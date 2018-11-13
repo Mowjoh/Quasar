@@ -22,7 +22,17 @@ namespace Quasar
     {
         public MainWindow()
         {
+            System.Threading.Thread.CurrentThread.CurrentUICulture =
+            new System.Globalization.CultureInfo(Quasar.Properties.Settings.Default["language"].ToString());
+
             InitializeComponent();
+
+        }
+
+        private void StartButton_Click(object sender, RoutedEventArgs e)
+        {
+            APIRequest test = new APIRequest();
+
         }
     }
 }
