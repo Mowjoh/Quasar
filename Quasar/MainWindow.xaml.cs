@@ -20,6 +20,7 @@ namespace Quasar
     /// </summary>
     public partial class MainWindow : Window
     {
+        bool[] progressStates = new bool[] { false, false, false };
         public MainWindow()
         {
             System.Threading.Thread.CurrentThread.CurrentUICulture =
@@ -29,10 +30,15 @@ namespace Quasar
 
         }
 
-        private void StartButton_Click(object sender, RoutedEventArgs e)
+        private async void StartButton_Click(object sender, RoutedEventArgs e)
         {
-            APIRequest test = new APIRequest();
+            Task<Member> getMember = APIRequest.RunAsync("1513589");
+            
+            PgrLabel1.Content = "Pulling Name";
 
+            Member mow = await getMember;
+
+            PgrLabel1.Content = mow.name;
         }
     }
 }
