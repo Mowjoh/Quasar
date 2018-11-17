@@ -15,7 +15,7 @@
         </Grid.ColumnDefinitions>
         <Grid x:Name="CategoryGrid"/>
 
-        <Button x:Name="StartButton" Content="{x:Static p:Resources.StartButton}" HorizontalAlignment="Left" Margin="188,85,0,0" VerticalAlignment="Top" Width="130" Click="StartButton_Click" Height="20" Grid.Column="2"/>
+        <Button x:Name="StartButton" Content="{x:Static p:Resources.StartButton}" HorizontalAlignment="Left" Margin="138,117,0,0" VerticalAlignment="Top" Width="130" Click="StartButton_Click" Height="20" Grid.Column="2"/>
         <Grid x:Name="ItemGrid" Grid.Column="1">
             <ListBox x:Name="ModListBox" HorizontalAlignment="Left" Height="399" Margin="10,10,0,0" VerticalAlignment="Top" Width="281" Background="#67000000" Foreground="White"/>
         </Grid>
