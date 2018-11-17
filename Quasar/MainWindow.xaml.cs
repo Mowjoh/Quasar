@@ -32,13 +32,18 @@ namespace Quasar
 
         private async void StartButton_Click(object sender, RoutedEventArgs e)
         {
-            Task<Member> getMember = APIRequest.RunAsync("1513589");
+            Task<List<ModItem>> getMod = APIRequest.RunGetModAsync("Skin");
+
+            List<ModItem> moddie = await getMod;
+
+            foreach(ModItem item in moddie)
+            {
+                ListBoxItem lbi = new ListBoxItem() { Content = item.name };
+                ModListBox.Items.Add(lbi);
+            }
             
-            PgrLabel1.Content = "Pulling Name";
 
-            Member mow = await getMember;
-
-            PgrLabel1.Content = mow.name;
+            
         }
     }
 }

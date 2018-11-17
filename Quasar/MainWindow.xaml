@@ -10,13 +10,15 @@
     <Grid x:Name="MainGrid" Background="#FF223946">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="150"/>
-            <ColumnDefinition Width="115"/>
-            <ColumnDefinition/>
-            <ColumnDefinition Width="400"/>
+            <ColumnDefinition Width="300"/>
+            <ColumnDefinition Width="327"/>
         </Grid.ColumnDefinitions>
-        <Button x:Name="StartButton" Content="{x:Static p:Resources.StartButton}" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="130" Click="StartButton_Click"/>
-        <Label x:Name="PgrLabel1" Content="Username" Grid.Column="1" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="95" Height="20" Foreground="White" FontSize="8"/>
-        <Label x:Name="StsLabel1" Content="" Grid.Column="3" HorizontalAlignment="Left" Margin="10,11,0,0" VerticalAlignment="Top" Width="95" Height="20" Foreground="White" FontSize="8"/>
+        <Grid x:Name="CategoryGrid"/>
+
+        <Button x:Name="StartButton" Content="{x:Static p:Resources.StartButton}" HorizontalAlignment="Left" Margin="188,85,0,0" VerticalAlignment="Top" Width="130" Click="StartButton_Click" Height="20" Grid.Column="2"/>
+        <Grid x:Name="ItemGrid" Grid.Column="1">
+            <ListBox x:Name="ModListBox" HorizontalAlignment="Left" Height="399" Margin="10,10,0,0" VerticalAlignment="Top" Width="281" Background="#67000000" Foreground="White"/>
+        </Grid>
 
     </Grid>
 </Window>
