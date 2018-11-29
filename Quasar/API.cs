@@ -29,6 +29,15 @@ namespace Quasar
 
     }
 
+    public class APISkin
+    {
+        public string name { get; set; }
+        public int id { get; set; }
+        public string author { get; set; }
+        public string authorid { get; set; }
+        public string description { get; set; }
+    }
+
 
 
     public class QueryStringItem
@@ -50,20 +59,15 @@ namespace Quasar
         }
     }
 
-
     public class APIRequest
     {
         static HttpClient client;
         static string HTTPUrl = "https://api.gamebanana.com/";
         
         static QueryStringItem jsonFormat = new QueryStringItem("format", "json_min");
-        static QueryStringItem jsonObject = new QueryStringItem("return_object", "1");
+        static QueryStringItem jsonObject = new QueryStringItem("return_keys", "1");
 
         static List<QueryStringItem> queryParameters;
-
-        public APIRequest()
-        { 
-        }
 
         #region Runs
 
@@ -79,6 +83,8 @@ namespace Quasar
 
             return newestMods;
         }
+
+
 
         #endregion
 
@@ -114,6 +120,32 @@ namespace Quasar
 
             queryParameters = getDefaultParameters();
             queryParameters.Add(new QueryStringItem("itemtype", itemtype));
+            queryParameters.Add(new QueryStringItem("sort", "id"));
+            queryParameters.Add(new QueryStringItem("direction", "desc"));
+            queryParameters.Add(new QueryStringItem("page", "1"));
+
+            string queryURL = formatApiRequest("Core/List/Section", queryParameters);
+
+            HttpResponseMessage response = await client.GetAsync(queryURL);
+
+            if (response.IsSuccessStatusCode)
+            {
+                string responseText = await response.Content.ReadAsStringAsync();
+
+                idList = JsonConvert.DeserializeObject<List<string>>(responseText);
+
+            }
+
+            return idList;
+
+        }
+
+        public static async Task<List<string>> getLatestCharacterSkins(string itemCat)
+        {
+            List<string> idList = new List<string>();
+
+            queryParameters = getDefaultParameters();
+            queryParameters.Add(new QueryStringItem("itemtype", itemCat));
             queryParameters.Add(new QueryStringItem("sort", "id"));
             queryParameters.Add(new QueryStringItem("direction", "desc"));
             queryParameters.Add(new QueryStringItem("page", "1"));

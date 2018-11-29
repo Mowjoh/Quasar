@@ -1,17 +1,9 @@
-﻿using System;
+﻿using Quasar.Resources;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Quasar
 {
@@ -20,30 +12,41 @@ namespace Quasar
     /// </summary>
     public partial class MainWindow : Window
     {
-        bool[] progressStates = new bool[] { false, false, false };
         public MainWindow()
         {
             System.Threading.Thread.CurrentThread.CurrentUICulture =
             new System.Globalization.CultureInfo(Quasar.Properties.Settings.Default["language"].ToString());
 
             InitializeComponent();
+            LoadCharacterList();
 
         }
 
         private async void StartButton_Click(object sender, RoutedEventArgs e)
         {
-            Task<List<ModItem>> getMod = APIRequest.RunGetModAsync("Skin");
+            SkinItem.Title.Content = "Downloading new mod";
+            Installer modInstaller = new Installer(SkinItem.Progress, SkinItem.Status);
+            var t = Task.Run(() => modInstaller.DownloadArchiveAsync("quasar:https://gamebanana.com/mmdl/403189,Skin,166918"));
 
-            List<ModItem> moddie = await getMod;
+        }
 
-            foreach(ModItem item in moddie)
+        private void LoadCharacterList()
+        {
+            List<Character> characters = XML.GetCharacters();
+
+            foreach(Character character in characters)
             {
-                ListBoxItem lbi = new ListBoxItem() { Content = item.name };
-                ModListBox.Items.Add(lbi);
+                ComboBoxItem cbi = new ComboBoxItem() { Content = character.name };
+                CharacterSelect.Items.Add(cbi);
+                
             }
-            
+        }
 
-            
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
+
+    
 }
