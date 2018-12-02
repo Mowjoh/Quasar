@@ -31,7 +31,7 @@ namespace Quasar
             newItem.Title.Content = "Downloading new mod";
             Installer modInstaller = new Installer(newItem.Progress, newItem.Status);
 
-            await modInstaller.DownloadArchiveAsync("quasar:https://gamebanana.com/mmdl/403189,Skin,166918,rar");
+            await modInstaller.DownloadArchiveAsync("quasar:https://gamebanana.com/mmdl/403189,Skin,166918,7z");
 
             APIMod newMod = await APIRequest.getMod(modInstaller.contentType, modInstaller.contentID);
             showModInfo(newMod);
