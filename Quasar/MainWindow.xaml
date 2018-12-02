@@ -25,28 +25,41 @@
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
                         <StackPanel x:Name="SectionStackPanel" Background="#A7000000">
-                            <Button x:Name="Skins" Content="Skins"/>
-                            <Button x:Name="Stages" Content="Stages"/>
+                            <Button x:Name="Skins" Content="Skins" Click="Skins_Click"/>
+                            <Button x:Name="Stages" Content="Stages" Click="Stages_Click"/>
                         </StackPanel>
                         <TabControl x:Name="ManagerContentTab" Grid.Column="1">
                             <TabItem x:Name="SkinsTab" Header="TabItem">
                                 <Grid x:Name="SkinsTabGrid" Background="#FFE5E5E5">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition/>
+                                        <RowDefinition Height="200"/>
+                                    </Grid.RowDefinitions>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="241*"/>
                                         <ColumnDefinition Width="242*"/>
                                         <ColumnDefinition Width="177*"/>
                                     </Grid.ColumnDefinitions>
                                     <ComboBox x:Name="CharacterSelect" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="221" Height="22" IsReadOnly="True" IsEditable="True" Text="Character" Foreground="Black"/>
-                                    <TreeView x:Name="FileView" Grid.Column="2" Margin="10,37,10,10"/>
-                                    <ScrollViewer x:Name="SkinScrollViewer" Margin="10,37,10,10" Background="#19000000">
-                                        <StackPanel x:Name="SkinStackPanel">
-                                            <controls:SkinItem x:Name="SkinItem" Height="55" Width="auto"/>
-                                        </StackPanel>
+                                    <TreeView x:Name="FileView" Grid.Column="2" Margin="10,37,10,10" Grid.RowSpan="2"/>
+                                    <ScrollViewer x:Name="SkinScrollViewer" Margin="10,37,10,10" Background="#19000000" Grid.RowSpan="2">
+                                        <StackPanel x:Name="SkinStackPanel"/>
                                     </ScrollViewer>
-                                    <GroupBox x:Name="SkinInfoGroup" Grid.Column="1" Header="Skin Information" Margin="10,0,10,10">
-                                        <Button Content="Press the button Morty !" Margin="10,10,10,0" VerticalAlignment="Top" Click="StartButton_Click"/>
+                                    <GroupBox x:Name="SkinInfoGroup" Grid.Column="1" Header="Skin Information" BorderBrush="#FF036EAE" Margin="10">
+                                        <StackPanel>
+                                            <Label x:Name="SkinNameLabel" Content="Name"/>
+                                            <Label x:Name="SkinAuthorLabel" Content="Author"/>
+                                            <Label x:Name="SkinDownloadsLabel" Content="Downloads"/>
+                                        </StackPanel>
                                     </GroupBox>
-                                    <Label Content="File Browser" Grid.Column="2" HorizontalAlignment="Left" Margin="10,6,0,0" VerticalAlignment="Top" Width="157"/>
+                                    <Label Content="File Browser" Grid.Column="2" HorizontalAlignment="Left" Margin="10,6,0,0" VerticalAlignment="Top" Width="157" Height="26"/>
+                                    <GroupBox x:Name="SkinUpdateGroup" Grid.Column="1" Header="Version Control" BorderBrush="#FF036EAE" Margin="10" Grid.Row="1">
+                                        <StackPanel>
+                                            <Label x:Name="SkinVersionLabel" Content="Version"/>
+                                            <Label x:Name="SkinStatusLabel" Content="Status"/>
+                                            <Button x:Name="ModUpdateButton" Content="Check for updates" Width="150" HorizontalAlignment="Left" Margin="0,50,0,0"/>
+                                        </StackPanel>
+                                    </GroupBox>
                                 </Grid>
                             </TabItem>
                             <TabItem x:Name="StagesTab" Header="TabItem" Visibility="Collapsed">
@@ -66,7 +79,9 @@
                 </TabItem>
             </TabControl>
         </Grid>
-        <Grid x:Name="HeaderGrid" Background="#FF021F2C"/>
+        <Grid x:Name="HeaderGrid" Background="#FF021F2C">
+            <Button x:Name="morty" Content="Press the button Morty !" Click="StartButton_Click" Width="200" Height="30"/>
+        </Grid>
 
     </Grid>
 </Window>

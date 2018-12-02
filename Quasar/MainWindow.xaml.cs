@@ -1,4 +1,5 @@
-﻿using Quasar.Resources;
+﻿using Quasar.Controls;
+using Quasar.Resources;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -24,9 +25,16 @@ namespace Quasar
 
         private async void StartButton_Click(object sender, RoutedEventArgs e)
         {
-            SkinItem.Title.Content = "Downloading new mod";
-            Installer modInstaller = new Installer(SkinItem.Progress, SkinItem.Status);
-            var t = Task.Run(() => modInstaller.DownloadArchiveAsync("quasar:https://gamebanana.com/mmdl/403189,Skin,166918"));
+            SkinItem newItem = new SkinItem();
+            SkinStackPanel.Children.Add(newItem);
+
+            newItem.Title.Content = "Downloading new mod";
+            Installer modInstaller = new Installer(newItem.Progress, newItem.Status);
+
+            await modInstaller.DownloadArchiveAsync("quasar:https://gamebanana.com/mmdl/403189,Skin,166918,7z");
+
+            APIMod newMod = await APIRequest.getMod(modInstaller.contentType, modInstaller.contentID);
+            showModInfo(newMod);
 
         }
 
@@ -42,10 +50,23 @@ namespace Quasar
             }
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void Skins_Click(object sender, RoutedEventArgs e)
         {
-
+            ManagerContentTab.SelectedItem = (SkinsTab);
         }
+
+        private void Stages_Click(object sender, RoutedEventArgs e)
+        {
+            ManagerContentTab.SelectedItem = (StagesTab);
+        }
+
+        public void showModInfo(APIMod _item)
+        {
+            SkinNameLabel.Content = "Name :"+_item.name;
+            SkinAuthorLabel.Content = "Authors :" + _item.authors;
+            SkinDownloadsLabel.Content = "Downloads :" + _item.downloads;
+        }
+
     }
 
     

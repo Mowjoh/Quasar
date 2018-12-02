@@ -26,6 +26,7 @@ namespace Quasar.Resources
 
             return characters;
         }
+
     }
     
     [XmlRoot("Characters")]

@@ -18,7 +18,7 @@ namespace Quasar
         public string name { get; set; }
     }
 
-    public class ModItem
+    public class APIMod
     {
         public int id { get; set; }
         public string type { get; set; }
@@ -29,13 +29,9 @@ namespace Quasar
 
     }
 
-    public class APISkin
+    public class APISkin : APIMod
     {
-        public string name { get; set; }
-        public int id { get; set; }
-        public string author { get; set; }
-        public string authorid { get; set; }
-        public string description { get; set; }
+        public string files { get; set; }
     }
 
 
@@ -61,7 +57,6 @@ namespace Quasar
 
     public class APIRequest
     {
-        static HttpClient client;
         static string HTTPUrl = "https://api.gamebanana.com/";
         
         static QueryStringItem jsonFormat = new QueryStringItem("format", "json_min");
@@ -69,156 +64,38 @@ namespace Quasar
 
         static List<QueryStringItem> queryParameters;
 
-        #region Runs
-
-        public static async Task<List<ModItem>> RunGetModAsync(string itemType)
-        {
-            resetClient();
-
-            List<string> latestModIDS = new List<string>();
-            List<ModItem> newestMods = new List<ModItem>();
-
-            latestModIDS = await getLatestModID(itemType);
-            newestMods = await getModsFromList(itemType, latestModIDS);
-
-            return newestMods;
-        }
-
-
-
-        #endregion
-
-        #region User Actions
-        public static async Task<Member> getUser(int userID)
-        {
-            Member member = null;
-
-            queryParameters = getDefaultParameters();
-            queryParameters.Add(new QueryStringItem("itemid", userID.ToString()));
-            queryParameters.Add(new QueryStringItem("itemtype", "Member"));
-            queryParameters.Add(new QueryStringItem("fields", "lastpost_date,Posts().Postcount().nGetPostCount(),OnlineStatus().bIsOnline()"));
-            string currentURL = formatApiRequest("Core/Item/Data", queryParameters);
-
-            HttpResponseMessage response = await client.GetAsync(currentURL);
-
-            if (response.IsSuccessStatusCode)
-            {
-                string responseText = await response.Content.ReadAsStringAsync();
-                var array = JsonConvert.DeserializeObject<JArray>(responseText);
-
-                member = new Member();
-                member.name = JsonConvert.DeserializeObject<List<string>>(responseText)[0];
-            }
-            return member;
-        }
-        #endregion
-
         #region Mod Actions
-        public static async Task<List<string>> getLatestModID(string itemtype)
+        public static async Task<APIMod> getMod(string itemtype, string itemID)
         {
-            List<string> idList = new List<string>();
+            APIMod downloadedMod = null;
 
             queryParameters = getDefaultParameters();
-            queryParameters.Add(new QueryStringItem("itemtype", itemtype));
-            queryParameters.Add(new QueryStringItem("sort", "id"));
-            queryParameters.Add(new QueryStringItem("direction", "desc"));
-            queryParameters.Add(new QueryStringItem("page", "1"));
-
-            string queryURL = formatApiRequest("Core/List/Section", queryParameters);
-
-            HttpResponseMessage response = await client.GetAsync(queryURL);
-
-            if (response.IsSuccessStatusCode)
-            {
-                string responseText = await response.Content.ReadAsStringAsync();
-
-                idList = JsonConvert.DeserializeObject<List<string>>(responseText);
-
-            }
-
-            return idList;
-
-        }
-
-        public static async Task<List<string>> getLatestCharacterSkins(string itemCat)
-        {
-            List<string> idList = new List<string>();
-
-            queryParameters = getDefaultParameters();
-            queryParameters.Add(new QueryStringItem("itemtype", itemCat));
-            queryParameters.Add(new QueryStringItem("sort", "id"));
-            queryParameters.Add(new QueryStringItem("direction", "desc"));
-            queryParameters.Add(new QueryStringItem("page", "1"));
-
-            string queryURL = formatApiRequest("Core/List/Section", queryParameters);
-
-            HttpResponseMessage response = await client.GetAsync(queryURL);
-
-            if (response.IsSuccessStatusCode)
-            {
-                string responseText = await response.Content.ReadAsStringAsync();
-
-                idList = JsonConvert.DeserializeObject<List<string>>(responseText);
-
-            }
-
-            return idList;
-
-        }
-
-        public static async Task<List<ModItem>> getModsFromList(string itemtype, List<string> idList)
-        {
-            List<ModItem> newestMods = new List<ModItem>();
-
-            int count = 0;
-            queryParameters = getDefaultParameters();
-            foreach (string id in idList)
-            {
-                queryParameters.Add(new QueryStringItem("itemid[" + count + "]", id));
-                queryParameters.Add(new QueryStringItem("itemtype[" + count + "]", "Skin"));
-                queryParameters.Add(new QueryStringItem("fields[" + count + "]", "name,authors,description,downloads"));
-                count++;
-            }
-
-            string queryURL = formatApiRequest("Core/Item/Data", queryParameters);
-
-            HttpResponseMessage response = await client.GetAsync(queryURL);
-
-            if (response.IsSuccessStatusCode)
-            {
-                string responseText = await response.Content.ReadAsStringAsync();
-
-                newestMods = JsonConvert.DeserializeObject<List<ModItem>>(responseText);
-
-            }
-            return newestMods;
-        }
-
-        public static async Task<ModItem> getMod(string itemtype, int itemID)
-        {
-            ModItem downloadedMod = null;
-
-            queryParameters = getDefaultParameters();
-            queryParameters.Add(new QueryStringItem("itemid", itemID.ToString()));
+            queryParameters.Add(new QueryStringItem("itemid", itemID));
             queryParameters.Add(new QueryStringItem("itemtype", itemtype));
             queryParameters.Add(new QueryStringItem("fields", "name,authors,description,downloads"));
 
             string queryURL = formatApiRequest("Core/Item/Data", queryParameters);
 
-            HttpResponseMessage response = await client.GetAsync(queryURL);
-
-            if (response.IsSuccessStatusCode)
+            using (HttpClient webClient = new HttpClient())
             {
-                string responseText = await response.Content.ReadAsStringAsync();
+                HttpResponseMessage response = await webClient.GetAsync(queryURL);
 
-                downloadedMod = JsonConvert.DeserializeObject<ModItem>(responseText);
+                if (response.IsSuccessStatusCode)
+                {
+                    string responseText = await response.Content.ReadAsStringAsync();
 
+                    downloadedMod = JsonConvert.DeserializeObject<APIMod>(responseText);
+
+                }
             }
+            
             return downloadedMod;
         }
+
         #endregion
 
         #region API Formatting
+
         public static string formatApiRequest(string path, List<QueryStringItem> parameters)
         {
             string formattedURL = HTTPUrl + path + "?";
@@ -243,18 +120,7 @@ namespace Quasar
 
             return newParameters;
         }
-        #endregion
 
-        #region HttpClient Management
-
-        public static void resetClient()
-        {
-            client = new HttpClient();
-
-            client.BaseAddress = new Uri(HTTPUrl);
-            client.DefaultRequestHeaders.Accept.Clear();
-            client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
-        }
         #endregion
 
 

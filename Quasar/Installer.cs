@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows.Threading;
 using System.Windows;
 using System.Windows.Controls;
+using System.IO;
 
 namespace Quasar
 {
@@ -17,8 +18,11 @@ namespace Quasar
         Label statusLabel;
 
         string downloadURL;
-        string contentType;
-        string contentID;
+        public string contentType;
+        public string contentID;
+        string fileFormat;
+
+        string dPath = Quasar.Properties.Settings.Default["DefaultDir"].ToString();
 
 
 
@@ -36,11 +40,17 @@ namespace Quasar
                 statusLabel.Visibility = Visibility.Hidden;
                 progressBar.Visibility = Visibility.Visible;
             }), DispatcherPriority.Background);
-            
 
             parseVariables(_quasarURL);
             var downloadLink = new Uri(downloadURL);
-            var saveFilename = System.IO.Path.GetFileName(downloadLink.AbsolutePath);
+            var saveFilename = dPath+"\\Quasar\\Library\\Downloads\\"+contentID+"."+fileFormat;
+
+            int i = 1;
+            while (File.Exists(saveFilename))
+            {
+                saveFilename = dPath + "\\Quasar\\Library\\Downloads\\" + contentID + "_" + i + "." + fileFormat;
+                i++;
+            }
 
             DownloadProgressChangedEventHandler DownloadProgressChangedEvent = (s, e) =>
             {
@@ -63,8 +73,6 @@ namespace Quasar
             {
                 webClient.DownloadProgressChanged += DownloadProgressChangedEvent;
                 await webClient.DownloadFileTaskAsync(downloadLink, saveFilename);
-
-                
             }
 
             await statusLabel.Dispatcher.BeginInvoke(new Action(() =>
@@ -83,6 +91,8 @@ namespace Quasar
             downloadURL = parameters.Split(',')[0];
             contentType = parameters.Split(',')[1];
             contentID   = parameters.Split(',')[2];
+            fileFormat = parameters.Split(',')[3];
         }
+
     }
 }
