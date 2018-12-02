@@ -6,7 +6,7 @@
       <Value Profile="(Default)">fr-FR</Value>
     </Setting>
     <Setting Name="DefaultDir" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">C:\Users\Mowjoh\Documents</Value>
+      <Value Profile="(Default)">E:\Documents\Doc William\Projets</Value>
     </Setting>
   </Settings>
 </SettingsFile>
