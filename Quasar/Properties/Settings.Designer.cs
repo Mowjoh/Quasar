@@ -34,7 +34,7 @@ namespace Quasar.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Users\\Mowjoh\\Documents")]
+        [global::System.Configuration.DefaultSettingValueAttribute("E:\\Documents\\Doc William\\Projets")]
         public string DefaultDir {
             get {
                 return ((string)(this["DefaultDir"]));
