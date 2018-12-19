@@ -45,19 +45,8 @@ namespace Quasar
             foreach(Character character in characters)
             {
                 ComboBoxItem cbi = new ComboBoxItem() { Content = character.name };
-                CharacterSelect.Items.Add(cbi);
-                
+                ModFilterSelect.Items.Add(cbi);
             }
-        }
-
-        private void Skins_Click(object sender, RoutedEventArgs e)
-        {
-            ManagerContentTab.SelectedItem = (SkinsTab);
-        }
-
-        private void Stages_Click(object sender, RoutedEventArgs e)
-        {
-            ManagerContentTab.SelectedItem = (StagesTab);
         }
 
         public void showModInfo(APIMod _item)
