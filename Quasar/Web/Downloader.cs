@@ -12,7 +12,7 @@ using System.IO;
 
 namespace Quasar
 {
-    class Installer
+    class Downloader
     {
         ProgressBar progressBar;
         Label statusLabel;
@@ -26,7 +26,7 @@ namespace Quasar
 
 
 
-        public Installer(ProgressBar _progressBar, Label _statusLabel)
+        public Downloader(ProgressBar _progressBar, Label _statusLabel)
         {
             progressBar = _progressBar;
             statusLabel = _statusLabel;

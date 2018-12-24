@@ -1,25 +1,26 @@
 ﻿using Quasar.Controls;
 using Quasar.Resources;
-using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using static Quasar.Library;
 
 namespace Quasar
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
+        List<Mod> Mods;
         public MainWindow()
         {
+            //Récupération de la langue
             System.Threading.Thread.CurrentThread.CurrentUICulture =
             new System.Globalization.CultureInfo(Quasar.Properties.Settings.Default["language"].ToString());
 
             InitializeComponent();
+
+            //Load des éléments de base
             LoadCharacterList();
+            LoadMods();
 
         }
 
@@ -29,13 +30,20 @@ namespace Quasar
             SkinStackPanel.Children.Add(newItem);
 
             newItem.Title.Content = "Downloading new mod";
-            Installer modInstaller = new Installer(newItem.Progress, newItem.Status);
+            Downloader modInstaller = new Downloader(newItem.Progress, newItem.Status);
 
             await modInstaller.DownloadArchiveAsync("quasar:https://gamebanana.com/mmdl/403189,Skin,166918,7z");
 
             APIMod newMod = await APIRequest.getMod(modInstaller.contentType, modInstaller.contentID);
             showModInfo(newMod);
+            Mods.Add(getModfromAPIMod(newMod));
 
+        }
+
+
+        private void LoadMods()
+        {
+            Mods = GetMods();
         }
 
         private void LoadCharacterList()
@@ -55,6 +63,8 @@ namespace Quasar
             SkinAuthorLabel.Content = "Authors :" + _item.authors;
             SkinDownloadsLabel.Content = "Downloads :" + _item.downloads;
         }
+
+        
 
     }
 
