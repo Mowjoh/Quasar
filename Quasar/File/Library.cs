@@ -11,12 +11,16 @@ namespace Quasar
 {
     public static class Library
     {
+        #region Basic Functions
         public static string GetLibraryPath()
         {
             string libraryPath = Quasar.Properties.Settings.Default["DefaultDir"].ToString() + "\\Library\\Library.xml";
             return libraryPath;
         }
 
+        #endregion
+
+        #region XML Interactions
         //Parsing the full Mod List
         public static ModList GetModListFile()
         {
@@ -49,19 +53,21 @@ namespace Quasar
                 xs.Serialize(wr, mods);
             }
         }
-        
+        #endregion
+
+        #region Data Operations
         public static Mod Parse(APIMod mod)
         {
             return new Mod() { id = mod.id, Name = mod.name, Author = mod.authors };
         }
 
-        
+        #endregion
 
-
+        #region XML Class Definitions
         //XML Serialization elements
         [Serializable()]
         [XmlRoot("Library")]
-        public class ModList:ICollection
+        public class ModList : ICollection
         {
             public string CollectionName;
             private ArrayList empArray = new ArrayList();
@@ -129,9 +135,7 @@ namespace Quasar
 
             }
         }
-
-
-
+        #endregion
 
     }
 

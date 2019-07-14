@@ -1,0 +1,14 @@
+﻿<ModTypes>
+  <ModType ID="0">
+    <Name>Skin</Name>
+    <Folder>Skins</Folder>
+  </ModType>
+  <ModType ID="1">
+    <Name>Music</Name>
+    <Folder>Music</Folder>
+  </ModType>
+  <ModType ID="2">
+    <Name>Sound</Name>
+    <Folder>Sounds</Folder>
+  </ModType>
+</ModTypes>

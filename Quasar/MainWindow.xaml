@@ -25,8 +25,8 @@
                             <ColumnDefinition Width="3*"/>
                             <ColumnDefinition Width="4*"/>
                         </Grid.ColumnDefinitions>
-                        <ComboBox x:Name="ModTypeSelect" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="221" Height="22" IsReadOnly="True" IsEditable="True" Text="Mod Type" Foreground="Black"/>
-                        <ComboBox x:Name="ModFilterSelect" Margin="309,10,10,0" VerticalAlignment="Top" Height="22" IsReadOnly="True" IsEditable="True" Text="Filter" Foreground="Black" IsEnabled="False"/>
+                        <ComboBox x:Name="ModTypeSelect" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="221" Height="22" IsReadOnly="True" IsEditable="True" Text="Select a Mod Type" Foreground="Black" SelectionChanged="ModTypeSelectionChanged"/>
+                        <ComboBox x:Name="ModFilterSelect" Margin="309,10,10,0" VerticalAlignment="Top" Height="22" IsReadOnly="True" IsEditable="True" Text="Filter things here" Foreground="Black" IsEnabled="False"/>
                         <ScrollViewer x:Name="ModScrollViewer" Margin="10,37,10,10" Background="#19000000">
                             <StackPanel x:Name="SkinStackPanel"/>
                         </ScrollViewer>

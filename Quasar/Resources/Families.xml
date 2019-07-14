@@ -1,0 +1,130 @@
+﻿<Families>
+  <Family ID="0">
+    <Name>Super Smash Bros</Name>
+    <Folder>Smashbros</Folder>
+  </Family>
+  <Family ID="1">
+    <Name>Mario</Name>
+    <Folder>Mario</Folder>
+  </Family>
+  <Family ID="2">
+    <Name>Mario Kart</Name>
+    <Folder>Mariokart</Folder>
+  </Family>
+  <Family ID="3">
+    <Name>Donkey Kong</Name>
+    <Folder>donkeykong</Folder>
+  </Family>
+  <Family ID="4">
+    <Name>Mario Kart</Name>
+    <Folder>Mariokart</Folder>
+  </Family>
+  <Family ID="5">
+    <Name>The Legend of Zelda</Name>
+    <Folder>Zelda</Folder>
+  </Family>
+  <Family ID="6">
+    <Name>Metroid</Name>
+    <Folder>Metroid</Folder>
+  </Family>
+  <Family ID="7">
+    <Name>Yoshi</Name>
+    <Folder>Yoshi</Folder>
+  </Family>
+  <Family ID="8">
+    <Name>Kirby</Name>
+    <Folder>Kirby</Folder>
+  </Family>
+  <Family ID="9">
+    <Name>Star Fox</Name>
+    <Folder>Starfox</Folder>
+  </Family>
+  <Family ID="10">
+    <Name>Pokemon</Name>
+    <Folder>Pokemon</Folder>
+  </Family>
+  <Family ID="11">
+    <Name>F-Zero</Name>
+    <Folder>fzero</Folder>
+  </Family>
+  <Family ID="12">
+    <Name>Earthbound</Name>
+    <Folder>Earthbound</Folder>
+  </Family>
+  <Family ID="13">
+    <Name>Fire Emblem</Name>
+    <Folder>Fireemblem</Folder>
+  </Family>
+  <Family ID="14">
+    <Name>Game and Watch</Name>
+    <Folder>Gamewatch</Folder>
+  </Family>
+  <Family ID="15">
+    <Name>Kid Icarus</Name>
+    <Folder>Kidicarus</Folder>
+  </Family>
+  <Family ID="16">
+    <Name>Wario</Name>
+    <Folder>Wario</Folder>
+  </Family>
+  <Family ID="17">
+    <Name>Animal Crossing</Name>
+    <Folder>Animalcrossing</Folder>
+  </Family>
+  <Family ID="18">
+    <Name>Wii Fit</Name>
+    <Folder>Wiifit</Folder>
+  </Family>
+  <Family ID="19">
+    <Name>Punch-Out!!</Name>
+    <Folder>Punchout</Folder>
+  </Family>
+  <Family ID="20">
+    <Name>Xenoblade Chronicles</Name>
+    <Folder>Xenoblade</Folder>
+  </Family>
+  <Family ID="21">
+    <Name>Splatoon</Name>
+    <Folder>Splatoon</Folder>
+  </Family>
+  <Family ID="22">
+    <Name>Metal Gear</Name>
+    <Folder>Metalgear</Folder>
+  </Family>
+  <Family ID="23">
+    <Name>Sonic</Name>
+    <Folder>Sonic</Folder>
+  </Family>
+  <Family ID="24">
+    <Name>Mega Man</Name>
+    <Folder>Megaman</Folder>
+  </Family>
+  <Family ID="25">
+    <Name>PAC-MAN</Name>
+    <Folder>Pacman</Folder>
+  </Family>
+  <Family ID="26">
+    <Name>Street Fighter</Name>
+    <Folder>Streetfighter</Folder>
+  </Family>
+  <Family ID="27">
+    <Name>Final Fantasy</Name>
+    <Folder>Finalfantasy</Folder>
+  </Family>
+  <Family ID="28">
+    <Name>Bayonetta</Name>
+    <Folder>Bayonetta</Folder>
+  </Family>
+  <Family ID="29">
+    <Name>Castlevania</Name>
+    <Folder>Castlevania</Folder>
+  </Family>
+  <Family ID="30">
+    <Name>Persona</Name>
+    <Folder>Persona</Folder>
+  </Family>
+  <Family ID="31">
+    <Name>Others</Name>
+    <Folder>Others</Folder>
+  </Family>
+</Families>

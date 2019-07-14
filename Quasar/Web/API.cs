@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Quasar
 {
-
+    #region Json Classes Definitions
     public class Member
     {
         public int id { get; set; }
@@ -33,9 +33,9 @@ namespace Quasar
     {
         public string files { get; set; }
     }
+    #endregion
 
-
-
+    #region API Interactions
     public class QueryStringItem
     {
         public string name { get; set; }
@@ -58,7 +58,7 @@ namespace Quasar
     public class APIRequest
     {
         static string HTTPUrl = "https://api.gamebanana.com/";
-        
+
         static QueryStringItem jsonFormat = new QueryStringItem("format", "json_min");
         static QueryStringItem jsonObject = new QueryStringItem("return_keys", "1");
 
@@ -88,7 +88,7 @@ namespace Quasar
 
                 }
             }
-            
+
             return downloadedMod;
         }
 
@@ -126,4 +126,8 @@ namespace Quasar
 
 
     }
+    #endregion
+
+
+
 }
