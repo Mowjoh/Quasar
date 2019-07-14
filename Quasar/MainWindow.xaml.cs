@@ -10,7 +10,7 @@ namespace Quasar
 {
     public partial class MainWindow : Window
     {
-        List<Mod> Mods;
+        ModList Mods;
         public MainWindow()
         {
             //Récupération de la langue
@@ -23,13 +23,13 @@ namespace Quasar
 
             //Load des éléments de base
             LoadCharacterList();
+
             LoadMods();
 
         }
 
-        private async void StartButton_Click(object sender, RoutedEventArgs e)
+        private async void TestDownloadButtonPress(object sender, RoutedEventArgs e)
         {
-            SetMods(Mods);
             ModListElement newItem = new ModListElement();
             SkinStackPanel.Children.Add(newItem);
 
@@ -39,16 +39,16 @@ namespace Quasar
             await modInstaller.DownloadArchiveAsync("quasar:https://gamebanana.com/mmdl/403189,Skin,166918,7z");
 
             APIMod newMod = await APIRequest.getMod(modInstaller.contentType, modInstaller.contentID);
-            showModInfo(newMod);
-            Mods.Add(getModfromAPIMod(newMod));
-            SetMods(Mods);
+            PrintModInformation(newMod);
+            Mods.Add(Parse(newMod));
+            WriteModListFile(Mods);
 
         }
 
 
         private void LoadMods()
         {
-            Mods = GetMods();
+            Mods = GetModListFile();
 
             foreach(Mod x in Mods)
             {
@@ -72,14 +72,14 @@ namespace Quasar
             }
         }
 
-        public void showModInfo(APIMod _item)
+        public void PrintModInformation(APIMod _item)
         {
             SkinNameLabel.Content = "Name :"+_item.name;
             SkinAuthorLabel.Content = "Authors :" + _item.authors;
             SkinDownloadsLabel.Content = "Downloads :" + _item.downloads;
         }
 
-        private void ClearFolders(object sender, RoutedEventArgs e)
+        private void DeleteDocumentFolderContents(object sender, RoutedEventArgs e)
         {
             string dPath = Quasar.Properties.Settings.Default["DefaultDir"].ToString();
             var saveFolder = dPath + "\\Library\\";
