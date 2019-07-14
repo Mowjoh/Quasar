@@ -1,1 +1,20 @@
-﻿<?xml version="1.0" encoding="utf-8" ?> 
+﻿<Library>
+  <Mod id="1">
+    <Name>Nom du mod</Name>
+    <Author>test</Author>
+    <Version>1</Version>
+    <Native>true</Native>
+  </Mod>
+  <Mod id="2">
+    <Name>Nom du mod</Name>
+    <Author>test</Author>
+    <Version>1</Version>
+    <Native>true</Native>
+  </Mod>
+  <Mod id="3">
+    <Name>Nom du mod</Name>
+    <Author>test</Author>
+    <Version>1</Version>
+    <Native>true</Native>
+  </Mod>
+</Library>

@@ -60,7 +60,8 @@
             </TabControl>
         </Grid>
         <Grid x:Name="HeaderGrid" Background="#FF021F2C">
-            <Button x:Name="morty" Content="Press the button Morty !" Click="StartButton_Click" Width="200" Height="30"/>
+            <Button x:Name="DownloadButton" Content="Download Test File" Click="StartButton_Click" Width="200" Height="30" Margin="10,4,1282,6"/>
+            <Button x:Name="CleanFolders_Button" Content="Clear Documents Folder" Click="ClearFolders" Width="200" Height="30" Margin="224,4,1068,6"/>
         </Grid>
 
     </Grid>

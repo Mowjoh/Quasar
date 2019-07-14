@@ -1,6 +1,7 @@
 ﻿using Quasar.Controls;
 using Quasar.Resources;
 using System.Collections.Generic;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using static Quasar.Library;
@@ -16,6 +17,8 @@ namespace Quasar
             System.Threading.Thread.CurrentThread.CurrentUICulture =
             new System.Globalization.CultureInfo(Quasar.Properties.Settings.Default["language"].ToString());
 
+            //Properties.Settings.Default.DefaultDir = System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments);
+
             InitializeComponent();
 
             //Load des éléments de base
@@ -26,7 +29,8 @@ namespace Quasar
 
         private async void StartButton_Click(object sender, RoutedEventArgs e)
         {
-            SkinItem newItem = new SkinItem();
+            SetMods(Mods);
+            ModListElement newItem = new ModListElement();
             SkinStackPanel.Children.Add(newItem);
 
             newItem.Title.Content = "Downloading new mod";
@@ -37,6 +41,7 @@ namespace Quasar
             APIMod newMod = await APIRequest.getMod(modInstaller.contentType, modInstaller.contentID);
             showModInfo(newMod);
             Mods.Add(getModfromAPIMod(newMod));
+            SetMods(Mods);
 
         }
 
@@ -44,6 +49,16 @@ namespace Quasar
         private void LoadMods()
         {
             Mods = GetMods();
+
+            foreach(Mod x in Mods)
+            {
+                ModListElement mle = new ModListElement();
+                mle.Title.Content = x.Name;
+                mle.Progress.Visibility = Visibility.Hidden;
+                mle.Status.Content = "Awaiting Check";
+                SkinStackPanel.Children.Add(mle);
+
+            }
         }
 
         private void LoadCharacterList()
@@ -64,8 +79,13 @@ namespace Quasar
             SkinDownloadsLabel.Content = "Downloads :" + _item.downloads;
         }
 
-        
+        private void ClearFolders(object sender, RoutedEventArgs e)
+        {
+            string dPath = Quasar.Properties.Settings.Default["DefaultDir"].ToString();
+            var saveFolder = dPath + "\\Library\\";
 
+            Directory.Delete(saveFolder, true);
+        }
     }
 
     

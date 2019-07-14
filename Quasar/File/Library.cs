@@ -30,8 +30,9 @@ namespace Quasar
         //Ecriture du fichier de librairie
         public static void SetMods(List<Mod> mods)
         {
+
             XmlSerializer xs = new XmlSerializer(typeof(ModList));
-            using (StreamWriter wr = new StreamWriter("person.xml"))
+            using (StreamWriter wr = new StreamWriter(@"Resources\Library.xml"))
             {
                 xs.Serialize(wr, mods);
             }
@@ -43,9 +44,11 @@ namespace Quasar
         }
 
         [XmlRoot("Library")]
+        [XmlInclude(typeof(Mod))]
         public class ModList
         {
-            [XmlElement("Mod")]
+            [XmlArray("Library")]
+            [XmlArrayItem("Mod")]
             public List<Mod> Mods { get; set; }
         }
 
@@ -80,5 +83,10 @@ namespace Quasar
 
             }
         }
+
+
+
+
     }
+
 }

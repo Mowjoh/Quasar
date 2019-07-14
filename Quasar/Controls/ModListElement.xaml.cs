@@ -18,9 +18,9 @@ namespace Quasar.Controls
     /// <summary>
     /// Interaction logic for SkinItem.xaml
     /// </summary>
-    public partial class SkinItem : UserControl
+    public partial class ModListElement : UserControl
     {
-        public SkinItem()
+        public ModListElement()
         {
             InitializeComponent();
         }

@@ -43,12 +43,15 @@ namespace Quasar
 
             parseVariables(_quasarURL);
             var downloadLink = new Uri(downloadURL);
-            var saveFilename = dPath+"\\Quasar\\Library\\Downloads\\"+contentID+"."+fileFormat;
+            var saveFolder = dPath + "\\Library\\Downloads\\";
+            var saveFilename = dPath+"\\Library\\Downloads\\"+contentID+"."+fileFormat;
+
+            if (!Directory.Exists(saveFolder)) Directory.CreateDirectory(saveFolder);
 
             int i = 1;
             while (File.Exists(saveFilename))
             {
-                saveFilename = dPath + "\\Quasar\\Library\\Downloads\\" + contentID + "_" + i + "." + fileFormat;
+                saveFilename = dPath + "\\Library\\Downloads\\" + contentID + "_" + i + "." + fileFormat;
                 i++;
             }
 
