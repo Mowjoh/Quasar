@@ -1,14 +1,17 @@
 ﻿<ModTypes>
   <ModType ID="0">
     <Name>Skin</Name>
+    <APIName>Skin</APIName>
     <Folder>Skins</Folder>
   </ModType>
   <ModType ID="1">
     <Name>Music</Name>
+    <APIName>?</APIName>
     <Folder>Music</Folder>
   </ModType>
   <ModType ID="2">
     <Name>Sound</Name>
+    <APIName>?</APIName>
     <Folder>Sounds</Folder>
   </ModType>
 </ModTypes>

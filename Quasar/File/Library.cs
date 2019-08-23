@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Xml.Serialization;
 using System.IO;
 using System.Collections;
+using Quasar.Resources;
 
 namespace Quasar
 {
@@ -56,9 +57,19 @@ namespace Quasar
         #endregion
 
         #region Data Operations
-        public static Mod Parse(APIMod mod)
+        public static Mod Parse(APIMod mod,List<ModType> modTypes)
         {
-            return new Mod() { id = mod.id, Name = mod.name, Author = mod.authors };
+            int modType = -1;
+            try
+            {
+                modType = modTypes.Find(mt => mt.APIName == mod.type).ID;
+            }
+            catch(Exception e)
+            {
+
+            }
+
+            return new Mod() { id = mod.id, Name = mod.name, type = modType, association = -1, Author = mod.authors };
         }
 
         #endregion
@@ -109,6 +120,12 @@ namespace Quasar
             [XmlAttribute("id")]
             public int id { get; set; }
 
+            [XmlAttribute("type")]
+            public int type { get; set; }
+
+            [XmlAttribute("association")]
+            public int association { get; set; }
+
             [XmlElement("Name")]
             public string Name { get; set; }
 
@@ -121,13 +138,15 @@ namespace Quasar
             [XmlElement("Native")]
             public bool Native { get; set; }
 
-            public Mod(int iid, string sname, string sauthor, int iversion, bool bnative)
+            public Mod(int _id, string _Name ,int _type ,int _association ,string _author, int _version, bool _native)
             {
-                id = iid;
-                Name = sname;
-                Author = sauthor;
-                Version = iversion;
-                Native = bnative;
+                id = _id;
+                Name = _Name;
+                type = _type;
+                association = _association;
+                Author = _author;
+                Version = _version;
+                Native = _native;
             }
 
             public Mod()

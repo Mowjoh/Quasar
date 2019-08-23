@@ -1,224 +1,230 @@
 ﻿<Characters>
-  <Character name="Mario">
+  <Character name="Mario" ID="1">
     <GBName>Tada</GBName>
   </Character>
-  <Character name="Donkey Kong">
+  <Character name="Donkey Kong" ID="2">
     <GBName>Tada</GBName>
   </Character>
-  <Character name="Link">
+  <Character name="Link" ID="3">
     <GBName>Tada</GBName>
   </Character>
-  <Character name="Samus">
+  <Character name="Samus" ID="4">
     <GBName>Tada</GBName>
   </Character>
-  <Character name="Dark Samus">
+  <Character name="Dark Samus" ID="5">
     <GBName>Tada</GBName>
   </Character>
-  <Character name="Yoshi">
+  <Character name="Yoshi" ID="6">
     <GBName>Tada</GBName>
   </Character>
-  <Character name="Kirby">
+  <Character name="Kirby" ID="7">
     <GBName>Tada</GBName>
   </Character>
-  <Character name="Fox">
+  <Character name="Fox" ID="8">
     <GBName>Tada</GBName>
   </Character>
-  <Character name="Pikachu">
+  <Character name="Pikachu" ID="9">
     <GBName>Tada</GBName>
   </Character>
-  <Character name="Luigi">
+  <Character name="Luigi" ID="10">
     <GBName>Tada</GBName>
   </Character>
-  <Character name="Ness">
+  <Character name="Ness" ID="11"> 
     <GBName>Tada</GBName>
   </Character>
-  <Character name="Captain Falcon">
+  <Character name="Captain Falcon" ID="12">
     <GBName>Tada</GBName>
   </Character>
-  <Character name="Jigglypuff">
+  <Character name="Jigglypuff" ID="13">
     <GBName>Tada</GBName>
   </Character>
-  <Character name="Peach">
+  <Character name="Peach" ID="14">
     <GBName>Tada</GBName>
   </Character>
-  <Character name="Daisy">
+  <Character name="Daisy" ID="15">
     <GBName>Tada</GBName>
   </Character>
-  <Character name="Bowser">
+  <Character name="Bowser" ID="16">
     <GBName>Tada</GBName>
   </Character>
-  <Character name="Ice Climbers">
+  <Character name="Ice Climbers" ID="17">
     <GBName>Tada</GBName>
   </Character>
-  <Character name="Sheik">
+  <Character name="Sheik" ID="18">
     <GBName>Tada</GBName>
   </Character>
-  <Character name="Zelda">
+  <Character name="Zelda" ID="19">
     <GBName>Tada</GBName>
   </Character>
-  <Character name="Dr. Mario">
+  <Character name="Dr. Mario" ID="20">
     <GBName>Tada</GBName>
   </Character>
-  <Character name="Pichu">
+  <Character name="Pichu" ID="21">
     <GBName>Tada</GBName>
   </Character>
-  <Character name="Falco">
+  <Character name="Falco" ID="22">
     <GBName>Tada</GBName>
   </Character>
-  <Character name="Marth">
+  <Character name="Marth" ID="23">
     <GBName>Tada</GBName>
   </Character>
-  <Character name="Lucina">
+  <Character name="Lucina" ID="24">
     <GBName>Tada</GBName>
   </Character>
-  <Character name="Young Link">
+  <Character name="Young Link" ID="25">
     <GBName>Tada</GBName>
   </Character>
-  <Character name="Ganondorf">
+  <Character name="Ganondorf" ID="26">
     <GBName>Tada</GBName>
   </Character>
-  <Character name="Mewtwo">
+  <Character name="Mewtwo" ID="27">
     <GBName>Tada</GBName>
   </Character>
-  <Character name="Roy">
+  <Character name="Roy" ID="28">
     <GBName>Tada</GBName>
   </Character>
-  <Character name="Chrom">
+  <Character name="Chrom" ID="29">
     <GBName>Tada</GBName>
   </Character>
-  <Character name="Mr. Game and Watch">
+  <Character name="Mr. Game and Watch" ID="30">
     <GBName>Tada</GBName>
   </Character>
-  <Character name="Meta Knight">
+  <Character name="Meta Knight" ID="31">
     <GBName>Tada</GBName>
   </Character>
-  <Character name="Pit">
+  <Character name="Pit" ID="32"> 
     <GBName>Tada</GBName>
   </Character>
-  <Character name="Dark Pit">
+  <Character name="Dark Pit" ID="33">
     <GBName>Tada</GBName>
   </Character>
-  <Character name="Zero Suit Samus">
+  <Character name="Zero Suit Samus" ID="34">
     <GBName>Tada</GBName>
   </Character>
-  <Character name="Wario">
+  <Character name="Wario" ID="35">
     <GBName>Tada</GBName>
   </Character>
-  <Character name="Snake">
+  <Character name="Snake" ID="36">
     <GBName>Tada</GBName>
   </Character>
-  <Character name="Ike">
+  <Character name="Ike" ID="37">
     <GBName>Tada</GBName>
   </Character>
-  <Character name="Pokemon Trainer">
+  <Character name="Pokemon Trainer" ID="38">
     <GBName>Tada</GBName>
   </Character>
-  <Character name="Diddy Kong">
+  <Character name="Diddy Kong" ID="39">
     <GBName>Tada</GBName>
   </Character>
-  <Character name="Lucas">
+  <Character name="Lucas" ID="40">
     <GBName>Tada</GBName>
   </Character>
-  <Character name="Sonic">
+  <Character name="Sonic" ID="41">
     <GBName>Tada</GBName>
   </Character>
-  <Character name="King Dedede">
+  <Character name="King Dedede" ID="42">
     <GBName>Tada</GBName>
   </Character>
-  <Character name="Olimar">
+  <Character name="Olimar" ID="43">
     <GBName>Tada</GBName>
   </Character>
-  <Character name="Lucario">
+  <Character name="Lucario" ID="44">
     <GBName>Tada</GBName>
   </Character>
-  <Character name="R.O.B.">
+  <Character name="R.O.B." ID="45">
     <GBName>Tada</GBName>
   </Character>
-  <Character name="Toon Link">
+  <Character name="Toon Link" ID="46">
     <GBName>Tada</GBName>
   </Character>
-  <Character name="Wolf">
+  <Character name="Wolf" ID="47">
     <GBName>Tada</GBName>
   </Character>
-  <Character name="Villager">
+  <Character name="Villager" ID="48">
     <GBName>Tada</GBName>
   </Character>
-  <Character name="Mega Man">
+  <Character name="Mega Man" ID="49">
     <GBName>Tada</GBName>
   </Character>
-  <Character name="Wii Fit Trainer">
+  <Character name="Wii Fit Trainer" ID="50">
     <GBName>Tada</GBName>
   </Character>
-  <Character name="Rosalina and Luma">
+  <Character name="Rosalina and Luma" ID="51">
     <GBName>Tada</GBName>
   </Character>
-  <Character name="Little Mac">
+  <Character name="Little Mac" ID="52">
     <GBName>Tada</GBName>
   </Character>
-  <Character name="Greninja">
+  <Character name="Greninja" ID="53">
     <GBName>Tada</GBName>
   </Character>
-  <Character name="Mii Fighter">
+  <Character name="Mii Fighter" ID="54">
     <GBName>Tada</GBName>
   </Character>
-  <Character name="Palutena">
+  <Character name="Palutena" ID="55">
     <GBName>Tada</GBName>
   </Character>
-  <Character name="Pac Man">
+  <Character name="Pac Man" ID="56">
     <GBName>Tada</GBName>
   </Character>
-  <Character name="Robin">
+  <Character name="Robin" ID="57">
     <GBName>Tada</GBName>
   </Character>
-  <Character name="Shulk">
+  <Character name="Shulk" ID="58">
     <GBName>Tada</GBName>
   </Character>
-  <Character name="Bowser Jr">
+  <Character name="Bowser Jr" ID="59">
     <GBName>Tada</GBName>
   </Character>
-  <Character name="Duck Hunt Duo">
+  <Character name="Duck Hunt Duo" ID="60">
     <GBName>Tada</GBName>
   </Character>
-  <Character name="Ryu">
+  <Character name="Ryu" ID="61">
     <GBName>Tada</GBName>
   </Character>
-  <Character name="Ken">
+  <Character name="Ken" ID="62">
     <GBName>Tada</GBName>
   </Character>
-  <Character name="Cloud">
+  <Character name="Cloud" ID="63">
     <GBName>Tada</GBName>
   </Character>
-  <Character name="Corrin">
+  <Character name="Corrin" ID="64">
     <GBName>Tada</GBName>
   </Character>
-  <Character name="Bayonetta">
+  <Character name="Bayonetta" ID="65">
     <GBName>Tada</GBName>
   </Character>
-  <Character name="Inkling">
+  <Character name="Inkling" ID="66">
     <GBName>Tada</GBName>
   </Character>
-  <Character name="Ridley">
+  <Character name="Ridley" ID="67">
     <GBName>Tada</GBName>
   </Character>
-  <Character name="Simon">
+  <Character name="Simon" ID="68">
     <GBName>Tada</GBName>
   </Character>
-  <Character name="Richter">
+  <Character name="Richter" ID="69">
     <GBName>Tada</GBName>
   </Character>
-  <Character name="King K. Rool">
+  <Character name="King K. Rool" ID="70">
     <GBName>Tada</GBName>
   </Character>
-  <Character name="Isabelle">
+  <Character name="Isabelle" ID="71">
     <GBName>Tada</GBName>
   </Character>
-  <Character name="Incineroar">
+  <Character name="Incineroar" ID="72">
     <GBName>Tada</GBName>
   </Character>
-  <Character name="Piranha Plant">
+  <Character name="Piranha Plant" ID="73">
     <GBName>Tada</GBName>
   </Character>
-  <Character name="Joker">
+  <Character name="Joker" ID="74">
+    <GBName>Tada</GBName>
+  </Character>
+  <Character name="Hero" ID="75">
+    <GBName>Tada</GBName>
+  </Character>
+  <Character name="Banjo-Kazooie" ID="76">
     <GBName>Tada</GBName>
   </Character>
 </Characters>

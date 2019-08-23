@@ -89,6 +89,10 @@ namespace Quasar
                 }
             }
 
+            downloadedMod.id = Int32.Parse(itemID);
+            downloadedMod.type = itemtype;
+
+
             return downloadedMod;
         }
 

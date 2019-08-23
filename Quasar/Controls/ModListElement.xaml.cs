@@ -20,8 +20,13 @@ namespace Quasar.Controls
     /// </summary>
     public partial class ModListElement : UserControl
     {
+        public int modID;
+        public int modType;
+        public int modAssociation;
+
         public ModListElement()
         {
+            
             InitializeComponent();
         }
     }

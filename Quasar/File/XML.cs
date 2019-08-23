@@ -130,6 +130,9 @@ namespace Quasar.Resources
         [XmlElement("Name")]
         public string Name { get; set; }
 
+        [XmlElement("APIName")]
+        public string APIName { get; set; }
+
         [XmlElement("Folder")]
         public string Folder { get; set; }
 
