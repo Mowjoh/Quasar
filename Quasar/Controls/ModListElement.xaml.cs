@@ -26,7 +26,6 @@ namespace Quasar.Controls
 
         public ModListElement()
         {
-            
             InitializeComponent();
         }
     }

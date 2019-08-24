@@ -14,4 +14,19 @@
     <APIName>?</APIName>
     <Folder>Sounds</Folder>
   </ModType>
+  <ModType ID="3">
+    <Name>Stage</Name>
+    <APIName>?</APIName>
+    <Folder>Stages</Folder>
+  </ModType>
+  <ModType ID="4">
+    <Name>GUI</Name>
+    <APIName>?</APIName>
+    <Folder>GUI</Folder>
+  </ModType>
+  <ModType ID="5">
+    <Name>Game Files</Name>
+    <APIName>?</APIName>
+    <Folder>GameFiles</Folder>
+  </ModType>
 </ModTypes>

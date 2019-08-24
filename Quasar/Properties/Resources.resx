@@ -117,10 +117,55 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AddPackageTabHeader" xml:space="preserve">
+    <value>Add &amp; Package</value>
+  </data>
+  <data name="AssignmentTabHeader" xml:space="preserve">
+    <value>Mod Assignment</value>
+  </data>
+  <data name="CheckModUpdateButton" xml:space="preserve">
+    <value>Check for updates</value>
+  </data>
+  <data name="ClearQuasarFolderButton" xml:space="preserve">
+    <value>Clean Folders</value>
+  </data>
+  <data name="FileBrowserHeader" xml:space="preserve">
+    <value>File Browser</value>
+  </data>
+  <data name="ManagementTabHeader" xml:space="preserve">
+    <value>Mod Management</value>
+  </data>
+  <data name="ModAuthor" xml:space="preserve">
+    <value>Author</value>
+  </data>
+  <data name="ModFilterSelectText" xml:space="preserve">
+    <value>You can filter things here</value>
+  </data>
+  <data name="ModInformationHeader" xml:space="preserve">
+    <value>Mod Information</value>
+  </data>
+  <data name="ModName" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="ModStatus" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="ModTypeSelectText" xml:space="preserve">
+    <value>Select a mod type</value>
+  </data>
+  <data name="ModVersion" xml:space="preserve">
+    <value>Version</value>
+  </data>
+  <data name="SettingsTabHeader" xml:space="preserve">
+    <value>Settings</value>
+  </data>
   <data name="StartButton" xml:space="preserve">
-    <value>Starts</value>
+    <value>Start Test Download</value>
   </data>
   <data name="Title" xml:space="preserve">
     <value>Quasar Mod Manager</value>
+  </data>
+  <data name="VersionInformationHeader" xml:space="preserve">
+    <value>Version Control</value>
   </data>
 </root>

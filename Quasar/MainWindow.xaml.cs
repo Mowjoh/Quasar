@@ -13,13 +13,14 @@ namespace Quasar
     public partial class MainWindow : Window
     {
         ModList Mods;
-        List<ModType> ModTypes;
-        List<Character> Characters;
-        List<Family> Families;
-        
+        List<ModType> ModTypes { get; set; }
+        List<Character> Characters { get; set; }
+        List<Family> Families { get; set; }
+
         public MainWindow()
         {
             checkForInstances();
+            System.Threading.Thread.CurrentThread.CurrentUICulture = new System.Globalization.CultureInfo(Properties.Settings.Default["Language"].ToString());
             InitializeComponent();
 
             //Load des éléments de base
@@ -57,16 +58,7 @@ namespace Quasar
         private void LoadModTypes()
         {
             ModTypes = XML.GetModTypes();
-            ModTypeSelect.Items.Clear();
-
-            ComboBoxItem allItem = new ComboBoxItem() { Content = "All Types" };
-            ModTypeSelect.Items.Add(allItem);
-
-            foreach (ModType modType in ModTypes)
-            {
-                ComboBoxItem cbi = new ComboBoxItem() { Content = modType.Name };
-                ModTypeSelect.Items.Add(cbi);
-            }
+            ModTypeSelect.ItemsSource = ModTypes;
         }
 
         private void LoadCharacterList()
@@ -89,7 +81,6 @@ namespace Quasar
             {
                 //Sending a hello with args, maybe
                 new PipeClient("Quasarite");
-
             }
             else
             {
@@ -103,104 +94,29 @@ namespace Quasar
         private void ModTypeSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             ComboBox comboBox = (ComboBox)sender;
-            ComboBoxItem SelectedItem = (ComboBoxItem)comboBox.SelectedItem;
-            if ((string)SelectedItem.Content != "All Types")
-            {
-                ModType SelectedModType = ModTypes.Find(mt => mt.Name.Equals(SelectedItem.Content));
-                FillFilterBox(SelectedModType.ID);
-                ShowFilteredList(GetFilteredList(SelectedModType.ID, -1));
-                ;
-            }
-            else
-            {
-                FillFilterBox(-1);
-                ShowFilteredList(GetFilteredList(-1, -1));
-
-            }
-
-            //Refresh the list based on filters
-            
-
-        }
-
-        //Refreshes the contents of the filter combobox
-        private void FillFilterBox(int mode)
-        {
-            ModFilterSelect.Items.Clear();
-            ModFilterSelect.Text = "Filter things here";
-
-            ComboBoxItem allItem = new ComboBoxItem() { Content = "All Items" };
-            ModTypeSelect.Items.Add(allItem);
-
-            switch (mode)
+            ModType selectedType = (ModType)comboBox.SelectedItem;
+            switch (selectedType.ID)
             {
                 case 0:
-                    foreach (Character character in Characters)
-                    {
-                        ComboBoxItem cbi = new ComboBoxItem() { Content = character.name };
-                        ModFilterSelect.Items.Add(cbi);
-                    }
+                    ModFilterSelect.ItemsSource = Characters;
                     break;
                 case 1:
-                    foreach (Family fam in Families)
-                    {
-                        ComboBoxItem cbi = new ComboBoxItem() { Content = fam.Name };
-                        ModFilterSelect.Items.Add(cbi);
-                    }
+                    ModFilterSelect.ItemsSource = Families;
+                    break;
+                case 2:
+                    ModFilterSelect.ItemsSource = Families;
                     break;
                 default:
                     break;
-            }
-            ModFilterSelect.IsEnabled = (bool)(mode != -1);
-            
 
+            }
         }
 
-        private ModList GetFilteredList(int modType,int modFilter)
-        {
-            ModList filteredModList = new ModList();
-
-            //Specific Type
-            if(modType != -1)
-            {
-                //Specific Mod Filter
-                if(modFilter != -1)
-                {
-                    var query = from Mod mod in Mods
-                                      where mod.type == modType && mod.association == modFilter
-                                      select mod;
-
-                    foreach(Mod currentMod in query)
-                    {
-                        filteredModList.Add(currentMod);
-                    }
-                }
-                //No Mod Filter
-                else{
-                    var query = from Mod mod in Mods
-                                      where mod.type == modType
-                                      select mod;
-
-                    foreach(Mod currentMod in query)
-                    {
-                        filteredModList.Add(currentMod);
-                    }
-                }
-                
-            }
-            //All Types
-            else{
-                return null;
-            }
-
-            return filteredModList;
-        }
-
+        //Refreshes the contents of the filter combobox
         public void PrintModInformation(APIMod _item)
         {
             SkinNameLabel.Content = "Name :" + _item.name;
             SkinAuthorLabel.Content = "Authors :" + _item.authors;
-            SkinDownloadsLabel.Content = "Downloads :" + _item.downloads;
         }
 
         public void ShowFilteredList(ModList Filters)
@@ -224,9 +140,9 @@ namespace Quasar
             newItem.Title.Content = "Downloading new mod";
             Downloader modInstaller = new Downloader(newItem.Progress, newItem.Status);
 
-            await modInstaller.DownloadArchiveAsync("quasar:https://gamebanana.com/mmdl/403189,Skin,166918,7z");
+            await modInstaller.DownloadArchiveAsync("quasar:https://gamebanana.com/mmdl/197052,Skin,153832,7z");
 
-            APIMod newMod = await APIRequest.getMod(modInstaller.contentType, modInstaller.contentID);
+            APIMod newMod = await APIRequest.getMod(modInstaller.contentType, modInstaller.contentID); 
 
             Mod parsedMod = Parse(newMod, ModTypes);
             Mods.Add(parsedMod);

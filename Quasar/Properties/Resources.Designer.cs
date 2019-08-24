@@ -61,7 +61,133 @@ namespace Quasar.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Starts.
+        ///   Looks up a localized string similar to Add &amp; Package.
+        /// </summary>
+        public static string AddPackageTabHeader {
+            get {
+                return ResourceManager.GetString("AddPackageTabHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mod Assignment.
+        /// </summary>
+        public static string AssignmentTabHeader {
+            get {
+                return ResourceManager.GetString("AssignmentTabHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Check for updates.
+        /// </summary>
+        public static string CheckModUpdateButton {
+            get {
+                return ResourceManager.GetString("CheckModUpdateButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Clean Folders.
+        /// </summary>
+        public static string ClearQuasarFolderButton {
+            get {
+                return ResourceManager.GetString("ClearQuasarFolderButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File Browser.
+        /// </summary>
+        public static string FileBrowserHeader {
+            get {
+                return ResourceManager.GetString("FileBrowserHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mod Management.
+        /// </summary>
+        public static string ManagementTabHeader {
+            get {
+                return ResourceManager.GetString("ManagementTabHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Author.
+        /// </summary>
+        public static string ModAuthor {
+            get {
+                return ResourceManager.GetString("ModAuthor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You can filter things here.
+        /// </summary>
+        public static string ModFilterSelectText {
+            get {
+                return ResourceManager.GetString("ModFilterSelectText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mod Information.
+        /// </summary>
+        public static string ModInformationHeader {
+            get {
+                return ResourceManager.GetString("ModInformationHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Name.
+        /// </summary>
+        public static string ModName {
+            get {
+                return ResourceManager.GetString("ModName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Status.
+        /// </summary>
+        public static string ModStatus {
+            get {
+                return ResourceManager.GetString("ModStatus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select a mod type.
+        /// </summary>
+        public static string ModTypeSelectText {
+            get {
+                return ResourceManager.GetString("ModTypeSelectText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Version.
+        /// </summary>
+        public static string ModVersion {
+            get {
+                return ResourceManager.GetString("ModVersion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Settings.
+        /// </summary>
+        public static string SettingsTabHeader {
+            get {
+                return ResourceManager.GetString("SettingsTabHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Start Test Download.
         /// </summary>
         public static string StartButton {
             get {
@@ -75,6 +201,15 @@ namespace Quasar.Properties {
         public static string Title {
             get {
                 return ResourceManager.GetString("Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Version Control.
+        /// </summary>
+        public static string VersionInformationHeader {
+            get {
+                return ResourceManager.GetString("VersionInformationHeader", resourceCulture);
             }
         }
     }

@@ -69,20 +69,26 @@ namespace Quasar.Resources
     {
         [XmlElement("Character")]
         public List<Character> Characters { get; set; }
+        public Character SelectedCharacter { get; set; }
+        
     }
 
     public class Character
     {
-        [XmlAttribute("name")]
-        public string name { get; set; }
+        [XmlAttribute("Name")]
+        public string Name { get; set; }
+
+        [XmlAttribute("ID")]
+        public int ID { get; set; }
 
         [XmlElement("GBName")]
         public string GBName { get; set; }
 
-        public Character(string sname, string sgbname)
+        public Character(string sname, string sgbname, int sID)
         {
-            name = sname;
+            Name = sname;
             GBName = sgbname;
+            ID = sID;
         }
 
         Character()
@@ -98,6 +104,7 @@ namespace Quasar.Resources
     {
         [XmlElement("Family")]
         public List<Family> Families { get; set; }
+        public Family SelectedFamily { get; set; }
     }
 
     public class Family
@@ -120,6 +127,7 @@ namespace Quasar.Resources
     {
         [XmlElement("ModType")]
         public List<ModType> ModTypes { get; set; }
+        public ModType SelectedModType { get; set; }
     }
 
     public class ModType
