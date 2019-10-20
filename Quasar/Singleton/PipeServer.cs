@@ -3,46 +3,52 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Quasar.Singleton
 {
     class PipeServer
     {
+        Mutex serverMutex;
+
         public PipeServer(string pipeName)
         {
-            var server = new NamedPipeServer<NPMessage>(pipeName);
-            server.ClientConnected += OnClientConnected;
-            server.ClientDisconnected += OnClientDisconnected;
-            server.ClientMessage += OnClientMessage;
-            server.Error += OnError;
-            server.Start();
+            Mutex ClientReady = new Mutex();
 
-            server.Stop();
-        }
+            var server = new NamedPipeServer<string>(pipeName);
 
-        private void OnClientConnected(NamedPipeConnection<NPMessage, NPMessage> connection)
-        {
-            Console.WriteLine("Client {0} is now connected!", connection.Id);
-            connection.PushMessage(new NPMessage
+
+            server.ClientConnected += delegate (NamedPipeConnection<string, string> connection)
             {
-                Text = "Welcome!"
-            });
-        }
+                Console.WriteLine("Client {0} is now connected!", connection.Id);
+                connection.PushMessage("Wolcom");
+                serverMutex.ReleaseMutex();
+            };
 
-        private void OnClientDisconnected(NamedPipeConnection<NPMessage, NPMessage> connection)
-        {
-            Console.WriteLine("Client {0} disconnected", connection.Id);
-        }
+            server.ClientDisconnected += delegate (NamedPipeConnection<string, string> connection)
+            {
+                serverMutex.WaitOne(TimeSpan.FromSeconds(2));
+                Console.WriteLine("Client {0} disconnected", connection.Id);
+            };
 
-        private void OnClientMessage(NamedPipeConnection<NPMessage, NPMessage> connection, NPMessage message)
-        {
-            Console.WriteLine("Client {0} says: {1}", connection.Id, message);
-        }
+            server.ClientMessage += delegate (NamedPipeConnection<string, string> connection, string message)
+            {
+                Console.WriteLine("Client {0} message received !", connection.Id);
+                Console.WriteLine("Client {0} says: {1}", connection.Id, message);
+                connection.PushMessage("Response from server");
+            };
 
-        private void OnError(Exception exception)
-        {
-            Console.Error.WriteLine("ERROR: {0}", exception);
+            server.Error += delegate (Exception exception)
+            {
+                Console.Error.WriteLine("ERROR: {0}", exception);
+            };
+
+            server.Start();
+            serverMutex = new Mutex(true, "QuasariteClient");
+            Console.WriteLine("Server Started");
+
+
         }
     }
 }

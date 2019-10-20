@@ -7,15 +7,23 @@ using System.Windows.Controls;
 using static Quasar.Library;
 using System.Linq;
 using Quasar.Singleton;
+using System.Threading;
+using System.Security.Principal;
+using Microsoft.Win32;
+using System;
 
 namespace Quasar
 {
     public partial class MainWindow : Window
     {
+        Mutex serverMutex { get; set; }
+
         ModList Mods;
         List<ModType> ModTypes { get; set; }
         List<Character> Characters { get; set; }
         List<Family> Families { get; set; }
+
+        PipeClient Pc_principal { get; set; }
 
         public MainWindow()
         {
@@ -24,8 +32,8 @@ namespace Quasar
             InitializeComponent();
 
             //Load des éléments de base
-            LoadBasicLists();
-            LoadMods();
+            //LoadBasicLists();
+            //LoadMods();
         }
 
         #region XML LOAD
@@ -73,18 +81,74 @@ namespace Quasar
         #endregion
 
         #region SINGLETON
-        static void checkForInstances()
+        private void checkForInstances()
         {
             //Checking if Quasar is running alright
-            var exists = System.Diagnostics.Process.GetProcessesByName(System.IO.Path.GetFileNameWithoutExtension(System.Reflection.Assembly.GetEntryAssembly().Location)).Count() > 1;
-            if (exists)
+            Mutex mt;
+            if (Mutex.TryOpenExisting("Quasarite", out mt))
             {
-                //Sending a hello with args, maybe
-                new PipeClient("Quasarite");
+                //Client
+                string[] Args = System.Environment.GetCommandLineArgs();
+                if(Args.Length == 2)
+                {
+                    Pc_principal = new PipeClient("Quasarite", Args[1]);
+                }
+                else
+                {
+                    Pc_principal = new PipeClient("Quasarite", "testModo");
+                }
+                Application.Current.Shutdown();
             }
             else
             {
+                //Server
+                serverMutex = new Mutex(true, "Quasarite");
                 new PipeServer("Quasarite");
+            }
+        }
+
+        private void ActivateCustomProtocol(object sender, RoutedEventArgs e)
+        {
+            string AppPath = System.Reflection.Assembly.GetEntryAssembly().Location;
+            var identity = WindowsIdentity.GetCurrent();
+            var principal = new WindowsPrincipal(identity);
+
+            if (principal.IsInRole(WindowsBuiltInRole.Administrator))
+            {
+                var customProtocol = Registry.ClassesRoot.OpenSubKey("quasar\\shell\\open\\command", true);
+                var customProtocolIcon = Registry.ClassesRoot.OpenSubKey("quasar\\DefaultIcon", true);
+
+                if (customProtocol != null && customProtocolIcon != null)
+                {
+                    customProtocol.SetValue("", "\"" + AppPath + "\" \"%1\"", RegistryValueKind.String);
+                    customProtocol.Close();
+
+
+                    customProtocolIcon.SetValue("", "\"" + AppPath + "\",1", RegistryValueKind.String);
+                    customProtocolIcon.Close();
+
+                    Console.WriteLine("Fix Successful");
+                }
+                else
+                {
+                    if (customProtocol == null)
+                    {
+                        customProtocol = Registry.ClassesRoot.CreateSubKey("quasar\\shell\\open\\command", true);
+                        customProtocol.SetValue("", "\"" + AppPath + "\" \"%1\"", RegistryValueKind.String);
+                        customProtocol.Close();
+                    }
+                    if (customProtocolIcon == null)
+                    {
+                        customProtocolIcon = Registry.ClassesRoot.CreateSubKey("quasar\\DefaultIcon", true);
+                        customProtocolIcon.SetValue("", "\"" + AppPath + "\",1", RegistryValueKind.String);
+                        customProtocolIcon.Close();
+                    }
+                    Console.WriteLine("Fix Successful");
+                }
+            }
+            else
+            {
+                Console.WriteLine("You need admin rights to do that");
             }
         }
         #endregion
@@ -115,8 +179,8 @@ namespace Quasar
         //Refreshes the contents of the filter combobox
         public void PrintModInformation(APIMod _item)
         {
-            SkinNameLabel.Content = "Name :" + _item.name;
-            SkinAuthorLabel.Content = "Authors :" + _item.authors;
+            SkinNameLabel.Content = "Name : " + _item.name;
+            SkinAuthorLabel.Content = "Authors : " + _item.authors;
         }
 
         public void ShowFilteredList(ModList Filters)
@@ -160,10 +224,7 @@ namespace Quasar
             Directory.Delete(saveFolder, true);
         }
 
-        private void reachHere()
-        {
-            System.Console.WriteLine("tada");
-        }
+        
         #endregion
 
     }
