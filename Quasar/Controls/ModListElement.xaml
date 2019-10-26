@@ -6,15 +6,10 @@
              xmlns:local="clr-namespace:Quasar.Controls"
              mc:Ignorable="d" 
              d:DesignHeight="50" d:DesignWidth="100" Width="Auto" Height="Auto" MinWidth="100" MinHeight="55">
-    <Grid>
-        <Grid.Background>
-            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                <GradientStop Color="#FFBBF9FF" Offset="0"/>
-                <GradientStop Color="#FF749599" Offset="1"/>
-            </LinearGradientBrush>
-        </Grid.Background>
-        <Label x:Name="Title" Content="SkinTitle" HorizontalAlignment="Left" VerticalAlignment="Top" Width="Auto"/>
-        <Label x:Name="Status" Content="Status" HorizontalAlignment="Left" Margin="0,29,0,0" VerticalAlignment="Top"/>
-        <ProgressBar x:Name="Progress" Height="10" Margin="0,38,0,0" VerticalAlignment="Top" Background="#6B000000" BorderBrush="{x:Null}" BorderThickness="0"/>
+    <Grid Background="White">
+        <Label x:Name="Title" Content="SkinTitle" HorizontalAlignment="Left" VerticalAlignment="Top" Width="Auto" Foreground="#FF0B397C"/>
+        <Label x:Name="Status" Content="Status" HorizontalAlignment="Left" Margin="0,29,0,0" VerticalAlignment="Top" Foreground="#FF0B397C"/>
+        <ProgressBar x:Name="Progress" Height="10" Margin="0,38,0,0" VerticalAlignment="Top" Background="#6B000000" BorderBrush="{x:Null}" BorderThickness="0" Foreground="#FF003009"/>
+        <Rectangle x:Name="Border" Stroke="#FF0B397C"/>
     </Grid>
 </UserControl>

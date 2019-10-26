@@ -14,6 +14,9 @@ namespace Quasar
 {
     class Downloader
     {
+        //Setting Default Directory Path
+        string DefaultDirectoryPath = Properties.Settings.Default["DefaultDir"].ToString();
+
         ProgressBar progressBar;
         Label statusLabel;
 
@@ -21,10 +24,6 @@ namespace Quasar
         public string contentType;
         public string contentID;
         string fileFormat;
-
-        string dPath = Quasar.Properties.Settings.Default["DefaultDir"].ToString();
-
-
 
         public Downloader(ProgressBar _progressBar, Label _statusLabel)
         {
@@ -41,17 +40,17 @@ namespace Quasar
                 progressBar.Visibility = Visibility.Visible;
             }), DispatcherPriority.Background);
 
-            parseVariables(_quasarURL);
+            ParseQueryStringParameters(_quasarURL);
             var downloadLink = new Uri(downloadURL);
-            var saveFolder = dPath + "\\Library\\Downloads\\";
-            var saveFilename = dPath+"\\Library\\Downloads\\"+contentID+"."+fileFormat;
+            var saveFolder = DefaultDirectoryPath + "\\Library\\Downloads\\";
+            var saveFilename = DefaultDirectoryPath+"\\Library\\Downloads\\"+contentID+"."+fileFormat;
 
             if (!Directory.Exists(saveFolder)) Directory.CreateDirectory(saveFolder);
 
             int i = 1;
             while (File.Exists(saveFilename))
             {
-                saveFilename = dPath + "\\Library\\Downloads\\" + contentID + "_" + i + "." + fileFormat;
+                saveFilename = DefaultDirectoryPath + "\\Library\\Downloads\\" + contentID + "_" + i + "." + fileFormat;
                 i++;
             }
 
@@ -88,7 +87,7 @@ namespace Quasar
             return true;
         }
 
-        public void parseVariables(string _quasarURL)
+        public void ParseQueryStringParameters(string _quasarURL)
         {
             string parameters = _quasarURL.Substring(7);
             downloadURL = parameters.Split(',')[0];
