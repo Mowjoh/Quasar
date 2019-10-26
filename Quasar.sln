@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.29102.190
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Quasar", "Quasar\Quasar.csproj", "{688FC6F7-45E8-4E2D-907D-EB2790A8CF7A}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "QuasarSetup", "QuasarSetup\QuasarSetup.vdproj", "{43477B82-4118-4CE2-9F1E-1A891C38DC8E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug Admin|Any CPU = Debug Admin|Any CPU
@@ -18,6 +20,9 @@ Global
 		{688FC6F7-45E8-4E2D-907D-EB2790A8CF7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{688FC6F7-45E8-4E2D-907D-EB2790A8CF7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{688FC6F7-45E8-4E2D-907D-EB2790A8CF7A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{43477B82-4118-4CE2-9F1E-1A891C38DC8E}.Debug Admin|Any CPU.ActiveCfg = Debug
+		{43477B82-4118-4CE2-9F1E-1A891C38DC8E}.Debug|Any CPU.ActiveCfg = Debug
+		{43477B82-4118-4CE2-9F1E-1A891C38DC8E}.Release|Any CPU.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

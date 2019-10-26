@@ -10,10 +10,11 @@ namespace Quasar.Singleton
 {
     class PipeServer
     {
-        Mutex serverMutex;
+        
 
         public PipeServer(string pipeName)
         {
+            
             Mutex ClientReady = new Mutex();
 
             var server = new NamedPipeServer<string>(pipeName);
@@ -46,8 +47,6 @@ namespace Quasar.Singleton
 
             server.Start();
             Console.WriteLine("Server Started");
-
-
         }
     }
 }

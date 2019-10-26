@@ -12,7 +12,7 @@ namespace Quasar.Quasar_Sys
 {
     static class Checker
     {
-        public static void Instances()
+        public static Mutex Instances(Mutex _serverMutex)
         {
             PipeClient Pc_principal;
 
@@ -35,9 +35,10 @@ namespace Quasar.Quasar_Sys
             else
             {
                 //Server
-                Mutex serverMutex = new Mutex(true, "Quasarite");
+                _serverMutex = new Mutex(true, "Quasarite");
                 new PipeServer("Quasarite");
             }
+            return _serverMutex;
         }
 
         public static void FirstRun()

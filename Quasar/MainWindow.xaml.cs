@@ -5,11 +5,8 @@ using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using static Quasar.Library;
-using System.Linq;
 using Quasar.Singleton;
 using System.Threading;
-using System.Security.Principal;
-using Microsoft.Win32;
 using System;
 using System.Globalization;
 using Quasar.File;
@@ -24,14 +21,17 @@ namespace Quasar
         List<Character> Characters { get; set; }
         List<Family> Families { get; set; }
 
+        Mutex serverMutex;
+
         PipeClient Pc_principal { get; set; }
 
         public MainWindow()
         {
             //Things to run before app really starts
-            Checker.Instances();
+            serverMutex = Checker.Instances(serverMutex);
             Checker.FirstRun();
             Folderino.CheckBaseFolders();
+            Folderino.CheckBaseFiles();
 
             //Setting language
             System.Threading.Thread.CurrentThread.CurrentUICulture = new System.Globalization.CultureInfo(Properties.Settings.Default.Language);
