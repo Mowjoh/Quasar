@@ -11,13 +11,14 @@ using System.Threading;
 using System.Security.Principal;
 using Microsoft.Win32;
 using System;
+using System.Globalization;
+using Quasar.File;
+using Quasar.Quasar_Sys;
 
 namespace Quasar
 {
     public partial class MainWindow : Window
     {
-        Mutex serverMutex { get; set; }
-
         ModList Mods;
         List<ModType> ModTypes { get; set; }
         List<Character> Characters { get; set; }
@@ -27,13 +28,20 @@ namespace Quasar
 
         public MainWindow()
         {
-            checkForInstances();
-            System.Threading.Thread.CurrentThread.CurrentUICulture = new System.Globalization.CultureInfo(Properties.Settings.Default["Language"].ToString());
+            //Things to run before app really starts
+            Checker.Instances();
+            Checker.FirstRun();
+            Folderino.CheckBaseFolders();
+
+            //Setting language
+            System.Threading.Thread.CurrentThread.CurrentUICulture = new System.Globalization.CultureInfo(Properties.Settings.Default.Language);
+            
+            //Aww, here we go again
             InitializeComponent();
 
-            //Load des éléments de base
-            //LoadBasicLists();
-            //LoadMods();
+            //Loading things
+            LoadBasicLists();
+            LoadMods();
         }
 
         #region XML LOAD
@@ -80,81 +88,9 @@ namespace Quasar
         }
         #endregion
 
-        #region SINGLETON
-        private void checkForInstances()
-        {
-            //Checking if Quasar is running alright
-            Mutex mt;
-            if (Mutex.TryOpenExisting("Quasarite", out mt))
-            {
-                //Client
-                string[] Args = System.Environment.GetCommandLineArgs();
-                if(Args.Length == 2)
-                {
-                    Pc_principal = new PipeClient("Quasarite", Args[1]);
-                }
-                else
-                {
-                    Pc_principal = new PipeClient("Quasarite", "testModo");
-                }
-                Application.Current.Shutdown();
-            }
-            else
-            {
-                //Server
-                serverMutex = new Mutex(true, "Quasarite");
-                new PipeServer("Quasarite");
-            }
-        }
-
-        private void ActivateCustomProtocol(object sender, RoutedEventArgs e)
-        {
-            string AppPath = System.Reflection.Assembly.GetEntryAssembly().Location;
-            var identity = WindowsIdentity.GetCurrent();
-            var principal = new WindowsPrincipal(identity);
-
-            if (principal.IsInRole(WindowsBuiltInRole.Administrator))
-            {
-                var customProtocol = Registry.ClassesRoot.OpenSubKey("quasar\\shell\\open\\command", true);
-                var customProtocolIcon = Registry.ClassesRoot.OpenSubKey("quasar\\DefaultIcon", true);
-
-                if (customProtocol != null && customProtocolIcon != null)
-                {
-                    customProtocol.SetValue("", "\"" + AppPath + "\" \"%1\"", RegistryValueKind.String);
-                    customProtocol.Close();
-
-
-                    customProtocolIcon.SetValue("", "\"" + AppPath + "\",1", RegistryValueKind.String);
-                    customProtocolIcon.Close();
-
-                    Console.WriteLine("Fix Successful");
-                }
-                else
-                {
-                    if (customProtocol == null)
-                    {
-                        customProtocol = Registry.ClassesRoot.CreateSubKey("quasar\\shell\\open\\command", true);
-                        customProtocol.SetValue("", "\"" + AppPath + "\" \"%1\"", RegistryValueKind.String);
-                        customProtocol.Close();
-                    }
-                    if (customProtocolIcon == null)
-                    {
-                        customProtocolIcon = Registry.ClassesRoot.CreateSubKey("quasar\\DefaultIcon", true);
-                        customProtocolIcon.SetValue("", "\"" + AppPath + "\",1", RegistryValueKind.String);
-                        customProtocolIcon.Close();
-                    }
-                    Console.WriteLine("Fix Successful");
-                }
-            }
-            else
-            {
-                Console.WriteLine("You need admin rights to do that");
-            }
-        }
-        #endregion
-
         #region INTERFACE ACTIONS
 
+        //Refreshes the content of the mod list based on mod type
         private void ModTypeSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             ComboBox comboBox = (ComboBox)sender;
@@ -182,6 +118,7 @@ namespace Quasar
             SkinNameLabel.Content = "Name : " + _item.name;
             SkinAuthorLabel.Content = "Authors : " + _item.authors;
         }
+
 
         public void ShowFilteredList(ModList Filters)
         {
@@ -219,12 +156,21 @@ namespace Quasar
         //Deletes Everything Quasar has stored cause that's the easy way out
         private void DeleteDocumentFolderContents(object sender, RoutedEventArgs e)
         {
-            var saveFolder = Properties.Settings.Default["DefaultDir"].ToString() + "\\Library\\";
-
-            Directory.Delete(saveFolder, true);
+            Folderino.DeleteDocumentsFolder();
         }
 
-        
+        private void ActivateCustomProtocol(object sender, RoutedEventArgs e)
+        {
+
+            if (Protoman.ActivateCustomProtocol())
+            {
+                Console.WriteLine("Fix Successful");
+            }
+            else
+            {
+                Console.WriteLine("You need admin rights to do that");
+            }
+        }
         #endregion
 
     }

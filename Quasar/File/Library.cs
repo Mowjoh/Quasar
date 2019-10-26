@@ -31,7 +31,7 @@ namespace Quasar
 
             string libraryPath = GetLibraryPath();
 
-            if (File.Exists(libraryPath))
+            if (System.IO.File.Exists(libraryPath))
             {
                 using (FileStream fileStream = new FileStream(libraryPath, FileMode.Open))
                 {

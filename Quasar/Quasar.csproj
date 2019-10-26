@@ -77,9 +77,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Quasar_Sys\Checker.cs" />
     <Compile Include="Controls\ModListElement.xaml.cs">
       <DependentUpon>ModListElement.xaml</DependentUpon>
     </Compile>
+    <Compile Include="File\Folderino.cs" />
     <Compile Include="Properties\Resources.en.Designer.cs">
       <DependentUpon>Resources.en.resx</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -90,6 +92,7 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
+    <Compile Include="Quasar_Sys\Protoman.cs" />
     <Compile Include="Singleton\PipeClient.cs" />
     <Compile Include="Singleton\PipeServer.cs" />
     <Compile Include="Web\Downloader.cs" />

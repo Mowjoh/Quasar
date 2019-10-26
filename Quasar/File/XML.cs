@@ -19,7 +19,7 @@ namespace Quasar.Resources
             XmlSerializer serializer = new XmlSerializer(typeof(CharacterList));
 
 
-            using (FileStream fileStream = new FileStream(@"Resources\Characters.xml", FileMode.Open))
+            using (FileStream fileStream = new FileStream(Properties.Settings.Default.AppPath + @"\Resources\Characters.xml", FileMode.Open))
             {
                 CharacterList result = (CharacterList)serializer.Deserialize(fileStream);
                 characters = result.Characters;
@@ -36,7 +36,7 @@ namespace Quasar.Resources
             XmlSerializer serializer = new XmlSerializer(typeof(ModTypeList));
 
 
-            using (FileStream fileStream = new FileStream(@"Resources\ModTypes.xml", FileMode.Open))
+            using (FileStream fileStream = new FileStream(Properties.Settings.Default.AppPath + @"\Resources\ModTypes.xml", FileMode.Open))
             {
                 ModTypeList result = (ModTypeList)serializer.Deserialize(fileStream);
                 modTypes = result.ModTypes;
@@ -53,7 +53,7 @@ namespace Quasar.Resources
             XmlSerializer serializer = new XmlSerializer(typeof(FamilyList));
 
 
-            using (FileStream fileStream = new FileStream(@"Resources\Families.xml", FileMode.Open))
+            using (FileStream fileStream = new FileStream(Properties.Settings.Default.AppPath + @"\Resources\Families.xml", FileMode.Open))
             {
                 FamilyList result = (FamilyList)serializer.Deserialize(fileStream);
                 families = result.Families;

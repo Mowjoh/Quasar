@@ -48,7 +48,7 @@ namespace Quasar
             if (!Directory.Exists(saveFolder)) Directory.CreateDirectory(saveFolder);
 
             int i = 1;
-            while (File.Exists(saveFilename))
+            while (System.IO.File.Exists(saveFilename))
             {
                 saveFilename = DefaultDirectoryPath + "\\Library\\Downloads\\" + contentID + "_" + i + "." + fileFormat;
                 i++;
