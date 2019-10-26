@@ -23,12 +23,12 @@ namespace Quasar.Singleton
             {
                 Console.WriteLine("Client {0} is now connected!", connection.Id);
                 connection.PushMessage("Wolcom");
-                serverMutex.ReleaseMutex();
+                
             };
 
             server.ClientDisconnected += delegate (NamedPipeConnection<string, string> connection)
             {
-                serverMutex.WaitOne(TimeSpan.FromSeconds(2));
+                
                 Console.WriteLine("Client {0} disconnected", connection.Id);
             };
 
@@ -36,7 +36,7 @@ namespace Quasar.Singleton
             {
                 Console.WriteLine("Client {0} message received !", connection.Id);
                 Console.WriteLine("Client {0} says: {1}", connection.Id, message);
-                connection.PushMessage("Response from server");
+                connection.PushMessage("Oukay");
             };
 
             server.Error += delegate (Exception exception)
@@ -45,7 +45,6 @@ namespace Quasar.Singleton
             };
 
             server.Start();
-            serverMutex = new Mutex(true, "QuasariteClient");
             Console.WriteLine("Server Started");
 
 

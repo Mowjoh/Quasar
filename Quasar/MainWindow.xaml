@@ -63,7 +63,7 @@
         <Grid x:Name="HeaderGrid" Background="#FF021F2C">
             <Button x:Name="DownloadButton" Content="{x:Static p:Resources.StartButton}" Click="TestDownloadButtonPress" Width="200" Height="30" Margin="10,4,1282,6"/>
             <Button x:Name="CleanFolders_Button" Content="{x:Static p:Resources.ClearQuasarFolderButton}" Click="DeleteDocumentFolderContents" Width="200" Height="30" Margin="224,4,1068,6"/>
-            <Button x:Name="CustomProtocol" Content="Custom Protocol Setup" Click="ActivateCustomProtocol" Width="200" Height="30" Margin="429,4,863,6"/>
+            <Button x:Name="CustomProtocol" Content="Custom Purotocolu" Click="ActivateCustomProtocol" Width="200" Height="30" Margin="429,4,863,6"/>
         </Grid>
 
     </Grid>
