@@ -1,4 +1,7 @@
 ﻿<Characters>
+  <Character Name="All Characters" ID="-1">
+    <GBName></GBName>
+  </Character>
   <Character Name="Mario" ID="1">
     <GBName>Tada</GBName>
   </Character>

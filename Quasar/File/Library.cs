@@ -69,7 +69,7 @@ namespace Quasar
 
             }
 
-            return new Mod() { id = mod.id, Name = mod.name, type = modType, association = -1, Author = mod.authors };
+            return new Mod() { id = mod.id, Name = mod.name, type = modType, association = -1, Author = mod.authors , category = mod.Categoryname};
         }
 
         #endregion
@@ -123,6 +123,9 @@ namespace Quasar
             [XmlAttribute("type")]
             public int type { get; set; }
 
+            [XmlAttribute("category")]
+            public string category { get; set; }
+
             [XmlAttribute("association")]
             public int association { get; set; }
 
@@ -138,7 +141,7 @@ namespace Quasar
             [XmlElement("Native")]
             public bool Native { get; set; }
 
-            public Mod(int _id, string _Name ,int _type ,int _association ,string _author, int _version, bool _native)
+            public Mod(int _id, string _Name ,int _type ,int _association ,string _author, int _version, bool _native, string _category)
             {
                 id = _id;
                 Name = _Name;
@@ -147,6 +150,7 @@ namespace Quasar
                 Author = _author;
                 Version = _version;
                 Native = _native;
+                category = _category;
             }
 
             public Mod()

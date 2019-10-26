@@ -1,4 +1,8 @@
 ﻿<Families>
+  <Family ID="-1">
+    <Name>All Families</Name>
+    <Folder></Folder>
+  </Family>
   <Family ID="0">
     <Name>Super Smash Bros</Name>
     <Folder>Smashbros</Folder>

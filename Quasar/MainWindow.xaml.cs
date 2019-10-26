@@ -95,7 +95,18 @@ namespace Quasar
         {
             ComboBox comboBox = (ComboBox)sender;
             ModType selectedType = (ModType)comboBox.SelectedItem;
-            switch (selectedType.ID)
+            FilterList(selectedType.ID);
+            ShowAdvancedFilters(selectedType.ID);
+        }
+
+        private void FilterSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ComboBox comboBox = (ComboBox)sender;
+        }
+
+        private void ShowAdvancedFilters(int _modType)
+        {
+            switch (_modType)
             {
                 case 0:
                     ModFilterSelect.ItemsSource = Characters;
@@ -107,8 +118,29 @@ namespace Quasar
                     ModFilterSelect.ItemsSource = Families;
                     break;
                 default:
+                    ModFilterSelect.ItemsSource = null;
                     break;
-
+            }
+        }
+        private void FilterList(int _modType)
+        {
+            foreach (ModListElement mle in SkinStackPanel.Children)
+            {
+                if (_modType == -1)
+                {
+                    mle.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    if (mle.modType != _modType)
+                    {
+                        mle.Visibility = Visibility.Hidden;
+                    }
+                    else
+                    {
+                        mle.Visibility = Visibility.Visible;
+                    }
+                }
             }
         }
 
@@ -117,16 +149,6 @@ namespace Quasar
         {
             SkinNameLabel.Content = "Name : " + _item.name;
             SkinAuthorLabel.Content = "Authors : " + _item.authors;
-        }
-
-
-        public void ShowFilteredList(ModList Filters)
-        {
-            foreach(ModListElement mle in SkinStackPanel.Children)
-            {
-                
-                mle.Visibility = Visibility.Hidden;
-            }
         }
 
         #endregion
@@ -173,6 +195,7 @@ namespace Quasar
         }
         #endregion
 
+        
     }
 
     

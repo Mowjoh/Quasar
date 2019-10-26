@@ -1,4 +1,9 @@
 ﻿<ModTypes>
+  <ModType ID="-1">
+    <Name>All Types</Name>
+    <APIName></APIName>
+    <Folder></Folder>
+  </ModType>
   <ModType ID="0">
     <Name>Skin</Name>
     <APIName>Skin</APIName>

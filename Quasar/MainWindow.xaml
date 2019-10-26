@@ -20,33 +20,35 @@
             <TabControl x:Name="ContentTabControl">
                 <TabItem x:Name="Management" Header="{x:Static p:Resources.ManagementTabHeader}">
                     <Grid x:Name="ManagementGrid" Background="#FFE5E5E5">
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="4*"/>
-                            <ColumnDefinition Width="3*"/>
-                            <ColumnDefinition Width="4*"/>
+                            <ColumnDefinition Width="256*"/>
+                            <ColumnDefinition Width="285*"/>
+                            <ColumnDefinition Width="405*"/>
+                            <ColumnDefinition Width="540*"/>
                         </Grid.ColumnDefinitions>
-                        <ComboBox x:Name="ModTypeSelect" ItemsSource="{Binding ModTypes}" DisplayMemberPath="Name" SelectedValuePath="ID" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="221" Height="22" IsReadOnly="True" IsEditable="True" Text="{x:Static p:Resources.ModTypeSelectText}" Foreground="Black" SelectionChanged="ModTypeSelectionChanged" ShouldPreserveUserEnteredPrefix="True">
-                        </ComboBox>
-                        <ComboBox x:Name="ModFilterSelect" ItemsSource="{Binding}" DisplayMemberPath="Name" SelectedValuePath="ID" Margin="309,10,10,0" VerticalAlignment="Top" Height="22" IsReadOnly="True" IsEditable="True" Text="{x:Static p:Resources.ModFilterSelectText}" Foreground="Black" IsEnabled="True">
-                        </ComboBox>
-                        <ScrollViewer x:Name="ModScrollViewer" Margin="10,37,10,10" Background="#19000000">
+                        <ComboBox x:Name="ModTypeSelect" ItemsSource="{Binding ModTypes}" DisplayMemberPath="Name" SelectedValuePath="ID" Margin="10,10,25,0" VerticalAlignment="Top" Height="22" IsReadOnly="True" IsEditable="True" Text="{x:Static p:Resources.ModTypeSelectText}" Foreground="Black" SelectionChanged="ModTypeSelectionChanged" ShouldPreserveUserEnteredPrefix="True"/>
+                        <ComboBox x:Name="ModFilterSelect" ItemsSource="{Binding}" DisplayMemberPath="Name" SelectedValuePath="ID" Margin="27,10,10,0" VerticalAlignment="Top" Height="22" IsReadOnly="True" IsEditable="True" Text="{x:Static p:Resources.ModFilterSelectText}" Foreground="Black" IsEnabled="True" Grid.Column="1" SelectionChanged="FilterSelectionChanged"/>
+                        <ScrollViewer x:Name="ModScrollViewer" Margin="10,37,10,10" Background="#19000000" Grid.ColumnSpan="2">
                             <StackPanel x:Name="SkinStackPanel"/>
                         </ScrollViewer>
-                        <GroupBox x:Name="ModInfoGroup" Header="{x:Static p:Resources.ModInformationHeader}" BorderBrush="#FF036EAE" Margin="7,10,15,195" Grid.Column="1">
+                        <GroupBox x:Name="ModInfoGroup" Header="{x:Static p:Resources.ModInformationHeader}" BorderBrush="#FF036EAE" Margin="7,10,15,195" Grid.Column="2">
                             <StackPanel>
                                 <Label x:Name="SkinNameLabel" Content="{x:Static p:Resources.ModName}"/>
                                 <Label x:Name="SkinAuthorLabel" Content="{x:Static p:Resources.ModAuthor}"/>
                             </StackPanel>
                         </GroupBox>
-                        <GroupBox x:Name="ModUpdateGroup" Header="Version Control" BorderBrush="#FF036EAE" Margin="10,0,10,10" Grid.Column="1" Height="180" VerticalAlignment="Bottom">
+                        <GroupBox x:Name="ModUpdateGroup" Header="Version Control" BorderBrush="#FF036EAE" Margin="10,0,10,10" Grid.Column="2" Height="180" VerticalAlignment="Bottom">
                             <StackPanel>
                                 <Label x:Name="SkinVersionLabel" Content="{x:Static p:Resources.ModVersion}"/>
                                 <Label x:Name="SkinStatusLabel" Content="{x:Static p:Resources.ModStatus}"/>
                                 <Button x:Name="ModUpdateButton" Content="{x:Static p:Resources.CheckModUpdateButton}" Width="150" HorizontalAlignment="Left" Margin="0,50,0,0"/>
                             </StackPanel>
                         </GroupBox>
-                        <Label x:Name="ModFileBrowserLabel" Content="{x:Static p:Resources.FileBrowserHeader}" HorizontalAlignment="Left" Margin="5,6,0,0" VerticalAlignment="Top" Width="157" Height="26" Grid.Column="2"/>
-                        <TreeView x:Name="ModFileView" Margin="10,37,10,10" Grid.Column="2"/>
+                        <Label x:Name="ModFileBrowserLabel" Content="{x:Static p:Resources.FileBrowserHeader}" HorizontalAlignment="Left" Margin="5,6,0,0" VerticalAlignment="Top" Width="157" Height="26" Grid.Column="3"/>
+                        <TreeView x:Name="ModFileView" Margin="10,37,10,10" Grid.Column="3"/>
                     </Grid>
                 </TabItem>
                 <TabItem x:Name="Assigning" Header="{x:Static p:Resources.AssignmentTabHeader}">
@@ -61,9 +63,9 @@
             </TabControl>
         </Grid>
         <Grid x:Name="HeaderGrid" Background="#FF021F2C">
-            <Button x:Name="DownloadButton" Content="{x:Static p:Resources.StartButton}" Click="TestDownloadButtonPress" Width="200" Height="30" Margin="10,4,1282,6"/>
-            <Button x:Name="CleanFolders_Button" Content="{x:Static p:Resources.ClearQuasarFolderButton}" Click="DeleteDocumentFolderContents" Width="200" Height="30" Margin="224,4,1068,6"/>
-            <Button x:Name="CustomProtocol" Content="Custom Purotocolu" Click="ActivateCustomProtocol" Width="200" Height="30" Margin="429,4,863,6"/>
+            <Button x:Name="DownloadButton" Content="{x:Static p:Resources.StartButton}" Click="TestDownloadButtonPress" Height="30" Margin="10,4,0,6" HorizontalAlignment="Left" Width="200"/>
+            <Button x:Name="CleanFolders_Button" Content="{x:Static p:Resources.ClearQuasarFolderButton}" Click="DeleteDocumentFolderContents" Height="30" Margin="224,4,0,6" HorizontalAlignment="Left" Width="200"/>
+            <Button x:Name="CustomProtocol" Content="Custom Purotocolu" Click="ActivateCustomProtocol" Width="200" Height="30" Margin="429,4,0,6" HorizontalAlignment="Left"/>
         </Grid>
 
     </Grid>

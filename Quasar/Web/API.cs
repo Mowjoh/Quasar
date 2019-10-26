@@ -26,6 +26,7 @@ namespace Quasar
         public string authors { get; set; }
         public string description { get; set; }
         public int downloads { get; set; }
+        public string Categoryname { get; set; }
 
     }
 
@@ -72,7 +73,7 @@ namespace Quasar
             queryParameters = getDefaultParameters();
             queryParameters.Add(new QueryStringItem("itemid", itemID));
             queryParameters.Add(new QueryStringItem("itemtype", itemtype));
-            queryParameters.Add(new QueryStringItem("fields", "name,authors,description,downloads"));
+            queryParameters.Add(new QueryStringItem("fields", "name,authors,description,downloads,Category().name"));
 
             string queryURL = formatApiRequest("Core/Item/Data", queryParameters);
 
@@ -85,7 +86,7 @@ namespace Quasar
                     string responseText = await response.Content.ReadAsStringAsync();
 
                     downloadedMod = JsonConvert.DeserializeObject<APIMod>(responseText);
-
+                    Console.Write("stop here");
                 }
             }
 
@@ -93,7 +94,7 @@ namespace Quasar
             downloadedMod.type = itemtype;
 
 
-            return downloadedMod;
+            return null;
         }
 
         #endregion
