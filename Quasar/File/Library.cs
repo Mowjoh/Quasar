@@ -168,6 +168,8 @@ namespace Quasar
             [XmlElement("Native")]
             public bool Native { get; set; }
 
+            public bool Ready { get; set; }
+
             public Mod(int _id, string _Name ,int _type ,int _association ,string[][] _authors, int _updates, bool _native, string _category)
             {
                 id = _id;
@@ -178,6 +180,13 @@ namespace Quasar
                 Updates = _updates;
                 Native = _native;
                 category = _category;
+            }
+
+            public Mod(int _id, int _type, bool _ready)
+            {
+                id = _id;
+                type = _type;
+                Ready = _ready;
             }
 
             public Mod()

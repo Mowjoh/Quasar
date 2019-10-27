@@ -15,19 +15,25 @@
     {
         "Entry"
         {
-        "MsmKey" = "8:_097470F2A6069CE89A97E356D36CB661"
+        "MsmKey" = "8:_13DA9C5FB09F34CD456B0D940039DED9"
+        "OwnerKey" = "8:_D49F4EAAB616D93ECD3C7F9C687C5A2A"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_13DA9C5FB09F34CD456B0D940039DED9"
         "OwnerKey" = "8:_D3F486953354489DB751F2F563B8EBFB"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_2DF8DE1DBA3099D1F5DE3E144545CC09"
-        "OwnerKey" = "8:_097470F2A6069CE89A97E356D36CB661"
+        "OwnerKey" = "8:_D49F4EAAB616D93ECD3C7F9C687C5A2A"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_45A8300327E30826333C065AEF2DFD70"
+        "MsmKey" = "8:_315C72229D38B48A527E1045E456103C"
         "OwnerKey" = "8:_D3F486953354489DB751F2F563B8EBFB"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -39,13 +45,7 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_6F2CFFA0E0D1CB0E515252A128CBD257"
-        "OwnerKey" = "8:_097470F2A6069CE89A97E356D36CB661"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_6F2CFFA0E0D1CB0E515252A128CBD257"
+        "MsmKey" = "8:_9966C9A9362C74C21906D9F2AB823212"
         "OwnerKey" = "8:_D3F486953354489DB751F2F563B8EBFB"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -57,8 +57,8 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_532500BF869229D592956367C555280F"
+        "MsmKey" = "8:_D49F4EAAB616D93ECD3C7F9C687C5A2A"
+        "OwnerKey" = "8:_D3F486953354489DB751F2F563B8EBFB"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -70,13 +70,19 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_45A8300327E30826333C065AEF2DFD70"
+        "OwnerKey" = "8:_315C72229D38B48A527E1045E456103C"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_097470F2A6069CE89A97E356D36CB661"
+        "OwnerKey" = "8:_9966C9A9362C74C21906D9F2AB823212"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_D49F4EAAB616D93ECD3C7F9C687C5A2A"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -88,7 +94,13 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_6F2CFFA0E0D1CB0E515252A128CBD257"
+        "OwnerKey" = "8:_13DA9C5FB09F34CD456B0D940039DED9"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_532500BF869229D592956367C555280F"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -109,6 +121,22 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.6.1"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.6.1 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.6.1"
+                    }
+                }
+            }
         }
         "Release"
         {
@@ -125,6 +153,14 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+            }
         }
     }
     "Deployable"
@@ -154,20 +190,20 @@
         }
         "File"
         {
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_097470F2A6069CE89A97E356D36CB661"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_13DA9C5FB09F34CD456B0D940039DED9"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:System.Net.Http.Formatting, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_097470F2A6069CE89A97E356D36CB661"
+                    "_13DA9C5FB09F34CD456B0D940039DED9"
                     {
-                    "Name" = "8:System.Net.Http.Formatting.dll"
+                    "Name" = "8:Newtonsoft.Json.dll"
                     "Attributes" = "3:512"
                     }
                 }
-            "SourcePath" = "8:System.Net.Http.Formatting.dll"
+            "SourcePath" = "8:Newtonsoft.Json.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_98530811AAC548198210D459D2DE76BD"
@@ -216,20 +252,20 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_45A8300327E30826333C065AEF2DFD70"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_315C72229D38B48A527E1045E456103C"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:NamedPipeWrapper, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:SharpCompress, Version=0.24.0.0, Culture=neutral, PublicKeyToken=afb0a02973931d96, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_45A8300327E30826333C065AEF2DFD70"
+                    "_315C72229D38B48A527E1045E456103C"
                     {
-                    "Name" = "8:NamedPipeWrapper.dll"
+                    "Name" = "8:SharpCompress.dll"
                     "Attributes" = "3:512"
                     }
                 }
-            "SourcePath" = "8:NamedPipeWrapper.dll"
+            "SourcePath" = "8:SharpCompress.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_98530811AAC548198210D459D2DE76BD"
@@ -278,20 +314,51 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_6F2CFFA0E0D1CB0E515252A128CBD257"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_9966C9A9362C74C21906D9F2AB823212"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:NamedPipeWrapper, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_6F2CFFA0E0D1CB0E515252A128CBD257"
+                    "_9966C9A9362C74C21906D9F2AB823212"
                     {
-                    "Name" = "8:Newtonsoft.Json.dll"
+                    "Name" = "8:NamedPipeWrapper.dll"
                     "Attributes" = "3:512"
                     }
                 }
-            "SourcePath" = "8:Newtonsoft.Json.dll"
+            "SourcePath" = "8:NamedPipeWrapper.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_98530811AAC548198210D459D2DE76BD"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_D49F4EAAB616D93ECD3C7F9C687C5A2A"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:System.Net.Http.Formatting, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_D49F4EAAB616D93ECD3C7F9C687C5A2A"
+                    {
+                    "Name" = "8:System.Net.Http.Formatting.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:System.Net.Http.Formatting.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_98530811AAC548198210D459D2DE76BD"
@@ -337,6 +404,17 @@
                     }
                 }
             }
+            "{1525181F-901A-416C-8A58-119130FE478E}:_36DAFF31BC2341638214AAD54B042CF9"
+            {
+            "Name" = "8:#1918"
+            "AlwaysCreate" = "11:FALSE"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Property" = "8:PersonalFolder"
+                "Folders"
+                {
+                }
+            }
             "{3C67513D-01DD-4637-8A68-80971EB9504F}:_98530811AAC548198210D459D2DE76BD"
             {
             "DefaultLocation" = "8:[ProgramFilesFolder]\\Quasar"
@@ -375,16 +453,16 @@
         "Product"
         {
         "Name" = "8:Microsoft Visual Studio"
-        "ProductName" = "8:QuasarSetup"
-        "ProductCode" = "8:{332C0293-F388-42A7-B26A-ED19BAA181E3}"
-        "PackageCode" = "8:{D91F8A19-3680-40B2-B157-60CAD53F8F7A}"
+        "ProductName" = "8:Quasar"
+        "ProductCode" = "8:{885D3001-0061-41C1-8CB1-45D049AA48BD}"
+        "PackageCode" = "8:{6CE2E88E-2067-4DB7-B4E3-0CEE1EEB9A9D}"
         "UpgradeCode" = "8:{33FBFAE5-777F-41E5-9E5C-1629D77AAA77}"
         "AspNetVersion" = "8:2.0.50727.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.0.0"
+        "ProductVersion" = "8:0.7.0"
         "Manufacturer" = "8:Mowjoh"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -481,8 +559,8 @@
                     {
                     "Name" = "8:quasar"
                     "Condition" = "8:"
-                    "AlwaysCreate" = "11:FALSE"
-                    "DeleteAtUninstall" = "11:FALSE"
+                    "AlwaysCreate" = "11:TRUE"
+                    "DeleteAtUninstall" = "11:TRUE"
                     "Transitive" = "11:FALSE"
                         "Keys"
                         {
@@ -490,8 +568,8 @@
                             {
                             "Name" = "8:shell"
                             "Condition" = "8:"
-                            "AlwaysCreate" = "11:FALSE"
-                            "DeleteAtUninstall" = "11:FALSE"
+                            "AlwaysCreate" = "11:TRUE"
+                            "DeleteAtUninstall" = "11:TRUE"
                             "Transitive" = "11:FALSE"
                                 "Keys"
                                 {
@@ -499,8 +577,8 @@
                                     {
                                     "Name" = "8:open"
                                     "Condition" = "8:"
-                                    "AlwaysCreate" = "11:FALSE"
-                                    "DeleteAtUninstall" = "11:FALSE"
+                                    "AlwaysCreate" = "11:TRUE"
+                                    "DeleteAtUninstall" = "11:TRUE"
                                     "Transitive" = "11:FALSE"
                                         "Keys"
                                         {
@@ -508,8 +586,8 @@
                                             {
                                             "Name" = "8:command"
                                             "Condition" = "8:"
-                                            "AlwaysCreate" = "11:FALSE"
-                                            "DeleteAtUninstall" = "11:FALSE"
+                                            "AlwaysCreate" = "11:TRUE"
+                                            "DeleteAtUninstall" = "11:TRUE"
                                             "Transitive" = "11:FALSE"
                                                 "Keys"
                                                 {
@@ -540,8 +618,8 @@
                             {
                             "Name" = "8:URL Protocol"
                             "Condition" = "8:"
-                            "AlwaysCreate" = "11:FALSE"
-                            "DeleteAtUninstall" = "11:FALSE"
+                            "AlwaysCreate" = "11:TRUE"
+                            "DeleteAtUninstall" = "11:TRUE"
                             "Transitive" = "11:FALSE"
                                 "Keys"
                                 {

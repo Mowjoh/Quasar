@@ -49,6 +49,19 @@ namespace Quasar.File
 
         }
 
+        public static void UpdateBaseFiles()
+        {
+            String BasePath = Properties.Settings.Default.DefaultDir;
+            String CharactersResourcePath = "\\Resources\\Characters.xml";
+            String FamiliesResourcePath = "\\Resources\\Families.xml";
+            String ModTypesResourcePath = "\\Resources\\ModTypes.xml";
+
+            ParseFromInstallation(CharactersResourcePath, CharactersResourcePath);
+            ParseFromInstallation(FamiliesResourcePath, FamiliesResourcePath);
+            ParseFromInstallation(ModTypesResourcePath, ModTypesResourcePath);
+
+        }
+
         public static void CheckCreate(String _Path)
         {
             if (!Directory.Exists(_Path))

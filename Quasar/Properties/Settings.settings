@@ -8,14 +8,20 @@
     <Setting Name="Language" Type="System.String" Scope="User">
       <Value Profile="(Default)">[System Language]</Value>
     </Setting>
-    <Setting Name="FirstRun" Type="System.String" Scope="User">
-      <Value Profile="(Default)">True</Value>
-    </Setting>
     <Setting Name="DefaultDir" Type="System.String" Scope="User">
       <Value Profile="(Default)">[User's Document Folder]</Value>
     </Setting>
     <Setting Name="AppPath" Type="System.String" Scope="User">
       <Value Profile="(Default)">[Application's Folder]</Value>
+    </Setting>
+    <Setting Name="AppVersion" Type="System.String" Scope="User">
+      <Value Profile="(Default)">0000</Value>
+    </Setting>
+    <Setting Name="UpgradeRequired" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="MeaningfulSetting" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
     </Setting>
   </Settings>
 </SettingsFile>

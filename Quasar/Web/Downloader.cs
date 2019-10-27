@@ -12,6 +12,7 @@ using System.IO;
 using Quasar.Controls;
 using static Quasar.Library;
 using Quasar.Resources;
+using Quasar.File;
 
 namespace Quasar
 {
@@ -36,7 +37,7 @@ namespace Quasar
             statusLabel = _statusLabel;
         }
 
-        public async Task<bool> DownloadArchiveAsync(string _quasarURL)
+        public async Task<bool> DownloadArchiveAsync(FileManager _FMan)
         {
             await statusLabel.Dispatcher.BeginInvoke(new Action(() =>
             {
@@ -45,7 +46,7 @@ namespace Quasar
                 progressBar.Visibility = Visibility.Visible;
             }), DispatcherPriority.Background);
 
-            ParseQueryStringParameters(_quasarURL);
+            ParseQueryStringParameters(_FMan);
             var downloadLink = new Uri(downloadURL);
             var saveFolder = DefaultDirectoryPath + "\\Library\\Downloads\\";
             var saveFilename = DefaultDirectoryPath+"\\Library\\Downloads\\"+contentID+"."+fileFormat;
@@ -91,13 +92,12 @@ namespace Quasar
             return true;
         }
 
-        public void ParseQueryStringParameters(string _quasarURL)
+        public void ParseQueryStringParameters(FileManager _FMan)
         {
-            string parameters = _quasarURL.Substring(7);
-            downloadURL = parameters.Split(',')[0];
-            contentType = parameters.Split(',')[1];
-            contentID   = parameters.Split(',')[2];
-            fileFormat = parameters.Split(',')[3];
+            downloadURL = _FMan.downloadURL;
+            contentType = _FMan.modType;
+            contentID   = _FMan.modID;
+            fileFormat = _FMan.modArchiveFormat;
         }
 
     }

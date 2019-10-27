@@ -46,18 +46,6 @@ namespace Quasar.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public string FirstRun {
-            get {
-                return ((string)(this["FirstRun"]));
-            }
-            set {
-                this["FirstRun"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("[User\'s Document Folder]")]
         public string DefaultDir {
             get {
@@ -77,6 +65,42 @@ namespace Quasar.Properties {
             }
             set {
                 this["AppPath"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0000")]
+        public string AppVersion {
+            get {
+                return ((string)(this["AppVersion"]));
+            }
+            set {
+                this["AppVersion"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool UpgradeRequired {
+            get {
+                return ((bool)(this["UpgradeRequired"]));
+            }
+            set {
+                this["UpgradeRequired"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool MeaningfulSetting {
+            get {
+                return ((bool)(this["MeaningfulSetting"]));
+            }
+            set {
+                this["MeaningfulSetting"] = value;
             }
         }
     }

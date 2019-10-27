@@ -8,6 +8,9 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Deployment;
+using System.Deployment.Application;
+using System.Reflection;
 
 namespace Quasar.Quasar_Sys
 {
@@ -46,27 +49,52 @@ namespace Quasar.Quasar_Sys
             return _serverMutex;
         }
 
-        public static void FirstRun()
+        public static void BaseUserSettings()
         {
-            if (Properties.Settings.Default.FirstRun == "True")
+            //Getting system language
+            CultureInfo ci = CultureInfo.InstalledUICulture;
+            Properties.Settings.Default.Language = (String)ci.Name;
+
+            //Getting User's Documents folder for storage purposes
+            String DocumentsFolderPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            DocumentsFolderPath += "\\Quasar";
+            Properties.Settings.Default.DefaultDir = DocumentsFolderPath;
+
+            //Getting execution path
+            String AppPath = Environment.GetCommandLineArgs()[0];
+            Properties.Settings.Default.AppPath = System.IO.Path.GetDirectoryName(AppPath);
+
+        }
+
+        public static bool checkUpdated()
+        {
+            string executionVersion = ExecutionVersion();
+            executionVersion = executionVersion.Replace(".", "");
+
+            bool Update = Properties.Settings.Default.UpgradeRequired;
+            if (Update)
             {
-                //Getting system language
-                CultureInfo ci = CultureInfo.InstalledUICulture;
-                Properties.Settings.Default.Language = (String)ci.Name;
-
-                //Getting User's Documents folder for storage purposes
-                String DocumentsFolderPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-                DocumentsFolderPath += "\\Quasar";
-                Properties.Settings.Default.DefaultDir = DocumentsFolderPath;
-
-                //Getting execution path
-                String AppPath = Environment.GetCommandLineArgs()[0];
-                Properties.Settings.Default.AppPath = System.IO.Path.GetDirectoryName(AppPath);
-
-                //Setting finished flag
-                Properties.Settings.Default.FirstRun = "False";
-
+                Properties.Settings.Default.Upgrade();
+                if(Properties.Settings.Default.AppVersion == "0000")
+                {
+                    BaseUserSettings();
+                }
+                Properties.Settings.Default.UpgradeRequired = false;
+                Properties.Settings.Default.AppVersion = executionVersion;
                 Properties.Settings.Default.Save();
+            }
+            return Update;
+        }
+
+        public static string ExecutionVersion()
+        {
+            try
+            {
+                return ApplicationDeployment.CurrentDeployment.CurrentVersion.ToString();
+            }
+            catch (Exception)
+            {
+                return Assembly.GetExecutingAssembly().GetName().Version.ToString();
             }
         }
     }

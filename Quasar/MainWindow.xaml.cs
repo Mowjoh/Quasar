@@ -21,6 +21,7 @@ namespace Quasar
     {
 
         public List<Mod> Mods;
+        public List<Mod> WorkingModList;
         public List<ModListElement> ListMods { get; set; }
 
         public Mod SelectedMod { get; set; }
@@ -35,13 +36,19 @@ namespace Quasar
 
         public MainWindow()
         {
-            //Things to run before app really starts
+            //Setting up Server or Client
             DLS = new QuasarDownloads();
             DLS.List.CollectionChanged += QuasarDownloadCollectionChanged;
             serverMutex = Checker.Instances(serverMutex, DLS.List);
-            Checker.FirstRun();
+
+            //Pre-run checks
+            bool Update = Checker.checkUpdated();
             Folderino.CheckBaseFolders();
             Folderino.CheckBaseFiles();
+            if (Update)
+            {
+                Folderino.UpdateBaseFiles();
+            }
 
             //Setting language
             System.Threading.Thread.CurrentThread.CurrentUICulture = new System.Globalization.CultureInfo(Properties.Settings.Default.Language);
@@ -61,6 +68,7 @@ namespace Quasar
         {
             Mods = GetModListFile();
             ListMods = new List<ModListElement>();
+            WorkingModList = new List<Mod>();
 
             foreach (Mod x in Mods)
             {
@@ -183,6 +191,66 @@ namespace Quasar
             //Showing Version info
             VersionStackPanel.Children.Add(new Label() { Content = _item.Updates });
             VersionStackPanel.Children.Add(new Label() { Content = "Up to Date" });
+
+            //Loading Tree View
+            LoadTreeView(ModFileView, new FileManager(_item).libraryContentPath);
+        }
+
+        public void LoadTreeView(System.Windows.Controls.TreeView _tv, string _fp)
+        {
+            _tv.Items.Clear();
+            
+            foreach(string s in Directory.GetDirectories(_fp)){
+                var rootDirectory = new DirectoryInfo(s);
+                _tv.Items.Add(CreateDirectoryNode(rootDirectory));
+            }
+           
+            
+        }
+
+        private static TreeViewItem CreateDirectoryNode(DirectoryInfo directoryInfo)
+        {
+            var directoryNode = new TreeViewItem { Header = directoryInfo.Name };
+            foreach (var directory in directoryInfo.GetDirectories())
+                directoryNode.Items.Add(CreateDirectoryNode(directory));
+
+            foreach (var file in directoryInfo.GetFiles())
+                directoryNode.Items.Add(new TreeViewItem { Header = file.Name });
+
+            return directoryNode;
+        }
+
+        private void ExpandTree()
+        {
+            foreach (var item in ModFileView.Items)
+            {
+                var tvi = item as TreeViewItem;
+                if (tvi != null){
+                    tvi.ExpandSubtree();
+                }
+            }
+        }
+
+        private void MinimizeTree()
+        {
+            foreach (var item in ModFileView.Items)
+            {
+                var tvi = item as TreeViewItem;
+                if (tvi != null)
+                {
+                    tvi.IsExpanded = false;
+                }
+            }
+        }
+
+        private void ModFileMaximize_Click(object sender, RoutedEventArgs e)
+        {
+            ExpandTree();
+        }
+
+        private void ModFileMinimize_Click(object sender, RoutedEventArgs e)
+        {
+            MinimizeTree();
         }
 
         #endregion
@@ -223,47 +291,96 @@ namespace Quasar
         //Launches a Quasar Download from it's URL
         private async void LaunchDownload(string _URL)
         {
-            ModListElement newItem;
+            bool newElement = false;
+            string downloadText = "";
 
-            //Creating interface element
-            newItem = new ModListElement();
-            ListMods.Add(newItem);
-            ModListView.Items.Refresh();
+            ModListElement mle = new ModListElement();
+            FileManager FMan = new FileManager(_URL);
 
-            //Setting download UI
-            newItem.Title.Content = "Downloading new mod";
+            Mod mod = Mods.Find(mm => mm.id == Int32.Parse(FMan.modID) && mm.type == Int32.Parse(FMan.modType));
 
-            Downloader modInstaller = new Downloader(newItem.Progress, newItem.Status);
+            
+            //Checking if Mod is already in library
+            if(mod != null)
+            {
+                mle = ListMods.Find(ml => ml.LocalMod == mod);
+                downloadText = "Updating mod";
+            }
+            else
+            {
+                mod = new Mod(Int32.Parse(FMan.modID), Int32.Parse(FMan.modType), false);
+                newElement = true;
+                downloadText = "Downloading new mod";
+            }
+            if (!WorkingModList.Contains(mod))
+            {
+                WorkingModList.Add(mod);
 
-            //Wait for download completion
-            await modInstaller.DownloadArchiveAsync(_URL);
+                if (newElement)
+                {
+                    //Creating interface element
+                    ListMods.Add(mle);
+                    ModListView.Items.Refresh();
+                }
 
-            //Parsing mod info from API
-            APIMod newMod = await APIRequest.getMod(modInstaller.contentType, modInstaller.contentID);
+                //Setting download UI
+                mle.Title.Content = downloadText;
 
-            //Create Mod from API information
-            Mod parsedMod = Parse(newMod, ModTypes);
+                Downloader modDownloader = new Downloader(mle.Progress, mle.Status);
 
-            //Updating list and saving XML
-            Mods.Add(parsedMod);
-            WriteModListFile(Mods);
+                //Wait for download completion
+                await modDownloader.DownloadArchiveAsync(FMan);
 
-            //Providing mod to ModListElement and showing info
-            newItem.setMod(parsedMod);
-            newItem.Downloaded = true;
+                //Parsing mod info from API
+                APIMod newAPIMod = await APIRequest.getMod(FMan.APIType, FMan.modID);
 
-            ModListView.SelectedItem = newItem;
+                //Create Mod from API information
+                Mod newmod = Parse(newAPIMod, ModTypes);
+                
+                if (newElement)
+                {
+                    //Adding element to list
+                    Mods.Add(newmod);
+                }
+                else
+                {
+                    //Updating List
+                    Mods[Mods.IndexOf(mod)] = newmod;
+                }
 
-            //Setting extract UI
-            newItem.Title.Content = "Extracting mod";
+                //Updating list and saving XML
+                WriteModListFile(Mods);
 
-            string fileSource = Properties.Settings.Default.DefaultDir + "\\Library\\Downloads\\" + modInstaller.contentID + "." + modInstaller.fileFormat;
-            string fileDestination = Properties.Settings.Default.DefaultDir + "\\Library\\Downloads\\" + modInstaller.contentID + "\\";
-            Unarchiver un = new Unarchiver(newItem.Progress, newItem.Status);
 
-            await un.ExtractArchiveAsync(fileSource, fileDestination,modInstaller.fileFormat);
+                //Setting extract UI
+                mle.Title.Content = "Extracting mod";
 
-            newItem.refreshUI();
+                //Preparing Extraction
+                Unarchiver un = new Unarchiver(mle.Progress, mle.Status);
+
+                //Wait for Archive extraction
+                await un.ExtractArchiveAsync(FMan.downloadDest, FMan.archiveContentDest, FMan.modArchiveFormat);
+
+                //Setting extract UI
+                mle.Title.Content = "Moving files";
+
+                //Moving files
+                await FMan.MoveDownload();
+
+                //Cleanup
+                FMan.ClearDownloadContents();
+
+                //Providing mod to ModListElement and showing info
+                mle.setMod(newmod);
+                mle.Downloaded = true;
+
+                //Refresh UI element
+                mle.refreshUI();
+                ModListView.SelectedItem = mle;
+
+                //Removing mod from Working List
+                WorkingModList.Remove(mod);
+            }
         }
 
         public void QuasarDownloadCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -273,9 +390,10 @@ namespace Quasar
                 Dispatcher.BeginInvoke((Action)(() => { LaunchDownload(quasari); }));
             }
         }
+
         #endregion
 
-        
+
     }
 
     
