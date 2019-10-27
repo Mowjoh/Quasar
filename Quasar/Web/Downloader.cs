@@ -26,7 +26,9 @@ namespace Quasar
         string downloadURL;
         public string contentType;
         public string contentID;
-        string fileFormat;
+        public string fileFormat;
+
+        public string saveFileName;
 
         public Downloader(ProgressBar _progressBar, Label _statusLabel)
         {
@@ -84,7 +86,6 @@ namespace Quasar
             {
                 statusLabel.Visibility = Visibility.Visible;
                 progressBar.Visibility = Visibility.Hidden;
-                statusLabel.Content = "Status : Up to date";
             }), DispatcherPriority.Background);
 
             return true;

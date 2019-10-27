@@ -49,5 +49,11 @@ namespace Quasar.Controls
             Title.Content = _mod.Name;
             Status.Content = "Up to date";
         }
+
+        public void refreshUI()
+        {
+            Title.Content = LocalMod.Name;
+            Status.Content = "Up to date";
+        }
     }
 }

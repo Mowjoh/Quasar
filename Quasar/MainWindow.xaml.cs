@@ -253,6 +253,17 @@ namespace Quasar
             newItem.Downloaded = true;
 
             ModListView.SelectedItem = newItem;
+
+            //Setting extract UI
+            newItem.Title.Content = "Extracting mod";
+
+            string fileSource = Properties.Settings.Default.DefaultDir + "\\Library\\Downloads\\" + modInstaller.contentID + "." + modInstaller.fileFormat;
+            string fileDestination = Properties.Settings.Default.DefaultDir + "\\Library\\Downloads\\" + modInstaller.contentID + "\\";
+            Unarchiver un = new Unarchiver(newItem.Progress, newItem.Status);
+
+            await un.ExtractArchiveAsync(fileSource, fileDestination,modInstaller.fileFormat);
+
+            newItem.refreshUI();
         }
 
         public void QuasarDownloadCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
