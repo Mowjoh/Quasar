@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using static Quasar.Library;
 
 namespace Quasar.Controls
 {
@@ -24,9 +25,29 @@ namespace Quasar.Controls
         public int modType;
         public int modAssociation;
 
+        public Mod LocalMod;
+
+        public bool Downloaded = false;
+
         public ModListElement()
         {
             InitializeComponent();
+        }
+
+        private void UserControl_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+
+        }
+
+        public void setMod(Mod _mod)
+        {
+            LocalMod = _mod;
+
+            modID = _mod.id;
+            modType = _mod.type;
+            modAssociation = _mod.association;
+            Title.Content = _mod.Name;
+            Status.Content = "Up to date";
         }
     }
 }

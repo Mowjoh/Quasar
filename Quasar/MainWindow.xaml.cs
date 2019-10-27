@@ -11,37 +11,48 @@ using System;
 using System.Globalization;
 using Quasar.File;
 using Quasar.Quasar_Sys;
+using System.Windows.Media;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 
 namespace Quasar
 {
     public partial class MainWindow : Window
     {
-        ModList Mods;
+
+        public List<Mod> Mods;
+        public List<ModListElement> ListMods { get; set; }
+
+        public Mod SelectedMod { get; set; }
+
+        public QuasarDownloads DLS;
+
         List<ModType> ModTypes { get; set; }
         List<Character> Characters { get; set; }
         List<Family> Families { get; set; }
 
         Mutex serverMutex;
 
-        PipeClient Pc_principal { get; set; }
-
         public MainWindow()
         {
             //Things to run before app really starts
-            serverMutex = Checker.Instances(serverMutex);
+            DLS = new QuasarDownloads();
+            DLS.List.CollectionChanged += QuasarDownloadCollectionChanged;
+            serverMutex = Checker.Instances(serverMutex, DLS.List);
             Checker.FirstRun();
             Folderino.CheckBaseFolders();
             Folderino.CheckBaseFiles();
 
             //Setting language
             System.Threading.Thread.CurrentThread.CurrentUICulture = new System.Globalization.CultureInfo(Properties.Settings.Default.Language);
-            
+
             //Aww, here we go again
             InitializeComponent();
 
             //Loading things
             LoadBasicLists();
             LoadMods();
+
         }
 
         #region XML LOAD
@@ -49,18 +60,19 @@ namespace Quasar
         private void LoadMods()
         {
             Mods = GetModListFile();
+            ListMods = new List<ModListElement>();
 
             foreach (Mod x in Mods)
             {
                 ModListElement mle = new ModListElement();
                 mle.Title.Content = x.Name;
                 mle.Progress.Visibility = Visibility.Hidden;
-                mle.Status.Content = "Awaiting Check";
-                mle.modID = x.id;
-                mle.modType = x.type;
-                mle.modAssociation = x.association;
-                SkinStackPanel.Children.Add(mle);
+                mle.setMod(x);
+                mle.Downloaded = true;
+                ListMods.Add(mle);
             }
+
+            ModListView.ItemsSource = ListMods;
         }
 
         private void LoadBasicLists()
@@ -90,6 +102,17 @@ namespace Quasar
 
         #region INTERFACE ACTIONS
 
+        private void ModSelected(object sender, SelectionChangedEventArgs e)
+        {
+            ModListElement mle = (ModListElement)ModListView.SelectedItem;
+            SelectedMod = mle.LocalMod;
+            if (mle.Downloaded)
+            {
+                PrintModInformation(mle.LocalMod);
+            }
+            
+        }
+
         //Refreshes the content of the mod list based on mod type
         private void ModTypeSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -101,7 +124,6 @@ namespace Quasar
 
         private void FilterSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            ComboBox comboBox = (ComboBox)sender;
         }
 
         private void ShowAdvancedFilters(int _modType)
@@ -124,7 +146,7 @@ namespace Quasar
         }
         private void FilterList(int _modType)
         {
-            foreach (ModListElement mle in SkinStackPanel.Children)
+            foreach (ModListElement mle in ModListView.Items)
             {
                 if (_modType == -1)
                 {
@@ -134,7 +156,7 @@ namespace Quasar
                 {
                     if (mle.modType != _modType)
                     {
-                        mle.Visibility = Visibility.Hidden;
+                        mle.Visibility = Visibility.Collapsed;
                     }
                     else
                     {
@@ -145,36 +167,27 @@ namespace Quasar
         }
 
         //Refreshes the contents of the filter combobox
-        public void PrintModInformation(APIMod _item)
+        public void PrintModInformation(Mod _item)
         {
-            SkinNameLabel.Content = "Name : " + _item.name;
-            SkinAuthorLabel.Content = "Authors : " + _item.authors;
+            //Thrashing the place
+            ModInfoStackPanelValues.Children.Clear();
+            VersionStackPanel.Children.Clear();
+
+            //Showing Name and Authors
+            ModInfoStackPanelValues.Children.Add(new Label() { Content = _item.Name });
+            foreach (String[] author in _item.Authors)
+            {
+                ModInfoStackPanelValues.Children.Add(new Label() { Content = "- " + author[0] });
+            }
+
+            //Showing Version info
+            VersionStackPanel.Children.Add(new Label() { Content = _item.Updates });
+            VersionStackPanel.Children.Add(new Label() { Content = "Up to Date" });
         }
 
         #endregion
 
-        #region OTHERS
-        //Launches a Quasar Download from it's URL
-        private async void TestDownloadButtonPress(object sender, RoutedEventArgs e)
-        {
-            ModListElement newItem = new ModListElement();
-            SkinStackPanel.Children.Add(newItem);
-
-            newItem.Title.Content = "Downloading new mod";
-            Downloader modInstaller = new Downloader(newItem.Progress, newItem.Status);
-
-            await modInstaller.DownloadArchiveAsync("quasar:https://gamebanana.com/mmdl/197052,Skin,153832,7z");
-
-            APIMod newMod = await APIRequest.getMod(modInstaller.contentType, modInstaller.contentID); 
-
-            Mod parsedMod = Parse(newMod, ModTypes);
-            Mods.Add(parsedMod);
-            WriteModListFile(Mods);
-
-            PrintModInformation(newMod);
-
-        }
-
+        #region Settings
         //Deletes Everything Quasar has stored cause that's the easy way out
         private void DeleteDocumentFolderContents(object sender, RoutedEventArgs e)
         {
@@ -191,6 +204,62 @@ namespace Quasar
             else
             {
                 Console.WriteLine("You need admin rights to do that");
+            }
+        }
+
+        #endregion
+
+        #region Downloads
+        public class QuasarDownloads
+        {
+            public ObservableCollection<string> List { get; set; }
+
+            public QuasarDownloads()
+            {
+                List = new ObservableCollection<string>();
+            }
+        }
+
+        //Launches a Quasar Download from it's URL
+        private async void LaunchDownload(string _URL)
+        {
+            ModListElement newItem;
+
+            //Creating interface element
+            newItem = new ModListElement();
+            ListMods.Add(newItem);
+            ModListView.Items.Refresh();
+
+            //Setting download UI
+            newItem.Title.Content = "Downloading new mod";
+
+            Downloader modInstaller = new Downloader(newItem.Progress, newItem.Status);
+
+            //Wait for download completion
+            await modInstaller.DownloadArchiveAsync(_URL);
+
+            //Parsing mod info from API
+            APIMod newMod = await APIRequest.getMod(modInstaller.contentType, modInstaller.contentID);
+
+            //Create Mod from API information
+            Mod parsedMod = Parse(newMod, ModTypes);
+
+            //Updating list and saving XML
+            Mods.Add(parsedMod);
+            WriteModListFile(Mods);
+
+            //Providing mod to ModListElement and showing info
+            newItem.setMod(parsedMod);
+            newItem.Downloaded = true;
+
+            ModListView.SelectedItem = newItem;
+        }
+
+        public void QuasarDownloadCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            foreach (string quasari in DLS.List)
+            {
+                Dispatcher.BeginInvoke((Action)(() => { LaunchDownload(quasari); }));
             }
         }
         #endregion

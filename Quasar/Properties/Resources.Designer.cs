@@ -115,7 +115,7 @@ namespace Quasar.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Author.
+        ///   Looks up a localized string similar to Author(s) :.
         /// </summary>
         public static string ModAuthor {
             get {
@@ -142,7 +142,7 @@ namespace Quasar.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Name.
+        ///   Looks up a localized string similar to Name :.
         /// </summary>
         public static string ModName {
             get {
@@ -151,7 +151,7 @@ namespace Quasar.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Status.
+        ///   Looks up a localized string similar to Status :.
         /// </summary>
         public static string ModStatus {
             get {
@@ -169,7 +169,7 @@ namespace Quasar.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Version.
+        ///   Looks up a localized string similar to Version :.
         /// </summary>
         public static string ModVersion {
             get {

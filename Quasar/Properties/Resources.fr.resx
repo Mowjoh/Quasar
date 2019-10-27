@@ -136,7 +136,7 @@
     <value>Gestion</value>
   </data>
   <data name="ModAuthor" xml:space="preserve">
-    <value>Auteur</value>
+    <value>Auteur(s) :</value>
   </data>
   <data name="ModFilterSelectText" xml:space="preserve">
     <value>Tu peux filtrer ici</value>
@@ -145,16 +145,16 @@
     <value>Informations sur le mod</value>
   </data>
   <data name="ModName" xml:space="preserve">
-    <value>Nom</value>
+    <value>Nom :</value>
   </data>
   <data name="ModStatus" xml:space="preserve">
-    <value>Statut</value>
+    <value>Statut :</value>
   </data>
   <data name="ModTypeSelectText" xml:space="preserve">
     <value>Sélection du type de mod</value>
   </data>
   <data name="ModVersion" xml:space="preserve">
-    <value>Version</value>
+    <value>Version :</value>
   </data>
   <data name="SettingsTabHeader" xml:space="preserve">
     <value>Paramètres</value>

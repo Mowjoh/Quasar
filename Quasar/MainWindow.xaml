@@ -32,20 +32,47 @@
                         <ComboBox x:Name="ModTypeSelect" ItemsSource="{Binding ModTypes}" DisplayMemberPath="Name" SelectedValuePath="ID" Margin="10,10,25,0" VerticalAlignment="Top" Height="22" IsReadOnly="True" IsEditable="True" Text="{x:Static p:Resources.ModTypeSelectText}" Foreground="Black" SelectionChanged="ModTypeSelectionChanged" ShouldPreserveUserEnteredPrefix="True"/>
                         <ComboBox x:Name="ModFilterSelect" ItemsSource="{Binding}" DisplayMemberPath="Name" SelectedValuePath="ID" Margin="27,10,10,0" VerticalAlignment="Top" Height="22" IsReadOnly="True" IsEditable="True" Text="{x:Static p:Resources.ModFilterSelectText}" Foreground="Black" IsEnabled="True" Grid.Column="1" SelectionChanged="FilterSelectionChanged"/>
                         <ScrollViewer x:Name="ModScrollViewer" Margin="10,37,10,10" Background="#19000000" Grid.ColumnSpan="2">
-                            <StackPanel x:Name="SkinStackPanel"/>
+                            <ListView x:Name="ModListView" SelectionChanged="ModSelected" ItemsSource="{Binding modLists}">
+                                <ListView.ItemContainerStyle>
+                                    <Style TargetType="ListViewItem">
+                                        <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
+                                        <Setter Property="Padding" Value="0,0,0,0"></Setter>
+                                    </Style>
+                                </ListView.ItemContainerStyle>
+                            </ListView>
                         </ScrollViewer>
                         <GroupBox x:Name="ModInfoGroup" Header="{x:Static p:Resources.ModInformationHeader}" BorderBrush="#FF036EAE" Margin="7,10,15,195" Grid.Column="2">
-                            <StackPanel>
-                                <Label x:Name="SkinNameLabel" Content="{x:Static p:Resources.ModName}"/>
-                                <Label x:Name="SkinAuthorLabel" Content="{x:Static p:Resources.ModAuthor}"/>
-                            </StackPanel>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="2*"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel x:Name="ModInfoStackPanel">
+                                    <Label x:Name="ModNameLabel" Content="{x:Static p:Resources.ModName}"/>
+                                    <Label x:Name="ModAuthorLabel" Content="{x:Static p:Resources.ModAuthor}"/>
+                                </StackPanel>
+                                <StackPanel x:Name="ModInfoStackPanelValues" Grid.Column="1">
+                                    <Label x:Name="ModNameValue" Content="{Binding ElementName=selectedMod, Path=Name}" Margin="0,0,123,0"/>
+                                </StackPanel>
+                            </Grid>
                         </GroupBox>
                         <GroupBox x:Name="ModUpdateGroup" Header="Version Control" BorderBrush="#FF036EAE" Margin="10,0,10,10" Grid.Column="2" Height="180" VerticalAlignment="Bottom">
-                            <StackPanel>
-                                <Label x:Name="SkinVersionLabel" Content="{x:Static p:Resources.ModVersion}"/>
-                                <Label x:Name="SkinStatusLabel" Content="{x:Static p:Resources.ModStatus}"/>
-                                <Button x:Name="ModUpdateButton" Content="{x:Static p:Resources.CheckModUpdateButton}" Width="150" HorizontalAlignment="Left" Margin="0,50,0,0"/>
-                            </StackPanel>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="4*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="80"/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <Button x:Name="ModUpdateButton" Content="{x:Static p:Resources.CheckModUpdateButton}" Width="150" HorizontalAlignment="Center" Margin="0,22,0,35" Grid.ColumnSpan="2" Grid.Row="1" VerticalAlignment="Center"/>
+                                <StackPanel Margin="0">
+                                    <Label x:Name="SkinVersionLabel" Content="{x:Static p:Resources.ModVersion}"/>
+                                    <Label x:Name="SkinStatusLabel" Content="{x:Static p:Resources.ModStatus}"/>
+                                </StackPanel>
+                                <StackPanel x:Name="VersionStackPanel" Margin="0" Grid.Column="1"/>
+                            </Grid>
                         </GroupBox>
                         <Label x:Name="ModFileBrowserLabel" Content="{x:Static p:Resources.FileBrowserHeader}" HorizontalAlignment="Left" Margin="5,6,0,0" VerticalAlignment="Top" Width="157" Height="26" Grid.Column="3"/>
                         <TreeView x:Name="ModFileView" Margin="10,37,10,10" Grid.Column="3"/>
@@ -58,15 +85,19 @@
                     <Grid Background="#FFE5E5E5"/>
                 </TabItem>
                 <TabItem x:Name="Setting" Header="{x:Static p:Resources.SettingsTabHeader}" Margin="-2,-2,-2,0">
-                    <Grid Background="#FFE5E5E5"/>
+                    <Grid Background="#FFE5E5E5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="94*"/>
+                            <ColumnDefinition Width="184*"/>
+                            <ColumnDefinition Width="1209*"/>
+                        </Grid.ColumnDefinitions>
+                        <Button x:Name="CleanFolders_Button" Content="{x:Static p:Resources.ClearQuasarFolderButton}" Click="DeleteDocumentFolderContents" Height="30" Margin="10,4,0,0" HorizontalAlignment="Left" Width="200" Grid.ColumnSpan="2" VerticalAlignment="Top"/>
+                        <Button x:Name="CustomProtocol" Content="Custom Purotocolu" Click="ActivateCustomProtocol" Width="200" Height="30" Margin="10,39,0,0" HorizontalAlignment="Left" Grid.ColumnSpan="2" VerticalAlignment="Top"/>
+                    </Grid>
                 </TabItem>
             </TabControl>
         </Grid>
-        <Grid x:Name="HeaderGrid" Background="#FF021F2C">
-            <Button x:Name="DownloadButton" Content="{x:Static p:Resources.StartButton}" Click="TestDownloadButtonPress" Height="30" Margin="10,4,0,6" HorizontalAlignment="Left" Width="200"/>
-            <Button x:Name="CleanFolders_Button" Content="{x:Static p:Resources.ClearQuasarFolderButton}" Click="DeleteDocumentFolderContents" Height="30" Margin="224,4,0,6" HorizontalAlignment="Left" Width="200"/>
-            <Button x:Name="CustomProtocol" Content="Custom Purotocolu" Click="ActivateCustomProtocol" Width="200" Height="30" Margin="429,4,0,6" HorizontalAlignment="Left"/>
-        </Grid>
+        <Grid x:Name="HeaderGrid" Background="#FF021F2C"/>
 
     </Grid>
 </Window>

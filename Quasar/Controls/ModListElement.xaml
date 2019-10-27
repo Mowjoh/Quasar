@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Quasar.Controls"
              mc:Ignorable="d" 
-             d:DesignHeight="50" d:DesignWidth="100" Width="Auto" Height="Auto" MinWidth="100" MinHeight="55">
+             d:DesignHeight="50" d:DesignWidth="100" Width="auto" Height="Auto" MinWidth="250" MinHeight="55" MouseUp="UserControl_MouseUp" HorizontalAlignment="Stretch">
     <Grid Background="White">
         <Label x:Name="Title" Content="SkinTitle" HorizontalAlignment="Left" VerticalAlignment="Top" Width="Auto" Foreground="#FF0B397C"/>
         <Label x:Name="Status" Content="Status" HorizontalAlignment="Left" Margin="0,29,0,0" VerticalAlignment="Top" Foreground="#FF0B397C"/>

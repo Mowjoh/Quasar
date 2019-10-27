@@ -18,15 +18,29 @@ namespace Quasar
         public string name { get; set; }
     }
 
+
     public class APIMod
     {
         public int id { get; set; }
         public string type { get; set; }
+        
+        [JsonProperty("name")]
         public string name { get; set; }
-        public string authors { get; set; }
+
+        [JsonProperty("Credits().aAuthors()")]
+        public string[][] authors { get; set; }
+
+        [JsonProperty("description")]
         public string description { get; set; }
+
+        [JsonProperty("downloads")]
         public int downloads { get; set; }
+
+        [JsonProperty("Category().name")]
         public string Categoryname { get; set; }
+
+        [JsonProperty("Updates().nGetUpdatesCount()")]
+        public int Updates { get; set; }
 
     }
 
@@ -73,7 +87,7 @@ namespace Quasar
             queryParameters = getDefaultParameters();
             queryParameters.Add(new QueryStringItem("itemid", itemID));
             queryParameters.Add(new QueryStringItem("itemtype", itemtype));
-            queryParameters.Add(new QueryStringItem("fields", "name,authors,description,downloads,Category().name"));
+            queryParameters.Add(new QueryStringItem("fields", "name,Credits().aAuthors(),description,downloads,Category().name,Updates().nGetUpdatesCount()"));
 
             string queryURL = formatApiRequest("Core/Item/Data", queryParameters);
 
@@ -86,7 +100,6 @@ namespace Quasar
                     string responseText = await response.Content.ReadAsStringAsync();
 
                     downloadedMod = JsonConvert.DeserializeObject<APIMod>(responseText);
-                    Console.Write("stop here");
                 }
             }
 
@@ -94,7 +107,7 @@ namespace Quasar
             downloadedMod.type = itemtype;
 
 
-            return null;
+            return downloadedMod;
         }
 
         #endregion

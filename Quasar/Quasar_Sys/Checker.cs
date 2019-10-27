@@ -1,6 +1,7 @@
 ﻿using Quasar.Singleton;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -12,32 +13,36 @@ namespace Quasar.Quasar_Sys
 {
     static class Checker
     {
-        public static Mutex Instances(Mutex _serverMutex)
+        public static Mutex Instances(Mutex _serverMutex,ObservableCollection<string> _DLS)
         {
             PipeClient Pc_principal;
-
+            string[] Args = System.Environment.GetCommandLineArgs();
             //Checking if Quasar is running alright
-            Mutex mt;
-            if (Mutex.TryOpenExisting("Quasarite", out mt))
+            if (Mutex.TryOpenExisting("Quasarite", out Mutex mt))
             {
                 //Client
-                string[] Args = System.Environment.GetCommandLineArgs();
                 if (Args.Length == 2)
                 {
                     Pc_principal = new PipeClient("Quasarite", Args[1]);
                 }
-                else
-                {
-                    Pc_principal = new PipeClient("Quasarite", "testModo");
-                }
+                mt.Close();
                 Application.Current.Shutdown();
             }
             else
             {
                 //Server
                 _serverMutex = new Mutex(true, "Quasarite");
-                new PipeServer("Quasarite");
+                if (Args.Length == 2)
+                {
+                    new PipeServer("Quasarite", _DLS, Args[1]);
+                }
+                else
+                {
+                    new PipeServer("Quasarite", _DLS, "");
+                }
+
             }
+
             return _serverMutex;
         }
 

@@ -15,17 +15,17 @@ namespace Quasar
         #region Basic Functions
         public static string GetLibraryPath()
         {
-            string libraryPath = Quasar.Properties.Settings.Default["DefaultDir"].ToString() + "\\Library\\Library.xml";
-            return libraryPath;
+            return Quasar.Properties.Settings.Default["DefaultDir"].ToString() + "\\Library\\Library.xml";
         }
 
         #endregion
 
         #region XML Interactions
         //Parsing the full Mod List
-        public static ModList GetModListFile()
+        public static List<Mod> GetModListFile()
         {
             ModList Mods = new ModList();
+            List<Mod> parsedMods = new List<Mod>();
 
             XmlSerializer serializer = new XmlSerializer(typeof(ModList));
 
@@ -36,22 +36,24 @@ namespace Quasar
                 using (FileStream fileStream = new FileStream(libraryPath, FileMode.Open))
                 {
                     ModList result = (ModList)serializer.Deserialize(fileStream);
-                    Mods = result;
+                    parsedMods = result.Cast<Mod>().ToList();
                 }
             }
 
-            return Mods;
+            return parsedMods;
         }
 
         //Writing the Mod List to the Library file
-        public static void WriteModListFile(ModList mods)
+        public static void WriteModListFile(List<Mod> _mods)
         {
             string libraryPath = GetLibraryPath();
+
+            ModList list = new ModList(_mods);
 
             XmlSerializer xs = new XmlSerializer(typeof(ModList));
             using (StreamWriter wr = new StreamWriter(libraryPath))
             {
-                xs.Serialize(wr, mods);
+                xs.Serialize(wr, list);
             }
         }
         #endregion
@@ -69,7 +71,18 @@ namespace Quasar
 
             }
 
-            return new Mod() { id = mod.id, Name = mod.name, type = modType, association = -1, Author = mod.authors , category = mod.Categoryname};
+
+
+            return new Mod() { id = mod.id, Name = mod.name, type = modType, association = -1, Authors = mod.authors , category = mod.Categoryname, Updates = mod.Updates};
+        }
+
+        public static string GetProperAuthors(string _input)
+        {
+            string output = "";
+
+
+
+            return output;
         }
 
         #endregion
@@ -81,7 +94,20 @@ namespace Quasar
         public class ModList : ICollection
         {
             public string CollectionName;
-            private ArrayList empArray = new ArrayList();
+            public ArrayList empArray = new ArrayList();
+
+            public ModList()
+            {
+
+            }
+
+            public ModList(List<Mod> _inputList)
+            {
+                foreach(Mod m in _inputList)
+                {
+                    empArray.Add(m);
+                }
+            }
 
             public Mod this[int index]
             {
@@ -112,6 +138,7 @@ namespace Quasar
             {
                 empArray.Add(newMod);
             }
+
         }
 
         [Serializable()]
@@ -132,23 +159,23 @@ namespace Quasar
             [XmlElement("Name")]
             public string Name { get; set; }
 
-            [XmlElement("Author")]
-            public string Author { get; set; }
+            [XmlElement(Type = typeof(string[][]), ElementName ="Authors")]
+            public string[][] Authors { get; set; }
 
-            [XmlElement("Version")]
-            public int Version { get; set; }
+            [XmlElement("Updates")]
+            public int Updates { get; set; }
 
             [XmlElement("Native")]
             public bool Native { get; set; }
 
-            public Mod(int _id, string _Name ,int _type ,int _association ,string _author, int _version, bool _native, string _category)
+            public Mod(int _id, string _Name ,int _type ,int _association ,string[][] _authors, int _updates, bool _native, string _category)
             {
                 id = _id;
                 Name = _Name;
                 type = _type;
                 association = _association;
-                Author = _author;
-                Version = _version;
+                Authors = _authors;
+                Updates = _updates;
                 Native = _native;
                 category = _category;
             }

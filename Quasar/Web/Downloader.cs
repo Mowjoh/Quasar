@@ -9,10 +9,13 @@ using System.Windows.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.IO;
+using Quasar.Controls;
+using static Quasar.Library;
+using Quasar.Resources;
 
 namespace Quasar
 {
-    class Downloader
+     class Downloader
     {
         //Setting Default Directory Path
         string DefaultDirectoryPath = Properties.Settings.Default["DefaultDir"].ToString();

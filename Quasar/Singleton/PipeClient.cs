@@ -53,7 +53,7 @@ namespace Quasar.Singleton
 
         public void startMessage(string Args)
         {
-            client.PushMessage("Args");
+            client.PushMessage(Args);
         }
 
 

@@ -1,10 +1,12 @@
 ﻿using NamedPipeWrapper;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Threading;
 
 namespace Quasar.Singleton
 {
@@ -12,7 +14,7 @@ namespace Quasar.Singleton
     {
         
 
-        public PipeServer(string pipeName)
+        public PipeServer(string pipeName,ObservableCollection<string> _DLS,string Args)
         {
             
             Mutex ClientReady = new Mutex();
@@ -22,30 +24,32 @@ namespace Quasar.Singleton
 
             server.ClientConnected += delegate (NamedPipeConnection<string, string> connection)
             {
-                Console.WriteLine("Client {0} is now connected!", connection.Id);
                 connection.PushMessage("Wolcom");
                 
             };
 
             server.ClientDisconnected += delegate (NamedPipeConnection<string, string> connection)
             {
-                
-                Console.WriteLine("Client {0} disconnected", connection.Id);
             };
 
             server.ClientMessage += delegate (NamedPipeConnection<string, string> connection, string message)
             {
-                Console.WriteLine("Client {0} message received !", connection.Id);
-                Console.WriteLine("Client {0} says: {1}", connection.Id, message);
+                _DLS.Clear();
+                _DLS.Add(message);
                 connection.PushMessage("Oukay");
             };
 
             server.Error += delegate (Exception exception)
             {
-                Console.Error.WriteLine("ERROR: {0}", exception);
             };
 
             server.Start();
+            if(Args != "")
+            {
+                _DLS.Clear();
+                _DLS.Add(Args);
+            }
+
             Console.WriteLine("Server Started");
         }
     }
