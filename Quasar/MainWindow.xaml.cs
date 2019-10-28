@@ -235,6 +235,30 @@ namespace Quasar
             }
         }
 
+        //Version actions
+        private async void CheckUpdates(object sender, RoutedEventArgs e)
+        {
+            ModListElement element = (ModListElement)ModListView.SelectedItem;
+            if(element != null)
+            {
+                //Getting local Mod
+                Mod mod = Mods.Find(mm => mm.id == element.modID && mm.type == element.modType);
+                ModType mt = ModTypes.Find(mmt => mmt.ID == mod.type);
+                //Parsing mod info from API
+                APIMod newAPIMod = await APIRequest.getMod(mt.APIName, element.modID.ToString());
+
+                //Create Mod from API information
+                Mod newmod = Parse(newAPIMod, ModTypes);
+
+                if (mod.Updates < newmod.Updates)
+                {
+                    string[] newDL = await APIRequest.getDownloadFileName(mt.APIName, element.modID.ToString());
+                    string quasarURL = APIRequest.getQuasarDownloadURL(newDL[0], newDL[1], mt.APIName, element.modID.ToString());
+                    LaunchDownload(quasarURL);
+                }
+            }
+        }
+
         //Tree view actions
         private void ExpandTree(object sender, RoutedEventArgs e)
         {
@@ -318,12 +342,25 @@ namespace Quasar
 
             Mod mod = Mods.Find(mm => mm.id == Int32.Parse(FMan.modID) && mm.type == Int32.Parse(FMan.modType));
 
-            
+            //Parsing mod info from API
+            APIMod newAPIMod = await APIRequest.getMod(FMan.APIType, FMan.modID);
+
+            //Create Mod from API information
+            Mod newmod = Parse(newAPIMod, ModTypes);
+
+            bool needupdate = true;
             //Checking if Mod is already in library
-            if(mod != null)
+            if (mod != null)
             {
-                mle = ListMods.Find(ml => ml.LocalMod == mod);
-                downloadText = "Updating mod";
+                if(mod.Updates < newmod.Updates)
+                {
+                    mle = ListMods.Find(ml => ml.LocalMod == mod);
+                    downloadText = "Updating mod";
+                }
+                else
+                {
+                    needupdate = false;
+                }
             }
             else
             {
@@ -331,9 +368,24 @@ namespace Quasar
                 newElement = true;
                 downloadText = "Downloading new mod";
             }
-            if (!WorkingModList.Contains(mod))
+            if (!WorkingModList.Contains(mod) && needupdate)
             {
                 WorkingModList.Add(mod);
+
+                //Setting up new ModList
+                if (newElement)
+                {
+                    //Adding element to list
+                    Mods.Add(newmod);
+                }
+                else
+                {
+                    //Updating List
+                    Mods[Mods.IndexOf(mod)] = newmod;
+                }
+
+                //Saving XML
+                WriteModListFile(Mods);
 
                 if (newElement)
                 {
@@ -349,27 +401,6 @@ namespace Quasar
 
                 //Wait for download completion
                 await modDownloader.DownloadArchiveAsync(FMan);
-
-                //Parsing mod info from API
-                APIMod newAPIMod = await APIRequest.getMod(FMan.APIType, FMan.modID);
-
-                //Create Mod from API information
-                Mod newmod = Parse(newAPIMod, ModTypes);
-                
-                if (newElement)
-                {
-                    //Adding element to list
-                    Mods.Add(newmod);
-                }
-                else
-                {
-                    //Updating List
-                    Mods[Mods.IndexOf(mod)] = newmod;
-                }
-
-                //Updating list and saving XML
-                WriteModListFile(Mods);
-
 
                 //Setting extract UI
                 mle.Title.Content = "Extracting mod";
@@ -410,8 +441,8 @@ namespace Quasar
             }
         }
 
-        #endregion
 
+        #endregion
 
     }
 

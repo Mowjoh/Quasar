@@ -1,6 +1,23 @@
 ﻿<Categories>
   <Category ID="-1" APICategory="0">
     <Name>All Categories</Name>
-    <APICategory></APICategory>
+  </Category>
+  <Category ID="0" APICategory="0">
+    <Name>Uncategorized</Name>
+  </Category>
+  <Category ID="1" APICategory="3542">
+    <Name>Music</Name>
+  </Category>
+  <Category ID="2" APICategory="3543">
+    <Name>Voices</Name>
+  </Category>
+  <Category ID="3" APICategory="6498">
+    <Name>Announcer</Name>
+  </Category>
+  <Category ID="4" APICategory="3544">
+    <Name>Victory Fanfares</Name>
+  </Category>
+  <Category ID="5" APICategory="3541">
+    <Name>Others</Name>
   </Category>
  </Categories>

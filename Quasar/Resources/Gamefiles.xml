@@ -1,6 +1,11 @@
 ﻿<Categories>
   <Category ID="-1" APICategory="0">
     <Name>All Categories</Name>
-    <APICategory></APICategory>
+  </Category>
+  <Category ID="0" APICategory="0">
+    <Name>Uncategorized</Name>
+  </Category>
+  <Category ID="1" APICategory="4887">
+    <Name>Others</Name>
   </Category>
  </Categories>

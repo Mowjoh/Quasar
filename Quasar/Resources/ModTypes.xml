@@ -19,19 +19,19 @@
   </ModType>
   <ModType ID="2">
     <Name>Sound</Name>
-    <APIName>Sounds</APIName>
+    <APIName>Sound</APIName>
     <ResourceFile>Sounds.xml</ResourceFile>
     <Folder>Sounds</Folder>
   </ModType>
   <ModType ID="3">
     <Name>GUI</Name>
-    <APIName>guis</APIName>
+    <APIName>Gui</APIName>
     <ResourceFile>GUI.xml</ResourceFile>
     <Folder>GUI</Folder>
   </ModType>
   <ModType ID="4">
     <Name>Game Files</Name>
-    <APIName>gamefiles</APIName>
+    <APIName>Gamefile</APIName>
     <ResourceFile>Gamefiles.xml</ResourceFile>
     <Folder>GameFiles</Folder>
   </ModType>

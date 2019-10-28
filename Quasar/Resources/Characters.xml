@@ -2,6 +2,9 @@
   <Category ID="-1" APICategory="0">
     <Name>All Categories</Name>
   </Category>
+  <Category ID="0" APICategory="0">
+    <Name>Uncategorized</Name>
+  </Category>
   <Category ID="1" APICategory="14080">
     <Name>Mario</Name>
   </Category>

@@ -1,10 +1,35 @@
 ﻿<Categories>
   <Category ID="-1" APICategory="0">
     <Name>All Categories</Name>
-    <APICategory></APICategory>
+  </Category>
+  <Category ID="0" APICategory="0">
+    <Name>Uncategorized</Name>
   </Category>
   <Category ID="1" APICategory="10485">
     <Name>Training</Name>
-    <APICategory></APICategory>
+  </Category>
+  <Category ID="2" APICategory="10478">
+    <Name>Battlefield</Name>
+  </Category>
+  <Category ID="3" APICategory="10281">
+    <Name>Castle Siege</Name>
+  </Category>
+  <Category ID="4" APICategory="10322">
+    <Name>Classic Routes</Name>
+  </Category>
+  <Category ID="5" APICategory="10474">
+    <Name>Final Destination</Name>
+  </Category>
+  <Category ID="6" APICategory="10473">
+    <Name>Magicant</Name>
+  </Category>
+  <Category ID="7" APICategory="10356">
+    <Name>Pac-Land</Name>
+  </Category>
+  <Category ID="8" APICategory="10271">
+    <Name>WarioWare, Inc</Name>
+  </Category>
+  <Category ID="9" APICategory="10202">
+    <Name>Others</Name>
   </Category>
  </Categories>

@@ -72,8 +72,18 @@ namespace Quasar
                 modTypeName = modType.Name;
 
                 Category category = modType.Categories.Find(c => c.APICategory == mod.catid);
-                modCat = category.ID;
-                modCatName = category.Name;
+                if(category != null)
+                {
+                    modCat = category.ID;
+                    modCatName = category.Name;
+                }
+                else
+                {
+                    category = modType.Categories.Find(c => c.ID == 0);
+                    modCat = 0;
+                    modCatName = category.Name;
+                }
+               
                
             }
             catch(Exception e)

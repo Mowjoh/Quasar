@@ -1,6 +1,38 @@
 ﻿<Categories>
   <Category ID="-1" APICategory="0">
     <Name>All Categories</Name>
-    <APICategory></APICategory>
+  </Category>
+  <Category ID="0" APICategory="0">
+    <Name>Uncategorized</Name>
+  </Category>
+  <Category ID="1" APICategory="2891">
+    <Name>Character Select Portraits</Name>
+  </Category>
+  <Category ID="2" APICategory="2892">
+    <Name>CSS Layouts</Name>
+  </Category>
+  <Category ID="3" APICategory="3012">
+    <Name>Fonts</Name>
+  </Category>
+  <Category ID="4" APICategory="2893">
+    <Name>Loading Icons</Name>
+  </Category>
+  <Category ID="5" APICategory="2894">
+    <Name>Loading Screens</Name>
+  </Category>
+  <Category ID="6" APICategory="2896">
+    <Name>Opening Movies</Name>
+  </Category>
+  <Category ID="7" APICategory="2898">
+    <Name>SSS Layouts</Name>
+  </Category>
+  <Category ID="8" APICategory="2899">
+    <Name>Stage Select Portraits</Name>
+  </Category>
+  <Category ID="9" APICategory="2900">
+    <Name>Title Screen </Name>
+  </Category>
+  <Category ID="10" APICategory="2837">
+    <Name>Other/Misc</Name>
   </Category>
  </Categories>
