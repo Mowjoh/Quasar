@@ -22,44 +22,20 @@ namespace Quasar.File
             CheckCreate(ModsPath);
             CheckCreate(DownloadsPath);
             CheckCreate(ResourcePath);
+            
 
         }
 
-        public static void CheckBaseFiles()
+        public static void CheckResources()
         {
-            String BasePath = Properties.Settings.Default.DefaultDir;
-            String CharactersResourcePath = "\\Resources\\Characters.xml";
-            String FamiliesResourcePath = "\\Resources\\Families.xml";
-            String ModTypesResourcePath = "\\Resources\\ModTypes.xml";
-
-            if (!System.IO.File.Exists(BasePath + CharactersResourcePath))
-            {
-                ParseFromInstallation(CharactersResourcePath, CharactersResourcePath);
-            }
-
-            if (!System.IO.File.Exists(BasePath + FamiliesResourcePath))
-            {
-                ParseFromInstallation(FamiliesResourcePath, FamiliesResourcePath);
-            }
-
-            if (!System.IO.File.Exists(BasePath + ModTypesResourcePath))
-            {
-                ParseFromInstallation(ModTypesResourcePath, ModTypesResourcePath);
-            }
-
+            
         }
 
         public static void UpdateBaseFiles()
         {
-            String BasePath = Properties.Settings.Default.DefaultDir;
-            String CharactersResourcePath = "\\Resources\\Characters.xml";
-            String FamiliesResourcePath = "\\Resources\\Families.xml";
-            String ModTypesResourcePath = "\\Resources\\ModTypes.xml";
-
-            ParseFromInstallation(CharactersResourcePath, CharactersResourcePath);
-            ParseFromInstallation(FamiliesResourcePath, FamiliesResourcePath);
-            ParseFromInstallation(ModTypesResourcePath, ModTypesResourcePath);
-
+            String ResourcePath = Properties.Settings.Default.DefaultDir + "\\Resources\\";
+            String AppPath = Properties.Settings.Default.AppPath + "\\Resources\\";
+            FileManager.CopyFolder(AppPath, ResourcePath, true);
         }
 
         public static void CheckCreate(String _Path)
@@ -70,16 +46,21 @@ namespace Quasar.File
             }
         }
 
-        public static void ParseFromInstallation(String _localFilePath, String _DocumentsPath)
+        public static void CompareResources()
         {
-            String AppPath = Properties.Settings.Default.AppPath;
-            String DocumentsFolderPath = Properties.Settings.Default.DefaultDir;
+            String AppPath = Properties.Settings.Default.AppPath + "\\Resources";
+            String DocumentsResourcePath = Properties.Settings.Default.DefaultDir + "\\Resources\\";
 
-            String SourceFilePath = AppPath + _localFilePath;
-            String DestinationFilePath = DocumentsFolderPath + _DocumentsPath;
-
-            System.IO.File.Copy(SourceFilePath, DestinationFilePath, true);
-
+            foreach (string s in Directory.GetFiles(AppPath))
+            {
+                string filename = Path.GetFileName(s);
+                string dest = DocumentsResourcePath + filename;
+                if (!System.IO.File.Exists(dest))
+                {
+                    
+                    System.IO.File.Copy(s, dest);
+                }
+            }
         }
 
         public static void DeleteDocumentsFolder()

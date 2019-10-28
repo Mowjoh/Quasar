@@ -2,36 +2,37 @@
   <ModType ID="-1">
     <Name>All Types</Name>
     <APIName></APIName>
+    <ResourceFile></ResourceFile>
     <Folder></Folder>
   </ModType>
   <ModType ID="0">
     <Name>Skin</Name>
     <APIName>Skin</APIName>
+    <ResourceFile>Characters.xml</ResourceFile>
     <Folder>Skins</Folder>
   </ModType>
   <ModType ID="1">
-    <Name>Music</Name>
-    <APIName>?</APIName>
-    <Folder>Music</Folder>
+    <Name>Stage</Name>
+    <APIName>Map</APIName>
+    <ResourceFile>Stages.xml</ResourceFile>
+    <Folder>Stages</Folder>
   </ModType>
   <ModType ID="2">
     <Name>Sound</Name>
-    <APIName>?</APIName>
+    <APIName>Sounds</APIName>
+    <ResourceFile>Sounds.xml</ResourceFile>
     <Folder>Sounds</Folder>
   </ModType>
   <ModType ID="3">
-    <Name>Stage</Name>
-    <APIName>?</APIName>
-    <Folder>Stages</Folder>
-  </ModType>
-  <ModType ID="4">
     <Name>GUI</Name>
-    <APIName>?</APIName>
+    <APIName>guis</APIName>
+    <ResourceFile>GUI.xml</ResourceFile>
     <Folder>GUI</Folder>
   </ModType>
-  <ModType ID="5">
+  <ModType ID="4">
     <Name>Game Files</Name>
-    <APIName>?</APIName>
+    <APIName>gamefiles</APIName>
+    <ResourceFile>Gamefiles.xml</ResourceFile>
     <Folder>GameFiles</Folder>
   </ModType>
 </ModTypes>

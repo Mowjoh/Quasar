@@ -138,6 +138,9 @@
   <data name="ModAuthor" xml:space="preserve">
     <value>Author(s) :</value>
   </data>
+  <data name="ModCategory" xml:space="preserve">
+    <value>Category :</value>
+  </data>
   <data name="ModFilterSelectText" xml:space="preserve">
     <value>You can filter things here</value>
   </data>
@@ -149,6 +152,9 @@
   </data>
   <data name="ModStatus" xml:space="preserve">
     <value>Status :</value>
+  </data>
+  <data name="ModTypeName" xml:space="preserve">
+    <value>Type :</value>
   </data>
   <data name="ModTypeSelectText" xml:space="preserve">
     <value>Select a mod type</value>

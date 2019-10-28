@@ -29,8 +29,6 @@ namespace Quasar
         public QuasarDownloads DLS;
 
         List<ModType> ModTypes { get; set; }
-        List<Character> Characters { get; set; }
-        List<Family> Families { get; set; }
 
         Mutex serverMutex;
 
@@ -44,7 +42,7 @@ namespace Quasar
             //Pre-run checks
             bool Update = Checker.checkUpdated();
             Folderino.CheckBaseFolders();
-            Folderino.CheckBaseFiles();
+            Folderino.CompareResources();
             if (Update)
             {
                 Folderino.UpdateBaseFiles();
@@ -66,7 +64,7 @@ namespace Quasar
         //Load Mod Library into memory
         private void LoadMods()
         {
-            Mods = GetModListFile();
+            Mods = GetModListFile(ModTypes);
             ListMods = new List<ModListElement>();
             WorkingModList = new List<Mod>();
 
@@ -74,6 +72,8 @@ namespace Quasar
             {
                 ModListElement mle = new ModListElement();
                 mle.Title.Content = x.Name;
+                mle.TypeLabel.Content = x.typeName;
+                mle.Category.Content = x.categoryName;
                 mle.Progress.Visibility = Visibility.Hidden;
                 mle.setMod(x);
                 mle.Downloaded = true;
@@ -86,9 +86,6 @@ namespace Quasar
         private void LoadBasicLists()
         {
             LoadModTypes();
-            LoadCharacterList();
-            LoadFamilies();
-
         }
 
         private void LoadModTypes()
@@ -96,19 +93,44 @@ namespace Quasar
             ModTypes = XML.GetModTypes();
             ModTypeSelect.ItemsSource = ModTypes;
         }
-
-        private void LoadCharacterList()
-        {
-            Characters = XML.GetCharacters();
-        }
-
-        private void LoadFamilies()
-        {
-            Families = XML.GetFamilies();
-        }
         #endregion
 
         #region INTERFACE ACTIONS
+        //Refreshes the contents of the filter combobox
+        public void PrintModInformation(Mod _item)
+        {
+            //Thrashing the place
+            ModInfoStackPanelValues.Children.Clear();
+            VersionStackPanel.Children.Clear();
+
+            //Showing Name, Category and Authors
+            ModInfoStackPanelValues.Children.Add(new Label() { Content = _item.Name });
+            ModInfoStackPanelValues.Children.Add(new Label() { Content = _item.typeName });
+            ModInfoStackPanelValues.Children.Add(new Label() { Content = _item.categoryName });
+            foreach (String[] author in _item.Authors)
+            {
+                ModInfoStackPanelValues.Children.Add(new Label() { Content = "- " + author[0] });
+            }
+
+            //Showing Version info
+            VersionStackPanel.Children.Add(new Label() { Content = _item.Updates });
+            VersionStackPanel.Children.Add(new Label() { Content = "Up to Date" });
+
+            //Loading Tree View
+            LoadTreeView(ModFileView, new FileManager(_item,ModTypes).libraryContentPath);
+        }
+
+        //Refreshes the contents of the File Mod Tree View
+        public void LoadTreeView(System.Windows.Controls.TreeView _tv, string _fp)
+        {
+            _tv.Items.Clear();
+
+            foreach (string s in Directory.GetDirectories(_fp))
+            {
+                var rootDirectory = new DirectoryInfo(s);
+                _tv.Items.Add(CreateDirectoryNode(rootDirectory));
+            }
+        }
 
         private void ModSelected(object sender, SelectionChangedEventArgs e)
         {
@@ -127,31 +149,45 @@ namespace Quasar
             ComboBox comboBox = (ComboBox)sender;
             ModType selectedType = (ModType)comboBox.SelectedItem;
             FilterList(selectedType.ID);
-            ShowAdvancedFilters(selectedType.ID);
+            ShowAdvancedFilters(selectedType);
         }
 
+        //Refreshes the content of the mod list based on mod type and mod category
         private void FilterSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            ComboBox comboBox = (ComboBox)sender;
+            Category selectedItem = (Category)comboBox.SelectedItem;
+            ModType selectedModType = (ModType)ModTypeSelect.SelectedItem;
+            if(selectedItem != null)
+            {
+                if (selectedItem.ID == -1)
+                {
+                    FilterList(selectedModType.ID);
+                }
+                else
+                {
+                    FilterList(selectedModType.ID, selectedItem.ID);
+                }
+            }
+            else
+            {
+                FilterList(selectedModType.ID);
+            }
+
+
         }
 
-        private void ShowAdvancedFilters(int _modType)
+        //Fill Category filter list
+        private void ShowAdvancedFilters(ModType modType)
         {
-            switch (_modType)
+            ModFilterSelect.ItemsSource = null;
+            if (modType.Categories.Count > 0)
             {
-                case 0:
-                    ModFilterSelect.ItemsSource = Characters;
-                    break;
-                case 1:
-                    ModFilterSelect.ItemsSource = Families;
-                    break;
-                case 2:
-                    ModFilterSelect.ItemsSource = Families;
-                    break;
-                default:
-                    ModFilterSelect.ItemsSource = null;
-                    break;
+                ModFilterSelect.ItemsSource = modType.Categories;
             }
         }
+        
+        //Shows items according to filters
         private void FilterList(int _modType)
         {
             foreach (ModListElement mle in ModListView.Items)
@@ -174,38 +210,54 @@ namespace Quasar
             }
         }
 
-        //Refreshes the contents of the filter combobox
-        public void PrintModInformation(Mod _item)
+        private void FilterList(int _modType, int modCategory)
         {
-            //Thrashing the place
-            ModInfoStackPanelValues.Children.Clear();
-            VersionStackPanel.Children.Clear();
-
-            //Showing Name and Authors
-            ModInfoStackPanelValues.Children.Add(new Label() { Content = _item.Name });
-            foreach (String[] author in _item.Authors)
+            foreach (ModListElement mle in ModListView.Items)
             {
-                ModInfoStackPanelValues.Children.Add(new Label() { Content = "- " + author[0] });
+                if (_modType == -1)
+                {
+                    if(modCategory == -1)
+                    {
+                        mle.Visibility = Visibility.Visible;
+                    }
+                }
+                else
+                {
+                    if (mle.modType == _modType && mle.modCategory == modCategory || mle.modType == _modType && mle.modCategory == -1)
+                    {
+                        mle.Visibility = Visibility.Visible;
+                    }
+                    else
+                    {
+                        mle.Visibility = Visibility.Collapsed;
+                    }
+                }
             }
-
-            //Showing Version info
-            VersionStackPanel.Children.Add(new Label() { Content = _item.Updates });
-            VersionStackPanel.Children.Add(new Label() { Content = "Up to Date" });
-
-            //Loading Tree View
-            LoadTreeView(ModFileView, new FileManager(_item).libraryContentPath);
         }
 
-        public void LoadTreeView(System.Windows.Controls.TreeView _tv, string _fp)
+        //Tree view actions
+        private void ExpandTree(object sender, RoutedEventArgs e)
         {
-            _tv.Items.Clear();
-            
-            foreach(string s in Directory.GetDirectories(_fp)){
-                var rootDirectory = new DirectoryInfo(s);
-                _tv.Items.Add(CreateDirectoryNode(rootDirectory));
+            foreach (var item in ModFileView.Items)
+            {
+                var tvi = item as TreeViewItem;
+                if (tvi != null)
+                {
+                    tvi.ExpandSubtree();
+                }
             }
-           
-            
+        }
+
+        private void MinimizeTree(object sender, RoutedEventArgs e)
+        {
+            foreach (var item in ModFileView.Items)
+            {
+                var tvi = item as TreeViewItem;
+                if (tvi != null)
+                {
+                    tvi.ExpandSubtree();
+                }
+            }
         }
 
         private static TreeViewItem CreateDirectoryNode(DirectoryInfo directoryInfo)
@@ -218,39 +270,6 @@ namespace Quasar
                 directoryNode.Items.Add(new TreeViewItem { Header = file.Name });
 
             return directoryNode;
-        }
-
-        private void ExpandTree()
-        {
-            foreach (var item in ModFileView.Items)
-            {
-                var tvi = item as TreeViewItem;
-                if (tvi != null){
-                    tvi.ExpandSubtree();
-                }
-            }
-        }
-
-        private void MinimizeTree()
-        {
-            foreach (var item in ModFileView.Items)
-            {
-                var tvi = item as TreeViewItem;
-                if (tvi != null)
-                {
-                    tvi.IsExpanded = false;
-                }
-            }
-        }
-
-        private void ModFileMaximize_Click(object sender, RoutedEventArgs e)
-        {
-            ExpandTree();
-        }
-
-        private void ModFileMinimize_Click(object sender, RoutedEventArgs e)
-        {
-            MinimizeTree();
         }
 
         #endregion
@@ -295,7 +314,7 @@ namespace Quasar
             string downloadText = "";
 
             ModListElement mle = new ModListElement();
-            FileManager FMan = new FileManager(_URL);
+            FileManager FMan = new FileManager(_URL, ModTypes);
 
             Mod mod = Mods.Find(mm => mm.id == Int32.Parse(FMan.modID) && mm.type == Int32.Parse(FMan.modType));
 
@@ -326,7 +345,7 @@ namespace Quasar
                 //Setting download UI
                 mle.Title.Content = downloadText;
 
-                Downloader modDownloader = new Downloader(mle.Progress, mle.Status);
+                Downloader modDownloader = new Downloader(mle.Progress, mle.Status, mle.TypeLabel, mle.Category);
 
                 //Wait for download completion
                 await modDownloader.DownloadArchiveAsync(FMan);

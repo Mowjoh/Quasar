@@ -23,6 +23,7 @@ namespace Quasar.Controls
     {
         public int modID;
         public int modType;
+        public int modCategory;
         public int modAssociation;
 
         public Mod LocalMod;
@@ -45,14 +46,19 @@ namespace Quasar.Controls
 
             modID = _mod.id;
             modType = _mod.type;
+            modCategory = _mod.category;
             modAssociation = _mod.association;
             Title.Content = _mod.Name;
+            Category.Content = _mod.categoryName;
+            TypeLabel.Content = _mod.typeName;
             Status.Content = "Up to date";
         }
 
         public void refreshUI()
         {
             Title.Content = LocalMod.Name;
+            Category.Content = LocalMod.categoryName;
+            TypeLabel.Content = LocalMod.typeName;
             Status.Content = "Up to date";
         }
     }

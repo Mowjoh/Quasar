@@ -22,7 +22,7 @@ namespace Quasar
 
         #region XML Interactions
         //Parsing the full Mod List
-        public static List<Mod> GetModListFile()
+        public static List<Mod> GetModListFile(List<ModType> modTypes)
         {
             ModList Mods = new ModList();
             List<Mod> parsedMods = new List<Mod>();
@@ -61,30 +61,28 @@ namespace Quasar
         #region Data Operations
         public static Mod Parse(APIMod mod,List<ModType> modTypes)
         {
-            int modType = -1;
+            int modTypeID = -1;
+            int modCat = -1;
+            string modCatName = "";
+            string modTypeName = "";
             try
             {
-                modType = modTypes.Find(mt => mt.APIName == mod.type).ID;
+                ModType modType = modTypes.Find(mt => mt.APIName == mod.type);
+                modTypeID = modType.ID;
+                modTypeName = modType.Name;
+
+                Category category = modType.Categories.Find(c => c.APICategory == mod.catid);
+                modCat = category.ID;
+                modCatName = category.Name;
+               
             }
             catch(Exception e)
             {
 
             }
 
-
-
-            return new Mod() { id = mod.id, Name = mod.name, type = modType, association = -1, Authors = mod.authors , category = mod.Categoryname, Updates = mod.Updates};
+            return new Mod() { id = mod.id, type = modTypeID, typeName = modTypeName, categoryName = modCatName, category = modCat, Name = mod.name, association = -1, Authors = mod.authors, Updates = mod.Updates};
         }
-
-        public static string GetProperAuthors(string _input)
-        {
-            string output = "";
-
-
-
-            return output;
-        }
-
         #endregion
 
         #region XML Class Definitions
@@ -150,8 +148,14 @@ namespace Quasar
             [XmlAttribute("type")]
             public int type { get; set; }
 
+            [XmlAttribute("typeName")]
+            public string typeName { get; set; }
+
             [XmlAttribute("category")]
-            public string category { get; set; }
+            public int category { get; set; }
+
+            [XmlAttribute("categoryName")]
+            public string categoryName { get; set; }
 
             [XmlAttribute("association")]
             public int association { get; set; }
@@ -170,7 +174,9 @@ namespace Quasar
 
             public bool Ready { get; set; }
 
-            public Mod(int _id, string _Name ,int _type ,int _association ,string[][] _authors, int _updates, bool _native, string _category)
+           
+
+            public Mod(int _id, string _Name ,int _type ,int _association ,string[][] _authors, int _updates, bool _native, int _category)
             {
                 id = _id;
                 Name = _Name;

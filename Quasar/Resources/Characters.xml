@@ -1,233 +1,242 @@
-﻿<Characters>
-  <Character Name="All Characters" ID="-1">
-    <GBName></GBName>
-  </Character>
-  <Character Name="Mario" ID="1">
-    <GBName>Tada</GBName>
-  </Character>
-  <Character Name="Donkey Kong" ID="2">
-    <GBName>Tada</GBName>
-  </Character>
-  <Character Name="Link" ID="3">
-    <GBName>Tada</GBName>
-  </Character>
-  <Character Name="Samus" ID="4">
-    <GBName>Tada</GBName>
-  </Character>
-  <Character Name="Dark Samus" ID="5">
-    <GBName>Tada</GBName>
-  </Character>
-  <Character Name="Yoshi" ID="6">
-    <GBName>Tada</GBName>
-  </Character>
-  <Character Name="Kirby" ID="7">
-    <GBName>Tada</GBName>
-  </Character>
-  <Character Name="Fox" ID="8">
-    <GBName>Tada</GBName>
-  </Character>
-  <Character Name="Pikachu" ID="9">
-    <GBName>Tada</GBName>
-  </Character>
-  <Character Name="Luigi" ID="10">
-    <GBName>Tada</GBName>
-  </Character>
-  <Character Name="Ness" ID="11"> 
-    <GBName>Tada</GBName>
-  </Character>
-  <Character Name="Captain Falcon" ID="12">
-    <GBName>Tada</GBName>
-  </Character>
-  <Character Name="Jigglypuff" ID="13">
-    <GBName>Tada</GBName>
-  </Character>
-  <Character Name="Peach" ID="14">
-    <GBName>Tada</GBName>
-  </Character>
-  <Character Name="Daisy" ID="15">
-    <GBName>Tada</GBName>
-  </Character>
-  <Character Name="Bowser" ID="16">
-    <GBName>Tada</GBName>
-  </Character>
-  <Character Name="Ice Climbers" ID="17">
-    <GBName>Tada</GBName>
-  </Character>
-  <Character Name="Sheik" ID="18">
-    <GBName>Tada</GBName>
-  </Character>
-  <Character Name="Zelda" ID="19">
-    <GBName>Tada</GBName>
-  </Character>
-  <Character Name="Dr. Mario" ID="20">
-    <GBName>Tada</GBName>
-  </Character>
-  <Character Name="Pichu" ID="21">
-    <GBName>Tada</GBName>
-  </Character>
-  <Character Name="Falco" ID="22">
-    <GBName>Tada</GBName>
-  </Character>
-  <Character Name="Marth" ID="23">
-    <GBName>Tada</GBName>
-  </Character>
-  <Character Name="Lucina" ID="24">
-    <GBName>Tada</GBName>
-  </Character>
-  <Character Name="Young Link" ID="25">
-    <GBName>Tada</GBName>
-  </Character>
-  <Character Name="Ganondorf" ID="26">
-    <GBName>Tada</GBName>
-  </Character>
-  <Character Name="Mewtwo" ID="27">
-    <GBName>Tada</GBName>
-  </Character>
-  <Character Name="Roy" ID="28">
-    <GBName>Tada</GBName>
-  </Character>
-  <Character Name="Chrom" ID="29">
-    <GBName>Tada</GBName>
-  </Character>
-  <Character Name="Mr. Game and Watch" ID="30">
-    <GBName>Tada</GBName>
-  </Character>
-  <Character Name="Meta Knight" ID="31">
-    <GBName>Tada</GBName>
-  </Character>
-  <Character Name="Pit" ID="32"> 
-    <GBName>Tada</GBName>
-  </Character>
-  <Character Name="Dark Pit" ID="33">
-    <GBName>Tada</GBName>
-  </Character>
-  <Character Name="Zero Suit Samus" ID="34">
-    <GBName>Tada</GBName>
-  </Character>
-  <Character Name="Wario" ID="35">
-    <GBName>Tada</GBName>
-  </Character>
-  <Character Name="Snake" ID="36">
-    <GBName>Tada</GBName>
-  </Character>
-  <Character Name="Ike" ID="37">
-    <GBName>Tada</GBName>
-  </Character>
-  <Character Name="Pokemon Trainer" ID="38">
-    <GBName>Tada</GBName>
-  </Character>
-  <Character Name="Diddy Kong" ID="39">
-    <GBName>Tada</GBName>
-  </Character>
-  <Character Name="Lucas" ID="40">
-    <GBName>Tada</GBName>
-  </Character>
-  <Character Name="Sonic" ID="41">
-    <GBName>Tada</GBName>
-  </Character>
-  <Character Name="King Dedede" ID="42">
-    <GBName>Tada</GBName>
-  </Character>
-  <Character Name="Olimar" ID="43">
-    <GBName>Tada</GBName>
-  </Character>
-  <Character Name="Lucario" ID="44">
-    <GBName>Tada</GBName>
-  </Character>
-  <Character Name="R.O.B." ID="45">
-    <GBName>Tada</GBName>
-  </Character>
-  <Character Name="Toon Link" ID="46">
-    <GBName>Tada</GBName>
-  </Character>
-  <Character Name="Wolf" ID="47">
-    <GBName>Tada</GBName>
-  </Character>
-  <Character Name="Villager" ID="48">
-    <GBName>Tada</GBName>
-  </Character>
-  <Character Name="Mega Man" ID="49">
-    <GBName>Tada</GBName>
-  </Character>
-  <Character Name="Wii Fit Trainer" ID="50">
-    <GBName>Tada</GBName>
-  </Character>
-  <Character Name="Rosalina and Luma" ID="51">
-    <GBName>Tada</GBName>
-  </Character>
-  <Character Name="Little Mac" ID="52">
-    <GBName>Tada</GBName>
-  </Character>
-  <Character Name="Greninja" ID="53">
-    <GBName>Tada</GBName>
-  </Character>
-  <Character Name="Mii Fighter" ID="54">
-    <GBName>Tada</GBName>
-  </Character>
-  <Character Name="Palutena" ID="55">
-    <GBName>Tada</GBName>
-  </Character>
-  <Character Name="Pac Man" ID="56">
-    <GBName>Tada</GBName>
-  </Character>
-  <Character Name="Robin" ID="57">
-    <GBName>Tada</GBName>
-  </Character>
-  <Character Name="Shulk" ID="58">
-    <GBName>Tada</GBName>
-  </Character>
-  <Character Name="Bowser Jr" ID="59">
-    <GBName>Tada</GBName>
-  </Character>
-  <Character Name="Duck Hunt Duo" ID="60">
-    <GBName>Tada</GBName>
-  </Character>
-  <Character Name="Ryu" ID="61">
-    <GBName>Tada</GBName>
-  </Character>
-  <Character Name="Ken" ID="62">
-    <GBName>Tada</GBName>
-  </Character>
-  <Character Name="Cloud" ID="63">
-    <GBName>Tada</GBName>
-  </Character>
-  <Character Name="Corrin" ID="64">
-    <GBName>Tada</GBName>
-  </Character>
-  <Character Name="Bayonetta" ID="65">
-    <GBName>Tada</GBName>
-  </Character>
-  <Character Name="Inkling" ID="66">
-    <GBName>Tada</GBName>
-  </Character>
-  <Character Name="Ridley" ID="67">
-    <GBName>Tada</GBName>
-  </Character>
-  <Character Name="Simon" ID="68">
-    <GBName>Tada</GBName>
-  </Character>
-  <Character Name="Richter" ID="69">
-    <GBName>Tada</GBName>
-  </Character>
-  <Character Name="King K. Rool" ID="70">
-    <GBName>Tada</GBName>
-  </Character>
-  <Character Name="Isabelle" ID="71">
-    <GBName>Tada</GBName>
-  </Character>
-  <Character Name="Incineroar" ID="72">
-    <GBName>Tada</GBName>
-  </Character>
-  <Character Name="Piranha Plant" ID="73">
-    <GBName>Tada</GBName>
-  </Character>
-  <Character Name="Joker" ID="74">
-    <GBName>Tada</GBName>
-  </Character>
-  <Character Name="Hero" ID="75">
-    <GBName>Tada</GBName>
-  </Character>
-  <Character Name="Banjo-Kazooie" ID="76">
-    <GBName>Tada</GBName>
-  </Character>
-</Characters>
+﻿<Categories>
+  <Category ID="-1" APICategory="0">
+    <Name>All Categories</Name>
+  </Category>
+  <Category ID="1" APICategory="14080">
+    <Name>Mario</Name>
+  </Category>
+  <Category ID="2" APICategory="14088">
+    <Name>Donkey Kong</Name>
+  </Category>
+  <Category ID="3" APICategory="14090">
+    <Name>Link</Name>
+  </Category>
+  <Category ID="4" APICategory="14096">
+    <Name>Samus</Name>
+  </Category>
+  <Category ID="5" APICategory="14149">
+    <Name>Dark Samus</Name>
+  </Category>
+  <Category ID="6" APICategory="14087">
+    <Name>Yoshi</Name>
+  </Category>
+  <Category ID="7" APICategory="14098">
+    <Name>Kirby</Name>
+  </Category>
+  <Category ID="8" APICategory="14101">
+    <Name>Fox</Name>
+  </Category>
+  <Category ID="9" APICategory="14104">
+    <Name>Pikachu</Name>
+  </Category>
+  <Category ID="10" APICategory="14081">
+    <Name>Luigi</Name>
+  </Category>
+  <Category ID="11" APICategory="14115">
+    <Name>Ness</Name>
+  </Category>
+  <Category ID="12" APICategory="14114">
+    <Name>Captain Falcon</Name>
+  </Category>
+  <Category ID="13" APICategory="14105">
+    <Name>Jigglypuff</Name>
+  </Category>
+  <Category ID="14" APICategory="14082">
+    <Name>Peach</Name>
+  </Category>
+  <Category ID="15" APICategory="14146">
+    <Name>Daisy</Name>
+  </Category>
+  <Category ID="16" APICategory="14083">
+    <Name>Bowser</Name>
+  </Category>
+  <Category ID="17" APICategory="14117">
+    <Name>Ice Climbers</Name>
+  </Category>
+  <Category ID="18" APICategory="14092">
+    <Name>Sheik</Name>
+  </Category>
+  <Category ID="19" APICategory="14091">
+    <Name>Zelda</Name>
+  </Category>
+  <Category ID="20" APICategory="14084">
+    <Name>Dr. Mario</Name>
+  </Category>
+  <Category ID="21" APICategory="14107">
+    <Name>Pichu</Name>
+  </Category>
+  <Category ID="22" APICategory="14102">
+    <Name>Falco</Name>
+  </Category>
+  <Category ID="23" APICategory="14118">
+    <Name>Marth</Name>
+  </Category>
+  <Category ID="24" APICategory="14122">
+    <Name>Lucina</Name>
+  </Category>
+  <Category ID="25" APICategory="14094">
+    <Name>Young Link</Name>
+  </Category>
+  <Category ID="26" APICategory="14093">
+    <Name>Ganondorf</Name>
+  </Category>
+  <Category ID="27" APICategory="14106">
+    <Name>Mewtwo</Name>
+  </Category>
+  <Category ID="28" APICategory="14119">
+    <Name>Roy</Name>
+  </Category>
+  <Category ID="29" APICategory="14151">
+    <Name>Chrom</Name>
+  </Category>
+  <Category ID="30" APICategory="14124">
+    <Name>Mr. Game and Watch</Name>
+  </Category>
+  <Category ID="31" APICategory="14099">
+    <Name>Meta Knight</Name>
+  </Category>
+  <Category ID="32" APICategory="14125">
+    <Name>Pit</Name>
+  </Category>
+  <Category ID="33" APICategory="14127">
+    <Name>Dark Pit</Name>
+  </Category>
+  <Category ID="34" APICategory="14097">
+    <Name>Zero Suit Samus</Name>
+  </Category>
+  <Category ID="35" APICategory="14128">
+    <Name>Wario</Name>
+  </Category>
+  <Category ID="36" APICategory="14136">
+    <Name>Snake</Name>
+  </Category>
+  <Category ID="37" APICategory="14120">
+    <Name>Ike</Name>
+  </Category>
+  <Category ID="38" APICategory="14108">
+    <Name>Pokemon Trainer</Name>
+  </Category>
+  <Category ID="39" APICategory="14089">
+    <Name>Diddy Kong</Name>
+  </Category>
+  <Category ID="40" APICategory="14116">
+    <Name>Lucas</Name>
+  </Category>
+  <Category ID="41" APICategory="14137">
+    <Name>Sonic</Name>
+  </Category>
+  <Category ID="42" APICategory="14100">
+    <Name>King Dedede</Name>
+  </Category>
+  <Category ID="43" APICategory="14129">
+    <Name>Olimar</Name>
+  </Category>
+  <Category ID="44" APICategory="14112">
+    <Name>Lucario</Name>
+  </Category>
+  <Category ID="45" APICategory="14130">
+    <Name>R.O.B.</Name>
+  </Category>
+  <Category ID="46" APICategory="14095">
+    <Name>Toon Link</Name>
+  </Category>
+  <Category ID="47" APICategory="14103">
+    <Name>Wolf</Name>
+  </Category>
+  <Category ID="48" APICategory="14131">
+    <Name>Villager</Name>
+  </Category>
+  <Category ID="49" APICategory="14138">
+    <Name>Mega Man</Name>
+  </Category>
+  <Category ID="50" APICategory="14133">
+    <Name>Wii Fit Trainer</Name>
+  </Category>
+  <Category ID="51" APICategory="14085">
+    <Name>Rosalina and Luma</Name>
+  </Category>
+  <Category ID="52" APICategory="14132">
+    <Name>Little Mac</Name>
+  </Category>
+  <Category ID="53" APICategory="14113">
+    <Name>Greninja</Name>
+  </Category>
+  <Category ID="54" APICategory="14143">
+    <Name>Mii Fighter</Name>
+  </Category>
+  <Category ID="55" APICategory="14145">
+    <Name>Mii Gunner</Name>
+  </Category>
+  <Category ID="56" APICategory="14144">
+    <Name>Mii Swordfighter</Name>
+  </Category>
+  <Category ID="57" APICategory="14126">
+    <Name>Palutena</Name>
+  </Category>
+  <Category ID="58" APICategory="14139">
+    <Name>Pac Man</Name>
+  </Category>
+  <Category ID="59" APICategory="14121">
+    <Name>Robin</Name>
+  </Category>
+  <Category ID="60" APICategory="14134">
+    <Name>Shulk</Name>
+  </Category>
+  <Category ID="61" APICategory="14086">
+    <Name>Bowser Jr</Name>
+  </Category>
+  <Category ID="62" APICategory="14135">
+  <Name>Duck Hunt Duo</Name>
+  </Category>
+  <Category ID="63" APICategory="14140">
+    <Name>Ryu</Name>
+  </Category>
+  <Category ID="64" APICategory="14154">
+    <Name>Ken</Name>
+  </Category>
+  <Category ID="65" APICategory="14141">
+    <Name>Cloud</Name>
+  </Category>
+  <Category ID="66" APICategory="14123">
+    <Name>Corrin</Name>
+  </Category>
+  <Category ID="67" APICategory="14142">
+    <Name>Bayonetta</Name>
+  </Category>
+  <Category ID="68" APICategory="14153">
+    <Name>Inkling</Name>
+  </Category>
+  <Category ID="69" APICategory="14148">
+    <Name>Ridley</Name>
+  </Category>
+  <Category ID="70" APICategory="14155">
+    <Name>Simon</Name>
+  </Category>
+  <Category ID="71" APICategory="14156">
+    <Name>Richter</Name>
+  </Category>
+  <Category ID="72" APICategory="14147">
+    <Name>King K. Rool</Name>
+  </Category>
+  <Category ID="73" APICategory="14152">
+    <Name>Isabelle</Name>
+  </Category>
+  <Category ID="74" APICategory="14150">
+    <Name>Incineroar</Name>
+  </Category>
+  <Category ID="75" APICategory="14526">
+    <Name>Piranha Plant</Name>
+  </Category>
+  <Category ID="76" APICategory="14612">
+    <Name>Joker</Name>
+  </Category>
+  <Category ID="77" APICategory="14872">
+    <Name>Hero</Name>
+  </Category>
+  <Category ID="78" APICategory="0">
+    <Name>Banjo-Kazooie</Name>
+  </Category>
+  <Category ID="79" APICategory="0">
+    <Name>Terry</Name>
+  </Category>
+</Categories>

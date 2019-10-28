@@ -49,6 +49,8 @@
                                 </Grid.ColumnDefinitions>
                                 <StackPanel x:Name="ModInfoStackPanel">
                                     <Label x:Name="ModNameLabel" Content="{x:Static p:Resources.ModName}"/>
+                                    <Label x:Name="ModTypeLabel" Content="{x:Static p:Resources.ModTypeName}"/>
+                                    <Label x:Name="ModCategoryLabel" Content="{x:Static p:Resources.ModCategory}"/>
                                     <Label x:Name="ModAuthorLabel" Content="{x:Static p:Resources.ModAuthor}"/>
                                 </StackPanel>
                                 <StackPanel x:Name="ModInfoStackPanelValues" Grid.Column="1">
@@ -76,8 +78,8 @@
                         </GroupBox>
                         <Label x:Name="ModFileBrowserLabel" Content="{x:Static p:Resources.FileBrowserHeader}" HorizontalAlignment="Left" Margin="5,6,0,0" VerticalAlignment="Top" Width="157" Height="26" Grid.Column="3"/>
                         <TreeView x:Name="ModFileView" Margin="10,37,10,10" Grid.Column="3"/>
-                        <Button x:Name="ModFileMinimize" Content="-" Grid.Column="3" Margin="0,11,10,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="20" Click="ModFileMinimize_Click"/>
-                        <Button x:Name="ModFileMaximize" Content="+" Grid.Column="3" Margin="0,11,35,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="20" Click="ModFileMaximize_Click"/>
+                        <Button x:Name="ModFileMinimize" Content="-" Grid.Column="3" Margin="0,11,10,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="20" Click="MinimizeTree"/>
+                        <Button x:Name="ModFileMaximize" Content="+" Grid.Column="3" Margin="0,11,35,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="20" Click="ExpandTree"/>
                     </Grid>
                 </TabItem>
                 <TabItem x:Name="Assigning" Header="{x:Static p:Resources.AssignmentTabHeader}">

@@ -11,23 +11,6 @@ namespace Quasar.Resources
 {
     public static class XML
     {
-        //Parsing all character info
-        public static List<Character> GetCharacters()
-        {
-            List<Character> characters = null;
-
-            XmlSerializer serializer = new XmlSerializer(typeof(CharacterList));
-
-
-            using (FileStream fileStream = new FileStream(Properties.Settings.Default.DefaultDir + @"\Resources\Characters.xml", FileMode.Open))
-            {
-                CharacterList result = (CharacterList)serializer.Deserialize(fileStream);
-                characters = result.Characters;
-            }
-
-            return characters;
-        }
-
         //Parsing all Mod Type info
         public static List<ModType> GetModTypes()
         {
@@ -35,93 +18,46 @@ namespace Quasar.Resources
 
             XmlSerializer serializer = new XmlSerializer(typeof(ModTypeList));
 
-
             using (FileStream fileStream = new FileStream(Properties.Settings.Default.DefaultDir + @"\Resources\ModTypes.xml", FileMode.Open))
             {
                 ModTypeList result = (ModTypeList)serializer.Deserialize(fileStream);
                 modTypes = result.ModTypes;
             }
 
+            foreach(ModType m in modTypes)
+            {
+                if(m.ResourceFile != "")
+                {
+                    m.Categories = GetCategories(m.ResourceFile);
+                }
+                else
+                {
+                    m.Categories = new List<Category>();
+                }
+               
+            }
+
             return modTypes;
         }
 
-        //Parsing all Families info (for Music)
-        public static List<Family> GetFamilies()
+
+        //Parsing all character info
+        public static List<Category> GetCategories(string _resource)
         {
-            List<Family> families = null;
+            List<Category> Categories = null;
 
-            XmlSerializer serializer = new XmlSerializer(typeof(FamilyList));
+            XmlSerializer serializer = new XmlSerializer(typeof(Categories));
 
-
-            using (FileStream fileStream = new FileStream(Properties.Settings.Default.DefaultDir + @"\Resources\Families.xml", FileMode.Open))
+            using (FileStream fileStream = new FileStream(Properties.Settings.Default.DefaultDir + @"\Resources\"+_resource, FileMode.Open))
             {
-                FamilyList result = (FamilyList)serializer.Deserialize(fileStream);
-                families = result.Families;
+                Categories result = (Categories)serializer.Deserialize(fileStream);
+                Categories = result.CategoryList;
             }
 
-            return families;
+            return Categories;
         }
     }
 
-    #region Characters
-    [XmlRoot("Characters")]
-    public class CharacterList
-    {
-        [XmlElement("Character")]
-        public List<Character> Characters { get; set; }
-        public Character SelectedCharacter { get; set; }
-        
-    }
-
-    public class Character
-    {
-        [XmlAttribute("Name")]
-        public string Name { get; set; }
-
-        [XmlAttribute("ID")]
-        public int ID { get; set; }
-
-        [XmlElement("GBName")]
-        public string GBName { get; set; }
-
-        public Character(string sname, string sgbname, int sID)
-        {
-            Name = sname;
-            GBName = sgbname;
-            ID = sID;
-        }
-
-        Character()
-        {
-
-        }
-    }
-    #endregion
-
-    #region Families
-    [XmlRoot("Families")]
-    public class FamilyList
-    {
-        [XmlElement("Family")]
-        public List<Family> Families { get; set; }
-        public Family SelectedFamily { get; set; }
-    }
-
-    public class Family
-    {
-        [XmlAttribute("ID")]
-        public int ID { get; set; }
-
-        [XmlElement("Name")]
-        public string Name { get; set; }
-
-        [XmlElement("Folder")]
-        public string Folder { get; set; }
-
-    }
-    #endregion
-
-    #region ModTypes
     [XmlRoot("ModTypes")]
     public class ModTypeList
     {
@@ -132,6 +68,8 @@ namespace Quasar.Resources
 
     public class ModType
     {
+        public List<Category> Categories { get; set; }
+
         [XmlAttribute("ID")]
         public int ID { get; set; }
 
@@ -141,11 +79,50 @@ namespace Quasar.Resources
         [XmlElement("APIName")]
         public string APIName { get; set; }
 
+        [XmlElement("ResourceFile")]
+        public string ResourceFile { get; set; }
+
         [XmlElement("Folder")]
         public string Folder { get; set; }
 
+        ModType()
+        {
+
+        }
+
     }
-    #endregion
+
+    [XmlRoot("Categories")]
+    public class Categories
+    {
+        [XmlElement("Category")]
+        public List<Category> CategoryList { get; set; }
+        public Category SelectedCategory { get; set; }
+    }
+
+    public class Category
+    {
+        [XmlAttribute("ID")]
+        public int ID { get; set; }
+
+        [XmlAttribute("APICategory")]
+        public int APICategory { get; set; }
+
+        [XmlElement("Name")]
+        public string Name { get; set; }
+
+        public Category(string _Name, int _APICategeory, int _ID)
+        {
+            Name = _Name;
+            APICategory = _APICategeory;
+            ID = _ID;
+        }
+
+        Category()
+        {
+
+        }
+    }
 
 
 

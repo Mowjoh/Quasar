@@ -36,8 +36,8 @@ namespace Quasar
         [JsonProperty("downloads")]
         public int downloads { get; set; }
 
-        [JsonProperty("Category().name")]
-        public string Categoryname { get; set; }
+        [JsonProperty("catid")]
+        public int catid { get; set; }
 
         [JsonProperty("Updates().nGetUpdatesCount()")]
         public int Updates { get; set; }
@@ -87,7 +87,7 @@ namespace Quasar
             queryParameters = getDefaultParameters();
             queryParameters.Add(new QueryStringItem("itemid", itemID));
             queryParameters.Add(new QueryStringItem("itemtype", itemtype));
-            queryParameters.Add(new QueryStringItem("fields", "name,Credits().aAuthors(),description,downloads,Category().name,Updates().nGetUpdatesCount()"));
+            queryParameters.Add(new QueryStringItem("fields", "name,Credits().aAuthors(),description,downloads,catid,Updates().nGetUpdatesCount()"));
 
             string queryURL = formatApiRequest("Core/Item/Data", queryParameters);
 

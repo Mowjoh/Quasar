@@ -124,6 +124,15 @@ namespace Quasar.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Category :.
+        /// </summary>
+        public static string ModCategory {
+            get {
+                return ResourceManager.GetString("ModCategory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to You can filter things here.
         /// </summary>
         public static string ModFilterSelectText {
@@ -156,6 +165,15 @@ namespace Quasar.Properties {
         public static string ModStatus {
             get {
                 return ResourceManager.GetString("ModStatus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Type :.
+        /// </summary>
+        public static string ModTypeName {
+            get {
+                return ResourceManager.GetString("ModTypeName", resourceCulture);
             }
         }
         

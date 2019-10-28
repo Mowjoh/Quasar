@@ -11,5 +11,7 @@
         <Label x:Name="Status" Content="Status" HorizontalAlignment="Left" Margin="0,29,0,0" VerticalAlignment="Top" Foreground="#FF0B397C"/>
         <ProgressBar x:Name="Progress" Height="10" Margin="0,38,0,0" VerticalAlignment="Top" Background="#6B000000" BorderBrush="{x:Null}" BorderThickness="0" Foreground="#FF003009"/>
         <Rectangle x:Name="Border" Stroke="#FF0B397C"/>
+        <Label x:Name="TypeLabel" Content="" HorizontalAlignment="Right" Margin="0" VerticalAlignment="Top" Foreground="#FF0B397C"/>
+        <Label x:Name="Category" Content="" HorizontalAlignment="Right" VerticalAlignment="Top" Width="Auto" Foreground="#FF0B397C" Margin="0,29,0,0"/>
     </Grid>
 </UserControl>

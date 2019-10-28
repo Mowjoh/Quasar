@@ -23,6 +23,8 @@ namespace Quasar
 
         ProgressBar progressBar;
         Label statusLabel;
+        Label typeLabel;
+        Label categoryLabel;
 
         string downloadURL;
         public string contentType;
@@ -31,10 +33,12 @@ namespace Quasar
 
         public string saveFileName;
 
-        public Downloader(ProgressBar _progressBar, Label _statusLabel)
+        public Downloader(ProgressBar _progressBar, Label _statusLabel, Label TypeLabel, Label _CategoryLabel)
         {
             progressBar = _progressBar;
             statusLabel = _statusLabel;
+            categoryLabel = _CategoryLabel;
+            typeLabel = TypeLabel;
         }
 
         public async Task<bool> DownloadArchiveAsync(FileManager _FMan)
@@ -71,9 +75,9 @@ namespace Quasar
                         (e.BytesReceived / 1024d / 1024d).ToString("0.00"),
                         (e.TotalBytesToReceive / 1024d / 1024d).ToString("0.00"));
 
-                statusLabel.Dispatcher.BeginInvoke((Action)(() =>
+                typeLabel.Dispatcher.BeginInvoke((Action)(() =>
                 {
-                    statusLabel.Content = downloadProgress;
+                    typeLabel.Content = downloadProgress;
                 }));
             };
 
