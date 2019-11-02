@@ -1,0 +1,7 @@
+﻿<InternalModType Name ="CSP" Filename="CSP" ID ="1" Association="1" Slots="8">
+  <InternalModTypeFile ID="1">
+    <Path>chara_{0}</Path>
+    <File>*.bntx</File>
+    <Mandatory>true</Mandatory>
+  </InternalModTypeFile>
+</InternalModType>

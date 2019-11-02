@@ -84,7 +84,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="File\FileManager.cs" />
+    <Compile Include="File\ModFileManager.cs" />
+    <Compile Include="File\ContentXML.cs" />
+    <Compile Include="File\AssociationXML.cs" />
     <Compile Include="File\Unarchiver.cs" />
     <Compile Include="Quasar_Sys\Checker.cs" />
     <Compile Include="Controls\ModListElement.xaml.cs">
@@ -102,10 +104,11 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="Quasar_Sys\Protoman.cs" />
+    <Compile Include="Quasar_Sys\Searchie.cs" />
     <Compile Include="Singleton\PipeClient.cs" />
     <Compile Include="Singleton\PipeServer.cs" />
     <Compile Include="Web\Downloader.cs" />
-    <Compile Include="File\Library.cs" />
+    <Compile Include="File\LibraryXML.cs" />
     <Compile Include="File\XML.cs" />
     <Page Include="Controls\ModListElement.xaml">
       <SubType>Designer</SubType>
@@ -156,6 +159,18 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="InternalModTypes\CSP.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="InternalModTypes\FighterVoice.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="InternalModTypes\Skin.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\GameData.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Resources\GUI.xml">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

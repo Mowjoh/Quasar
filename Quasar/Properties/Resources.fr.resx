@@ -132,6 +132,9 @@
   <data name="FileBrowserHeader" xml:space="preserve">
     <value>Gestionnaire de fichiers</value>
   </data>
+  <data name="InternalModTypesHeader" xml:space="preserve">
+    <value>Types de mods internes</value>
+  </data>
   <data name="ManagementTabHeader" xml:space="preserve">
     <value>Gestion</value>
   </data>

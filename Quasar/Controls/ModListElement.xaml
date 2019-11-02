@@ -6,12 +6,20 @@
              xmlns:local="clr-namespace:Quasar.Controls"
              mc:Ignorable="d" 
              d:DesignHeight="50" d:DesignWidth="100" Width="auto" Height="Auto" MinWidth="250" MinHeight="55" MouseUp="UserControl_MouseUp" HorizontalAlignment="Stretch">
-    <Grid Background="White">
-        <Label x:Name="Title" Content="SkinTitle" HorizontalAlignment="Left" VerticalAlignment="Top" Width="Auto" Foreground="#FF0B397C"/>
-        <Label x:Name="Status" Content="Status" HorizontalAlignment="Left" Margin="0,29,0,0" VerticalAlignment="Top" Foreground="#FF0B397C"/>
-        <ProgressBar x:Name="Progress" Height="10" Margin="0,38,0,0" VerticalAlignment="Top" Background="#6B000000" BorderBrush="{x:Null}" BorderThickness="0" Foreground="#FF003009"/>
-        <Rectangle x:Name="Border" Stroke="#FF0B397C"/>
-        <Label x:Name="TypeLabel" Content="" HorizontalAlignment="Right" Margin="0" VerticalAlignment="Top" Foreground="#FF0B397C"/>
-        <Label x:Name="Category" Content="" HorizontalAlignment="Right" VerticalAlignment="Top" Width="Auto" Foreground="#FF0B397C" Margin="0,29,0,0"/>
+    <UserControl.Resources>
+        <SolidColorBrush x:Key="BlueText" Color="#FF0B397C"/>
+        <SolidColorBrush x:Key="RedText" Color="#FF9E1904"/>
+        <SolidColorBrush x:Key="GreenText" Color="#FF006E1E"/>
+        <SolidColorBrush x:Key="PurpleText" Color="#FFAD00B6"/>
+        <SolidColorBrush x:Key="BlackText" Color="Black"/>
+        <SolidColorBrush x:Key="DarkBlueText" Color="#FF06766C"/>
+    </UserControl.Resources>
+    <Grid Background="White" x:Name="MLEGrid">
+        <Label x:Name="Title" Content="SkinTitle" HorizontalAlignment="Left" VerticalAlignment="Top" Width="Auto" Foreground="{DynamicResource BlackText}"/>
+        <Label x:Name="Status" Content="Status" HorizontalAlignment="Left" Margin="0,29,0,0" VerticalAlignment="Top" Foreground="{DynamicResource BlackText}"/>
+        <ProgressBar x:Name="Progress" Height="10" Margin="0,38,0,0" VerticalAlignment="Top" Background="#6B000000" BorderBrush="{x:Null}" BorderThickness="0" Foreground="{DynamicResource BlackText}"/>
+        <Rectangle x:Name="Border" Stroke="{DynamicResource BlackText}"/>
+        <Label x:Name="TypeLabel" Content="" HorizontalAlignment="Right" Margin="0" VerticalAlignment="Top" Foreground="{DynamicResource BlackText}"/>
+        <Label x:Name="Category" Content="" HorizontalAlignment="Right" VerticalAlignment="Top" Width="Auto" Foreground="{DynamicResource BlackText}" Margin="0,29,0,0"/>
     </Grid>
 </UserControl>

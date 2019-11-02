@@ -9,7 +9,7 @@ using static Quasar.Library;
 
 namespace Quasar.File
 {
-    public class FileManager
+    public class ModFileManager
     {
         public string modID { get; set; }
         public string modType { get; set; }
@@ -23,7 +23,7 @@ namespace Quasar.File
         public string archiveContentDest { get; set; }
         public string libraryContentPath { get; set; }
 
-        public FileManager(string _quasarURL,List<ModType> modTypes)
+        public ModFileManager(string _quasarURL,List<ModType> modTypes)
         {
             string parameters = _quasarURL.Substring(7);
             downloadURL = parameters.Split(',')[0];
@@ -40,7 +40,7 @@ namespace Quasar.File
             libraryContentPath = Properties.Settings.Default.DefaultDir + "\\Library\\Mods\\" + modTypeFolder + "\\" + modID + "\\";
         }
 
-        public FileManager(Mod _mod, List<ModType> modTypes)
+        public ModFileManager(Mod _mod, List<ModType> modTypes)
         {
             modID = _mod.id.ToString();
             modType = _mod.type.ToString();

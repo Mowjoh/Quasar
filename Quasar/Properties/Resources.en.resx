@@ -132,6 +132,9 @@
   <data name="FileBrowserHeader" xml:space="preserve">
     <value>File Browser</value>
   </data>
+  <data name="InternalModTypesHeader" xml:space="preserve">
+    <value>Internal Mod Types</value>
+  </data>
   <data name="ManagementTabHeader" xml:space="preserve">
     <value>Mod Management</value>
   </data>

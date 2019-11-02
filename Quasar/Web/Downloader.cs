@@ -41,7 +41,7 @@ namespace Quasar
             typeLabel = TypeLabel;
         }
 
-        public async Task<bool> DownloadArchiveAsync(FileManager _FMan)
+        public async Task<bool> DownloadArchiveAsync(ModFileManager _FMan)
         {
             await statusLabel.Dispatcher.BeginInvoke(new Action(() =>
             {
@@ -96,7 +96,7 @@ namespace Quasar
             return true;
         }
 
-        public void ParseQueryStringParameters(FileManager _FMan)
+        public void ParseQueryStringParameters(ModFileManager _FMan)
         {
             downloadURL = _FMan.downloadURL;
             contentType = _FMan.modType;

@@ -17,12 +17,14 @@ namespace Quasar.File
             String ModsPath = BasePath + "\\Library\\Mods\\";
             String DownloadsPath = BasePath + "\\Library\\Downloads\\";
             String ResourcePath = BasePath + "\\Resources\\";
+            String InternalModTypesPath = BasePath + "\\InternalModTypes\\";
             CheckCreate(BasePath);
             CheckCreate(LibraryPath);
             CheckCreate(ModsPath);
             CheckCreate(DownloadsPath);
             CheckCreate(ResourcePath);
-            
+            CheckCreate(InternalModTypesPath);
+
 
         }
 
@@ -34,8 +36,12 @@ namespace Quasar.File
         public static void UpdateBaseFiles()
         {
             String ResourcePath = Properties.Settings.Default.DefaultDir + "\\Resources\\";
+            String InternalModTypesPath = Properties.Settings.Default.DefaultDir + "\\InternalModTypes\\";
             String AppPath = Properties.Settings.Default.AppPath + "\\Resources\\";
-            FileManager.CopyFolder(AppPath, ResourcePath, true);
+            String IMTApp = Properties.Settings.Default.AppPath + "\\InternalModTypes\\";
+
+            ModFileManager.CopyFolder(AppPath, ResourcePath, true);
+            ModFileManager.CopyFolder(IMTApp, InternalModTypesPath, true);
         }
 
         public static void CheckCreate(String _Path)
@@ -46,27 +52,43 @@ namespace Quasar.File
             }
         }
 
-        public static void CompareResources()
+        public static void checkCopy(string source, string destination)
         {
-            String AppPath = Properties.Settings.Default.AppPath + "\\Resources";
-            String DocumentsResourcePath = Properties.Settings.Default.DefaultDir + "\\Resources\\";
-
-            foreach (string s in Directory.GetFiles(AppPath))
+            foreach (string s in Directory.GetFiles(source))
             {
                 string filename = Path.GetFileName(s);
-                string dest = DocumentsResourcePath + filename;
+                string dest = destination + filename;
                 if (!System.IO.File.Exists(dest))
                 {
-                    
+
                     System.IO.File.Copy(s, dest);
                 }
             }
         }
 
+        public static void CompareResources()
+        {
+            String AppResPath = Properties.Settings.Default.AppPath + "\\Resources";
+            String DocumentsResourcePath = Properties.Settings.Default.DefaultDir + "\\Resources\\";
+            String AppIMTPath = Properties.Settings.Default.AppPath + "\\InternalModTypes";
+            String InternalModTypesPath = Properties.Settings.Default.DefaultDir + "\\InternalModTypes\\";
+
+            checkCopy(AppResPath, DocumentsResourcePath);
+            checkCopy(AppIMTPath, InternalModTypesPath);
+        }
+
         public static void DeleteDocumentsFolder()
         {
             var DocumentsFolder = Properties.Settings.Default.DefaultDir;
-            Directory.Delete(DocumentsFolder, true);
+            foreach(String s in Directory.GetDirectories(DocumentsFolder))
+            {
+                Directory.Delete(s, true);
+            }
+            foreach(string s in Directory.GetFiles(DocumentsFolder))
+            {
+                System.IO.File.Delete(s);
+            }
+            
             Application.Current.Shutdown();
         }
     }

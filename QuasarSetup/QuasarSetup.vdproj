@@ -160,6 +160,14 @@
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.6.1"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.6.1 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.6.1"
+                    }
+                }
             }
         }
     }
@@ -454,15 +462,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Quasar"
-        "ProductCode" = "8:{885D3001-0061-41C1-8CB1-45D049AA48BD}"
-        "PackageCode" = "8:{6CE2E88E-2067-4DB7-B4E3-0CEE1EEB9A9D}"
+        "ProductCode" = "8:{36FA1C28-EE12-4540-B862-F7C7B0F16686}"
+        "PackageCode" = "8:{D99D7D13-E28E-4566-9FB2-8A40218C2DF8}"
         "UpgradeCode" = "8:{33FBFAE5-777F-41E5-9E5C-1629D77AAA77}"
         "AspNetVersion" = "8:2.0.50727.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:0.7.0"
+        "ProductVersion" = "8:0.7.1"
         "Manufacturer" = "8:Mowjoh"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"

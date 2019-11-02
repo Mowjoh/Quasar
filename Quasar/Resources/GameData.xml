@@ -1,0 +1,571 @@
+﻿<GameDataInformation>
+  <Category ID ="0">
+    <Name>Other</Name>
+  </Category>
+  <Category ID="1">
+    <Name>Characters</Name>
+    <Item ID="1">
+      <Name>Mario</Name>
+      <ItemAttribute>
+        <Key>foldername</Key>
+        <Value>Value</Value>
+      </ItemAttribute>
+    </Item>
+    <Item ID="2">
+      <Name>Donkey Kong</Name>
+      <ItemAttribute>
+        <Key>foldername</Key>
+        <Value>Value</Value>
+      </ItemAttribute>
+    </Item>
+    <Item ID="3">
+      <Name>Link</Name>
+      <ItemAttribute>
+        <Key>foldername</Key>
+        <Value>Value</Value>
+      </ItemAttribute>
+    </Item>
+    <Item ID="4">
+      <Name>Samus</Name>
+      <ItemAttribute>
+        <Key>foldername</Key>
+        <Value>Value</Value>
+      </ItemAttribute>
+    </Item>
+    <Item ID="5">
+      <Name>Dark Samus</Name>
+      <ItemAttribute>
+        <Key>foldername</Key>
+        <Value>Value</Value>
+      </ItemAttribute>
+    </Item>
+    <Item ID="6">
+      <Name>Yoshi</Name>
+      <ItemAttribute>
+        <Key>foldername</Key>
+        <Value>Value</Value>
+      </ItemAttribute>
+    </Item>
+    <Item ID="7">
+      <Name>Kirby</Name>
+      <ItemAttribute>
+        <Key>foldername</Key>
+        <Value>Value</Value>
+      </ItemAttribute>
+    </Item>
+    <Item ID="8">
+      <Name>Fox</Name>
+      <ItemAttribute>
+        <Key>foldername</Key>
+        <Value>Value</Value>
+      </ItemAttribute>
+    </Item>
+    <Item ID="9">
+      <Name>Pikachu</Name>
+      <ItemAttribute>
+        <Key>foldername</Key>
+        <Value>Value</Value>
+      </ItemAttribute>
+    </Item>
+    <Item ID="10">
+      <Name>Luigi</Name>
+      <ItemAttribute>
+        <Key>foldername</Key>
+        <Value>Value</Value>
+      </ItemAttribute>
+    </Item>
+    <Item ID="11">
+      <Name>Ness</Name>
+      <ItemAttribute>
+        <Key>foldername</Key>
+        <Value>Value</Value>
+      </ItemAttribute>
+    </Item>
+    <Item ID="12">
+      <Name>Captain Falcon</Name>
+      <ItemAttribute>
+        <Key>foldername</Key>
+        <Value>Value</Value>
+      </ItemAttribute>
+    </Item>
+    <Item ID="13">
+      <Name>Jigglypuff</Name>
+      <ItemAttribute>
+        <Key>foldername</Key>
+        <Value>Value</Value>
+      </ItemAttribute>
+    </Item>
+    <Item ID="14">
+      <Name>Peach</Name>
+      <ItemAttribute>
+        <Key>foldername</Key>
+        <Value>Value</Value>
+      </ItemAttribute>
+    </Item>
+    <Item ID="15">
+      <Name>Daisy</Name>
+      <ItemAttribute>
+        <Key>foldername</Key>
+        <Value>Value</Value>
+      </ItemAttribute>
+    </Item>
+    <Item ID="16">
+      <Name>Bowser</Name>
+      <ItemAttribute>
+        <Key>foldername</Key>
+        <Value>Value</Value>
+      </ItemAttribute>
+    </Item>
+    <Item ID="17">
+      <Name>Ice Climbers</Name>
+      <ItemAttribute>
+        <Key>foldername</Key>
+        <Value>Value</Value>
+      </ItemAttribute>
+    </Item>
+    <Item ID="18">
+      <Name>Sheik</Name>
+      <ItemAttribute>
+        <Key>foldername</Key>
+        <Value>Value</Value>
+      </ItemAttribute>
+    </Item>
+    <Item ID="19">
+      <Name>Zelda</Name>
+      <ItemAttribute>
+        <Key>foldername</Key>
+        <Value>Value</Value>
+      </ItemAttribute>
+    </Item>
+    <Item ID="20">
+      <Name>Dr. Mario</Name>
+      <ItemAttribute>
+        <Key>foldername</Key>
+        <Value>Value</Value>
+      </ItemAttribute>
+    </Item>
+    <Item ID="21">
+      <Name>Pichu</Name>
+      <ItemAttribute>
+        <Key>foldername</Key>
+        <Value>Value</Value>
+      </ItemAttribute>
+    </Item>
+    <Item ID="22">
+      <Name>Falco</Name>
+      <ItemAttribute>
+        <Key>foldername</Key>
+        <Value>Value</Value>
+      </ItemAttribute>
+    </Item>
+    <Item ID="23">
+      <Name>Marth</Name>
+      <ItemAttribute>
+        <Key>foldername</Key>
+        <Value>Value</Value>
+      </ItemAttribute>
+    </Item>
+    <Item ID="24">
+      <Name>Lucina</Name>
+      <ItemAttribute>
+        <Key>foldername</Key>
+        <Value>Value</Value>
+      </ItemAttribute>
+    </Item>
+    <Item ID="25">
+      <Name>Young Link</Name>
+      <ItemAttribute>
+        <Key>foldername</Key>
+        <Value>Value</Value>
+      </ItemAttribute>
+    </Item>
+    <Item ID="26">
+      <Name>Ganondorf</Name>
+      <ItemAttribute>
+        <Key>foldername</Key>
+        <Value>Value</Value>
+      </ItemAttribute>
+    </Item>
+    <Item ID="27">
+      <Name>Mewtwo</Name>
+      <ItemAttribute>
+        <Key>foldername</Key>
+        <Value>Value</Value>
+      </ItemAttribute>
+    </Item>
+    <Item ID="28">
+      <Name>Roy</Name>
+      <ItemAttribute>
+        <Key>foldername</Key>
+        <Value>Value</Value>
+      </ItemAttribute>
+    </Item>
+    <Item ID="29">
+      <Name>Chrom</Name>
+      <ItemAttribute>
+        <Key>foldername</Key>
+        <Value>Value</Value>
+      </ItemAttribute>
+    </Item>
+    <Item ID="30">
+      <Name>Mr. Game and Watch</Name>
+      <ItemAttribute>
+        <Key>foldername</Key>
+        <Value>Value</Value>
+      </ItemAttribute>
+    </Item>
+    <Item ID="31">
+      <Name>Meta Knight</Name>
+      <ItemAttribute>
+        <Key>foldername</Key>
+        <Value>Value</Value>
+      </ItemAttribute>
+    </Item>
+    <Item ID="32">
+      <Name>Pit</Name>
+      <ItemAttribute>
+        <Key>foldername</Key>
+        <Value>Value</Value>
+      </ItemAttribute>
+    </Item>
+    <Item ID="33">
+      <Name>Dark Pit</Name>
+      <ItemAttribute>
+        <Key>foldername</Key>
+        <Value>Value</Value>
+      </ItemAttribute>
+    </Item>
+    <Item ID="34">
+      <Name>Zero Suit Samus</Name>
+      <ItemAttribute>
+        <Key>foldername</Key>
+        <Value>Value</Value>
+      </ItemAttribute>
+    </Item>
+    <Item ID="35">
+      <Name>Wario</Name>
+      <ItemAttribute>
+        <Key>foldername</Key>
+        <Value>Value</Value>
+      </ItemAttribute>
+    </Item>
+    <Item ID="36">
+      <Name>Snake</Name>
+      <ItemAttribute>
+        <Key>foldername</Key>
+        <Value>Value</Value>
+      </ItemAttribute>
+    </Item>
+    <Item ID="37">
+      <Name>Ike</Name>
+      <ItemAttribute>
+        <Key>foldername</Key>
+        <Value>Value</Value>
+      </ItemAttribute>
+    </Item>
+    <Item ID="38">
+      <Name>Pokemon Trainer</Name>
+      <ItemAttribute>
+        <Key>foldername</Key>
+        <Value>Value</Value>
+      </ItemAttribute>
+    </Item>
+    <Item ID="39">
+      <Name>Diddy Kong</Name>
+      <ItemAttribute>
+        <Key>foldername</Key>
+        <Value>Value</Value>
+      </ItemAttribute>
+    </Item>
+    <Item ID="40">
+      <Name>Lucas</Name>
+      <ItemAttribute>
+        <Key>foldername</Key>
+        <Value>Value</Value>
+      </ItemAttribute>
+    </Item>
+    <Item ID="41">
+      <Name>Sonic</Name>
+      <ItemAttribute>
+        <Key>foldername</Key>
+        <Value>Value</Value>
+      </ItemAttribute>
+    </Item>
+    <Item ID="42">
+      <Name>King Dedede</Name>
+      <ItemAttribute>
+        <Key>foldername</Key>
+        <Value>Value</Value>
+      </ItemAttribute>
+    </Item>
+    <Item ID="43">
+      <Name>Olimar</Name>
+      <ItemAttribute>
+        <Key>foldername</Key>
+        <Value>Value</Value>
+      </ItemAttribute>
+    </Item>
+    <Item ID="44">
+      <Name>Lucario</Name>
+      <ItemAttribute>
+        <Key>foldername</Key>
+        <Value>Value</Value>
+      </ItemAttribute>
+    </Item>
+    <Item ID="45">
+      <Name>R.O.B.</Name>
+      <ItemAttribute>
+        <Key>foldername</Key>
+        <Value>Value</Value>
+      </ItemAttribute>
+    </Item>
+    <Item ID="46">
+      <Name>Toon Link</Name>
+      <ItemAttribute>
+        <Key>foldername</Key>
+        <Value>Value</Value>
+      </ItemAttribute>
+    </Item>
+    <Item ID="47">
+      <Name>Wolf</Name>
+      <ItemAttribute>
+        <Key>foldername</Key>
+        <Value>Value</Value>
+      </ItemAttribute>
+    </Item>
+    <Item ID="48">
+      <Name>Villager</Name>
+      <ItemAttribute>
+        <Key>foldername</Key>
+        <Value>Value</Value>
+      </ItemAttribute>
+    </Item>
+    <Item ID="49">
+      <Name>Mega Man</Name>
+      <ItemAttribute>
+        <Key>foldername</Key>
+        <Value>Value</Value>
+      </ItemAttribute>
+    </Item>
+    <Item ID="50">
+      <Name>Wii Fit Trainer</Name>
+      <ItemAttribute>
+        <Key>foldername</Key>
+        <Value>Value</Value>
+      </ItemAttribute>
+    </Item>
+    <Item ID="51">
+      <Name>Rosalina and Luma</Name>
+      <ItemAttribute>
+        <Key>foldername</Key>
+        <Value>Value</Value>
+      </ItemAttribute>
+    </Item>
+    <Item ID="52">
+      <Name>Little Mac</Name>
+      <ItemAttribute>
+        <Key>foldername</Key>
+        <Value>Value</Value>
+      </ItemAttribute>
+    </Item>
+    <Item ID="53">
+      <Name>Greninja</Name>
+      <ItemAttribute>
+        <Key>foldername</Key>
+        <Value>Value</Value>
+      </ItemAttribute>
+    </Item>
+    <Item ID="54">
+      <Name>Mii Fighter</Name>
+      <ItemAttribute>
+        <Key>foldername</Key>
+        <Value>Value</Value>
+      </ItemAttribute>
+    </Item>
+    <Item ID="55">
+      <Name>Mii Gunner</Name>
+      <ItemAttribute>
+        <Key>foldername</Key>
+        <Value>Value</Value>
+      </ItemAttribute>
+    </Item>
+    <Item ID="56">
+      <Name>Mii Swordfighter</Name>
+      <ItemAttribute>
+        <Key>foldername</Key>
+        <Value>Value</Value>
+      </ItemAttribute>
+    </Item>
+    <Item ID="57">
+      <Name>Palutena</Name>
+      <ItemAttribute>
+        <Key>foldername</Key>
+        <Value>Value</Value>
+      </ItemAttribute>
+    </Item>
+    <Item ID="58">
+      <Name>Pac Man</Name>
+      <ItemAttribute>
+        <Key>foldername</Key>
+        <Value>Value</Value>
+      </ItemAttribute>
+    </Item>
+    <Item ID="59">
+      <Name>Robin</Name>
+      <ItemAttribute>
+        <Key>foldername</Key>
+        <Value>Value</Value>
+      </ItemAttribute>
+    </Item>
+    <Item ID="60">
+      <Name>Shulk</Name>
+      <ItemAttribute>
+        <Key>foldername</Key>
+        <Value>Value</Value>
+      </ItemAttribute>
+    </Item>
+    <Item ID="61">
+      <Name>Bowser Jr</Name>
+      <ItemAttribute>
+        <Key>foldername</Key>
+        <Value>Value</Value>
+      </ItemAttribute>
+    </Item>
+    <Item ID="62">
+      <Name>Duck Hunt Duo</Name>
+      <ItemAttribute>
+        <Key>foldername</Key>
+        <Value>Value</Value>
+      </ItemAttribute>
+    </Item>
+    <Item ID="63">
+      <Name>Ryu</Name>
+      <ItemAttribute>
+        <Key>foldername</Key>
+        <Value>Value</Value>
+      </ItemAttribute>
+    </Item>
+    <Item ID="64">
+      <Name>Ken</Name>
+      <ItemAttribute>
+        <Key>foldername</Key>
+        <Value>Value</Value>
+      </ItemAttribute>
+    </Item>
+    <Item ID="65">
+      <Name>Cloud</Name>
+      <ItemAttribute>
+        <Key>foldername</Key>
+        <Value>Value</Value>
+      </ItemAttribute>
+    </Item>
+    <Item ID="66">
+      <Name>Corrin</Name>
+      <ItemAttribute>
+        <Key>foldername</Key>
+        <Value>Value</Value>
+      </ItemAttribute>
+    </Item>
+    <Item ID="67">
+      <Name>Bayonetta</Name>
+      <ItemAttribute>
+        <Key>foldername</Key>
+        <Value>Value</Value>
+      </ItemAttribute>
+    </Item>
+    <Item ID="68">
+      <Name>Inkling</Name>
+      <ItemAttribute>
+        <Key>foldername</Key>
+        <Value>Value</Value>
+      </ItemAttribute>
+    </Item>
+    <Item ID="69">
+      <Name>Ridley</Name>
+      <ItemAttribute>
+        <Key>foldername</Key>
+        <Value>Value</Value>
+      </ItemAttribute>
+    </Item>
+    <Item ID="70">
+      <Name>Simon</Name>
+      <ItemAttribute>
+        <Key>foldername</Key>
+        <Value>Value</Value>
+      </ItemAttribute>
+    </Item>
+    <Item ID="71">
+      <Name>Richter</Name>
+      <ItemAttribute>
+        <Key>foldername</Key>
+        <Value>Value</Value>
+      </ItemAttribute>
+    </Item>
+    <Item ID="72">
+      <Name>King K. Rool</Name>
+      <ItemAttribute>
+        <Key>foldername</Key>
+        <Value>Value</Value>
+      </ItemAttribute>
+    </Item>
+    <Item ID="73">
+      <Name>Isabelle</Name>
+      <ItemAttribute>
+        <Key>foldername</Key>
+        <Value>Value</Value>
+      </ItemAttribute>
+    </Item>
+    <Item ID="74">
+      <Name>Incineroar</Name>
+      <ItemAttribute>
+        <Key>foldername</Key>
+        <Value>Value</Value>
+      </ItemAttribute>
+    </Item>
+    <Item ID="75">
+      <Name>Piranha Plant</Name>
+      <ItemAttribute>
+        <Key>foldername</Key>
+        <Value>Value</Value>
+      </ItemAttribute>
+    </Item>
+    <Item ID="76">
+      <Name>Joker</Name>
+      <ItemAttribute>
+        <Key>foldername</Key>
+        <Value>Value</Value>
+      </ItemAttribute>
+    </Item>
+    <Item ID="77">
+      <Name>Hero</Name>
+      <ItemAttribute>
+        <Key>foldername</Key>
+        <Value>Value</Value>
+      </ItemAttribute>
+    </Item>
+    <Item ID="78">
+      <Name>Banjo-Kazooie</Name>
+      <ItemAttribute>
+        <Key>foldername</Key>
+        <Value>Value</Value>
+      </ItemAttribute>
+    </Item>
+    <Item ID="79">
+      <Name>Terry</Name>
+      <ItemAttribute>
+        <Key>foldername</Key>
+        <Value>Value</Value>
+      </ItemAttribute>
+    </Item>
+  </Category>
+  <Category ID="2">
+    <Name>Stages</Name>
+    <Item ID="1">
+      <Name>Final Destination</Name>
+      <ItemAttribute>
+        <Key>foldername</Key>
+        <Value>finaldest</Value>
+      </ItemAttribute>
+    </Item>
+  </Category>
+</GameDataInformation>

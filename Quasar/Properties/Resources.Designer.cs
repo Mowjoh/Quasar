@@ -106,6 +106,15 @@ namespace Quasar.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Internal Mod Types.
+        /// </summary>
+        public static string InternalModTypesHeader {
+            get {
+                return ResourceManager.GetString("InternalModTypesHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Mod Management.
         /// </summary>
         public static string ManagementTabHeader {
