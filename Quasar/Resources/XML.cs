@@ -7,43 +7,33 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 
-namespace Quasar.Resources
+namespace Quasar.XMLResources
 {
     public static class XML
     {
         //Loads
-        public static List<ModType> GetModTypes()
+        public static List<Game> GetGames()
         {
-            List<ModType> modTypes = null;
+            List<Game> Games = null;
 
-            XmlSerializer serializer = new XmlSerializer(typeof(ModTypeList));
+            XmlSerializer serializer = new XmlSerializer(typeof(GameList));
 
-            using (FileStream fileStream = new FileStream(Properties.Settings.Default.DefaultDir + @"\Resources\ModTypes.xml", FileMode.Open))
+            using (FileStream fileStream = new FileStream(Properties.Settings.Default.DefaultDir + @"\References\API\Games.xml", FileMode.Open))
             {
-                ModTypeList result = (ModTypeList)serializer.Deserialize(fileStream);
-                modTypes = result.ModTypes;
+                GameList result = (GameList)serializer.Deserialize(fileStream);
+                Games = result.Games;
             }
-
-            foreach (ModType m in modTypes)
+            foreach(Game game in Games)
             {
-                if (m.ResourceFile != "")
-                {
-                    m.Categories = GetCategories(m.ResourceFile);
-                }
-                else
-                {
-                    m.Categories = new List<Category>();
-                }
-
+                game.ImagePath = Properties.Settings.Default.DefaultDir + @"\References\images\" + game.Image;
             }
-
-            return modTypes;
+            return Games;
         }
 
         public static List<InternalModType> GetInternalModTypes()
         {
             List<InternalModType> InteralModTypes = new List<InternalModType>();
-            string typesFolderPath = Properties.Settings.Default.DefaultDir + @"\InternalModTypes\";
+            string typesFolderPath = Properties.Settings.Default.DefaultDir + @"\References\InternalModTypes\";
             XmlSerializer serializer = new XmlSerializer(typeof(InternalModType));
 
             foreach (string file in Directory.GetFiles(typesFolderPath))
@@ -59,40 +49,13 @@ namespace Quasar.Resources
             return InteralModTypes;
         }
         
-        public static List<Category> GetCategories(string _resource)
-        {
-            List<Category> Categories = null;
-
-            XmlSerializer serializer = new XmlSerializer(typeof(Categories));
-
-            using (FileStream fileStream = new FileStream(Properties.Settings.Default.DefaultDir + @"\Resources\" + _resource, FileMode.Open))
-            {
-                Categories result = (Categories)serializer.Deserialize(fileStream);
-                Categories = result.CategoryList;
-            }
-
-            return Categories;
-        }
-
-        public static List<GameDataCategory> getGameCategories()
+        public static List<GameDataCategory> GetGameCategories()
         {
             List<GameDataCategory> categories = new List<GameDataCategory>();
 
             XmlSerializer serializer = new XmlSerializer(typeof(GameDataInformation));
-            /*
-            GameDataItemAttribute attr = new GameDataItemAttribute() { Key = "test", Value = "tada" };
-            GameDataItem item = new GameDataItem() { ID = 1, Name = "name", Attributes = new List<GameDataItemAttribute>() { attr } };
-            GameDataCategory cat = new GameDataCategory() { ID = 1, Items = new List<GameDataItem>() { item } };
-            GameDataInformation info = new GameDataInformation() { Categories = new List<GameDataCategory>() { cat } };
 
-            using (StreamWriter wr = new StreamWriter(Properties.Settings.Default.DefaultDir+ @"\Resources\output.xml"))
-            {
-                serializer.Serialize(wr, info);
-            }
-            */
-
-
-            using (FileStream fileStream = new FileStream(Properties.Settings.Default.DefaultDir + @"\Resources\GameData.xml", FileMode.Open))
+            using (FileStream fileStream = new FileStream(Properties.Settings.Default.DefaultDir + @"\References\GameData\GameData.xml", FileMode.Open))
             {
                 GameDataInformation result = (GameDataInformation)serializer.Deserialize(fileStream);
                 categories = result.Categories;
@@ -116,46 +79,51 @@ namespace Quasar.Resources
 
     }
 
-    [XmlRoot("ModTypes")]
-    public class ModTypeList
+    [XmlRoot("Games")]
+    public class GameList
     {
-        [XmlElement("ModType")]
-        public List<ModType> ModTypes { get; set; }
-        public ModType SelectedModType { get; set; }
+        [XmlElement("Game")]
+        public List<Game> Games { get; set; }
     }
 
-    public class ModType
+    public class Game
     {
-        public List<Category> Categories { get; set; }
-
         [XmlAttribute("ID")]
         public int ID { get; set; }
 
-        [XmlElement("Name")]
+        [XmlAttribute("Name")]
         public string Name { get; set; }
 
-        [XmlElement("APIName")]
-        public string APIName { get; set; }
+        [XmlAttribute("GameName")]
+        public string GameName { get; set; }
 
-        [XmlElement("ResourceFile")]
-        public string ResourceFile { get; set; }
+        [XmlAttribute("Image")]
+        public string Image { get; set; }
 
-        [XmlElement("Folder")]
-        public string Folder { get; set; }
+        public string ImagePath { get; set; }        
 
-        ModType()
-        {
-
-        }
-
+        [XmlElement("GameModType")]
+        public List<GameModType> GameModTypes { get; set; }
     }
 
-    [XmlRoot("Categories")]
-    public class Categories
+    public class GameModType
     {
+        
+        [XmlAttribute("ID")]
+        public int ID { get; set; }
+
+        [XmlAttribute("Name")]
+        public string Name { get; set; }
+
+        [XmlAttribute("APIName")]
+        public string APIName { get; set; }
+
+        [XmlAttribute("LibraryFolder")]
+        public string LibraryFolder { get; set; }
+
         [XmlElement("Category")]
-        public List<Category> CategoryList { get; set; }
-        public Category SelectedCategory { get; set; }
+        public List<Category> Categories { get; set; }
+
     }
 
     public class Category

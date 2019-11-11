@@ -14,26 +14,29 @@ namespace Quasar
 
     public class APIMod
     {
-        public int id { get; set; }
-        public string type { get; set; }
+        public int ID { get; set; }
+        public string ModType { get; set; }
         
         [JsonProperty("name")]
-        public string name { get; set; }
+        public string Name { get; set; }
 
         [JsonProperty("Credits().aAuthors()")]
-        public string[][] authors { get; set; }
+        public string[][] Authors { get; set; }
 
         [JsonProperty("description")]
-        public string description { get; set; }
+        public string Description { get; set; }
 
         [JsonProperty("downloads")]
-        public int downloads { get; set; }
+        public int Downloads { get; set; }
 
         [JsonProperty("catid")]
-        public int catid { get; set; }
+        public int CategoryID { get; set; }
+
+        [JsonProperty("Game().name")]
+        public string GameName { get; set; }
 
         [JsonProperty("Updates().nGetUpdatesCount()")]
-        public int Updates { get; set; }
+        public int UpdateCount { get; set; }
 
     }
 
@@ -66,43 +69,43 @@ namespace Quasar
 
     public class QueryStringItem
     {
-        public string name { get; set; }
-        public string value { get; set; }
+        public string Name { get; set; }
+        public string Value { get; set; }
 
 
-        public QueryStringItem(string name, string value)
+        public QueryStringItem(string _Name, string _Value)
         {
-            this.name = name;
-            this.value = value;
+            this.Name = _Name;
+            this.Value = _Value;
         }
 
-        public string output()
+        public string Output()
         {
-            string outie = name + "=" + value;
+            string outie = Name + "=" + Value;
             return outie;
         }
     }
 
     public class APIRequest
     {
-        static string HTTPUrl = "https://api.gamebanana.com/";
+        static readonly string HTTPUrl = "https://api.gamebanana.com/";
 
-        static QueryStringItem jsonFormat = new QueryStringItem("format", "json_min");
-        static QueryStringItem jsonObject = new QueryStringItem("return_keys", "1");
+        static readonly QueryStringItem jsonFormat = new QueryStringItem("format", "json_min");
+        static readonly QueryStringItem jsonObject = new QueryStringItem("return_keys", "1");
 
         static List<QueryStringItem> queryParameters;
 
         #region Mod Actions
-        public static async Task<APIMod> getMod(string itemtype, string itemID)
+        public static async Task<APIMod> GetAPIMod(string _ItemType, string _ItemID)
         {
-            APIMod downloadedMod = null;
+            APIMod DownloadedAPIMod = null;
 
-            queryParameters = getDefaultParameters();
-            queryParameters.Add(new QueryStringItem("itemid", itemID));
-            queryParameters.Add(new QueryStringItem("itemtype", itemtype));
-            queryParameters.Add(new QueryStringItem("fields", "name,Credits().aAuthors(),description,downloads,catid,Updates().nGetUpdatesCount()"));
+            queryParameters = GetDefaultParameters();
+            queryParameters.Add(new QueryStringItem("itemid", _ItemID));
+            queryParameters.Add(new QueryStringItem("itemtype", _ItemType));
+            queryParameters.Add(new QueryStringItem("fields", "name,Credits().aAuthors(),description,downloads,catid,Updates().nGetUpdatesCount(),Game().name"));
 
-            string queryURL = formatApiRequest("Core/Item/Data", queryParameters);
+            string queryURL = FormatAPIRequest("Core/Item/Data", queryParameters);
 
             using (HttpClient webClient = new HttpClient())
             {
@@ -112,28 +115,28 @@ namespace Quasar
                 {
                     string responseText = await response.Content.ReadAsStringAsync();
 
-                    downloadedMod = JsonConvert.DeserializeObject<APIMod>(responseText);
+                    DownloadedAPIMod = JsonConvert.DeserializeObject<APIMod>(responseText);
                 }
             }
 
-            downloadedMod.id = Int32.Parse(itemID);
-            downloadedMod.type = itemtype;
+            DownloadedAPIMod.ID = Int32.Parse(_ItemID);
+            DownloadedAPIMod.ModType = _ItemType;
 
 
-            return downloadedMod;
+            return DownloadedAPIMod;
         }
 
-        public static async Task<string[]> getDownloadFileName(string itemtype, string itemID)
+        public static async Task<string[]> GetDownloadFileName(string _ItemType, string _ItemID)
         {
             string filename = "";
             string downloadURL = "";
 
-            queryParameters = getDefaultParameters();
-            queryParameters.Add(new QueryStringItem("itemid", itemID));
-            queryParameters.Add(new QueryStringItem("itemtype", itemtype)); 
+            queryParameters = GetDefaultParameters();
+            queryParameters.Add(new QueryStringItem("itemid", _ItemID));
+            queryParameters.Add(new QueryStringItem("itemtype", _ItemType)); 
             queryParameters.Add(new QueryStringItem("fields", "Files().aFiles()"));
 
-            string queryURL = formatApiRequest("Core/Item/Data", queryParameters);
+            string queryURL = FormatAPIRequest("Core/Item/Data", queryParameters);
 
             using (HttpClient webClient = new HttpClient())
             {
@@ -165,43 +168,35 @@ namespace Quasar
 
         #region API Formatting
 
-        public static string formatApiRequest(string path, List<QueryStringItem> parameters)
+        public static string FormatAPIRequest(string path, List<QueryStringItem> _Parameters)
         {
             string formattedURL = HTTPUrl + path + "?";
 
-            Boolean first = true;
-            foreach (QueryStringItem QSI in parameters)
+            bool first = true;
+            foreach (QueryStringItem item in _Parameters)
             {
-                formattedURL += first ? QSI.output() : "&" + QSI.output();
+                formattedURL += first ? item.Output() : "&" + item.Output();
                 if (first) { first = false; }
             }
 
             return formattedURL;
         }
 
-        public static List<QueryStringItem> getDefaultParameters()
+        public static List<QueryStringItem> GetDefaultParameters()
         {
-            List<QueryStringItem> newParameters = new List<QueryStringItem>();
-
-            //Adding default QueryString parameters
-            newParameters.Add(jsonFormat);
-            newParameters.Add(jsonObject);
-
-            return newParameters;
+            return new List<QueryStringItem>{jsonFormat,jsonObject}; 
         }
-
-
 
         #endregion
 
-        public static string getQuasarDownloadURL(string download, string downloadURL, string APITypeName, string modID)
+        public static string GetQuasarDownloadURL(string _Filename, string _ResourceURL, string _APITypeName, string _ModID)
         {
-            string extension = download.Split('.')[1];
+            string extension = _Filename.Split('.')[1];
 
             string url = "quasar:";
-            url += downloadURL;
-            url += "," + APITypeName;
-            url += "," + modID;
+            url += _ResourceURL;
+            url += "," + _APITypeName;
+            url += "," + _ModID;
             url += "," + extension;
 
 

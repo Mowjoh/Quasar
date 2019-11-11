@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Quasar.XMLResources;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,7 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using static Quasar.Library;
+using static Quasar.XMLResources.Library;
 
 namespace Quasar.Controls
 {
@@ -26,7 +27,9 @@ namespace Quasar.Controls
         public int modCategory;
         public bool modProcessed;
 
-        public Mod LocalMod;
+        public int gameID;
+
+        public LibraryMod LocalMod;
 
         public bool Downloaded = false;
 
@@ -40,32 +43,37 @@ namespace Quasar.Controls
 
         }
 
-        public void setMod(Mod _mod)
+        public void SetMod(LibraryMod _mod)
         {
+            
             LocalMod = _mod;
-
-            modID = _mod.id;
-            modType = _mod.type;
-            modCategory = _mod.category;
-            modProcessed = _mod.processed;
+            modID = _mod.ID;
+            modType = _mod.TypeID;
+            modCategory = _mod.APICategoryID;
+            modProcessed = _mod.FinishedProcessing;
             Title.Content = _mod.Name;
-            Category.Content = _mod.categoryName;
-            TypeLabel.Content = _mod.typeName;
-            setModTypeColor(modType);
+            ModCategory.Content = _mod.APICategoryName;
+            ModType.Content = _mod.TypeLabel;
+            SetModTypeColor(modType);
             Status.Content = "Up to date";
 
         }
+        public void setGame(Game _Game)
+        {
+            ModGame.Content = _Game.Name;
+            gameID = _Game.ID;
+        }
 
-        public void refreshUI()
+        public void RefreshInterface()
         {
             Title.Content = LocalMod.Name;
-            Category.Content = LocalMod.categoryName;
-            TypeLabel.Content = LocalMod.typeName;
-            setModTypeColor(modType);
+            ModCategory.Content = LocalMod.APICategoryName;
+            ModType.Content = LocalMod.TypeLabel;
+            SetModTypeColor(modType);
             Status.Content = "Up to date";
         }
 
-        public void setModTypeColor(int type)
+        public void SetModTypeColor(int type)
         {
             SolidColorBrush brush;
             switch (type)
@@ -90,8 +98,8 @@ namespace Quasar.Controls
                     break;
             }
             Title.Foreground = brush;
-            Category.Foreground = brush;
-            TypeLabel.Foreground = brush;
+            ModCategory.Foreground = brush;
+            ModType.Foreground = brush;
             Status.Foreground = brush;
             Border.Stroke = brush;
         }

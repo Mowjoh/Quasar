@@ -18,15 +18,14 @@ namespace Quasar.Quasar_Sys
     {
         public static Mutex Instances(Mutex _serverMutex,ObservableCollection<string> _DLS)
         {
-            PipeClient Pc_principal;
-            string[] Args = System.Environment.GetCommandLineArgs();
+            string[] Args = Environment.GetCommandLineArgs();
             //Checking if Quasar is running alright
             if (Mutex.TryOpenExisting("Quasarite", out Mutex mt))
             {
                 //Client
                 if (Args.Length == 2)
                 {
-                    Pc_principal = new PipeClient("Quasarite", Args[1]);
+                    PipeClient.StartPipeClient("Quasarite", Args[1]);
                 }
                 mt.Close();
                 Application.Current.Shutdown();
@@ -66,7 +65,7 @@ namespace Quasar.Quasar_Sys
 
         }
 
-        public static bool checkUpdated()
+        public static bool CheckQuasarUpdated()
         {
             string executionVersion = ExecutionVersion();
             executionVersion = executionVersion.Replace(".", "");

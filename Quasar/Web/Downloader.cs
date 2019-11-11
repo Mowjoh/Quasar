@@ -10,98 +10,94 @@ using System.Windows;
 using System.Windows.Controls;
 using System.IO;
 using Quasar.Controls;
-using static Quasar.Library;
-using Quasar.Resources;
-using Quasar.File;
+using Quasar.XMLResources;
+using Quasar.FileSystem;
 
 namespace Quasar
 {
      class Downloader
     {
         //Setting Default Directory Path
-        string DefaultDirectoryPath = Properties.Settings.Default["DefaultDir"].ToString();
+        readonly string DefaultDirectoryPath = Properties.Settings.Default["DefaultDir"].ToString();
+        readonly ProgressBar DownloadProgressBar;
+        readonly Label StatusLabel;
+        readonly Label TypeLabel;
 
-        ProgressBar progressBar;
-        Label statusLabel;
-        Label typeLabel;
-        Label categoryLabel;
+        string DownloadURL;
+        public string ModTypeID;
+        public string ModID;
+        public string ArchiveExtension;
 
-        string downloadURL;
-        public string contentType;
-        public string contentID;
-        public string fileFormat;
-
-        public string saveFileName;
-
-        public Downloader(ProgressBar _progressBar, Label _statusLabel, Label TypeLabel, Label _CategoryLabel)
+        public Downloader(ProgressBar _ProgressBar, Label _StatusLabel, Label _TypeLabel)
         {
-            progressBar = _progressBar;
-            statusLabel = _statusLabel;
-            categoryLabel = _CategoryLabel;
-            typeLabel = TypeLabel;
+            DownloadProgressBar = _ProgressBar;
+            StatusLabel = _StatusLabel;
+            TypeLabel = _TypeLabel;
         }
 
-        public async Task<bool> DownloadArchiveAsync(ModFileManager _FMan)
+        //The big boi, the download Task
+        public async Task<bool> DownloadArchiveAsync(ModFileManager _ModFileManager)
         {
-            await statusLabel.Dispatcher.BeginInvoke(new Action(() =>
+            //Setting Status and ProgressBar
+            await StatusLabel.Dispatcher.BeginInvoke(new Action(() =>
             {
-                progressBar.Value = 0;
-                statusLabel.Visibility = Visibility.Hidden;
-                progressBar.Visibility = Visibility.Visible;
+                DownloadProgressBar.Value = 0;
+                StatusLabel.Visibility = Visibility.Hidden;
+                DownloadProgressBar.Visibility = Visibility.Visible;
             }), DispatcherPriority.Background);
 
-            ParseQueryStringParameters(_FMan);
-            var downloadLink = new Uri(downloadURL);
-            var saveFolder = DefaultDirectoryPath + "\\Library\\Downloads\\";
-            var saveFilename = DefaultDirectoryPath+"\\Library\\Downloads\\"+contentID+"."+fileFormat;
+            //Getting info from Quasar URL
+            ParseQueryStringParameters(_ModFileManager);
+            var DownloadURL = new Uri(this.DownloadURL);
+            var DestinationFolderPath = DefaultDirectoryPath + "\\Library\\Downloads\\";
+            var DestinationFilePath = DestinationFolderPath + ModID + "." + ArchiveExtension;
+            Folderino.CheckCreate(DestinationFolderPath);
 
-            if (!Directory.Exists(saveFolder)) Directory.CreateDirectory(saveFolder);
-
-            int i = 1;
-            while (System.IO.File.Exists(saveFilename))
+            //Setting up Progress actions
+            void DownloadProgressChangedEvent(object s, DownloadProgressChangedEventArgs e)
             {
-                saveFilename = DefaultDirectoryPath + "\\Library\\Downloads\\" + contentID + "_" + i + "." + fileFormat;
-                i++;
-            }
-
-            DownloadProgressChangedEventHandler DownloadProgressChangedEvent = (s, e) =>
-            {
-                progressBar.Dispatcher.BeginInvoke((Action)(() =>
+                //Changing ProgressBar value
+                DownloadProgressBar.Dispatcher.BeginInvoke((Action)(() =>
                 {
-                    progressBar.Value = e.ProgressPercentage;
+                    DownloadProgressBar.Value = e.ProgressPercentage;
                 }));
 
+                //Making a proper string to display
                 var downloadProgress = string.Format("{0} MB / {1} MB",
                         (e.BytesReceived / 1024d / 1024d).ToString("0.00"),
                         (e.TotalBytesToReceive / 1024d / 1024d).ToString("0.00"));
 
-                typeLabel.Dispatcher.BeginInvoke((Action)(() =>
+                //Displaying value
+                TypeLabel.Dispatcher.BeginInvoke((Action)(() =>
                 {
-                    typeLabel.Content = downloadProgress;
+                    TypeLabel.Content = downloadProgress;
                 }));
-            };
+            }
 
+            //File Download
             using (WebClient webClient = new WebClient())
             {
                 webClient.DownloadProgressChanged += DownloadProgressChangedEvent;
-                await webClient.DownloadFileTaskAsync(downloadLink, saveFilename);
+                await webClient.DownloadFileTaskAsync(DownloadURL, DestinationFilePath);
             }
-
-            await statusLabel.Dispatcher.BeginInvoke(new Action(() =>
+            
+            //Setting UI for finished state
+            await StatusLabel.Dispatcher.BeginInvoke(new Action(() =>
             {
-                statusLabel.Visibility = Visibility.Visible;
-                progressBar.Visibility = Visibility.Hidden;
+                StatusLabel.Visibility = Visibility.Visible;
+                DownloadProgressBar.Visibility = Visibility.Hidden;
             }), DispatcherPriority.Background);
 
             return true;
         }
 
-        public void ParseQueryStringParameters(ModFileManager _FMan)
+        //Parsing information from a ModFileManager instance
+        public void ParseQueryStringParameters(ModFileManager _ModFileManager)
         {
-            downloadURL = _FMan.downloadURL;
-            contentType = _FMan.modType;
-            contentID   = _FMan.modID;
-            fileFormat = _FMan.modArchiveFormat;
+            DownloadURL = _ModFileManager.DownloadURL;
+            ModTypeID = _ModFileManager.ModTypeID;
+            ModID   = _ModFileManager.ModID;
+            ArchiveExtension = _ModFileManager.ModArchiveFormat;
         }
 
     }

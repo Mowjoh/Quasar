@@ -7,220 +7,276 @@
         xmlns:local="clr-namespace:Quasar"
         xmlns:controls="clr-namespace:Quasar.Controls"
         mc:Ignorable="d"
-        Title="{x:Static p:Resources.Title}" MinWidth="800" MinHeight="550" Width="1191" Height="599">
-    <Grid>
-        <TabControl x:Name="ContentTabControl">
-            <TabItem x:Name="Management" Header="{x:Static p:Resources.ManagementTabHeader}">
-                <Grid x:Name="ManagementGrid" Background="#FFE5E5E5">
-                    <Grid.RowDefinitions>
-                        <RowDefinition/>
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="256*"/>
-                        <ColumnDefinition Width="285*"/>
-                        <ColumnDefinition Width="405*"/>
-                        <ColumnDefinition Width="540*"/>
-                    </Grid.ColumnDefinitions>
-                    <ComboBox x:Name="ModTypeSelect" ItemsSource="{Binding ModTypes}" DisplayMemberPath="Name" SelectedValuePath="ID" Margin="10,10,25,0" VerticalAlignment="Top" Height="22" IsReadOnly="True" IsEditable="True" Text="{x:Static p:Resources.ModTypeSelectText}" Foreground="Black" SelectionChanged="ModTypeSelectionChanged" ShouldPreserveUserEnteredPrefix="True"/>
-                    <ComboBox x:Name="ModFilterSelect" ItemsSource="{Binding}" DisplayMemberPath="Name" SelectedValuePath="ID" Margin="27,10,10,0" VerticalAlignment="Top" Height="22" IsReadOnly="True" IsEditable="True" Text="{x:Static p:Resources.ModFilterSelectText}" Foreground="Black" IsEnabled="True" Grid.Column="1" SelectionChanged="FilterSelectionChanged"/>
-                    <ScrollViewer x:Name="ModScrollViewer" Margin="10,37,10,10" Background="#19000000" Grid.ColumnSpan="2">
-                        <ListView x:Name="ModListView" SelectionChanged="ModSelected" ItemsSource="{Binding modLists}">
-                            <ListView.ItemContainerStyle>
-                                <Style TargetType="{x:Type ListViewItem}">
-                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                                    <Setter Property="Padding" Value="0,0,0,0"/>
-                                </Style>
-                            </ListView.ItemContainerStyle>
-                        </ListView>
-                    </ScrollViewer>
-                    <GroupBox x:Name="ModInfoGroup" Header="{x:Static p:Resources.ModInformationHeader}" BorderBrush="#FF036EAE" Margin="7,10,15,195" Grid.Column="2">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="1*"/>
-                                <ColumnDefinition Width="2*"/>
-                            </Grid.ColumnDefinitions>
-                            <StackPanel x:Name="ModInfoStackPanel">
-                                <Label x:Name="ModNameLabel" Content="{x:Static p:Resources.ModName}"/>
-                                <Label x:Name="ModTypeLabel" Content="{x:Static p:Resources.ModTypeName}"/>
-                                <Label x:Name="ModCategoryLabel" Content="{x:Static p:Resources.ModCategory}"/>
-                                <Label x:Name="ModAuthorLabel" Content="{x:Static p:Resources.ModAuthor}"/>
-                            </StackPanel>
-                            <StackPanel x:Name="ModInfoStackPanelValues" Grid.Column="1">
-                                <Label x:Name="ModNameValue" Content="{Binding Name, ElementName=selectedMod}" Margin="0,0,123,0"/>
-                            </StackPanel>
-                        </Grid>
-                    </GroupBox>
-                    <GroupBox x:Name="ModUpdateGroup" Header="Version Control" BorderBrush="#FF036EAE" Margin="10,0,10,10" Grid.Column="2" Height="180" VerticalAlignment="Bottom">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="1*"/>
-                                <ColumnDefinition Width="4*"/>
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="80"/>
-                                <RowDefinition/>
-                            </Grid.RowDefinitions>
-                            <Button x:Name="ModUpdateButton" Content="{x:Static p:Resources.CheckModUpdateButton}" Width="150" HorizontalAlignment="Center" Margin="0,22,0,35" Grid.ColumnSpan="2" Grid.Row="1" VerticalAlignment="Center" Click="CheckUpdates"/>
-                            <StackPanel Margin="0">
-                                <Label x:Name="SkinVersionLabel" Content="{x:Static p:Resources.ModVersion}"/>
-                                <Label x:Name="SkinStatusLabel" Content="{x:Static p:Resources.ModStatus}"/>
-                            </StackPanel>
-                            <StackPanel x:Name="VersionStackPanel" Margin="0" Grid.Column="1"/>
-                        </Grid>
-                    </GroupBox>
-                    <Label x:Name="ModFileBrowserLabel" Content="{x:Static p:Resources.FileBrowserHeader}" HorizontalAlignment="Left" Margin="5,6,0,0" VerticalAlignment="Top" Width="157" Height="26" Grid.Column="3"/>
-                    <TreeView x:Name="ModFileView" Margin="10,37,10,10" Grid.Column="3"/>
-                    <Button x:Name="ModFileMinimize" Content="-" Grid.Column="3" Margin="0,11,10,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="20" Click="MinimizeTree"/>
-                    <Button x:Name="ModFileMaximize" Content="+" Grid.Column="3" Margin="0,11,35,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="20" Click="ExpandTree"/>
-                </Grid>
-            </TabItem>
-            <TabItem x:Name="Content" Header="Content Management">
-                <Grid x:Name="ContentManagementGrid" Background="#FFE5E5E5">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="300*"/>
-                        <ColumnDefinition Width="321*"/>
-                        <ColumnDefinition Width="427*"/>
-                    </Grid.ColumnDefinitions>
-                    <Label x:Name="ContentModListLabel" Content="Untreated Mods :" HorizontalAlignment="Center" Margin="0,10,0,0" VerticalAlignment="Top"/>
-                    <DataGrid x:Name="ContentDataGrid" AutoGenerateColumns="False" CanUserAddRows="False" Margin="10,41,10,10" SelectionChanged="ContentDataGridItemSelected">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="Name" Width="2*" Binding="{Binding Name}"/>
-                            <DataGridTextColumn Header="Type" Width="1*" Binding="{Binding typeName}"/>
-                            <DataGridTextColumn Header="Category" Width="1*" Binding="{Binding categoryName}"/>
-                        </DataGrid.Columns>
-                    </DataGrid>
-                    <Label x:Name="ContentDetectionProcessLabel" Content="Autodetect process" Grid.Column="1" HorizontalAlignment="Left" Margin="11,41,0,0" VerticalAlignment="Top"/>
-                    <Button x:Name="ContentAutoDetectLaunchButton" Content="Launch Autodetect" Grid.Column="1" Margin="0,47,10,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="124" Click="AutoDetectLaunch"/>
-                    <Label x:Name="ContentAutoDetectWarningLabel" Content="If the autodetect found something, it'll show there below" Grid.Column="1" HorizontalAlignment="Center" Margin="30,128,30,0" VerticalAlignment="Top" FontStyle="Italic"/>
-                    <Label x:Name="ContentIMTLabel" Content="Internal Mod Type" Grid.Column="1" HorizontalAlignment="Left" Margin="11,159,0,0" VerticalAlignment="Top"/>
-                    <ComboBox x:Name="ContentIMTSelect" Grid.Column="1" Margin="142,159,10,0" VerticalAlignment="Top">
-                        <ComboBoxItem Content="Skin" HorizontalAlignment="Left" Width="206"/>
-                    </ComboBox>
-                    <Label x:Name="ContentDetectedIMTLabel" Content="Detected Item(s)" Grid.Column="1" HorizontalAlignment="Left" Margin="11,191,0,0" VerticalAlignment="Top"/>
-                    <ComboBox x:Name="ContentDetectedIMTSelect" Grid.Column="1" Margin="142,195,10,0" VerticalAlignment="Top">
-                        <ComboBoxItem Content="Skin #1" HorizontalAlignment="Left" Width="356"/>
-                    </ComboBox>
-                    <Label x:Name="ContentManualSearchWarningLabel" Content="If you think autodetect didn't find your mod" Grid.Column="1" HorizontalAlignment="Right" Margin="0,277,10,0" VerticalAlignment="Top" FontStyle="Italic"/>
-                    <Button x:Name="ContentManualSearchButton" Content="Manual Search" Grid.Column="1" HorizontalAlignment="Left" Margin="226,308,0,0" VerticalAlignment="Top" Width="124"/>
-                    <Label x:Name="ContentFinalStepWarningLabel" Content="Please select the association and give the mod a name" Grid.Column="1" HorizontalAlignment="Center" Margin="0,401,0,0" VerticalAlignment="Top" FontStyle="Italic"/>
-                    <Label x:Name="ContentModAssociationLabel" Content="Mod Association" Grid.Column="1" HorizontalAlignment="Left" Margin="10,432,0,0" VerticalAlignment="Top" Height="30"/>
-                    <ComboBox x:Name="ContentModAssociationSelect" Grid.Column="1" Margin="142,432,10,0" VerticalAlignment="Top">
-                        <ComboBoxItem Content="Incineroar" HorizontalAlignment="Left" Width="206"/>
-                    </ComboBox>
-                    <Label x:Name="ContentModNameLabel" Content="Mod Name :" Grid.Column="1" HorizontalAlignment="Left" Margin="10,467,0,0" VerticalAlignment="Top" Height="23"/>
-                    <TextBox x:Name="ContentModNameText" Grid.Column="1" Height="23" Margin="142,467,10,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top"/>
-                    <Button x:Name="ContentAddCollectionButton" Content="Add to collection" Grid.Column="1" Margin="117,0,119,10" Height="20" VerticalAlignment="Bottom"/>
-                    <Label x:Name="ContentDetectedFileLabel" Content="Detected Files :" HorizontalAlignment="Center" Margin="0,10,0,0" VerticalAlignment="Top" Grid.Column="2"/>
-                    <DataGrid x:Name="ContentFileDataGrid" AutoGenerateColumns="False" CanUserAddRows="False" Grid.Column="2" Height="489" Margin="10,41,10,0" VerticalAlignment="Top">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="Detected File" Width="1*" Binding="{Binding SourcePath}"></DataGridTextColumn>
-                            <DataGridTextColumn Header="File type" Width="auto" Binding="{Binding Path}"></DataGridTextColumn>
-                        </DataGrid.Columns>
-                    </DataGrid>
-                </Grid>
-            </TabItem>
-            <TabItem x:Name="Assigning" Header="{x:Static p:Resources.AssignmentTabHeader}">
-                <Grid Background="#FFE5E5E5">
-                    <Label Content="Section Under Construction..." HorizontalAlignment="Center"  VerticalAlignment="Center" FontSize="36"/>
-                </Grid>
-            </TabItem>
-            <TabItem x:Name="Build" Header="Build">
-                <Grid Background="#FFE5E5E5">
-                    <Label Content="Section Under Construction..." HorizontalAlignment="Center"  VerticalAlignment="Center" FontSize="36"/>
-                </Grid>
-            </TabItem>
-            <TabItem x:Name="ModCreation" Header="Add Mods">
-                <Grid Background="#FFE5E5E5">
-                    <Label Content="Section Under Construction..." HorizontalAlignment="Center"  VerticalAlignment="Center" FontSize="36"/>
-                </Grid>
-            </TabItem>
-            <TabItem x:Name="IMTTab" Header="{x:Static p:Resources.InternalModTypesHeader}">
-                <Grid x:Name="IMTGrid" Background="#FFE5E5E5">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1*"/>
-                        <ColumnDefinition Width="1*"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid x:Name="IMTTreeGrid">
+        Title="{x:Static p:Resources.Title}" MinWidth="800" MinHeight="700" Width="1374" Height="1056">
+    <Grid x:Name="QuasarGrid">
+        <Grid x:Name="OverlayGrid" Panel.ZIndex="1000" Opacity="100" Background="#FF2D2D2D" d:IsHidden="True">
+            <Grid.RenderTransform>
+                <ScaleTransform ScaleX="0" ScaleY="1"/>
+            </Grid.RenderTransform>
+
+            <ListBox x:Name="GamesListView" ItemsSource="{Binding Game}" Height="230" Padding="0" BorderThickness="0" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center" ScrollViewer.CanContentScroll="False" Background="#FF2D2D2D" Margin="50,189,50,194" VerticalAlignment="Center" SelectionChanged="GamesListView_SelectionChanged" d:IsHidden="True">
+                <ListBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <VirtualizingStackPanel IsItemsHost="True" Orientation="Horizontal"/>
+                    </ItemsPanelTemplate>
+                </ListBox.ItemsPanel>
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Vertical" Width="150" Margin="10,0,10,0" HorizontalAlignment="Center" Height="180">
+                            <TextBlock Text="{Binding Name}" Width="150" Margin="-8,0,-8,5" HorizontalAlignment="Center" Foreground="#FF3caaea" VerticalAlignment="Center" TextAlignment="Center" FontSize="18" />
+                            <Image Source="{Binding ImagePath}"  Width="150" Margin="-8,0,-8,0"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </Grid>
+        <Grid x:Name="AppGrid">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="40"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+
+            <TabControl x:Name="ContentTabControl" Grid.Column="1">
+                <TabItem x:Name="Management" Header="{x:Static p:Resources.ManagementTabHeader}">
+                    <Grid x:Name="ManagementGrid" Background="#FFE5E5E5">
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="35"/>
-                            <RowDefinition/>
+                            <RowDefinition Height="35*"/>
+                            <RowDefinition Height="19*"/>
                         </Grid.RowDefinitions>
-                        <Label x:Name="IMTContentsLabel" Content="Contents :" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="101"/>
-                        <Button x:Name="IMTAddFileButton" Content="Add File" Margin="116,13,0,0" VerticalAlignment="Top" Height="22" RenderTransformOrigin="-0.441,0.545" HorizontalAlignment="Left" Width="130" Click="IMTAddFile"/>
-                        <Button x:Name="IMTDelFileButton" Content="Delete File" Margin="0,12,10,0" VerticalAlignment="Top" Height="22" RenderTransformOrigin="-0.441,0.545" Click="IMTDeleteFile" HorizontalAlignment="Right" Width="130"/>
-                        <DataGrid x:Name="IMTDataGrid" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False"  Margin="10" Grid.Row="1" SelectionChanged="DataGridRowSelected">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="256*"/>
+                            <ColumnDefinition Width="285*"/>
+                            <ColumnDefinition Width="405*"/>
+                            <ColumnDefinition Width="540*"/>
+                        </Grid.ColumnDefinitions>
+                        <ComboBox x:Name="ModTypeSelect" ItemsSource="{Binding ModTypes}" DisplayMemberPath="Name" SelectedValuePath="ID" Margin="10,10,25,0" VerticalAlignment="Top" Height="22" IsReadOnly="True" IsEditable="True" Text="{x:Static p:Resources.ModTypeSelectText}" Foreground="Black" SelectionChanged="ModTypeSelectionChanged" ShouldPreserveUserEnteredPrefix="True"/>
+                        <ComboBox x:Name="ModFilterSelect" ItemsSource="{Binding}" DisplayMemberPath="Name" SelectedValuePath="ID" Margin="27,10,10,0" VerticalAlignment="Top" Height="22" IsReadOnly="True" IsEditable="True" Text="{x:Static p:Resources.ModFilterSelectText}" Foreground="Black" IsEnabled="True" Grid.Column="1" SelectionChanged="FilterSelectionChanged"/>
+                        <ScrollViewer x:Name="ModScrollViewer" Margin="10,37,10,10" Background="#19000000" Grid.ColumnSpan="2" Grid.RowSpan="2">
+                            <ListView x:Name="ModListView" SelectionChanged="ModSelected" ItemsSource="{Binding modLists}">
+                                <ListView.ItemContainerStyle>
+                                    <Style TargetType="{x:Type ListViewItem}">
+                                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                        <Setter Property="Padding" Value="0,0,0,0"/>
+                                    </Style>
+                                </ListView.ItemContainerStyle>
+                            </ListView>
+                        </ScrollViewer>
+                        <GroupBox x:Name="ModInfoGroup" Header="{x:Static p:Resources.ModInformationHeader}" BorderBrush="#FF036EAE" Margin="7,10,10,10" Grid.Column="2">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="2*"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel x:Name="ModInfoStackPanel">
+                                    <Label x:Name="ModNameLabel" Content="{x:Static p:Resources.ModName}"/>
+                                    <Label x:Name="ModTypeLabel" Content="{x:Static p:Resources.ModTypeName}"/>
+                                    <Label x:Name="ModCategoryLabel" Content="{x:Static p:Resources.ModCategory}"/>
+                                    <Label x:Name="ModAuthorLabel" Content="{x:Static p:Resources.ModAuthor}"/>
+                                </StackPanel>
+                                <StackPanel x:Name="ModInfoStackPanelValues" Grid.Column="1">
+                                    <Label x:Name="ModNameValue" Content="{Binding Name, ElementName=selectedMod}" Margin="0,0,123,0"/>
+                                </StackPanel>
+                            </Grid>
+                        </GroupBox>
+                        <GroupBox x:Name="ModUpdateGroup" Header="Version Control" BorderBrush="#FF036EAE" Margin="10,0,10,10" Grid.Column="2" Grid.Row="1">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="4*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="80"/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <Button x:Name="ModUpdateButton" Content="{x:Static p:Resources.CheckModUpdateButton}" Width="150" HorizontalAlignment="Center" Margin="0,22,0,35" Grid.ColumnSpan="2" Grid.Row="1" VerticalAlignment="Center" Click="CheckUpdates"/>
+                                <StackPanel Margin="0">
+                                    <Label x:Name="SkinVersionLabel" Content="{x:Static p:Resources.ModVersion}"/>
+                                    <Label x:Name="SkinStatusLabel" Content="{x:Static p:Resources.ModStatus}"/>
+                                </StackPanel>
+                                <StackPanel x:Name="VersionStackPanel" Margin="0" Grid.Column="1"/>
+                            </Grid>
+                        </GroupBox>
+                        <Label x:Name="ModFileBrowserLabel" Content="{x:Static p:Resources.FileBrowserHeader}" HorizontalAlignment="Left" Margin="5,6,0,0" VerticalAlignment="Top" Width="157" Height="26" Grid.Column="3"/>
+                        <TreeView x:Name="ModFileView" Margin="10,37,10,10" Grid.Column="3"/>
+                        <Button x:Name="ModFileMinimize" Content="-" Grid.Column="3" Margin="0,11,10,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="20" Click="MinimizeTree"/>
+                        <Button x:Name="ModFileMaximize" Content="+" Grid.Column="3" Margin="0,11,35,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="20" Click="ExpandTree"/>
+                        <Image x:Name="ModImage" Grid.Column="3" Margin="10" Grid.Row="1" StretchDirection="DownOnly"/>
+                    </Grid>
+                </TabItem>
+                <TabItem x:Name="Contents" Header="Content Management">
+                    <Grid x:Name="ContentManagementGrid" Background="#FFE5E5E5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="300*"/>
+                            <ColumnDefinition Width="321*"/>
+                            <ColumnDefinition Width="427*"/>
+                        </Grid.ColumnDefinitions>
+                        <Label x:Name="ContentModListLabel" Content="Untreated Mods :" HorizontalAlignment="Center" Margin="0,10,0,0" VerticalAlignment="Top"/>
+                        <DataGrid x:Name="ContentDataGrid" AutoGenerateColumns="False" CanUserAddRows="False" Margin="10,41,10,10" SelectionChanged="ContentDataGridItemSelected">
                             <DataGrid.Columns>
-                                <DataGridTextColumn Header="Path" Binding="{Binding Path}" Width="8*"/>
-                                <DataGridTextColumn Header="FileName" Binding="{Binding File}" Width="6*"/>
-                                <DataGridCheckBoxColumn Header="Mandatory" Binding="{Binding Mandatory}" Width="2*"/>
+                                <DataGridTextColumn Header="Name" Width="2*" Binding="{Binding Name}"/>
+                                <DataGridTextColumn Header="Type" Width="1*" Binding="{Binding typeName}"/>
+                                <DataGridTextColumn Header="Category" Width="1*" Binding="{Binding categoryName}"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <Label x:Name="ContentDetectionProcessLabel" Content="Autodetect process" Grid.Column="1" HorizontalAlignment="Left" Margin="11,41,0,0" VerticalAlignment="Top"/>
+                        <Button x:Name="ContentAutoDetectLaunchButton" Content="Launch Autodetect" Grid.Column="1" Margin="0,47,10,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="124" Click="AutoDetectLaunch"/>
+                        <Label x:Name="ContentAutoDetectWarningLabel" Content="If the autodetect found something, it'll show there below" Grid.Column="1" HorizontalAlignment="Center" Margin="30,128,30,0" VerticalAlignment="Top" FontStyle="Italic"/>
+                        <Label x:Name="ContentIMTLabel" Content="Internal Mod Type" Grid.Column="1" HorizontalAlignment="Left" Margin="11,159,0,0" VerticalAlignment="Top"/>
+                        <ComboBox x:Name="ContentIMTSelect" ItemsSource="{Binding InternalModType}" DisplayMemberPath="Name" Grid.Column="1" Margin="142,159,10,0" VerticalAlignment="Top" SelectionChanged="ContentIMTSelect_SelectionChanged"/>
+                        <Label x:Name="ContentDetectedIMTLabel" Content="Detected Item(s)" Grid.Column="1" HorizontalAlignment="Left" Margin="11,191,0,0" VerticalAlignment="Top"/>
+                        <ComboBox x:Name="ContentDetectedIMTSelect" ItemsSource="{Binding ContentMapping}" DisplayMemberPath="Name" Grid.Column="1" Margin="142,195,10,0" VerticalAlignment="Top"/>
+                        <Label x:Name="ContentManualSearchWarningLabel" Content="If you think autodetect didn't find your mod" Grid.Column="1" HorizontalAlignment="Right" Margin="0,277,10,0" VerticalAlignment="Top" FontStyle="Italic"/>
+                        <Button x:Name="ContentManualSearchButton" Content="Manual Search" Grid.Column="1" HorizontalAlignment="Left" Margin="226,308,0,0" VerticalAlignment="Top" Width="124"/>
+                        <Label x:Name="ContentFinalStepWarningLabel" Content="Please select the association and give the mod a name" Grid.Column="1" HorizontalAlignment="Center" Margin="0,401,0,0" VerticalAlignment="Top" FontStyle="Italic"/>
+                        <Label x:Name="ContentModAssociationLabel" Content="Mod Association" Grid.Column="1" HorizontalAlignment="Left" Margin="10,432,0,0" VerticalAlignment="Top" Height="30"/>
+                        <ComboBox x:Name="ContentModAssociationSelect" Grid.Column="1" Margin="142,432,10,0" VerticalAlignment="Top">
+                            <ComboBoxItem Content="Incineroar" HorizontalAlignment="Left" Width="206"/>
+                        </ComboBox>
+                        <Label x:Name="ContentModNameLabel" Content="Mod Name :" Grid.Column="1" HorizontalAlignment="Left" Margin="10,467,0,0" VerticalAlignment="Top" Height="23"/>
+                        <TextBox x:Name="ContentModNameText" Grid.Column="1" Height="23" Margin="142,467,10,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top"/>
+                        <Button x:Name="ContentAddCollectionButton" Content="Add to collection" Grid.Column="1" Margin="117,0,119,10" Height="20" VerticalAlignment="Bottom"/>
+                        <Label x:Name="ContentDetectedFileLabel" Content="Detected Files :" HorizontalAlignment="Center" Margin="0,10,0,0" VerticalAlignment="Top" Grid.Column="2"/>
+                        <DataGrid x:Name="ContentFileDataGrid" AutoGenerateColumns="False" CanUserAddRows="False" Grid.Column="2" Height="489" Margin="10,41,10,0" VerticalAlignment="Top">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Detected File" Width="1*" Binding="{Binding SourcePath}"/>
+                                <DataGridTextColumn Header="File type" Width="auto" Binding="{Binding Path}"/>
                             </DataGrid.Columns>
                         </DataGrid>
                     </Grid>
-                    <Grid x:Name="IMTManagementGrid" Grid.Column="1">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="100"/>
-                            <RowDefinition Height="40"/>
-                            <RowDefinition Height="100"/>
-                            <RowDefinition Height="52*"/>
-                            <RowDefinition Height="23*"/>
-                        </Grid.RowDefinitions>
-                        <Label x:Name="IMTSelectLabel" Content="Select an Internal Mod Type" HorizontalAlignment="Left" Margin="0,12,0,0" VerticalAlignment="Top" Width="166"/>
-                        <ComboBox x:Name="InternalModTypeSelect" ItemsSource="{Binding InternalModType}" DisplayMemberPath="Name" Margin="171,16,152,0" VerticalAlignment="Top" Height="22" SelectionChanged="InternalModTypeSelected"/>
-                        <Button x:Name="IMTAddTypeButton" Content="Add New Type" Margin="0,16,10,0" VerticalAlignment="Top" Height="22" HorizontalAlignment="Right" Width="118"/>
-                        <Label x:Name="IMTRefWarningLabel" Content="References : You can easily make your paths dynamic (detecting c00 by using c{00} for instance)" HorizontalAlignment="Left" Margin="10,74,0,0" VerticalAlignment="Top" FontStyle="Italic"/>
-                        <Separator HorizontalAlignment="Left" Height="14" Margin="0,55,0,0" VerticalAlignment="Top" Width="588"/>
-                        <Grid x:Name="IMTActionGrid" Grid.Row="1">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="205*"/>
-                                <ColumnDefinition Width="205*"/>
-                                <ColumnDefinition Width="100*"/>
-                            </Grid.ColumnDefinitions>
-                            <ComboBox x:Name="IMTRefCategoryCombobox" Margin="10,8,10,0" VerticalAlignment="Top">
-                                <ComboBoxItem Content="Numbers" HorizontalAlignment="Left" Width="258"/>
-                            </ComboBox>
-                            <ComboBox x:Name="IMTRefCombobox" Margin="10,8,10,0" VerticalAlignment="Top" Grid.Column="1">
-                                <ComboBoxItem Content="One digit {0}" HorizontalAlignment="Left" Width="258"/>
-                                <ComboBoxItem Content="Two digits {00}" HorizontalAlignment="Left" Width="258"/>
-                                <ComboBoxItem Content="Three digits {000}" HorizontalAlignment="Left" Width="258"/>
-                                <ComboBoxItem Content="Four digits {0000}" HorizontalAlignment="Left" Width="258"/>
-                            </ComboBox>
-                            <Button x:Name="IMTAddRefButton" Content="Add Reference" Grid.Column="2" Margin="10,8,10,0" VerticalAlignment="Top" Height="22"/>
+                </TabItem>
+                <TabItem x:Name="Assigning" Header="{x:Static p:Resources.AssignmentTabHeader}">
+                    <Grid Background="#FFE5E5E5">
+                        <Grid x:Name="AssignationGameBlock" Grid.ColumnSpan="2" Grid.Column="2" Background ="Black" Panel.ZIndex="500">
+                            <Label Content="Please select a game first" HorizontalAlignment="Center" Foreground="Wheat"  VerticalAlignment="Center" FontSize="36" />
                         </Grid>
-                        <Grid x:Name="IMTFileManagementGrid" Grid.Row="2">
-                            <Button x:Name="IMTSaveButton" Content="Save File and Path" Margin="0,65,10,0" VerticalAlignment="Top" Height="23" RenderTransformOrigin="0.24,3.217" HorizontalAlignment="Right" Width="149" Click="IMTInfoSave"/>
-                            <TextBox x:Name="IMTPathText" Height="23" Margin="82,3,10,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" IsEnabled="False"/>
-                            <Label x:Name="IMTPathLabel" Content="Path" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="3.333,0.962" Margin="10,5,0,0"/>
-                            <TextBox x:Name="IMTFileText" Height="23" Margin="82,31,10,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" IsEnabled="False"/>
-                            <Label x:Name="IMTFileLabel" Content="File Name" HorizontalAlignment="Left" Margin="10,31,0,0" VerticalAlignment="Top"/>
-                            <CheckBox x:Name="IMTMandatory" Content="Mandatory" HorizontalAlignment="Left" Margin="82,70,0,0" VerticalAlignment="Top" IsEnabled="False"/>
-                        </Grid>
-                        <Grid x:Name="IMTAssociationGrid" Grid.Row="3">
-                            <Label x:Name="IMTAssociationLabel" Content="Internal Mod Type Association" HorizontalAlignment="Left" Margin="10,34,0,0" VerticalAlignment="Top"/>
-                            <ComboBox x:Name="IMTAssotiationSelect" ItemsSource="{Binding GameDataCategory}"  DisplayMemberPath="Name" Margin="203,38,10,0" VerticalAlignment="Top" SelectionChanged="IMTAssotiationSelectChanged" IsEnabled="False"/>
-                            <Label x:Name="IMTSlotsLabel" Content="Slots" HorizontalAlignment="Left" Margin="10,65,0,0" VerticalAlignment="Top"/>
-                            <TextBox x:Name="IMTSlotsText" HorizontalAlignment="Left" Height="23" Margin="203,69,0,0" TextWrapping="Wrap" Text="8" VerticalAlignment="Top" Width="77" HorizontalContentAlignment="Right" Padding="0,0,5,0" IsEnabled="False"/>
-                            <Label x:Name="IMTCustoSlotLabel" Content="Custom Slot Name" HorizontalAlignment="Left" Margin="10,144,0,0" VerticalAlignment="Top"/>
-                            <TextBox x:Name="IMTCustomNameText" Height="23" Margin="203,147,10,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" IsEnabled="False"/>
-                            <Label x:Name="IMTCustomWarningLabel" Content="If you have selected Other, please type out a name" HorizontalAlignment="Left" Margin="203,121,0,0" VerticalAlignment="Top" FontStyle="Italic"/>
-                            <Separator HorizontalAlignment="Left" Height="14" Margin="0" VerticalAlignment="Top" Width="588"/>
-                        </Grid>
-                        <Separator HorizontalAlignment="Left" Height="14" Margin="0,10,0,0" VerticalAlignment="Top" Width="588" Grid.Row="4"/>
-                        <Label x:Name="IMTSaveWarningLabel" Content="Caution: This action will remove all associations with this type." HorizontalAlignment="Center" Margin="10,24,0,0" VerticalAlignment="Top" FontStyle="Italic" Grid.Row="4"/>
-                        <Button x:Name="IMTSaveXMLButton" Content="Save Internal Mod Type" HorizontalAlignment="Center" Margin="10,55,0,0" VerticalAlignment="Top" Width="156" Grid.Row="4" Click="IMTSaveXML"/>
+                        <Label Content="Section Under Construction..." HorizontalAlignment="Center"  VerticalAlignment="Center" FontSize="36"/>
                     </Grid>
-                </Grid>
-            </TabItem>
-            <TabItem x:Name="Setting" Header="{x:Static p:Resources.SettingsTabHeader}">
-                <Grid Background="#FFE5E5E5">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="94*"/>
-                        <ColumnDefinition Width="184*"/>
-                        <ColumnDefinition Width="1209*"/>
-                    </Grid.ColumnDefinitions>
-                    <Button x:Name="CleanFolders_Button" Content="{x:Static p:Resources.ClearQuasarFolderButton}" Click="DeleteDocumentFolderContents" Height="30" Margin="10,4,0,0" HorizontalAlignment="Left" Width="200" Grid.ColumnSpan="2" VerticalAlignment="Top"/>
-                    <Button x:Name="CustomProtocol" Content="Custom Purotocolu" Click="ActivateCustomProtocol" Width="200" Height="30" Margin="10,39,0,0" HorizontalAlignment="Left" Grid.ColumnSpan="2" VerticalAlignment="Top"/>
-                </Grid>
-            </TabItem>
-        </TabControl>
+                </TabItem>
+                <TabItem x:Name="Build" Header="Build">
+                    <Grid Background="#FFE5E5E5">
+                        <Grid x:Name="BuilderGameBlock" Grid.ColumnSpan="2" Grid.Column="2" Background ="Black" Panel.ZIndex="500">
+                            <Label Content="Please select a game first" HorizontalAlignment="Center" Foreground="Wheat"  VerticalAlignment="Center" FontSize="36" />
+                        </Grid>
+                        <Label Content="Section Under Construction..." HorizontalAlignment="Center"  VerticalAlignment="Center" FontSize="36"/>
+                    </Grid>
+                </TabItem>
+                <TabItem x:Name="ModCreation" Header="Add Mods">
+                    <Grid Background="#FFE5E5E5">
+                        <Grid x:Name="CreationGameBlock" Grid.ColumnSpan="2" Grid.Column="2" Background ="Black" Panel.ZIndex="500">
+                            <Label Content="Please select a game first" HorizontalAlignment="Center" Foreground="Wheat"  VerticalAlignment="Center" FontSize="36" />
+                        </Grid>
+                        <Label Content="Section Under Construction..." HorizontalAlignment="Center"  VerticalAlignment="Center" FontSize="36"/>
+                    </Grid>
+                </TabItem>
+                <TabItem x:Name="IMTTab" Header="{x:Static p:Resources.InternalModTypesHeader}">
+                    <Grid x:Name="IMTGrid" Background="#FFE5E5E5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid x:Name="IMTGameBlock" Grid.ColumnSpan="2" Background ="Black" Panel.ZIndex="500">
+                            <Label Content="Please select a game first" HorizontalAlignment="Center" Foreground="Wheat"  VerticalAlignment="Center" FontSize="36" />
+                        </Grid>
+                        <Grid x:Name="IMTTreeGrid">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="35"/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <Label x:Name="IMTContentsLabel" Content="Contents :" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="101"/>
+                            <Button x:Name="IMTAddFileButton" Content="Add File" Margin="116,13,0,0" VerticalAlignment="Top" Height="22" RenderTransformOrigin="-0.441,0.545" HorizontalAlignment="Left" Width="130" Click="IMTAddFile"/>
+                            <Button x:Name="IMTDelFileButton" Content="Delete File" Margin="0,12,10,0" VerticalAlignment="Top" Height="22" RenderTransformOrigin="-0.441,0.545" Click="IMTDeleteFile" HorizontalAlignment="Right" Width="130"/>
+                            <DataGrid x:Name="IMTDataGrid" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False"  Margin="10" Grid.Row="1" SelectionChanged="DataGridRowSelected">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Path" Binding="{Binding Path}" Width="8*"/>
+                                    <DataGridTextColumn Header="FileName" Binding="{Binding File}" Width="6*"/>
+                                    <DataGridCheckBoxColumn Header="Mandatory" Binding="{Binding Mandatory}" Width="2*"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </Grid>
+                        <Grid x:Name="IMTManagementGrid" Grid.Column="1">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="100"/>
+                                <RowDefinition Height="40"/>
+                                <RowDefinition Height="100"/>
+                                <RowDefinition Height="52*"/>
+                                <RowDefinition Height="23*"/>
+                            </Grid.RowDefinitions>
+                            <Label x:Name="IMTSelectLabel" Content="Select an Internal Mod Type" HorizontalAlignment="Left" Margin="0,12,0,0" VerticalAlignment="Top" Width="166"/>
+                            <ComboBox x:Name="InternalModTypeSelect" ItemsSource="{Binding InternalModType}" DisplayMemberPath="Name" Margin="171,16,152,0" VerticalAlignment="Top" Height="22" SelectionChanged="InternalModTypeSelected"/>
+                            <Button x:Name="IMTAddTypeButton" Content="Add New Type" Margin="0,16,10,0" VerticalAlignment="Top" Height="22" HorizontalAlignment="Right" Width="118"/>
+                            <Label x:Name="IMTRefWarningLabel" Content="References : You can easily make your paths dynamic (detecting c00 by using c{00} for instance)" HorizontalAlignment="Left" Margin="10,74,0,0" VerticalAlignment="Top" FontStyle="Italic"/>
+                            <Separator HorizontalAlignment="Left" Height="14" Margin="0,55,0,0" VerticalAlignment="Top" Width="588"/>
+                            <Grid x:Name="IMTActionGrid" Grid.Row="1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="205*"/>
+                                    <ColumnDefinition Width="205*"/>
+                                    <ColumnDefinition Width="100*"/>
+                                </Grid.ColumnDefinitions>
+                                <ComboBox x:Name="IMTRefCategoryCombobox" Margin="10,8,10,0" VerticalAlignment="Top">
+                                    <ComboBoxItem Content="Numbers" HorizontalAlignment="Left" Width="258"/>
+                                </ComboBox>
+                                <ComboBox x:Name="IMTRefCombobox" Margin="10,8,10,0" VerticalAlignment="Top" Grid.Column="1">
+                                    <ComboBoxItem Content="One digit {0}" HorizontalAlignment="Left" Width="258"/>
+                                    <ComboBoxItem Content="Two digits {00}" HorizontalAlignment="Left" Width="258"/>
+                                    <ComboBoxItem Content="Three digits {000}" HorizontalAlignment="Left" Width="258"/>
+                                    <ComboBoxItem Content="Four digits {0000}" HorizontalAlignment="Left" Width="258"/>
+                                </ComboBox>
+                                <Button x:Name="IMTAddRefButton" Content="Add Reference" Grid.Column="2" Margin="10,8,10,0" VerticalAlignment="Top" Height="22"/>
+                            </Grid>
+                            <Grid x:Name="IMTFileManagementGrid" Grid.Row="2">
+                                <Button x:Name="IMTSaveButton" Content="Save File and Path" Margin="0,65,10,0" VerticalAlignment="Top" Height="23" RenderTransformOrigin="0.24,3.217" HorizontalAlignment="Right" Width="149" Click="IMTInfoSave"/>
+                                <TextBox x:Name="IMTPathText" Height="23" Margin="82,3,10,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" IsEnabled="False"/>
+                                <Label x:Name="IMTPathLabel" Content="Path" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="3.333,0.962" Margin="10,5,0,0"/>
+                                <TextBox x:Name="IMTFileText" Height="23" Margin="82,31,10,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" IsEnabled="False"/>
+                                <Label x:Name="IMTFileLabel" Content="File Name" HorizontalAlignment="Left" Margin="10,31,0,0" VerticalAlignment="Top"/>
+                                <CheckBox x:Name="IMTMandatory" Content="Mandatory" HorizontalAlignment="Left" Margin="82,70,0,0" VerticalAlignment="Top" IsEnabled="False"/>
+                            </Grid>
+                            <Grid x:Name="IMTAssociationGrid" Grid.Row="3">
+                                <Label x:Name="IMTAssociationLabel" Content="Internal Mod Type Association" HorizontalAlignment="Left" Margin="10,34,0,0" VerticalAlignment="Top"/>
+                                <ComboBox x:Name="IMTAssotiationSelect" ItemsSource="{Binding GameDataCategory}"  DisplayMemberPath="Name" Margin="203,38,10,0" VerticalAlignment="Top" SelectionChanged="IMTAssotiationSelectChanged" IsEnabled="False"/>
+                                <Label x:Name="IMTSlotsLabel" Content="Slots" HorizontalAlignment="Left" Margin="10,65,0,0" VerticalAlignment="Top"/>
+                                <TextBox x:Name="IMTSlotsText" HorizontalAlignment="Left" Height="23" Margin="203,69,0,0" TextWrapping="Wrap" Text="8" VerticalAlignment="Top" Width="77" HorizontalContentAlignment="Right" Padding="0,0,5,0" IsEnabled="False"/>
+                                <Label x:Name="IMTCustoSlotLabel" Content="Custom Slot Name" HorizontalAlignment="Left" Margin="10,144,0,0" VerticalAlignment="Top"/>
+                                <TextBox x:Name="IMTCustomNameText" Height="23" Margin="203,147,10,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" IsEnabled="False"/>
+                                <Label x:Name="IMTCustomWarningLabel" Content="If you have selected Other, please type out a name" HorizontalAlignment="Left" Margin="203,121,0,0" VerticalAlignment="Top" FontStyle="Italic"/>
+                                <Separator HorizontalAlignment="Left" Height="14" Margin="0" VerticalAlignment="Top" Width="588"/>
+                            </Grid>
+                            <Separator HorizontalAlignment="Left" Height="14" Margin="0,10,0,0" VerticalAlignment="Top" Width="588" Grid.Row="4"/>
+                            <Label x:Name="IMTSaveWarningLabel" Content="Caution: This action will remove all associations with this type." HorizontalAlignment="Center" Margin="10,24,0,0" VerticalAlignment="Top" FontStyle="Italic" Grid.Row="4"/>
+                            <Button x:Name="IMTSaveXMLButton" Content="Save Internal Mod Type" HorizontalAlignment="Center" Margin="10,55,0,0" VerticalAlignment="Top" Width="156" Grid.Row="4" Click="IMTSaveXML"/>
+                        </Grid>
+                    </Grid>
+                </TabItem>
+                <TabItem x:Name="Setting" Header="{x:Static p:Resources.SettingsTabHeader}">
+                    <Grid Background="#FFE5E5E5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="94*"/>
+                            <ColumnDefinition Width="184*"/>
+                            <ColumnDefinition Width="1209*"/>
+                        </Grid.ColumnDefinitions>
+                        <Button x:Name="CleanFolders_Button" Content="{x:Static p:Resources.ClearQuasarFolderButton}" Click="DeleteDocumentFolderContents" Height="30" Margin="10,4,0,0" HorizontalAlignment="Left" Width="200" Grid.ColumnSpan="2" VerticalAlignment="Top"/>
+                        <Button x:Name="CustomProtocol" Content="Custom Purotocolu" Click="ActivateCustomProtocol" Width="200" Height="30" Margin="10,39,0,0" HorizontalAlignment="Left" Grid.ColumnSpan="2" VerticalAlignment="Top"/>
+                    </Grid>
+                </TabItem>
+            </TabControl>
+            <Grid Background="#FF2D2D2D">
+                <Button x:Name="HomeButton" Height="35" Width="35" BorderThickness="0" BorderBrush="#FF2D2D2D" Background="{x:Null}" >
+                    <Button.Triggers>
+                        <EventTrigger RoutedEvent="ButtonBase.Click">
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <DoubleAnimation 
+                                         Storyboard.TargetName="OverlayGrid"
+                                         Storyboard.TargetProperty="(RenderTransform).(ScaleTransform.ScaleX)" 
+                                         From="0" To="1" 
+                                         Duration="0:0:0.2" />
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                    </Button.Triggers>
+                    <Image HorizontalAlignment="Center" Height="35" Width="35" VerticalAlignment="Center" Source="References/images/home.png"/>
+                </Button>
+            </Grid>
+        </Grid>
     </Grid>
 </Window>

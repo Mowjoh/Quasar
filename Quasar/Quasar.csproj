@@ -84,15 +84,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="File\ModFileManager.cs" />
-    <Compile Include="File\ContentXML.cs" />
-    <Compile Include="File\AssociationXML.cs" />
-    <Compile Include="File\Unarchiver.cs" />
+    <Compile Include="FileSystem\ModFileManager.cs" />
+    <Compile Include="Resources\ContentXML.cs" />
+    <Compile Include="Resources\AssociationXML.cs" />
+    <Compile Include="FileSystem\Unarchiver.cs" />
     <Compile Include="Quasar_Sys\Checker.cs" />
     <Compile Include="Controls\ModListElement.xaml.cs">
       <DependentUpon>ModListElement.xaml</DependentUpon>
     </Compile>
-    <Compile Include="File\Folderino.cs" />
+    <Compile Include="FileSystem\Folderino.cs" />
     <Compile Include="Properties\Resources.en.Designer.cs">
       <DependentUpon>Resources.en.resx</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -108,8 +108,8 @@
     <Compile Include="Singleton\PipeClient.cs" />
     <Compile Include="Singleton\PipeServer.cs" />
     <Compile Include="Web\Downloader.cs" />
-    <Compile Include="File\LibraryXML.cs" />
-    <Compile Include="File\XML.cs" />
+    <Compile Include="Resources\LibraryXML.cs" />
+    <Compile Include="Resources\XML.cs" />
     <Page Include="Controls\ModListElement.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -159,42 +159,34 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="InternalModTypes\CSP.xml">
+    <Content Include="References\images\mk8d.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="InternalModTypes\FighterVoice.xml">
+    <Content Include="References\InternalModTypes\CSP.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="InternalModTypes\Skin.xml">
+    <Content Include="References\InternalModTypes\FighterVoice.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\GameData.xml">
+    <Content Include="References\InternalModTypes\Skin.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\GUI.xml">
-      <SubType>Designer</SubType>
+    <Content Include="References\GameData\GameData.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\Sounds.xml">
-      <SubType>Designer</SubType>
+    <Content Include="References\images\All.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\Stages.xml">
-      <SubType>Designer</SubType>
+    <Content Include="References\images\FETH.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\Characters.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Resources\Families.xml">
+    <Content Include="References\images\home.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\Gamefiles.xml">
-      <SubType>Designer</SubType>
+    <Content Include="References\images\SmashUltimate.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\ModTypes.xml">
+    <Content Include="References\API\Games.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
@@ -230,5 +222,6 @@
       <Version>0.24.0</Version>
     </PackageReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

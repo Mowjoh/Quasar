@@ -1,77 +1,69 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Serialization;
 using System.IO;
 using System.Collections;
-using Quasar.Resources;
 
-namespace Quasar
+namespace Quasar.XMLResources
 {
     public static class Library
     {
-        #region Basic Functions
-        public static string GetLibraryPath()
-        {
-            return Quasar.Properties.Settings.Default["DefaultDir"].ToString() + "\\Library\\Library.xml";
-        }
-
-        #endregion
 
         #region XML Interactions
-        //Parsing the full Mod List
-        public static List<Mod> GetModListFile(List<ModType> modTypes)
+        //Loading the Library Mod List
+        public static List<LibraryMod> GetLibraryModList()
         {
-            ModList Mods = new ModList();
-            List<Mod> parsedMods = new List<Mod>();
+            string LibraryFilePath = Properties.Settings.Default["DefaultDir"].ToString() + "\\Library\\Library.xml";
+            List<LibraryMod> LibraryModList = new List<LibraryMod>();
 
-            XmlSerializer serializer = new XmlSerializer(typeof(ModList));
+            XmlSerializer LibrarySerializer = new XmlSerializer(typeof(LibraryModList));
 
-            string libraryPath = GetLibraryPath();
-
-            if (System.IO.File.Exists(libraryPath))
+            if (File.Exists(LibraryFilePath))
             {
-                using (FileStream fileStream = new FileStream(libraryPath, FileMode.Open))
+                using (FileStream fileStream = new FileStream(LibraryFilePath, FileMode.Open))
                 {
-                    ModList result = (ModList)serializer.Deserialize(fileStream);
-                    parsedMods = result.Cast<Mod>().ToList();
+                    LibraryModList result = (LibraryModList)LibrarySerializer.Deserialize(fileStream);
+                    LibraryModList = result.Cast<LibraryMod>().ToList();
                 }
             }
 
-            return parsedMods;
+            return LibraryModList;
         }
 
         //Writing the Mod List to the Library file
-        public static void WriteModListFile(List<Mod> _mods)
+        public static void WriteModListFile(List<LibraryMod> LibraryMods)
         {
-            string libraryPath = GetLibraryPath();
+            string LibraryFilePath = Properties.Settings.Default["DefaultDir"].ToString() + "\\Library\\Library.xml";
 
-            ModList list = new ModList(_mods);
+            LibraryModList LibraryModList = new LibraryModList(LibraryMods);
 
-            XmlSerializer xs = new XmlSerializer(typeof(ModList));
-            using (StreamWriter wr = new StreamWriter(libraryPath))
+            XmlSerializer LibrarySerializer = new XmlSerializer(typeof(LibraryModList));
+            using (StreamWriter Writer = new StreamWriter(LibraryFilePath))
             {
-                xs.Serialize(wr, list);
+                LibrarySerializer.Serialize(Writer, LibraryModList);
             }
         }
         #endregion
 
         #region Data Operations
-        public static Mod Parse(APIMod mod,List<ModType> modTypes)
+        public static LibraryMod GetLibraryMod(APIMod mod,Game _Game)
         {
+            //Setting base values
             int modTypeID = -1;
             int modCat = -1;
             string modCatName = "";
             string modTypeName = "";
+
             try
             {
-                ModType modType = modTypes.Find(mt => mt.APIName == mod.type);
+                //Getting Mod Type
+                GameModType modType = _Game.GameModTypes.Find(mt => mt.APIName == mod.ModType);
                 modTypeID = modType.ID;
                 modTypeName = modType.Name;
 
-                Category category = modType.Categories.Find(c => c.APICategory == mod.catid);
+                //Getting category
+                Category category = modType.Categories.Find(c => c.APICategory == mod.CategoryID);
                 if(category != null)
                 {
                     modCat = category.ID;
@@ -88,10 +80,10 @@ namespace Quasar
             }
             catch(Exception e)
             {
-
+                Console.WriteLine(e.Message);
             }
 
-            return new Mod() { id = mod.id, type = modTypeID, typeName = modTypeName, categoryName = modCatName, category = modCat, Name = mod.name, processed = false, Authors = mod.authors, Updates = mod.Updates};
+            return new LibraryMod() { ID = mod.ID, TypeID = modTypeID, TypeLabel = modTypeName, APICategoryName = modCatName, APICategoryID = modCat, Name = mod.Name, FinishedProcessing = false, Authors = mod.Authors, Updates = mod.UpdateCount, GameID=_Game.ID};
         }
         #endregion
 
@@ -99,27 +91,27 @@ namespace Quasar
         //XML Serialization elements
         [Serializable()]
         [XmlRoot("Library")]
-        public class ModList : ICollection
+        public class LibraryModList : ICollection
         {
             public string CollectionName;
             public ArrayList empArray = new ArrayList();
 
-            public ModList()
+            public LibraryModList()
             {
 
             }
 
-            public ModList(List<Mod> _inputList)
+            public LibraryModList(List<LibraryMod> _inputList)
             {
-                foreach(Mod m in _inputList)
+                foreach(LibraryMod m in _inputList)
                 {
                     empArray.Add(m);
                 }
             }
 
-            public Mod this[int index]
+            public LibraryMod this[int index]
             {
-                get { return (Mod)empArray[index]; }
+                get { return (LibraryMod)empArray[index]; }
             }
             public void CopyTo(Array a, int index)
             {
@@ -142,7 +134,7 @@ namespace Quasar
                 return empArray.GetEnumerator();
             }
 
-            public void Add(Mod newMod)
+            public void Add(LibraryMod newMod)
             {
                 empArray.Add(newMod);
             }
@@ -150,25 +142,28 @@ namespace Quasar
         }
 
         [Serializable()]
-        public class Mod
+        public class LibraryMod
         {
             [XmlAttribute("id")]
-            public int id { get; set; }
+            public int ID { get; set; }
+
+            [XmlAttribute("GameID")]
+            public int GameID { get; set; }
 
             [XmlAttribute("type")]
-            public int type { get; set; }
+            public int TypeID { get; set; }
 
             [XmlAttribute("typeName")]
-            public string typeName { get; set; }
+            public string TypeLabel { get; set; }
 
             [XmlAttribute("category")]
-            public int category { get; set; }
+            public int APICategoryID { get; set; }
 
             [XmlAttribute("categoryName")]
-            public string categoryName { get; set; }
+            public string APICategoryName { get; set; }
 
             [XmlAttribute("processed")]
-            public bool processed { get; set; }
+            public bool FinishedProcessing { get; set; }
 
             [XmlElement("Name")]
             public string Name { get; set; }
@@ -186,26 +181,26 @@ namespace Quasar
 
            
 
-            public Mod(int _id, string _Name ,int _type ,bool _processed, string[][] _authors, int _updates, bool _native, int _category)
+            public LibraryMod(int _id, string _Name ,int _type ,bool _processed, string[][] _authors, int _updates, bool _native, int _category)
             {
-                id = _id;
+                ID = _id;
                 Name = _Name;
-                type = _type;
-                processed = _processed;
+                TypeID = _type;
+                FinishedProcessing = _processed;
                 Authors = _authors;
                 Updates = _updates;
                 Native = _native;
-                category = _category;
+                APICategoryID = _category;
             }
 
-            public Mod(int _id, int _type, bool _ready)
+            public LibraryMod(int _id, int _type, bool _ready)
             {
-                id = _id;
-                type = _type;
+                ID = _id;
+                TypeID = _type;
                 Ready = _ready;
             }
 
-            public Mod()
+            public LibraryMod()
             {
 
             }

@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Quasar.Controls"
              mc:Ignorable="d" 
-             d:DesignHeight="50" d:DesignWidth="100" Width="auto" Height="Auto" MinWidth="250" MinHeight="55" MouseUp="UserControl_MouseUp" HorizontalAlignment="Stretch">
+             d:DesignHeight="80" d:DesignWidth="100" Width="auto" Height="Auto" MinWidth="250" MinHeight="80" MouseUp="UserControl_MouseUp" HorizontalAlignment="Stretch">
     <UserControl.Resources>
         <SolidColorBrush x:Key="BlueText" Color="#FF0B397C"/>
         <SolidColorBrush x:Key="RedText" Color="#FF9E1904"/>
@@ -15,11 +15,12 @@
         <SolidColorBrush x:Key="DarkBlueText" Color="#FF06766C"/>
     </UserControl.Resources>
     <Grid Background="White" x:Name="MLEGrid">
-        <Label x:Name="Title" Content="SkinTitle" HorizontalAlignment="Left" VerticalAlignment="Top" Width="Auto" Foreground="{DynamicResource BlackText}"/>
-        <Label x:Name="Status" Content="Status" HorizontalAlignment="Left" Margin="0,29,0,0" VerticalAlignment="Top" Foreground="{DynamicResource BlackText}"/>
-        <ProgressBar x:Name="Progress" Height="10" Margin="0,38,0,0" VerticalAlignment="Top" Background="#6B000000" BorderBrush="{x:Null}" BorderThickness="0" Foreground="{DynamicResource BlackText}"/>
-        <Rectangle x:Name="Border" Stroke="{DynamicResource BlackText}"/>
-        <Label x:Name="TypeLabel" Content="" HorizontalAlignment="Right" Margin="0" VerticalAlignment="Top" Foreground="{DynamicResource BlackText}"/>
-        <Label x:Name="Category" Content="" HorizontalAlignment="Right" VerticalAlignment="Top" Width="Auto" Foreground="{DynamicResource BlackText}" Margin="0,29,0,0"/>
+        <Label x:Name="Title" Content="ModName" HorizontalAlignment="Left" VerticalAlignment="Top" Width="Auto" Foreground="{DynamicResource BlackText}" Margin="0,25,0,0"/>
+        <Label x:Name="Status" Content="Status" HorizontalAlignment="Left" Margin="0,56,0,-2" VerticalAlignment="Top" Foreground="{DynamicResource BlackText}"/>
+        <ProgressBar x:Name="Progress" Height="10" Margin="0,64,0,0" VerticalAlignment="Top" Background="#6B000000" BorderBrush="{x:Null}" BorderThickness="0" Foreground="{DynamicResource BlackText}"/>
+        <Rectangle x:Name="Border" Stroke="{DynamicResource BlackText}" d:IsHidden="True"/>
+        <Label x:Name="ModType" Content="qsdqsd" HorizontalAlignment="Right" Margin="0,30,0,0" VerticalAlignment="Top" Foreground="{DynamicResource BlackText}"/>
+        <Label x:Name="ModCategory" Content="qsdqsd" HorizontalAlignment="Right" VerticalAlignment="Top" Width="Auto" Foreground="{DynamicResource BlackText}" Margin="0,56,0,-2"/>
+        <Label x:Name="ModGame" Content="Mod Game" VerticalAlignment="Top" HorizontalAlignment="Center"/>
     </Grid>
 </UserControl>

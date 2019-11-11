@@ -10,6 +10,7 @@ namespace Quasar.Quasar_Sys
 {
     static class Protoman
     {
+        //Fixes Custom Protocol Shenanigans, to be removed soon.
         public static bool ActivateCustomProtocol()
         {
             bool Attempt = false;

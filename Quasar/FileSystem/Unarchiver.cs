@@ -13,12 +13,12 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
 
-namespace Quasar.File
+namespace Quasar.FileSystem
 {
     public class Unarchiver
     {
-        ProgressBar progressBar;
-        Label statusLabel;
+        readonly ProgressBar progressBar;
+        readonly Label statusLabel;
 
         public Unarchiver(ProgressBar _progressBar, Label _statusLabel)
         {
@@ -26,8 +26,10 @@ namespace Quasar.File
             statusLabel = _statusLabel;
         }
 
+        //Archive Extraction async process
         public async Task<int> ExtractArchiveAsync(string _ArchiveSource, string ArchiveDestination, string _ArchiveType)
         {
+            //Setting up Extraction UI
             await progressBar.Dispatcher.BeginInvoke(new Action(() =>
             {
                 progressBar.Value = 0;
@@ -36,9 +38,10 @@ namespace Quasar.File
                 progressBar.IsIndeterminate = true;
             }), DispatcherPriority.Background);
 
-
+            //Launching Extraction Task
             await Task.Run(() => Extract(_ArchiveSource, ArchiveDestination, _ArchiveType));
 
+            //Setting up Finished UI
             await statusLabel.Dispatcher.BeginInvoke(new Action(() =>
             {
                 statusLabel.Visibility = Visibility.Visible;
@@ -48,7 +51,8 @@ namespace Quasar.File
             return 0;
         }
 
-        public async Task<int> Extract(string _ArchiveSource, string ArchiveDestination, string _ArchiveType)
+        //Archive Extraction Task
+        public Task<int> Extract(string _ArchiveSource, string ArchiveDestination, string _ArchiveType)
         {
             switch (_ArchiveType)
             {
@@ -96,7 +100,7 @@ namespace Quasar.File
                     break;
             }
 
-            return 0;
+            return Task.FromResult(1);
         }
     }
 }

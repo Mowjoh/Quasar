@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using System.Xml.Serialization;
 using System.IO;
 using System.Collections;
-using Quasar.Resources;
+using Quasar.XMLResources;
 
-namespace Quasar
+namespace Quasar.XMLResources
 {
     public static class ModAssociation 
     { 

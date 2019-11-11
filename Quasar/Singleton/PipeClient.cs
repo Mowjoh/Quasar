@@ -9,21 +9,22 @@ using System.Threading.Tasks;
 
 namespace Quasar.Singleton
 {
-    class PipeClient
+    static class PipeClient
     {
-        NamedPipeClient<string> client;
+        
 
-        public PipeClient(string pipeName, string Args)
+        public static void StartPipeClient(string _PipeName, string _Arguments)
         {
-            client = new NamedPipeClient<string>(pipeName);
+            NamedPipeClient<string> PipeClient;
+            PipeClient = new NamedPipeClient<string>(_PipeName);
             bool Disconnect = false;
             
             //When the servers sends a hello message, send back arguments
-            client.ServerMessage += delegate (NamedPipeConnection<string, string> connection, string message) {
+            PipeClient.ServerMessage += delegate (NamedPipeConnection<string, string> connection, string message) {
                 //Server sends a hello
                 if(message.Equals("Wolcom"))
                 {
-                    startMessage(Args);
+                    startMessage(_Arguments, PipeClient);
                 }
 
                 //Server received the message
@@ -33,13 +34,13 @@ namespace Quasar.Singleton
                 }
             };
 
-            client.Error += delegate (Exception exception)
+            PipeClient.Error += delegate (Exception exception)
             {
                 Console.Error.WriteLine("ERROR: {0}", exception);
             };
 
 
-            client.Start();
+            PipeClient.Start();
 
             //Waiting for operations to complete
             while (!Disconnect)
@@ -47,13 +48,14 @@ namespace Quasar.Singleton
 
             }
 
-            client.Stop();
+            PipeClient.Stop();
         }
 
 
-        public void startMessage(string Args)
+
+        public static void startMessage(string _Arguments, NamedPipeClient<string> _PipeClient)
         {
-            client.PushMessage(Args);
+            _PipeClient.PushMessage(_Arguments);
         }
 
 
