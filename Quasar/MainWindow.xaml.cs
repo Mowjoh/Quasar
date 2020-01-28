@@ -21,8 +21,9 @@ namespace Quasar
         //Loading references
         public List<LibraryMod> Mods;
         List<Game> Games { get; set; }
+        Game CurrentGame { get; set; }
         List<InternalModType> InternalModTypes { get; set; }
-        List<GameDataCategory> GameDataCategories { get; set; }
+        List<GameData> GameData { get; set; }
         List<ContentMapping> ContentMappings { get; set; }
 
         //Working references
@@ -33,6 +34,8 @@ namespace Quasar
         //Quasar Downloads
         readonly Mutex serverMutex;
         public QuasarDownloads DLS;
+
+        public bool readytoSelect { get; set; }
 
         
         public MainWindow()
@@ -64,7 +67,9 @@ namespace Quasar
             LoadBasicLists();
             LoadLibraryMods();
 
-                    }
+            readytoSelect = true;
+
+        }
 
         #region XML LOAD
         //Load Mod Library into memory
@@ -89,7 +94,6 @@ namespace Quasar
                 ListMods.Add(mle);
             }
             ModListView.ItemsSource = ListMods;
-            ContentDataGrid.ItemsSource = Mods;
 
         }
 
@@ -98,10 +102,80 @@ namespace Quasar
             Games = XML.GetGames();
             GamesListView.ItemsSource = Games;
             InternalModTypes = XML.GetInternalModTypes();
-            GameDataCategories = XML.GetGameCategories();
+            GameData = XML.GetGameData();
             ContentMappings = new List<ContentMapping>();
         }
 
+        #endregion
+
+        #region GameSelectOverlay
+        private void ContentIMTSelect_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
+
+        private void GamesListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (readytoSelect)
+            {
+                readytoSelect = false;
+                // Create a DoubleAnimation to animate the width of the button.
+                DoubleAnimation myDoubleAnimation = new DoubleAnimation() { From = 1, To = 0, Duration = new Duration(TimeSpan.FromMilliseconds(200)) };
+
+                // Configure the animation to target the button's Width property.
+                Storyboard.SetTarget(myDoubleAnimation, OverlayGrid);
+                Storyboard.SetTargetProperty(myDoubleAnimation, new PropertyPath("RenderTransform.ScaleX"));
+
+                // Create a storyboard to contain the animation.
+                Storyboard ReturnAnimation = new Storyboard();
+                ReturnAnimation.Children.Add(myDoubleAnimation);
+
+                Game selectedGame = (Game)GamesListView.SelectedItem;
+                CurrentGame = selectedGame;
+                ModTypeSelect.ItemsSource = CurrentGame.GameModTypes;
+                FilterList(-1, -1, CurrentGame.ID);
+                ShowBasicFilters(CurrentGame);
+
+                ModInfoStackPanelValues.Children.Clear();
+                VersionStackPanel.Children.Clear();
+                ModFileView.Items.Clear();
+                ModImage.Source = null;
+
+
+                List<InternalModType> internalModTypes = InternalModTypes.FindAll(imt => imt.GameID == selectedGame.ID);
+                InternalModTypeSelect.ItemsSource = internalModTypes;
+
+                List<GameDataCategory> gameDataCategories = GameData.Find(g => g.GameID == selectedGame.ID).Categories;
+                IMTAssotiationSelect.ItemsSource = gameDataCategories;
+
+                if (CurrentGame.ID == -1)
+                {
+                    IMTGameBlock.Visibility = Visibility.Visible;
+                    AssignationGameBlock.Visibility = Visibility.Visible;
+                    BuilderGameBlock.Visibility = Visibility.Visible;
+                    CreationGameBlock.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    IMTGameBlock.Visibility = Visibility.Hidden;
+                    AssignationGameBlock.Visibility = Visibility.Hidden;
+                    BuilderGameBlock.Visibility = Visibility.Hidden;
+                    CreationGameBlock.Visibility = Visibility.Hidden;
+                }
+
+                ReturnAnimation.Begin();
+            }
+
+        }
+
+        private void HomeButton_Click(object sender, RoutedEventArgs e)
+        {
+            if(CurrentGame != null)
+            {
+                GamesListView.SelectedItem = GamesListView.Items[GamesListView.Items.IndexOf(CurrentGame)];
+            }
+            readytoSelect = true;
+        }
         #endregion
 
         #region ModManagements
@@ -172,16 +246,15 @@ namespace Quasar
         private void ModTypeSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             ComboBox comboBox = (ComboBox)sender;
-            Game game = (Game)GamesListView.SelectedItem;
             GameModType selectedType = (GameModType)comboBox.SelectedItem;
             if(selectedType != null)
             {
-                FilterList(selectedType.ID, -1, game.ID);
+                FilterList(selectedType.ID, -1, CurrentGame.ID);
                 ShowAdvancedFilters(selectedType);
             }
             else
             {
-                FilterList(-1, -1, game.ID);
+                FilterList(-1, -1, CurrentGame.ID);
                 ModFilterSelect.ItemsSource = null;
             }
             
@@ -193,13 +266,12 @@ namespace Quasar
             ComboBox comboBox = (ComboBox)sender;
             Category selectedItem = (Category)comboBox.SelectedItem;
             GameModType selectedModType = (GameModType)ModTypeSelect.SelectedItem;
-            Game game = (Game)GamesListView.SelectedItem;
 
             if(selectedModType != null)
             {
                 if (selectedItem != null)
                 {
-                    FilterList(selectedModType.ID, selectedItem.ID, game.ID);
+                    FilterList(selectedModType.ID, selectedItem.ID, CurrentGame.ID);
                 }
                 else
                 {
@@ -245,14 +317,14 @@ namespace Quasar
 
                 if((AnyGame || mle.gameID == _modGame) && (AnyCategory || mle.modCategory == modCategory) && (AnyModType || mle.modType == _modType))
                 {
-                    mle.Visibility = Visibility.Visible;
+                    mle.isActive = true;
                 }
                 else
                 {
-                    mle.Visibility = Visibility.Collapsed;
+                    mle.isActive = false;
                 }
-
             }
+            ModListView.Items.Refresh();
         }
 
         private static TreeViewItem CreateDirectoryNode(DirectoryInfo directoryInfo)
@@ -286,41 +358,20 @@ namespace Quasar
             {
                 ModImage.Source = new BitmapImage(new Uri(imageSource, UriKind.RelativeOrAbsolute));
             }
+            else
+            {
+                ModImage.Source = null;
+            }
         }
         #endregion
 
         #region Mod Content
         private void ContentDataGridItemSelected(object sender, SelectionChangedEventArgs e)
         {
-            LibraryMod m = (LibraryMod)ContentDataGrid.SelectedItem;
-            if (m != null)
-            {
-                if (!m.FinishedProcessing)
-                {
-                    ContentDetectionProcessLabel.Content = "Awaiting Autodetect";
-                    ContentAutoDetectLaunchButton.IsEnabled = true;
-                }
-                else
-                {
-                    ContentDetectionProcessLabel.Content = "Autodetect finished";
-                    ContentAutoDetectLaunchButton.IsEnabled = false;
-                }
-            }
         }
 
         private void AutoDetectLaunch(object sender, RoutedEventArgs e)
         {
-            //Getting detected items from selected mod
-            LibraryMod m = (LibraryMod)ContentDataGrid.SelectedItem;
-            Game game = Games.Find(g => g.ID == m.GameID);
-            List<ContentMapping> mappings = Searchie.AutoDetectinator(m, InternalModTypes, game);
-            if (mappings.Count > 0)
-            {
-                foreach(ContentMapping map in mappings)
-                {
-                    ContentMappings.Add(map);
-                }
-            }
         }
         #endregion
 
@@ -329,9 +380,10 @@ namespace Quasar
         private void InternalModTypeSelected(object sender, SelectionChangedEventArgs e)
         {
             //Getting info
+            GameData gameData = GameData.Find(g => g.GameID == CurrentGame.ID);
             InternalModType type = (InternalModType)InternalModTypeSelect.SelectedItem;
             IMTDataGrid.ItemsSource = type.Files;
-            GameDataCategory cat = GameDataCategories.Find(c => c.ID == type.Association);
+            GameDataCategory cat = gameData.Categories.Find(c =>c.ID == type.Association);
 
             //Resetting info
             IMTFileText.Text = "";
@@ -518,24 +570,24 @@ namespace Quasar
             //Setting base ModFileManager
             ModFileManager ModFileManager = new ModFileManager(_URL);
 
-            //Finding existing mod
-            LibraryMod Mod = Mods.Find(mm => mm.ID == Int32.Parse(ModFileManager.ModID) && mm.TypeID == Int32.Parse(ModFileManager.ModTypeID));
-
             //Parsing mod info from API
             APIMod newAPIMod = await APIRequest.GetAPIMod(ModFileManager.APIType, ModFileManager.ModID);
-            
+
             //Finding related game
             Game game = Games.Find(g => g.GameName == newAPIMod.GameName);
-            
+
+            //Resetting ModFileManager based on new info
+            ModFileManager = new ModFileManager(_URL, game);
+
             //Setting game UI
             mle.setGame(game);
+
+            //Finding existing mod
+            LibraryMod Mod = Mods.Find(mm => mm.ID == Int32.Parse(ModFileManager.ModID) && mm.TypeID == Int32.Parse(ModFileManager.ModTypeID));
 
             //Create Mod from API information
             LibraryMod newmod = GetLibraryMod(newAPIMod, game);
             
-            //Resetting ModFileManager based on new info
-            ModFileManager = new ModFileManager(_URL, game);
-
             bool needupdate = true;
             //Checking if Mod is already in library
             if (Mod != null)
@@ -634,55 +686,7 @@ namespace Quasar
 
         #endregion
 
-        private void ContentIMTSelect_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            //Getting detected items from selected mod
-            LibraryMod m = (LibraryMod)ContentDataGrid.SelectedItem;
-            InternalModType i = (InternalModType)ContentIMTSelect.SelectedItem;
-            List<ContentMapping> mappings = ContentMappings.FindAll(map => map.ModID == m.ID && map.InternalModType == i.ID);
-
-        }
-
-        private void GamesListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            // Create a DoubleAnimation to animate the width of the button.
-            DoubleAnimation myDoubleAnimation = new DoubleAnimation(){ From = 1, To = 0, Duration = new Duration(TimeSpan.FromMilliseconds(200))};
-
-            // Configure the animation to target the button's Width property.
-            Storyboard.SetTarget(myDoubleAnimation, OverlayGrid);
-            Storyboard.SetTargetProperty(myDoubleAnimation, new PropertyPath("RenderTransform.ScaleX"));
-
-            // Create a storyboard to contain the animation.
-            Storyboard ReturnAnimation = new Storyboard();
-            ReturnAnimation.Children.Add(myDoubleAnimation);
-
-            ReturnAnimation.Begin();
-
-            Game selectedGame = (Game)GamesListView.SelectedItem;
-            ModTypeSelect.ItemsSource = selectedGame.GameModTypes;
-            FilterList(-1, -1, selectedGame.ID);
-            ShowBasicFilters(selectedGame);
-
-            ModInfoStackPanelValues.Children.Clear();
-            VersionStackPanel.Children.Clear();
-            ModFileView.Items.Clear();
-            ModImage.Source = null;
-
-            if(selectedGame.ID == -1) {
-                IMTGameBlock.Visibility = Visibility.Visible;
-                AssignationGameBlock.Visibility = Visibility.Visible;
-                BuilderGameBlock.Visibility = Visibility.Visible;
-                CreationGameBlock.Visibility = Visibility.Visible;
-            }
-            else
-            {
-                IMTGameBlock.Visibility = Visibility.Hidden;
-                AssignationGameBlock.Visibility = Visibility.Hidden;
-                BuilderGameBlock.Visibility = Visibility.Hidden;
-                CreationGameBlock.Visibility = Visibility.Hidden;
-            }
-        }
-
+        
     }
 
     

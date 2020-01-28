@@ -49,16 +49,16 @@ namespace Quasar.XMLResources
             return InteralModTypes;
         }
         
-        public static List<GameDataCategory> GetGameCategories()
+        public static List<GameData> GetGameData()
         {
-            List<GameDataCategory> categories = new List<GameDataCategory>();
+            List<GameData> categories = new List<GameData>();
 
-            XmlSerializer serializer = new XmlSerializer(typeof(GameDataInformation));
+            XmlSerializer serializer = new XmlSerializer(typeof(GamesData));
 
             using (FileStream fileStream = new FileStream(Properties.Settings.Default.DefaultDir + @"\References\GameData\GameData.xml", FileMode.Open))
             {
-                GameDataInformation result = (GameDataInformation)serializer.Deserialize(fileStream);
-                categories = result.Categories;
+                GamesData result = (GamesData)serializer.Deserialize(fileStream);
+                categories = result.Games;
             }
 
             return categories;
@@ -67,7 +67,7 @@ namespace Quasar.XMLResources
         //Saves
         public static void SaveInternalModType(InternalModType type)
         {
-            string destination = Properties.Settings.Default.DefaultDir + @"\InternalModTypes\" + type.Filename + ".xml";
+            string destination = Properties.Settings.Default.DefaultDir + @"\References\InternalModTypes\" + type.Filename + ".xml";
 
             XmlSerializer xmlSerializer = new XmlSerializer(typeof(InternalModType));
 
@@ -162,6 +162,9 @@ namespace Quasar.XMLResources
         [XmlAttribute("ID")]
         public int ID { get; set; }
 
+        [XmlAttribute("GameID")]
+        public int GameID { get; set; }
+
         [XmlAttribute("Association")]
         public int Association { get; set; }
 
@@ -193,9 +196,17 @@ namespace Quasar.XMLResources
     }
 
 
-    [XmlRoot("GameDataInformation")]
-    public class GameDataInformation
+    [XmlRoot("GamesData")]
+    public class GamesData
     {
+        [XmlElement("GameData")]
+        public List<GameData> Games { get; set; }
+    }
+
+    public class GameData
+    {
+        [XmlAttribute("GameID")]
+        public int GameID { get; set; }
 
         [XmlElement("Category")]
         public List<GameDataCategory> Categories { get; set; }

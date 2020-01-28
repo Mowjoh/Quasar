@@ -1,4 +1,4 @@
-﻿<InternalModType Name ="Skin" Filename="Skin"  ID ="1" Association="1" Slots="8">
+﻿<InternalModType Name ="Skin" Filename="Skin"  ID ="1" Association="1" Slots="8" GameID="1">
   <InternalModTypeFile ID="1">
     <Path>c{00}</Path>
     <File>*.nutexb</File>

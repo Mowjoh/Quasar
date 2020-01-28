@@ -7,7 +7,7 @@
         xmlns:local="clr-namespace:Quasar"
         xmlns:controls="clr-namespace:Quasar.Controls"
         mc:Ignorable="d"
-        Title="{x:Static p:Resources.Title}" MinWidth="800" MinHeight="700" Width="1374" Height="1056">
+        Title="{x:Static p:Resources.Title}" MinWidth="1200" MinHeight="700" Width="1418" Height="834">
     <Grid x:Name="QuasarGrid">
         <Grid x:Name="OverlayGrid" Panel.ZIndex="1000" Opacity="100" Background="#FF2D2D2D" d:IsHidden="True">
             <Grid.RenderTransform>
@@ -52,9 +52,17 @@
                         <ComboBox x:Name="ModTypeSelect" ItemsSource="{Binding ModTypes}" DisplayMemberPath="Name" SelectedValuePath="ID" Margin="10,10,25,0" VerticalAlignment="Top" Height="22" IsReadOnly="True" IsEditable="True" Text="{x:Static p:Resources.ModTypeSelectText}" Foreground="Black" SelectionChanged="ModTypeSelectionChanged" ShouldPreserveUserEnteredPrefix="True"/>
                         <ComboBox x:Name="ModFilterSelect" ItemsSource="{Binding}" DisplayMemberPath="Name" SelectedValuePath="ID" Margin="27,10,10,0" VerticalAlignment="Top" Height="22" IsReadOnly="True" IsEditable="True" Text="{x:Static p:Resources.ModFilterSelectText}" Foreground="Black" IsEnabled="True" Grid.Column="1" SelectionChanged="FilterSelectionChanged"/>
                         <ScrollViewer x:Name="ModScrollViewer" Margin="10,37,10,10" Background="#19000000" Grid.ColumnSpan="2" Grid.RowSpan="2">
-                            <ListView x:Name="ModListView" SelectionChanged="ModSelected" ItemsSource="{Binding modLists}">
+                            <ListView x:Name="ModListView" SelectionChanged="ModSelected" ItemsSource="{Binding ModListElement}">
                                 <ListView.ItemContainerStyle>
                                     <Style TargetType="{x:Type ListViewItem}">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Path=isActive}" Value="False">
+                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Path=isActive}" Value="True">
+                                                <Setter Property="Visibility" Value="Visible"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
                                         <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                                         <Setter Property="Padding" Value="0,0,0,0"/>
                                     </Style>
@@ -106,42 +114,31 @@
                 <TabItem x:Name="Contents" Header="Content Management">
                     <Grid x:Name="ContentManagementGrid" Background="#FFE5E5E5">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="300*"/>
-                            <ColumnDefinition Width="321*"/>
-                            <ColumnDefinition Width="427*"/>
+                            <ColumnDefinition Width="195*"/>
+                            <ColumnDefinition Width="247*"/>
+                            <ColumnDefinition Width="240*"/>
                         </Grid.ColumnDefinitions>
-                        <Label x:Name="ContentModListLabel" Content="Untreated Mods :" HorizontalAlignment="Center" Margin="0,10,0,0" VerticalAlignment="Top"/>
-                        <DataGrid x:Name="ContentDataGrid" AutoGenerateColumns="False" CanUserAddRows="False" Margin="10,41,10,10" SelectionChanged="ContentDataGridItemSelected">
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Header="Name" Width="2*" Binding="{Binding Name}"/>
-                                <DataGridTextColumn Header="Type" Width="1*" Binding="{Binding typeName}"/>
-                                <DataGridTextColumn Header="Category" Width="1*" Binding="{Binding categoryName}"/>
-                            </DataGrid.Columns>
-                        </DataGrid>
-                        <Label x:Name="ContentDetectionProcessLabel" Content="Autodetect process" Grid.Column="1" HorizontalAlignment="Left" Margin="11,41,0,0" VerticalAlignment="Top"/>
-                        <Button x:Name="ContentAutoDetectLaunchButton" Content="Launch Autodetect" Grid.Column="1" Margin="0,47,10,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="124" Click="AutoDetectLaunch"/>
-                        <Label x:Name="ContentAutoDetectWarningLabel" Content="If the autodetect found something, it'll show there below" Grid.Column="1" HorizontalAlignment="Center" Margin="30,128,30,0" VerticalAlignment="Top" FontStyle="Italic"/>
-                        <Label x:Name="ContentIMTLabel" Content="Internal Mod Type" Grid.Column="1" HorizontalAlignment="Left" Margin="11,159,0,0" VerticalAlignment="Top"/>
-                        <ComboBox x:Name="ContentIMTSelect" ItemsSource="{Binding InternalModType}" DisplayMemberPath="Name" Grid.Column="1" Margin="142,159,10,0" VerticalAlignment="Top" SelectionChanged="ContentIMTSelect_SelectionChanged"/>
-                        <Label x:Name="ContentDetectedIMTLabel" Content="Detected Item(s)" Grid.Column="1" HorizontalAlignment="Left" Margin="11,191,0,0" VerticalAlignment="Top"/>
-                        <ComboBox x:Name="ContentDetectedIMTSelect" ItemsSource="{Binding ContentMapping}" DisplayMemberPath="Name" Grid.Column="1" Margin="142,195,10,0" VerticalAlignment="Top"/>
-                        <Label x:Name="ContentManualSearchWarningLabel" Content="If you think autodetect didn't find your mod" Grid.Column="1" HorizontalAlignment="Right" Margin="0,277,10,0" VerticalAlignment="Top" FontStyle="Italic"/>
-                        <Button x:Name="ContentManualSearchButton" Content="Manual Search" Grid.Column="1" HorizontalAlignment="Left" Margin="226,308,0,0" VerticalAlignment="Top" Width="124"/>
-                        <Label x:Name="ContentFinalStepWarningLabel" Content="Please select the association and give the mod a name" Grid.Column="1" HorizontalAlignment="Center" Margin="0,401,0,0" VerticalAlignment="Top" FontStyle="Italic"/>
-                        <Label x:Name="ContentModAssociationLabel" Content="Mod Association" Grid.Column="1" HorizontalAlignment="Left" Margin="10,432,0,0" VerticalAlignment="Top" Height="30"/>
-                        <ComboBox x:Name="ContentModAssociationSelect" Grid.Column="1" Margin="142,432,10,0" VerticalAlignment="Top">
-                            <ComboBoxItem Content="Incineroar" HorizontalAlignment="Left" Width="206"/>
-                        </ComboBox>
-                        <Label x:Name="ContentModNameLabel" Content="Mod Name :" Grid.Column="1" HorizontalAlignment="Left" Margin="10,467,0,0" VerticalAlignment="Top" Height="23"/>
-                        <TextBox x:Name="ContentModNameText" Grid.Column="1" Height="23" Margin="142,467,10,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top"/>
-                        <Button x:Name="ContentAddCollectionButton" Content="Add to collection" Grid.Column="1" Margin="117,0,119,10" Height="20" VerticalAlignment="Bottom"/>
-                        <Label x:Name="ContentDetectedFileLabel" Content="Detected Files :" HorizontalAlignment="Center" Margin="0,10,0,0" VerticalAlignment="Top" Grid.Column="2"/>
-                        <DataGrid x:Name="ContentFileDataGrid" AutoGenerateColumns="False" CanUserAddRows="False" Grid.Column="2" Height="489" Margin="10,41,10,0" VerticalAlignment="Top">
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Header="Detected File" Width="1*" Binding="{Binding SourcePath}"/>
-                                <DataGridTextColumn Header="File type" Width="auto" Binding="{Binding Path}"/>
-                            </DataGrid.Columns>
-                        </DataGrid>
+                        <Label x:Name="CMDetectStartLabel" Content="Mod Content Scanner" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="26" Width="129"/>
+                        <Button x:Name="CMDetectStartButton" Content="Launch it !" Margin="0,13,10,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="236" Height="20"/>
+                        <Label Content="Game" Grid.Column="1" HorizontalAlignment="Left" Margin="13,69,0,0" VerticalAlignment="Top" Height="26" Width="41"/>
+                        <Label Content="Mod Type" Grid.Column="1" HorizontalAlignment="Left" Margin="13,100,0,0" VerticalAlignment="Top" Height="26" Width="63"/>
+                        <Label Content="Detected Type" Grid.Column="1" HorizontalAlignment="Left" Margin="13,131,0,0" VerticalAlignment="Top" Height="26" Width="86"/>
+                        <Label Content="Desired Name :" Grid.Column="1" HorizontalAlignment="Left" Margin="13,391,0,0" VerticalAlignment="Top" Height="26" Width="91"/>
+                        <Label Content="This mod is for :" Grid.Column="1" HorizontalAlignment="Left" Margin="13,417,0,0" VerticalAlignment="Top" Height="26" Width="94"/>
+                        <TextBox Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="112,394,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="296"/>
+                        <ComboBox Grid.Column="1" HorizontalAlignment="Left" Margin="112,421,0,0" VerticalAlignment="Top" Width="296" Height="22"/>
+                        <Button Content="Add to Library" Grid.Column="1" HorizontalAlignment="Left" Margin="10,639,0,0" VerticalAlignment="Top" Width="172" Height="20"/>
+                        <Button Content="Ignore this mod" Grid.Column="1" Margin="0,639,10,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="208" Height="20"/>
+                        <TreeView Grid.Column="2" Margin="10,57,10,10"/>
+                        <Label Content="These information correspond to the selected mod on the left." Grid.Column="1" Margin="54,32,37,0" VerticalAlignment="Top" FontStyle="Italic" Height="26"/>
+                        <TextBlock Grid.Column="1" Margin="10,255,10,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="118" FontStyle="Italic" TextAlignment="Center"><Run Text="Naming the mod will help you find it later."/><LineBreak/><Run/><LineBreak/><Run Text="Please select a reference for the mod so you can assign it to the proper game element."/><LineBreak/><Run/><LineBreak/><Run Text="Selecting multiple mods allows for faster referencing but the name is autogenerated"/></TextBlock>
+                        <TextBlock Grid.Column="1" Margin="10,530,10,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="85" FontStyle="Italic" TextAlignment="Center"><Run Text="If you wish to add what you named and referenced above, "/><LineBreak/><Run Text="select &quot;Add to Library&quot;"/><LineBreak/><Run/><LineBreak/><Run Text="If you don't care about the mod Quasar has detected, "/><LineBreak/><Run Text="select &quot;Ignore this mod&quot;"/></TextBlock>
+                        <Label x:Name="CMDetectedGameText" Content="Smash Bros" Grid.Column="1" HorizontalAlignment="Left" Margin="112,69,0,0" VerticalAlignment="Top" Height="26" Width="71"/>
+                        <ListBox Margin="10,57,10,10">
+                            <ListBoxItem Content="Mowjoh Skin #1"/>
+                            <ListBoxItem Content="Mowjoh Skin #2"/>
+                            <ListBoxItem Content="Mowjoh Skin #3"/>
+                        </ListBox>
                     </Grid>
                 </TabItem>
                 <TabItem x:Name="Assigning" Header="{x:Static p:Resources.AssignmentTabHeader}">
@@ -174,7 +171,7 @@
                             <ColumnDefinition Width="1*"/>
                             <ColumnDefinition Width="1*"/>
                         </Grid.ColumnDefinitions>
-                        <Grid x:Name="IMTGameBlock" Grid.ColumnSpan="2" Background ="Black" Panel.ZIndex="500">
+                        <Grid x:Name="IMTGameBlock" Grid.ColumnSpan="2" Background ="Black" Panel.ZIndex="500" d:IsHidden="True">
                             <Label Content="Please select a game first" HorizontalAlignment="Center" Foreground="Wheat"  VerticalAlignment="Center" FontSize="36" />
                         </Grid>
                         <Grid x:Name="IMTTreeGrid">
@@ -250,17 +247,15 @@
                 <TabItem x:Name="Setting" Header="{x:Static p:Resources.SettingsTabHeader}">
                     <Grid Background="#FFE5E5E5">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="94*"/>
-                            <ColumnDefinition Width="184*"/>
-                            <ColumnDefinition Width="1209*"/>
+                            <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
-                        <Button x:Name="CleanFolders_Button" Content="{x:Static p:Resources.ClearQuasarFolderButton}" Click="DeleteDocumentFolderContents" Height="30" Margin="10,4,0,0" HorizontalAlignment="Left" Width="200" Grid.ColumnSpan="2" VerticalAlignment="Top"/>
-                        <Button x:Name="CustomProtocol" Content="Custom Purotocolu" Click="ActivateCustomProtocol" Width="200" Height="30" Margin="10,39,0,0" HorizontalAlignment="Left" Grid.ColumnSpan="2" VerticalAlignment="Top"/>
+                        <Button x:Name="CleanFolders_Button" Content="{x:Static p:Resources.ClearQuasarFolderButton}" Click="DeleteDocumentFolderContents" Height="30" Margin="1110,10,0,0" HorizontalAlignment="Left" Width="200" VerticalAlignment="Top"/>
+                        <Button x:Name="CustomProtocol" Content="Custom Purotocolu" Click="ActivateCustomProtocol" Width="200" Height="30" Margin="10,10,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
                     </Grid>
                 </TabItem>
             </TabControl>
             <Grid Background="#FF2D2D2D">
-                <Button x:Name="HomeButton" Height="35" Width="35" BorderThickness="0" BorderBrush="#FF2D2D2D" Background="{x:Null}" >
+                <Button x:Name="HomeButton" Height="35" Width="35" BorderThickness="0" BorderBrush="#FF2D2D2D" Background="{x:Null}" Click="HomeButton_Click" >
                     <Button.Triggers>
                         <EventTrigger RoutedEvent="ButtonBase.Click">
                             <BeginStoryboard>

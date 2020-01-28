@@ -29,13 +29,16 @@ namespace Quasar.Controls
 
         public int gameID;
 
+
         public LibraryMod LocalMod;
 
         public bool Downloaded = false;
 
+        public bool isActive { get; set; }
         public ModListElement()
         {
             InitializeComponent();
+            isActive = true;
         }
 
         private void UserControl_MouseUp(object sender, MouseButtonEventArgs e)
