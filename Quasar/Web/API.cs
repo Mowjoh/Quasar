@@ -164,6 +164,44 @@ namespace Quasar
 
             return new string[]{ filename, downloadURL };
         }
+
+        public static async Task<int> GetScreenshot(string _ItemType, string _ItemID, string _GameID, string _TypeID, string _ID)
+        {
+            string downloadURL = "";
+
+            queryParameters = GetDefaultParameters();
+            queryParameters.Add(new QueryStringItem("itemid", _ItemID));
+            queryParameters.Add(new QueryStringItem("itemtype", _ItemType));
+            queryParameters.Add(new QueryStringItem("fields", "Preview().sSubFeedImageUrl()"));
+
+
+            string queryURL = FormatAPIRequest("Core/Item/Data", queryParameters);
+
+            using (HttpClient webClient = new HttpClient())
+            {
+                HttpResponseMessage response = await webClient.GetAsync(queryURL);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    string responseText = await response.Content.ReadAsStringAsync();
+
+                    Regex fileMatch = new Regex("sSubFeedImageUrl\\(\\)\":\"(.*?)\"");
+                    Match match = fileMatch.Match(responseText);
+
+                    downloadURL = match.Value;
+                    downloadURL = downloadURL.Split('"')[2];
+                    downloadURL = downloadURL.Replace("\\/", "/");
+
+                    string downloadextension = downloadURL.Split('.')[downloadURL.Split('.').Length -1];
+
+                    string imageSource = Properties.Settings.Default.DefaultDir + @"\Library\Screenshots\" + _GameID + "_" + _TypeID + "_" + _ID + "." + downloadextension;
+
+                    await Downloader.DownloadFile(downloadURL, imageSource);
+                }
+            }
+
+            return 0;
+        }
         #endregion
 
         #region API Formatting

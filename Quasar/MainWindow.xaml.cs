@@ -13,6 +13,7 @@ using Quasar.XMLResources;
 using static Quasar.XMLResources.Library;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
+using System.Linq;
 
 namespace Quasar
 {
@@ -353,10 +354,13 @@ namespace Quasar
 
         private void LoadImage(LibraryMod libraryMod)
         {
-            string imageSource = Properties.Settings.Default.DefaultDir + @"\Library\Screenshots\" + libraryMod.GameID + "_" + libraryMod.TypeID + "_" + libraryMod.ID + ".jpg";
-            if (File.Exists(imageSource))
+            string imageSource = Properties.Settings.Default.DefaultDir + @"\Library\Screenshots\"  ;
+            string imagename = libraryMod.GameID + "_" + libraryMod.TypeID + "_" + libraryMod.ID;
+            string[] files = Directory.GetFiles(imageSource,imagename + ".*");
+
+            if (files.Length > 0)
             {
-                ModImage.Source = new BitmapImage(new Uri(imageSource, UriKind.RelativeOrAbsolute));
+                ModImage.Source = new BitmapImage(new Uri(files[0], UriKind.RelativeOrAbsolute));
             }
             else
             {
@@ -666,6 +670,9 @@ namespace Quasar
                 mle.RefreshInterface();
                 ModListView.SelectedItem = mle;
 
+                //Getting Screenshot from Gamebanana
+                await APIRequest.GetScreenshot(ModFileManager.APIType, ModFileManager.ModID, game.ID.ToString(), Mod.TypeID.ToString(), Mod.ID.ToString());
+
                 //Saving XML
                 WriteModListFile(Mods);
 
@@ -684,9 +691,9 @@ namespace Quasar
 
 
 
+
         #endregion
 
-        
     }
 
     

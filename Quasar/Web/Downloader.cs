@@ -91,6 +91,17 @@ namespace Quasar
             return true;
         }
 
+
+        public static async Task<bool> DownloadFile(string _URL, string _Destination)
+        {
+            //File Download
+            using (WebClient webClient = new WebClient())
+            {
+                await webClient.DownloadFileTaskAsync(_URL, _Destination);
+            }
+
+            return true;
+        }
         //Parsing information from a ModFileManager instance
         public void ParseQueryStringParameters(ModFileManager _ModFileManager)
         {
