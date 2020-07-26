@@ -36,7 +36,7 @@ namespace Quasar.XMLResources
             string typesFolderPath = Properties.Settings.Default.DefaultDir + @"\References\InternalModTypes\";
             XmlSerializer serializer = new XmlSerializer(typeof(InternalModType));
 
-            foreach (string file in Directory.GetFiles(typesFolderPath))
+            foreach (string file in Directory.GetFiles(typesFolderPath,"*",SearchOption.AllDirectories))
             {
                 using (FileStream fileStream = new FileStream(file, FileMode.Open))
                 {

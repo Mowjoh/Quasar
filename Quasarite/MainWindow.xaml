@@ -1,0 +1,29 @@
+﻿<Window x:Class="Quasarite.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Quasarite"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="300" Width="800">
+    <Grid Background="#FF4F4F4F">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="100"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Label  Content="GB Post URL :" Margin="10,11,10,0" VerticalAlignment="Top" Background="{x:Null}" Foreground="#FF35D8C2"/>
+        <TextBox Name="UrlInput" Grid.Column="1" Height="26" Margin="10,11,10,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
+        <Label Content="Archive Ext :" Margin="10,42,10,0" VerticalAlignment="Top" Foreground="#FF35D8C2"/>
+        <TextBox Name="TypeInput" Grid.Column="1" Height="26" Margin="10,42,10,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
+        <Label Content="DL Link :" Margin="10,73,10,0" VerticalAlignment="Top" Foreground="#FF35D8C2"/>
+        <TextBox Name="DownloadInput" Grid.Column="1" Height="26" Margin="10,73,10,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
+        <Button Content="Compute Link" Grid.Column="1" Margin="10,142,10,0" VerticalAlignment="Top" Click="Button_Click"/>
+        <Label Content="Quasar Link :" Margin="10,167,0,0" VerticalAlignment="Top" Foreground="#FF35D8C2" Grid.Column="1" HorizontalAlignment="Left" Width="81"/>
+        <Label Name="QuasarUrlLabel" Content="" Margin="96,167,10,0" VerticalAlignment="Top" Foreground="#FF35D8C2" Grid.Column="1"/>
+        <Button Content="Copy Link" Grid.Column="1" Margin="10,198,10,0" VerticalAlignment="Top" Click="Button_Click_1"/>
+        <Button Content="Execute Link" Grid.Column="1" Margin="10,239,10,0" VerticalAlignment="Top" Background="#FF147AA0" Foreground="White" Click="Button_Click_2"/>
+        <Label Content="API Type :" Margin="10,104,10,0" VerticalAlignment="Top" Foreground="#FF35D8C2"/>
+        <TextBox Name="APIInput" Grid.Column="1" Height="26" Margin="10,104,10,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
+
+    </Grid>
+</Window>

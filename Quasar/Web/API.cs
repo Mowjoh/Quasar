@@ -176,28 +176,34 @@ namespace Quasar
 
 
             string queryURL = FormatAPIRequest("Core/Item/Data", queryParameters);
-
-            using (HttpClient webClient = new HttpClient())
+            try
             {
-                HttpResponseMessage response = await webClient.GetAsync(queryURL);
-
-                if (response.IsSuccessStatusCode)
+                using (HttpClient webClient = new HttpClient())
                 {
-                    string responseText = await response.Content.ReadAsStringAsync();
+                    HttpResponseMessage response = await webClient.GetAsync(queryURL);
 
-                    Regex fileMatch = new Regex("sSubFeedImageUrl\\(\\)\":\"(.*?)\"");
-                    Match match = fileMatch.Match(responseText);
+                    if (response.IsSuccessStatusCode)
+                    {
+                        string responseText = await response.Content.ReadAsStringAsync();
 
-                    downloadURL = match.Value;
-                    downloadURL = downloadURL.Split('"')[2];
-                    downloadURL = downloadURL.Replace("\\/", "/");
+                        Regex fileMatch = new Regex("sSubFeedImageUrl\\(\\)\":\"(.*?)\"");
+                        Match match = fileMatch.Match(responseText);
 
-                    string downloadextension = downloadURL.Split('.')[downloadURL.Split('.').Length -1];
+                        downloadURL = match.Value;
+                        downloadURL = downloadURL.Split('"')[2];
+                        downloadURL = downloadURL.Replace("\\/", "/");
 
-                    string imageSource = Properties.Settings.Default.DefaultDir + @"\Library\Screenshots\" + _GameID + "_" + _TypeID + "_" + _ID + "." + downloadextension;
+                        string downloadextension = downloadURL.Split('.')[downloadURL.Split('.').Length - 1];
 
-                    await Downloader.DownloadFile(downloadURL, imageSource);
+                        string imageSource = Properties.Settings.Default.DefaultDir + @"\Library\Screenshots\" + _GameID + "_" + _TypeID + "_" + _ID + "." + downloadextension;
+
+                        await Downloader.DownloadFile(downloadURL, imageSource);
+                    }
                 }
+            }
+            catch(Exception e)
+            {
+
             }
 
             return 0;

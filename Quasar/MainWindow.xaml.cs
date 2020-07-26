@@ -50,8 +50,13 @@ namespace Quasar
             bool Update = Checker.CheckQuasarUpdated();
             Folderino.CheckBaseFolders();
             Folderino.CompareReferences();
+            bool Debug = false;
 
-            if (Update)
+            #if DEBUG
+            Debug = true;
+            #endif
+
+            if (Update || Debug)
             {
                 Folderino.UpdateBaseFiles();
             }
@@ -553,6 +558,38 @@ namespace Quasar
 
         #endregion
 
+        #region Detection
+        //When the detector engine gets launched
+        private void CMDetectStartButton_Click(object sender, RoutedEventArgs e)
+        {
+            if(CurrentGame != null)
+            {
+                if(CurrentGame.ID != -1)
+                {
+                    foreach(LibraryMod lm in Mods)
+                    {
+                        List<ContentMapping> MahList =  Searchie.AutoDetectinator(lm, InternalModTypes, CurrentGame);
+                        using (System.IO.StreamWriter file = new System.IO.StreamWriter(Properties.Settings.Default["DefaultDir"].ToString() + @"\Log.txt", true))
+                        {
+                            foreach(ContentMapping m in MahList)
+                            {
+                                InternalModType imt = InternalModTypes.Single(imts => imts.ID == m.InternalModType);
+                                file.WriteLine("ContentMapping for type `" + imt.Name + "`");
+
+                                foreach(ContentMappingFile f in m.Files)
+                                {
+                                    file.WriteLine("Match for file `"+f.SourcePath+"` in Parent folder `"+f.Path+"`");
+                                }
+                            }
+                            
+                        }
+
+                    }
+                }
+            }
+        }
+        #endregion
+
         #region Downloads
         public class QuasarDownloads
         {
@@ -693,7 +730,7 @@ namespace Quasar
 
 
         #endregion
-
+        
     }
 
     

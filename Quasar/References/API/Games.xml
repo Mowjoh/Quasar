@@ -316,6 +316,12 @@
       <Category ID="1" APICategory="4887">
         <Name>Others</Name>
       </Category>
+      <Category ID="2" APICategory="5432">
+        <Name>Animation</Name>
+      </Category>
+      <Category ID="3" APICategory="5400">
+        <Name>Modpacks</Name>
+      </Category>
     </GameModType>
     <GameModType Name="GUI"  ID="5" APIName="Gui" LibraryFolder="SmashUltimate">
       <Category ID="-1" APICategory="0">

@@ -71,6 +71,8 @@ namespace Quasar.Quasar_Sys
             executionVersion = executionVersion.Replace(".", "");
 
             bool Update = Properties.Settings.Default.UpgradeRequired;
+
+
             if (Update)
             {
                 Properties.Settings.Default.Upgrade();

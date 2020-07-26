@@ -87,11 +87,12 @@ namespace Quasar.Quasar_Sys
             string output = input;
 
             //Replacing the any tag
-            output = output.Replace("{any}", @"[A-Za-z0-9\_\-]*");
+            output = output.Replace(@"*", @"[A-Za-z0-9\_\-]*");
             //Replacing backslashes for regex interpretation
             output = output.Replace(@"\", @"\\");
             //Replacing double digits
-            output = output.Replace(@"{00}", "(?'numbah'\\d+)");
+            output = output.Replace(@"{00}", @"(?'DoubleDigit'\d{2})");
+            output = output.Replace(@"{0}", @"(?'SingleDigit'\d{1})");
             //Replacing points for regex interpretation
             output = output.Replace(@".", "\\.");
 

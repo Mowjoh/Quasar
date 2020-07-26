@@ -1,7 +1,0 @@
-﻿<InternalModType Name ="Fighter Voice" Filename="FighterVoice"  ID ="1" Association="0" Slots="1" GameID="1">
-  <InternalModTypeFile ID="1">
-    <Path>fighter_voice</Path>
-    <File>*.nus3audio</File>
-    <Mandatory>true</Mandatory>
-  </InternalModTypeFile>
-</InternalModType>

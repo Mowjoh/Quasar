@@ -154,34 +154,62 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <Content Include="References\QuasarUrlShortcuts\Foxie.url">
+    <Content Include="References\InternalModTypes\SmashUltimate\Stage_SkinModel.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="References\QuasarUrlShortcuts\Mon-Ika.url">
+    <Content Include="References\InternalModTypes\SmashUltimate\Fighter_Animation.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="References\QuasarUrlShortcuts\Peach Bomb.url">
+    <Content Include="References\QuasarUrlShortcuts\Mario Kart 8D\Thwomp Circuit.url">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="References\QuasarUrlShortcuts\Salt &amp; Pepper Icies.url">
+    <Content Include="References\QuasarUrlShortcuts\Smash Bros\Gamefiles\Peach Bomb.url">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="References\QuasarUrlShortcuts\Sans UI.url">
+    <Content Include="References\QuasarUrlShortcuts\Smash Bros\Gamefiles\Stretchy Falcon.url">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="References\QuasarUrlShortcuts\Shiny Mewtwo.url">
+    <Content Include="References\QuasarUrlShortcuts\Smash Bros\GUI\Sans UI.url">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="References\QuasarUrlShortcuts\TerryChu.url">
+    <Content Include="References\QuasarUrlShortcuts\Smash Bros\Skins\Mon-Ika.url">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="References\QuasarUrlShortcuts\The Gief.url">
+    <Content Include="References\QuasarUrlShortcuts\Smash Bros\Skins\n64 Fox.url">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="References\QuasarUrlShortcuts\Thwomp Circuit.url">
+    <Content Include="References\QuasarUrlShortcuts\Smash Bros\Skins\Salt &amp; Pepper Icies.url">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="References\QuasarUrlShortcuts\Training Map.url">
+    <Content Include="References\QuasarUrlShortcuts\Smash Bros\Skins\Sonic 4 Remasterd.url">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="References\QuasarUrlShortcuts\Smash Bros\Skins\TerryChu.url">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="References\QuasarUrlShortcuts\Smash Bros\Skins\The Gief.url">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="References\QuasarUrlShortcuts\Smash Bros\Sounds\DK64.url">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="References\QuasarUrlShortcuts\Smash Bros\Sounds\Mario Series Bowser.url">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="References\QuasarUrlShortcuts\Smash Bros\Stages\Cherish Ball PKS2.url">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="References\QuasarUrlShortcuts\Smash Bros\Stages\Training Map.url">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Resource Include="References\GameFiles\SmashUltimate.txt" />
+    <Content Include="References\InternalModTypes\SmashUltimate\Fighter_Model.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="References\InternalModTypes\SmashUltimate\Music.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="References\InternalModTypes\SmashUltimate\Stage_UI.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
@@ -192,13 +220,13 @@
     <Content Include="References\images\mk8d.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="References\InternalModTypes\CSP.xml">
+    <Content Include="References\InternalModTypes\SmashUltimate\Fighter_UI.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="References\InternalModTypes\FighterVoice.xml">
+    <Content Include="References\InternalModTypes\SmashUltimate\Fighter_Voice.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="References\InternalModTypes\Skin.xml">
+    <Content Include="References\InternalModTypes\SmashUltimate\Fighter_Skin.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="References\GameData\GameData.xml">
