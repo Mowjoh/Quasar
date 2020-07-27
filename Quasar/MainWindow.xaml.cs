@@ -151,8 +151,16 @@ namespace Quasar
                 List<InternalModType> internalModTypes = InternalModTypes.FindAll(imt => imt.GameID == selectedGame.ID);
                 InternalModTypeSelect.ItemsSource = internalModTypes;
 
-                List<GameDataCategory> gameDataCategories = GameData.Find(g => g.GameID == selectedGame.ID).Categories;
-                IMTAssotiationSelect.ItemsSource = gameDataCategories;
+                if(GameData.Find(g => g.GameID == selectedGame.ID) != null)
+                {
+                    List<GameDataCategory> gameDataCategories = GameData.Find(g => g.GameID == selectedGame.ID).Categories;
+                    IMTAssotiationSelect.ItemsSource = gameDataCategories;
+                }
+                else
+                {
+                    IMTAssotiationSelect.ItemsSource = null;
+                }
+                
 
                 if (CurrentGame.ID == -1)
                 {
@@ -566,22 +574,28 @@ namespace Quasar
             {
                 if(CurrentGame.ID != -1)
                 {
-                    foreach(LibraryMod lm in Mods)
+                    using (System.IO.StreamWriter file = new System.IO.StreamWriter(Properties.Settings.Default["DefaultDir"].ToString() + @"\Log.txt", true))
                     {
-                        List<ContentMapping> MahList =  Searchie.AutoDetectinator(lm, InternalModTypes, CurrentGame);
-                        using (System.IO.StreamWriter file = new System.IO.StreamWriter(Properties.Settings.Default["DefaultDir"].ToString() + @"\Log.txt", true))
+                        foreach (LibraryMod lm in Mods)
                         {
+                            file.WriteLine("Mod '" + lm.Name + "'");
+                            List<ContentMapping> MahList =  Searchie.AutoDetectinator(lm, InternalModTypes, CurrentGame);
+                        
                             foreach(ContentMapping m in MahList)
                             {
                                 InternalModType imt = InternalModTypes.Single(imts => imts.ID == m.InternalModType);
-                                file.WriteLine("ContentMapping for type `" + imt.Name + "`");
+                                file.WriteLine("-------------------------------------------------------------");
+                                file.WriteLine("ContentMapping for type '" + imt.Name + "'");
 
                                 foreach(ContentMappingFile f in m.Files)
                                 {
-                                    file.WriteLine("Match for file `"+f.SourcePath+"` in Parent folder `"+f.Path+"`");
+                                    file.WriteLine("    - Match for file '"+f.SourcePath+"' in Parent folder '"+f.Path+"'");
                                 }
                             }
-                            
+                            file.WriteLine("------___________________________________------");
+                            file.WriteLine("");
+                            file.WriteLine("");
+
                         }
 
                     }

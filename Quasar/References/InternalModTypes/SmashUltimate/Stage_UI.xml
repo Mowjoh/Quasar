@@ -1,8 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <InternalModType xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="Stage UI" Filename="SmashUltimate/Stage_UI" ID="7" GameID="1" Association="2" Slots="1">
   <InternalModTypeFile ID="0">
-    <Path>stage_{0}</Path>
-    <File>*.btnx</File>
+    <Path>stage_1</Path>
+    <File>stage_1_*.bntx</File>
     <Mandatory>true</Mandatory>
+  </InternalModTypeFile>
+  <InternalModTypeFile ID="1">
+    <Path>stage_2</Path>
+    <File>stage_2_*.bntx</File>
+    <Mandatory>false</Mandatory>
+  </InternalModTypeFile>
+  <InternalModTypeFile ID="2">
+    <Path>stage_3</Path>
+    <File>stage_3_*.bntx</File>
+    <Mandatory>false</Mandatory>
+  </InternalModTypeFile>
+  <InternalModTypeFile ID="3">
+    <Path>stage_4</Path>
+    <File>stage_4_*.bntx</File>
+    <Mandatory>false</Mandatory>
   </InternalModTypeFile>
 </InternalModType>

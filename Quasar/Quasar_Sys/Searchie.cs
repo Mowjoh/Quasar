@@ -41,7 +41,7 @@ namespace Quasar.Quasar_Sys
             foreach (InternalModTypeFile IMTFile in type.Files)
             {
                 //Setting up Regex
-                Regex fileRegex = new Regex(PrepareRegex(IMTFile.Path + @"\" + IMTFile.File));
+                Regex fileRegex = new Regex(PrepareRegex(IMTFile.Path.Replace(@"/",@"\") + @"\" + IMTFile.File));
 
                 //Foreach file in the mod
                 foreach (string filepath in files)
@@ -82,12 +82,17 @@ namespace Quasar.Quasar_Sys
             return content;
         }
 
+        public static void Log(String input)
+        {
+
+        }
+
         public static string PrepareRegex(string input)
         {
             string output = input;
 
             //Replacing the any tag
-            output = output.Replace(@"*", @"[A-Za-z0-9\_\-]*");
+            output = output.Replace(@"*", @"([A-Za-z0-9\_\-]*)");
             //Replacing backslashes for regex interpretation
             output = output.Replace(@"\", @"\\");
             //Replacing double digits
