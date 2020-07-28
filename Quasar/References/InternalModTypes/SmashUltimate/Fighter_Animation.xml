@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <InternalModType xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="Fighter Animation" Filename="SmashUltimate/Fighter_Animation" ID="4" GameID="1" Association="1" Slots="1">
   <InternalModTypeFile ID="0">
-    <Path>c{00}</Path>
+    <Path>c{S00}</Path>
     <File>*.nuanmb</File>
     <Mandatory>true</Mandatory>
   </InternalModTypeFile>

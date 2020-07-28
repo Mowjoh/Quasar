@@ -570,38 +570,40 @@ namespace Quasar
         //When the detector engine gets launched
         private void CMDetectStartButton_Click(object sender, RoutedEventArgs e)
         {
+            List<ContentMapping> FullList = new List<ContentMapping>();
+
             if(CurrentGame != null)
             {
                 if(CurrentGame.ID != -1)
                 {
-                    using (System.IO.StreamWriter file = new System.IO.StreamWriter(Properties.Settings.Default["DefaultDir"].ToString() + @"\Log.txt", true))
+                    foreach (LibraryMod lm in Mods)
                     {
-                        foreach (LibraryMod lm in Mods)
+                        List<ContentMapping> MahList = Searchie.AutoDetectinator(lm, InternalModTypes, CurrentGame);
+
+                        foreach (ContentMapping m in MahList)
                         {
-                            file.WriteLine("Mod '" + lm.Name + "'");
-                            List<ContentMapping> MahList =  Searchie.AutoDetectinator(lm, InternalModTypes, CurrentGame);
-                        
-                            foreach(ContentMapping m in MahList)
-                            {
-                                InternalModType imt = InternalModTypes.Single(imts => imts.ID == m.InternalModType);
-                                file.WriteLine("-------------------------------------------------------------");
-                                file.WriteLine("ContentMapping for type '" + imt.Name + "'");
-
-                                foreach(ContentMappingFile f in m.Files)
-                                {
-                                    file.WriteLine("    - Match for file '"+f.SourcePath+"' in Parent folder '"+f.Path+"'");
-                                }
-                            }
-                            file.WriteLine("------___________________________________------");
-                            file.WriteLine("");
-                            file.WriteLine("");
-
+                            FullList.Add(m);
                         }
-
                     }
                 }
             }
+            DetectionList.ItemsSource = FullList;
         }
+
+        private void DetectionList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            DetectionTreeView.Items.Clear();
+            ContentMapping m = (ContentMapping)DetectionList.SelectedItem;
+            if(DetectionList.SelectedIndex != -1)
+            {
+                foreach (ContentMappingFile cmf in m.Files)
+                {
+                    DetectionTreeView.Items.Add(new TreeViewItem() { Header = cmf.SourcePath + cmf.Path });
+                }
+            }
+            
+        }
+
         #endregion
 
         #region Downloads
@@ -744,7 +746,8 @@ namespace Quasar
 
 
         #endregion
-        
+
+       
     }
 
     

@@ -1,43 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <InternalModType xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="Fighter UI" Filename="SmashUltimate/Fighter_UI" ID="3" GameID="1" Association="1" Slots="8">
   <InternalModTypeFile ID="0">
-    <Path>chara_0</Path>
-    <File>chara_0_*{00}.bntx</File>
+    <Path>chara_{0}</Path>
+    <File>chara_{0}_*{S00}.bntx</File>
     <Mandatory>true</Mandatory>
-  </InternalModTypeFile>
-  <InternalModTypeFile ID="1">
-    <Path>chara_1</Path>
-    <File>chara_1_*{00}.bntx</File>
-    <Mandatory>false</Mandatory>
-  </InternalModTypeFile>
-  <InternalModTypeFile ID="2">
-    <Path>chara_2</Path>
-    <File>chara_2_*{00}.bntx</File>
-    <Mandatory>false</Mandatory>
-  </InternalModTypeFile>
-  <InternalModTypeFile ID="3">
-    <Path>chara_3</Path>
-    <File>chara_3_*{00}.bntx</File>
-    <Mandatory>false</Mandatory>
-  </InternalModTypeFile>
-  <InternalModTypeFile ID="4">
-    <Path>chara_4</Path>
-    <File>chara_4_*{00}.bntx</File>
-    <Mandatory>false</Mandatory>
-  </InternalModTypeFile>
-  <InternalModTypeFile ID="5">
-    <Path>chara_5</Path>
-    <File>chara_5_*{00}.bntx</File>
-    <Mandatory>false</Mandatory>
-  </InternalModTypeFile>
-  <InternalModTypeFile ID="6">
-    <Path>chara_6</Path>
-    <File>chara_6_*{00}.bntx</File>
-    <Mandatory>false</Mandatory>
-  </InternalModTypeFile>
-  <InternalModTypeFile ID="7">
-    <Path>chara_7</Path>
-    <File>chara_7_*{00}.bntx</File>
-    <Mandatory>false</Mandatory>
   </InternalModTypeFile>
 </InternalModType>

@@ -48,30 +48,41 @@ namespace Quasar.Quasar_Sys
                 {
                     string outputPath = filepath.Replace(modFileManager.LibraryContentFolderPath, "");
                     //Try to match with current file in the internal type
-                    Match matcho = fileRegex.Match(filepath);
-                    if (matcho.Success)
+                    Match matchoum = fileRegex.Match(filepath);
+                    if (matchoum.Success)
                     {
                         //Getting match groups
-                        GroupCollection Groups = matcho.Groups;
+                        GroupCollection Groups = matchoum.Groups;
                         if(Groups.Count != 0)
                         {
                             //Getting full match Value
                             string match = Groups[0].Value;
-                            string previousPath = filepath.Substring(0, matcho.Index);
-                            if(Groups.Count > 1)
+                            string previousPath = filepath.Substring(0, matchoum.Index);
+
+                            string slot = "default";
+                            foreach(Group g in Groups)
                             {
-                                
-                                ContentMapping newMapping = content.Find(map => map.Name == Groups[Groups.Count-1].Value && map.InternalModType == type.ID && map.Folder == previousPath && map.ModID.ToString() == modFileManager.ModID);
-                                if (newMapping != null)
+                                if(g.Name.Length > 4)
                                 {
-                                    newMapping.Files.Add(new ContentMappingFile() { Path = IMTFile.Path, InternalModTypeFileID = IMTFile.ID, SourcePath = outputPath });
+                                    if (g.Name.Substring(0, 4).Equals("Slot"))
+                                    {
+                                        slot = g.Value;
+                                    }
                                 }
-                                else
-                                {
-                                    newMapping = new ContentMapping() { Name = Groups[Groups.Count - 1].Value, InternalModType = type.ID, Files = new List<ContentMappingFile>(), Folder = previousPath,ModID = Int32.Parse(modFileManager.ModID) };
-                                    newMapping.Files.Add(new ContentMappingFile() { Path = IMTFile.Path, InternalModTypeFileID = IMTFile.ID, SourcePath = outputPath });
-                                    content.Add(newMapping);
-                                }
+                            }
+
+                            string MatchGroup = type.Name+"_"+modFileManager.ModID+"_"+slot;
+
+                            ContentMapping newMapping = content.Find(map => map.Name == MatchGroup && map.InternalModType == type.ID && map.Folder == previousPath && map.ModID.ToString() == modFileManager.ModID);
+                            if (newMapping != null)
+                            {
+                                newMapping.Files.Add(new ContentMappingFile() { Path = IMTFile.Path, InternalModTypeFileID = IMTFile.ID, SourcePath = outputPath });
+                            }
+                            else
+                            {
+                                newMapping = new ContentMapping() { Name = MatchGroup, InternalModType = type.ID, Files = new List<ContentMappingFile>(), Folder = previousPath, ModID = Int32.Parse(modFileManager.ModID) };
+                                newMapping.Files.Add(new ContentMappingFile() { Path = IMTFile.Path, InternalModTypeFileID = IMTFile.ID, SourcePath = outputPath });
+                                content.Add(newMapping);
                             }
 
                         }
@@ -95,9 +106,15 @@ namespace Quasar.Quasar_Sys
             output = output.Replace(@"*", @"([A-Za-z0-9\_\-]*)");
             //Replacing backslashes for regex interpretation
             output = output.Replace(@"\", @"\\");
-            //Replacing double digits
+
+            //Replacing base digits
             output = output.Replace(@"{00}", @"(?'DoubleDigit'\d{2})");
             output = output.Replace(@"{0}", @"(?'SingleDigit'\d{1})");
+
+            //Replacing Slot digits
+            output = output.Replace(@"{S00}", @"(?'SlotDoubleDigit'\d{2})");
+            output = output.Replace(@"{S0}", @"(?'SlotSingleDigit'\d{1})");
+
             //Replacing points for regex interpretation
             output = output.Replace(@".", "\\.");
 
