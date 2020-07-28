@@ -19,8 +19,8 @@
         <Label x:Name="Status" Content="Status" HorizontalAlignment="Left" Margin="0,56,0,-2" VerticalAlignment="Top" Foreground="{DynamicResource BlackText}"/>
         <ProgressBar x:Name="Progress" Height="10" Margin="0,64,0,0" VerticalAlignment="Top" Background="#6B000000" BorderBrush="{x:Null}" BorderThickness="0" Foreground="{DynamicResource BlackText}"/>
         <Rectangle x:Name="Border" Stroke="{DynamicResource BlackText}" d:IsHidden="True"/>
-        <Label x:Name="ModType" Content="qsdqsd" HorizontalAlignment="Right" Margin="0,30,0,0" VerticalAlignment="Top" Foreground="{DynamicResource BlackText}"/>
-        <Label x:Name="ModCategory" Content="qsdqsd" HorizontalAlignment="Right" VerticalAlignment="Top" Width="Auto" Foreground="{DynamicResource BlackText}" Margin="0,56,0,-2"/>
+        <Label x:Name="ModType" Content="" HorizontalAlignment="Right" Margin="0,30,0,0" VerticalAlignment="Top" Foreground="{DynamicResource BlackText}"/>
+        <Label x:Name="ModCategory" Content="" HorizontalAlignment="Right" VerticalAlignment="Top" Width="Auto" Foreground="{DynamicResource BlackText}" Margin="0,56,0,-2"/>
         <Label x:Name="ModGame" Content="Mod Game" VerticalAlignment="Top" HorizontalAlignment="Center"/>
     </Grid>
 </UserControl>
