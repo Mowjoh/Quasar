@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <InternalModType xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="Fighter Skin" Filename="SmashUltimate/Fighter_Skin" ID="2" GameID="1" Association="1" Slots="8">
   <InternalModTypeFile ID="0">
-    <Path>c{00}</Path>
+    <Path>model/*/c{00}</Path>
     <File>*.nutexb</File>
     <Mandatory>true</Mandatory>
   </InternalModTypeFile>

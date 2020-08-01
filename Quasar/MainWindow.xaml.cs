@@ -14,6 +14,7 @@ using static Quasar.XMLResources.Library;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Linq;
+using System.Diagnostics;
 
 namespace Quasar
 {
@@ -72,7 +73,7 @@ namespace Quasar
             //Loading things
             LoadBasicLists();
             LoadLibraryMods();
-
+            
             readytoSelect = true;
 
         }
@@ -109,7 +110,11 @@ namespace Quasar
             GamesListView.ItemsSource = Games;
             InternalModTypes = XML.GetInternalModTypes();
             GameData = XML.GetGameData();
-            ContentMappings = new List<ContentMapping>();
+            ContentMappings = ContentXML.GetContentMappings();
+            DetectionList.ItemsSource = ContentMappings;
+
+            Game Selected = Games.Find(g => g.ID == Properties.Settings.Default.LastSelectedGame);
+            SelectGame(Selected);
         }
 
         #endregion
@@ -137,49 +142,60 @@ namespace Quasar
                 ReturnAnimation.Children.Add(myDoubleAnimation);
 
                 Game selectedGame = (Game)GamesListView.SelectedItem;
-                CurrentGame = selectedGame;
-                ModTypeSelect.ItemsSource = CurrentGame.GameModTypes;
-                FilterList(-1, -1, CurrentGame.ID);
-                ShowBasicFilters(CurrentGame);
 
-                ModInfoStackPanelValues.Children.Clear();
-                VersionStackPanel.Children.Clear();
-                ModFileView.Items.Clear();
-                ModImage.Source = null;
+                SelectGame(selectedGame);
 
-
-                List<InternalModType> internalModTypes = InternalModTypes.FindAll(imt => imt.GameID == selectedGame.ID);
-                InternalModTypeSelect.ItemsSource = internalModTypes;
-
-                if(GameData.Find(g => g.GameID == selectedGame.ID) != null)
-                {
-                    List<GameDataCategory> gameDataCategories = GameData.Find(g => g.GameID == selectedGame.ID).Categories;
-                    IMTAssotiationSelect.ItemsSource = gameDataCategories;
-                }
-                else
-                {
-                    IMTAssotiationSelect.ItemsSource = null;
-                }
-                
-
-                if (CurrentGame.ID == -1)
-                {
-                    IMTGameBlock.Visibility = Visibility.Visible;
-                    AssignationGameBlock.Visibility = Visibility.Visible;
-                    BuilderGameBlock.Visibility = Visibility.Visible;
-                    CreationGameBlock.Visibility = Visibility.Visible;
-                }
-                else
-                {
-                    IMTGameBlock.Visibility = Visibility.Hidden;
-                    AssignationGameBlock.Visibility = Visibility.Hidden;
-                    BuilderGameBlock.Visibility = Visibility.Hidden;
-                    CreationGameBlock.Visibility = Visibility.Hidden;
-                }
+                Properties.Settings.Default.LastSelectedGame = selectedGame.ID;
+                Properties.Settings.Default.Save();
 
                 ReturnAnimation.Begin();
             }
 
+        }
+
+        private void SelectGame(Game gamu)
+        {
+            CurrentGame = gamu;
+            ModTypeSelect.ItemsSource = CurrentGame.GameModTypes;
+            FilterList(-1, -1, CurrentGame.ID);
+            ShowBasicFilters(CurrentGame);
+
+            ModInfoStackPanelValues.Children.Clear();
+            VersionStackPanel.Children.Clear();
+            ModFileView.Items.Clear();
+            ModImage.Source = null;
+
+
+            List<InternalModType> internalModTypes = InternalModTypes.FindAll(imt => imt.GameID == gamu.ID);
+            InternalModTypeSelect.ItemsSource = internalModTypes;
+
+            if (GameData.Find(g => g.GameID == gamu.ID) != null)
+            {
+                List<GameDataCategory> gameDataCategories = GameData.Find(g => g.GameID == gamu.ID).Categories;
+                IMTAssotiationSelect.ItemsSource = gameDataCategories;
+            }
+            else
+            {
+                IMTAssotiationSelect.ItemsSource = null;
+            }
+
+
+            if (CurrentGame.ID == -1)
+            {
+                IMTGameBlock.Visibility = Visibility.Visible;
+                AssignationGameBlock.Visibility = Visibility.Visible;
+                BuilderGameBlock.Visibility = Visibility.Visible;
+                CreationGameBlock.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                IMTGameBlock.Visibility = Visibility.Hidden;
+                AssignationGameBlock.Visibility = Visibility.Hidden;
+                BuilderGameBlock.Visibility = Visibility.Hidden;
+                CreationGameBlock.Visibility = Visibility.Hidden;
+            }
+
+            ModListView.Items.Refresh();
         }
 
         private void HomeButton_Click(object sender, RoutedEventArgs e)
@@ -587,7 +603,23 @@ namespace Quasar
                     }
                 }
             }
-            DetectionList.ItemsSource = FullList;
+            ContentMappings = FullList;
+            
+        }
+
+        private bool FirstScanLibraryMod(LibraryMod libraryMod, Game game, List<InternalModType> types)
+        {
+            bool processed = false;
+            List<ContentMapping> FullList = Searchie.AutoDetectinator(libraryMod, types, game);
+            foreach(ContentMapping cm in FullList)
+            {
+                ContentMappings.Add(cm);
+                processed = true;
+            }
+
+            ContentXML.WriteContentMappingListFile(ContentMappings);
+
+            return processed;
         }
 
         private void DetectionList_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -598,7 +630,7 @@ namespace Quasar
             {
                 foreach (ContentMappingFile cmf in m.Files)
                 {
-                    DetectionTreeView.Items.Add(new TreeViewItem() { Header = cmf.SourcePath + cmf.Path });
+                    DetectionTreeView.Items.Add(new TreeViewItem() { Header = cmf.SourcePath});
                 }
             }
             
@@ -725,6 +757,18 @@ namespace Quasar
 
                 //Getting Screenshot from Gamebanana
                 await APIRequest.GetScreenshot(ModFileManager.APIType, ModFileManager.ModID, game.ID.ToString(), Mod.TypeID.ToString(), Mod.ID.ToString());
+
+                //Scanning Files
+                int modIndex = Mods.IndexOf(Mod);
+                if(modIndex == -1)
+                {
+                    Mods[Mods.IndexOf(newmod)].FinishedProcessing = FirstScanLibraryMod(Mod, game, InternalModTypes);
+                }
+                else
+                {
+                    Mods[modIndex].FinishedProcessing = FirstScanLibraryMod(Mod, game, InternalModTypes);
+                }
+                
 
                 //Saving XML
                 WriteModListFile(Mods);

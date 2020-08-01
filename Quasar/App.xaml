@@ -20,5 +20,15 @@
             </Setter>
         </Style>
 
+        <Style x:Key="QuasarButtonStyle">
+            
+        </Style>
+
+        <Style x:Key="QuasarBackgroundStyle"></Style>
+
+        <SolidColorBrush x:Key="QuasarBackgroundDark" Color="#dfdbc3"/>
+        <SolidColorBrush x:Key="QuasarBackgroundLight" Color="#dfdbc3"/>
+        <SolidColorBrush x:Key="QuasarTextColor" Color="#73635a"/>
+        
     </Application.Resources>
 </Application>
