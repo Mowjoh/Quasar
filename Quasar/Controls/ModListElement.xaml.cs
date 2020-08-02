@@ -1,6 +1,7 @@
 ﻿using Quasar.XMLResources;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -29,6 +30,10 @@ namespace Quasar.Controls
 
         public int gameID;
 
+        public bool recto
+        {
+            get; set;
+        }
 
         public LibraryMod LocalMod;
 
@@ -39,6 +44,7 @@ namespace Quasar.Controls
         {
             InitializeComponent();
             isActive = true;
+            recto = true;
         }
 
         private void UserControl_MouseUp(object sender, MouseButtonEventArgs e)
@@ -59,6 +65,7 @@ namespace Quasar.Controls
             ModType.Content = _mod.TypeLabel;
             SetModTypeColor(modType);
             Status.Content = "Up to date";
+            LoadImage(LocalMod);
 
         }
         public void setGame(Game _Game)
@@ -74,6 +81,23 @@ namespace Quasar.Controls
             ModType.Content = LocalMod.TypeLabel;
             SetModTypeColor(modType);
             Status.Content = "Up to date";
+            LoadImage(LocalMod);
+
+        }
+        private void LoadImage(LibraryMod libraryMod)
+        {
+            string imageSource = Properties.Settings.Default.DefaultDir + @"\Library\Screenshots\";
+            string imagename = libraryMod.GameID + "_" + libraryMod.TypeID + "_" + libraryMod.ID;
+            string[] files = Directory.GetFiles(imageSource, imagename + ".*");
+
+            if (files.Length > 0)
+            {
+                ModImage.Source = new BitmapImage(new Uri(files[0], UriKind.RelativeOrAbsolute));
+            }
+            else
+            {
+                ModImage.Source = null;
+            }
         }
 
         public void SetModTypeColor(int type)
@@ -100,11 +124,17 @@ namespace Quasar.Controls
                     brush = FindResource("BlackText") as SolidColorBrush;
                     break;
             }
+            /*
             Title.Foreground = brush;
             ModCategory.Foreground = brush;
             ModType.Foreground = brush;
-            Status.Foreground = brush;
+            Status.Foreground = brush;*/
             Border.Stroke = brush;
+        }
+
+        private void ModImage_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            recto = false;
         }
     }
 }

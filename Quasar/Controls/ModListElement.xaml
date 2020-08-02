@@ -5,22 +5,62 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Quasar.Controls"
              mc:Ignorable="d" 
-             d:DesignHeight="80" d:DesignWidth="100" Width="auto" Height="Auto" MinWidth="250" MinHeight="80" MouseUp="UserControl_MouseUp" HorizontalAlignment="Stretch">
+             d:DesignHeight="100" d:DesignWidth="450" Width="450" Height="100" MouseUp="UserControl_MouseUp" HorizontalAlignment="Stretch">
     <UserControl.Resources>
         <SolidColorBrush x:Key="BlueText" Color="#FF0B397C"/>
         <SolidColorBrush x:Key="RedText" Color="#FF9E1904"/>
         <SolidColorBrush x:Key="GreenText" Color="#FF006E1E"/>
         <SolidColorBrush x:Key="PurpleText" Color="#FFAD00B6"/>
-        <SolidColorBrush x:Key="BlackText" Color="Black"/>
+        <SolidColorBrush x:Key="BlackText" Color="Yellow"/>
         <SolidColorBrush x:Key="DarkBlueText" Color="#FF06766C"/>
+
+        <Style x:Key="ActiveLabel" TargetType="Label">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding recto}" Value="True">
+                    <Setter Property="Visibility" Value="Visible"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding recto}" Value="False">
+                    <Setter Property="Visibility" Value="Hidden"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="VersoLabel" TargetType="Label">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding recto}" Value="True">
+                    <Setter Property="Visibility" Value="Hidden"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding recto}" Value="False">
+                    <Setter Property="Visibility" Value="Visible"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
     </UserControl.Resources>
-    <Grid Background="{DynamicResource QuasarBackgroundLight}" x:Name="MLEGrid">
-        <Label x:Name="Title" Content="ModName" HorizontalAlignment="Left" VerticalAlignment="Top" Width="Auto" Foreground="{DynamicResource QuasarTextColor}" Margin="0,25,0,0"/>
-        <Label x:Name="Status" Content="Status" HorizontalAlignment="Left" Margin="0,56,0,-2" VerticalAlignment="Top" Foreground="{DynamicResource QuasarTextColor}"/>
-        <ProgressBar x:Name="Progress" Height="10" Margin="0,64,0,0" VerticalAlignment="Top" Background="#6B000000" BorderBrush="{x:Null}" BorderThickness="0" Foreground="{DynamicResource BlackText}"/>
-        <Rectangle x:Name="Border" Stroke="{DynamicResource BlackText}" d:IsHidden="True"/>
-        <Label x:Name="ModType" Content="" HorizontalAlignment="Right" Margin="0,30,0,0" VerticalAlignment="Top" Foreground="{DynamicResource QuasarTextColor}"/>
-        <Label x:Name="ModCategory" Content="" HorizontalAlignment="Right" VerticalAlignment="Top" Width="Auto" Foreground="{DynamicResource QuasarTextColor}" Margin="0,56,0,-2"/>
-        <Label x:Name="ModGame" Content="Mod Game" VerticalAlignment="Top" HorizontalAlignment="Center" Foreground="{DynamicResource QuasarTextColor}"/>
+    <Grid Background="{DynamicResource QuasarBackgroundLight}" x:Name="MLEGrid" >
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="160"/>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="45"/>
+        </Grid.ColumnDefinitions>
+
+        <Image x:Name="ModImage" Stretch="UniformToFill" Margin="0" MouseLeftButtonUp="ModImage_MouseLeftButtonUp"/>
+
+
+        <Label x:Name="ModGame" Style="{StaticResource ActiveLabel}" Content="Mod Game" VerticalAlignment="Top" Foreground="{DynamicResource QuasarTextColor}" Grid.Column="1" Margin="10,0"/>
+        <Label x:Name="Title" Style="{StaticResource ActiveLabel}" Content="ModName" VerticalAlignment="Top" Foreground="{DynamicResource QuasarTextColor}" Margin="10,26,10,0" Grid.Column="1"/>
+        <Label x:Name="Status" Style="{StaticResource ActiveLabel}" Content="Status" Margin="10,74,10,0" VerticalAlignment="Top" Foreground="{DynamicResource QuasarTextColor}" Grid.Column="1" Grid.ColumnSpan="2"/>
+        <ProgressBar x:Name="Progress" Height="10" Margin="0,82,0,0" VerticalAlignment="Top" Background="#6B000000" BorderBrush="{x:Null}" BorderThickness="0" Foreground="{DynamicResource BlackText}" Grid.Column="1"/>
+        <Rectangle x:Name="Border" Stroke="{DynamicResource BlackText}" d:IsHidden="True" Grid.ColumnSpan="3"/>
+
+
+        <Label x:Name="ModType" Style="{StaticResource VersoLabel}" Visibility="Hidden" Content="" Margin="5,0,5,74" Foreground="{DynamicResource QuasarTextColor}" Grid.Column="1" Grid.ColumnSpan="2"/>
+        <Label x:Name="ModCategory" Style="{StaticResource VersoLabel}"  Content="Category" VerticalAlignment="Bottom" Foreground="{DynamicResource QuasarTextColor}" Margin="10,0,10,22" Grid.Column="1"/>
+
+        <StackPanel Orientation="Vertical" Grid.Column="2" Margin="0">
+            <Path x:Name="Update" Stroke="Green" Fill="Green" Data="M12 6v3l4-4-4-4v3c-4.42 0-8 3.58-8 8 0 1.57.46 3.03 1.24 4.26L6.7 14.8c-.45-.83-.7-1.79-.7-2.8 0-3.31 2.69-6 6-6zm6.76 1.74L17.3 9.2c.44.84.7 1.79.7 2.8 0 3.31-2.69 6-6 6v-3l-4 4 4 4v-3c4.42 0 8-3.58 8-8 0-1.57-.46-3.03-1.24-4.26z" Height="20" Width="20" Margin="0,10,0,0" Stretch="Uniform" ToolTip="Your mod is up to date !" />
+            <Path x:Name="TreeView" Stroke="White" Fill="White" Data="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z" Height="20" Width="20" Margin="0,10,0,0" Stretch="Uniform" ToolTip="Open File Tree" />
+            <Path x:Name="Description" Stroke="White" Fill="White" Data="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" Height="20" Width="20" Margin="0,10,0,0" Stretch="Uniform" ToolTip="View Mod Details" />
+
+        </StackPanel>
+        
     </Grid>
 </UserControl>

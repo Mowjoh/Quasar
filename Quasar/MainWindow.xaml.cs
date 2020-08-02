@@ -113,8 +113,8 @@ namespace Quasar
             ContentMappings = ContentXML.GetContentMappings();
             DetectionList.ItemsSource = ContentMappings;
 
-            Game Selected = Games.Find(g => g.ID == Properties.Settings.Default.LastSelectedGame);
-            SelectGame(Selected);
+            //Game Selected = Games.Find(g => g.ID == Properties.Settings.Default.LastSelectedGame);
+            //SelectGame(Selected);
         }
 
         #endregion
@@ -145,7 +145,7 @@ namespace Quasar
 
                 SelectGame(selectedGame);
 
-                Properties.Settings.Default.LastSelectedGame = selectedGame.ID;
+                //Properties.Settings.Default.LastSelectedGame = selectedGame.ID;
                 Properties.Settings.Default.Save();
 
                 ReturnAnimation.Begin();
@@ -160,10 +160,9 @@ namespace Quasar
             FilterList(-1, -1, CurrentGame.ID);
             ShowBasicFilters(CurrentGame);
 
-            ModInfoStackPanelValues.Children.Clear();
-            VersionStackPanel.Children.Clear();
-            ModFileView.Items.Clear();
-            ModImage.Source = null;
+            //ModInfoStackPanelValues.Children.Clear();
+            //VersionStackPanel.Children.Clear();
+            //ModFileView.Items.Clear();
 
 
             List<InternalModType> internalModTypes = InternalModTypes.FindAll(imt => imt.GameID == gamu.ID);
@@ -238,26 +237,26 @@ namespace Quasar
         public void PrintModInformation(LibraryMod _item)
         {
             //Thrashing the place
-            ModInfoStackPanelValues.Children.Clear();
-            VersionStackPanel.Children.Clear();
+            //ModInfoStackPanelValues.Children.Clear();
+            //VersionStackPanel.Children.Clear();
 
             //Showing Name, Category and Authors
-            ModInfoStackPanelValues.Children.Add(new Label() { Content = _item.Name });
-            ModInfoStackPanelValues.Children.Add(new Label() { Content = _item.TypeLabel });
-            ModInfoStackPanelValues.Children.Add(new Label() { Content = _item.APICategoryName });
+            //ModInfoStackPanelValues.Children.Add(new Label() { Content = _item.Name });
+            //ModInfoStackPanelValues.Children.Add(new Label() { Content = _item.TypeLabel });
+            //ModInfoStackPanelValues.Children.Add(new Label() { Content = _item.APICategoryName });
             foreach (String[] author in _item.Authors)
             {
-                ModInfoStackPanelValues.Children.Add(new Label() { Content = " - " + author[0] });
+                //ModInfoStackPanelValues.Children.Add(new Label() { Content = " - " + author[0] });
             }
 
             //Showing Version info
-            VersionStackPanel.Children.Add(new Label() { Content = _item.Updates });
-            VersionStackPanel.Children.Add(new Label() { Content = "Up to Date" });
+            //VersionStackPanel.Children.Add(new Label() { Content = _item.Updates });
+            //VersionStackPanel.Children.Add(new Label() { Content = "Up to Date" });
 
             Game modGame = Games.Find(g => g.ID == _item.GameID);
 
             //Loading Tree View
-            LoadTreeView(ModFileView, new ModFileManager(_item, modGame).LibraryContentFolderPath);
+            //LoadTreeView(ModFileView, new ModFileManager(_item, modGame).LibraryContentFolderPath);
             LoadImage(_item);
         }
         //Refreshes the contents of the File Mod Tree View
@@ -372,13 +371,13 @@ namespace Quasar
         //Tree view actions
         private void ExpandTree(object sender, RoutedEventArgs e)
         {
-            ExpandTree(ModFileView);
+            //ExpandTree(ModFileView);
 
         }
 
         private void MinimizeTree(object sender, RoutedEventArgs e)
         {
-            MinimizeTree(ModFileView);
+            //MinimizeTree(ModFileView);
         }
 
         private void LoadImage(LibraryMod libraryMod)
@@ -389,11 +388,11 @@ namespace Quasar
 
             if (files.Length > 0)
             {
-                ModImage.Source = new BitmapImage(new Uri(files[0], UriKind.RelativeOrAbsolute));
+                //ModImage.Source = new BitmapImage(new Uri(files[0], UriKind.RelativeOrAbsolute));
             }
             else
             {
-                ModImage.Source = null;
+                //ModImage.Source = null;
             }
         }
         #endregion
