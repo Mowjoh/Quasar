@@ -8,6 +8,16 @@
 
         <System:String x:Key="HeaderTabContent">qsd</System:String>
 
+        <SolidColorBrush x:Key="QuasarButtonBackground" Color="#92DEC3"/>
+        <SolidColorBrush x:Key="QuasarButtonText" Color="#000000"/>
+
+        <SolidColorBrush x:Key="QuasarBackgroundDark" Color="#262833"/>
+        <SolidColorBrush x:Key="QuasarBackgroundLight" Color="#262833"/>
+        <SolidColorBrush x:Key="QuasarBackgroundAccent" Color="#262833"/>
+        <SolidColorBrush x:Key="QuasarTextColorAccent" Color="#4acfac"/>
+        <SolidColorBrush x:Key="QuasarTextColor" Color="#ececec"/>
+
+
         <Style x:Key="ModListElementStyle1" TargetType="{x:Type Controls:ModListElement}">
             <Setter Property="Template">
                 <Setter.Value>
@@ -20,15 +30,62 @@
             </Setter>
         </Style>
 
-        <Style x:Key="QuasarButtonStyle">
-            
+        <Style x:Key="QuasarButtonStyle" TargetType="{x:Type Button}">
+            <Setter Property="Background" Value="{StaticResource QuasarButtonBackground}"/>
+            <Setter Property="Foreground" Value="{StaticResource QuasarButtonText}"/>
+        </Style>
+       
+
+        <ControlTemplate TargetType="Button" x:Key="NewButton">
+            <Grid Height="Auto" Width="Auto">
+                <Border Height="Auto" Width="Auto">
+                    <Path Stroke="Black" StrokeThickness="1" Fill="{StaticResource QuasarButtonBackground}">
+                        <Path.Data>
+                            <RectangleGeometry Rect="0,0,200,50" RadiusX="10" RadiusY="10" />
+                        </Path.Data>
+                    </Path>
+                </Border>
+                <Label VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{StaticResource QuasarButtonText}" FontSize="14">Content</Label>
+                
+            </Grid>
+        </ControlTemplate>
+
+        <Style TargetType="{x:Type ListBox}" x:Key="ModListStyle">
+            <Setter Property="ItemsPanel">
+                <Setter.Value>
+                    <ItemsPanelTemplate>
+                        <WrapPanel Width="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=ActualWidth}"/>
+                    </ItemsPanelTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
 
-        <Style x:Key="QuasarBackgroundStyle"></Style>
+        <Style x:Key="QuasarListBox" TargetType="{x:Type ListBox}">
+            <Setter Property="Background" Value="{DynamicResource QuasarBackgroundDark}"/>
+        </Style>
 
-        <SolidColorBrush x:Key="QuasarBackgroundDark" Color="#dfdbc3"/>
-        <SolidColorBrush x:Key="QuasarBackgroundLight" Color="#dfdbc3"/>
-        <SolidColorBrush x:Key="QuasarTextColor" Color="#73635a"/>
-        
+        <Style TargetType="ListBox" x:Key="QuasarList">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListBoxItem">
+                        <Border BorderThickness="1" BorderBrush="Transparent" 
+                                Margin="5,0,5,0" Background="Transparent" Name="itemBorder" Padding="5,0,0,0">
+                            <ContentPresenter />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="itemBorder" Property="BorderBrush" Value="White"></Setter>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="itemBorder" Property="BorderBrush" Value="LightSkyBlue"></Setter>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+      
     </Application.Resources>
+
+    
 </Application>
