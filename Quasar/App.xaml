@@ -11,11 +11,11 @@
         <SolidColorBrush x:Key="QuasarButtonBackground" Color="#92DEC3"/>
         <SolidColorBrush x:Key="QuasarButtonText" Color="#000000"/>
 
-        <SolidColorBrush x:Key="QuasarBackgroundDark" Color="#FF242927"/>
-        <SolidColorBrush x:Key="QuasarBackgroundLight" Color="#FF242927"/>
-        <SolidColorBrush x:Key="QuasarBackgroundAccent" Color="#202060"/>
-        <SolidColorBrush x:Key="QuasarTextColorAccent" Color="#b030b0"/>
-        <SolidColorBrush x:Key="QuasarTextColor" Color="#ffffff"/>
+        <SolidColorBrush x:Key="QuasarBackgroundDark" Color="#262833"/>
+        <SolidColorBrush x:Key="QuasarBackgroundLight" Color="#262833"/>
+        <SolidColorBrush x:Key="QuasarBackgroundAccent" Color="#262833"/>
+        <SolidColorBrush x:Key="QuasarTextColorAccent" Color="#4acfac"/>
+        <SolidColorBrush x:Key="QuasarTextColor" Color="#ececec"/>
 
 
         <Style x:Key="ModListElementStyle1" TargetType="{x:Type Controls:ModListElement}">
@@ -59,5 +59,33 @@
                 </Setter.Value>
             </Setter>
         </Style>
+
+        <Style x:Key="QuasarListBox" TargetType="{x:Type ListBox}">
+            <Setter Property="Background" Value="{DynamicResource QuasarBackgroundDark}"/>
+        </Style>
+
+        <Style TargetType="ListBox" x:Key="QuasarList">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListBoxItem">
+                        <Border BorderThickness="1" BorderBrush="Transparent" 
+                                Margin="5,0,5,0" Background="Transparent" Name="itemBorder" Padding="5,0,0,0">
+                            <ContentPresenter />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="itemBorder" Property="BorderBrush" Value="White"></Setter>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="itemBorder" Property="BorderBrush" Value="LightSkyBlue"></Setter>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+      
     </Application.Resources>
+
+    
 </Application>

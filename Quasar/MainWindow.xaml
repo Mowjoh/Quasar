@@ -7,7 +7,7 @@
         xmlns:local="clr-namespace:Quasar"
         xmlns:controls="clr-namespace:Quasar.Controls"
         mc:Ignorable="d"
-        Title="{x:Static p:Resources.Title}" MinWidth="1200" MinHeight="700" Width="1359" Height="792">
+        Title="{x:Static p:Resources.Title}" MinWidth="1250" MinHeight="800" Width="1250" Height="800">
     <Grid x:Name="QuasarGrid">
         <Grid x:Name="OverlayGrid" Panel.ZIndex="1000" Opacity="100" Background="#FF2D2D2D">
             <Grid.RenderTransform>
@@ -38,16 +38,30 @@
 
             <TabControl x:Name="ContentTabControl" Grid.Column="1">
                 <TabItem x:Name="Management" Header="{x:Static p:Resources.ManagementTabHeader}">
-                    <Grid x:Name="ManagementGrid">
+                    <Grid x:Name="ManagementGrid" Background="{DynamicResource QuasarBackgroundDark}">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="50"/>
-                            <RowDefinition/>
+                            <RowDefinition Height="35*"/>
+                            <RowDefinition Height="656*"/>
                         </Grid.RowDefinitions>
-                        <ComboBox x:Name="ModTypeSelect" ItemsSource="{Binding ModTypes}" DisplayMemberPath="Name" SelectedValuePath="ID" Margin="10,10,0,0" VerticalAlignment="Top" Height="22" IsReadOnly="True" IsEditable="True" Text="{x:Static p:Resources.ModTypeSelectText}" Foreground="Black" SelectionChanged="ModTypeSelectionChanged" ShouldPreserveUserEnteredPrefix="True" Background="{DynamicResource QuasarBackgroundDark}" HorizontalAlignment="Left" Width="302"/>
-                        <ComboBox x:Name="ModFilterSelect" ItemsSource="{Binding}" DisplayMemberPath="Name" SelectedValuePath="ID" Margin="317,10,0,0" VerticalAlignment="Top" Height="22" IsReadOnly="True" IsEditable="True" Text="{x:Static p:Resources.ModFilterSelectText}" Foreground="Black" IsEnabled="True" SelectionChanged="FilterSelectionChanged" HorizontalAlignment="Left" Width="275"/>
-                        <ListBox x:Name="ModListView" SelectionChanged="ModSelected" ItemsSource="{Binding ModListElement}" Background="{DynamicResource QuasarBackgroundLight}" Style="{StaticResource ModListStyle}" Margin="0,0,0,0" Grid.Row="1" >
-                            <ListBox.ItemContainerStyle>
-                                <Style TargetType="{x:Type ListBoxItem}">
+                        <ComboBox x:Name="ModTypeSelect" ItemsSource="{Binding ModTypes}" DisplayMemberPath="Name" SelectedValuePath="ID" Margin="10,16,0,0" VerticalAlignment="Top" Height="22" IsReadOnly="True" IsEditable="True" Text="{x:Static p:Resources.ModTypeSelectText}" Foreground="Black" SelectionChanged="ModTypeSelectionChanged" ShouldPreserveUserEnteredPrefix="True" Background="{DynamicResource QuasarBackgroundDark}" HorizontalAlignment="Left" Width="302"/>
+                        <ComboBox x:Name="ModFilterSelect" ItemsSource="{Binding}" DisplayMemberPath="Name" SelectedValuePath="ID" Margin="911,16,10,0" VerticalAlignment="Top" Height="22" IsReadOnly="True" IsEditable="True" Text="{x:Static p:Resources.ModFilterSelectText}" Foreground="Black" IsEnabled="True" SelectionChanged="FilterSelectionChanged"/>
+                        <ListView x:Name="ModListView" SelectionChanged="ModSelected" ItemsSource="{Binding ModListElement}" Background="{DynamicResource QuasarBackgroundLight}" Style="{StaticResource ModListStyle}" Margin="0,0,0,0" Grid.Row="2" >
+                            <ListView.Resources>
+                                <ControlTemplate x:Key="SelectedTemplate" TargetType="ListViewItem">
+                                    <Border SnapsToDevicePixels="true" BorderBrush="Transparent" BorderThickness="0" Background="Transparent" CornerRadius="5" x:Name="border">
+                                        <ContentControl SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" Margin="0" VerticalAlignment="Stretch" Content="{TemplateBinding Content}" />
+                                    </Border>
+                                </ControlTemplate>
+                                <Style TargetType="ListViewItem">
+                                    <Style.Triggers>
+
+                                    </Style.Triggers>
+                                </Style>
+                            </ListView.Resources>
+
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="{x:Type ListViewItem}">
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding isActive}" Value="False">
                                             <Setter Property="Visibility" Value="Collapsed"/>
@@ -55,32 +69,203 @@
                                         <DataTrigger Binding="{Binding isActive}" Value="True">
                                             <Setter Property="Visibility" Value="Visible"/>
                                         </DataTrigger>
+                                        <MultiTrigger>
+                                            <MultiTrigger.Conditions>
+                                                <Condition Property="IsSelected" Value="true" />
+                                                <Condition Property="Selector.IsSelectionActive" Value="true" />
+                                            </MultiTrigger.Conditions>
+                                            <Setter Property="Background" Value="Transparent" />
+                                            <Setter Property="Template" Value="{StaticResource SelectedTemplate}" />
+                                        </MultiTrigger>
+                                        <Trigger Property="IsMouseDirectlyOver" Value="True">
+                                            <Setter Property="Background" Value="Transparent" />
+                                            <Setter Property="Template" Value="{StaticResource SelectedTemplate}" />
+                                        </Trigger>
                                     </Style.Triggers>
                                 </Style>
-                            </ListBox.ItemContainerStyle>
-                        </ListBox>
+                            </ListView.ItemContainerStyle>
+                        </ListView>
+                        <Grid Grid.Row="1" Margin="10,0,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="30*"/>
+                                <ColumnDefinition Width="20*"/>
+                                <ColumnDefinition Width="20*"/>
+                                <ColumnDefinition Width="20*"/>
+                                <ColumnDefinition Width="10*"/>
+                            </Grid.ColumnDefinitions>
+                            <Label x:Name="Title" FontStyle="Italic" Content="ModName" Foreground="{DynamicResource QuasarTextColor}" Grid.Column="0" HorizontalContentAlignment="Left" VerticalContentAlignment="Center"/>
+                            <Label x:Name="Status" FontStyle="Italic" Content="Status" Foreground="{DynamicResource QuasarTextColor}" Grid.Column="0"  HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Visibility="Hidden"/>
+
+                            <Label x:Name="ModType" FontStyle="Italic" Content="Type" Foreground="{DynamicResource QuasarTextColor}" Grid.Column="1"  HorizontalContentAlignment="Left" VerticalContentAlignment="Center" />
+                            <Label x:Name="ModCategory" FontStyle="Italic"  Content="Category" Foreground="{DynamicResource QuasarTextColor}" Grid.Column="2"    HorizontalContentAlignment="Left" VerticalContentAlignment="Center"/>
+                            <Label x:Name="ModGame" FontStyle="Italic" Content="Mod Game" Foreground="{DynamicResource QuasarTextColor}" Grid.Column="3"  HorizontalContentAlignment="Left" VerticalContentAlignment="Center"/>
+                            <Label x:Name="Actions" FontStyle="Italic" Content="Actions" Foreground="{DynamicResource QuasarTextColor}" Grid.Column="4"  HorizontalContentAlignment="Right" VerticalContentAlignment="Center"/>
+
+                        </Grid>
                     </Grid>
                 </TabItem>
-                <TabItem x:Name="Contents" Header="Content Management" d:IsHidden="True">
+                <TabItem x:Name="Contents" Header="Content Management">
                     <Grid x:Name="ContentManagementGrid" Background="{DynamicResource QuasarBackgroundDark}">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="45*"/>
-                            <ColumnDefinition Width="150*"/>
-                            <ColumnDefinition Width="247*"/>
-                            <ColumnDefinition Width="240*"/>
-                        </Grid.ColumnDefinitions>
-                        <Label x:Name="CMDetectStartLabel" Content="Mod Content Scanner" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="26" Width="129" Grid.ColumnSpan="2" Foreground="{DynamicResource QuasarTextColor}"/>
-                        <Button x:Name="CMDetectStartButton" Content="Launch it !" Margin="0,13,10,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="236" Height="20" Grid.Column="1" Click="CMDetectStartButton_Click"/>
-                        <TreeView x:Name="DetectionTreeView" Grid.Column="3" Margin="10,57,10,10" Background="{DynamicResource QuasarBackgroundLight}" Foreground="{DynamicResource QuasarTextColor}"/>
-                        <ListBox x:Name="DetectionList" Margin="10,57,10,10" Grid.ColumnSpan="2" DisplayMemberPath="Name" SelectionChanged="DetectionList_SelectionChanged" Background="{DynamicResource QuasarBackgroundLight}" Foreground="{DynamicResource QuasarTextColor}" />
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="50"/>
+                            <RowDefinition Height="35*"/>
+                            <RowDefinition Height="656*"/>
+                        </Grid.RowDefinitions>
+                        <ComboBox x:Name="ContentTypeSelect" ItemsSource="{Binding ModTypes}" DisplayMemberPath="Name" SelectedValuePath="ID" Margin="10,16,0,0" VerticalAlignment="Top" Height="22" IsReadOnly="True" IsEditable="True" Text="{x:Static p:Resources.ModTypeSelectText}" Foreground="Black" SelectionChanged="ModTypeSelectionChanged" ShouldPreserveUserEnteredPrefix="True" Background="{DynamicResource QuasarBackgroundDark}" HorizontalAlignment="Left" Width="302"/>
+                        <ComboBox x:Name="ContentFilterSelect" ItemsSource="{Binding}" DisplayMemberPath="Name" SelectedValuePath="ID" Margin="911,16,10,0" VerticalAlignment="Top" Height="22" IsReadOnly="True" IsEditable="True" Text="{x:Static p:Resources.ModFilterSelectText}" Foreground="Black" IsEnabled="True" SelectionChanged="FilterSelectionChanged"/>
+                        <ListView x:Name="ContentListView"  SelectionChanged="ContentSelected" ItemsSource="{Binding ModListElement}" Background="{DynamicResource QuasarBackgroundLight}" Margin="0,0,10,0" Grid.Row="2" >
+                            <ListView.Resources>
+                                <ControlTemplate x:Key="SelectedTemplate" TargetType="{x:Type ListViewItem}">
+                                    <Border SnapsToDevicePixels="true" BorderBrush="Transparent" BorderThickness="0" Background="Transparent" CornerRadius="5" x:Name="border">
+                                        <ContentControl SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" Margin="0" VerticalAlignment="Stretch" Content="{TemplateBinding Content}" />
+                                    </Border>
+                                </ControlTemplate>
+                                <Style TargetType="{x:Type ListViewItem}"/>
+                            </ListView.Resources>
+
+                            <ListView.Style>
+                                <StaticResource ResourceKey="ModListStyle"/>
+                            </ListView.Style>
+
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="{x:Type ListViewItem}">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding isActive}" Value="False">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding isActive}" Value="True">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                        </DataTrigger>
+                                        <MultiTrigger>
+                                            <MultiTrigger.Conditions>
+                                                <Condition Property="IsSelected" Value="true" />
+                                                <Condition Property="Selector.IsSelectionActive" Value="true" />
+                                            </MultiTrigger.Conditions>
+                                            <Setter Property="Background" Value="Transparent" />
+                                            <Setter Property="Template" Value="{StaticResource SelectedTemplate}" />
+                                        </MultiTrigger>
+                                        <Trigger Property="IsMouseDirectlyOver" Value="True">
+                                            <Setter Property="Background" Value="Transparent" />
+                                            <Setter Property="Template" Value="{StaticResource SelectedTemplate}" />
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </ListView.ItemContainerStyle>
+                        </ListView>
+                        <Grid Grid.Row="1" Margin="10,0,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="35*"/>
+                                <ColumnDefinition Width="20*"/>
+                                <ColumnDefinition Width="20*"/>
+                                <ColumnDefinition Width="20*"/>
+                                <ColumnDefinition Width="20*"/>
+                                <ColumnDefinition Width="10*"/>
+                            </Grid.ColumnDefinitions>
+                            <Label x:Name="Title1" FontStyle="Italic" Content="Mod Name" Foreground="{DynamicResource QuasarTextColor}" Grid.Column="0" HorizontalContentAlignment="Left" VerticalContentAlignment="Center"/>
+                            <Label x:Name="ModType1" FontStyle="Italic" Content="Content Name" Foreground="{DynamicResource QuasarTextColor}" Grid.Column="1"  HorizontalContentAlignment="Left" VerticalContentAlignment="Center" />
+                            <Label x:Name="ModCategory1" FontStyle="Italic"  Content="Detected Type" Foreground="{DynamicResource QuasarTextColor}" Grid.Column="2"    HorizontalContentAlignment="Left" VerticalContentAlignment="Center"/>
+                            <Label x:Name="ModGame1" FontStyle="Italic" Content="Association" Foreground="{DynamicResource QuasarTextColor}" Grid.Column="3"  HorizontalContentAlignment="Left" VerticalContentAlignment="Center"/>
+                            <Label x:Name="ContentSlot" FontStyle="Italic" Content="Slot" Foreground="{DynamicResource QuasarTextColor}" Grid.Column="4"  HorizontalContentAlignment="Left" VerticalContentAlignment="Center"/>
+                            <Label x:Name="Actions1" FontStyle="Italic" Content="Actions" Foreground="{DynamicResource QuasarTextColor}" Grid.Column="5"  HorizontalContentAlignment="Right" VerticalContentAlignment="Center"/>
+
+                        </Grid>
                     </Grid>
                 </TabItem>
-                <TabItem x:Name="Assigning" Header="{x:Static p:Resources.AssignmentTabHeader}" d:IsHidden="True">
+                <TabItem x:Name="Assigning" Header="{x:Static p:Resources.AssignmentTabHeader}">
                     <Grid Background="#FFE5E5E5">
-                        <Grid x:Name="AssignationGameBlock" Grid.ColumnSpan="2" Grid.Column="2" Background ="Black" Panel.ZIndex="500">
+                        <Grid x:Name="AssignationGameBlock" Grid.ColumnSpan="2" Grid.Column="2" Background ="Black" Panel.ZIndex="500" Visibility="Collapsed">
                             <Label Content="Please select a game first" HorizontalAlignment="Center" Foreground="Wheat"  VerticalAlignment="Center" FontSize="36" />
                         </Grid>
-                        <Label Content="Section Under Construction..." HorizontalAlignment="Center"  VerticalAlignment="Center" FontSize="36"/>
+                        <Grid x:Name="AssignmentGrid" Background="{DynamicResource QuasarBackgroundDark}">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="30"/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="190"/>
+                                <ColumnDefinition Width="190"/>
+                                <ColumnDefinition Width="190"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Label Content="Game Element" Foreground="{DynamicResource QuasarTextColor}" Grid.Column="0" VerticalAlignment="Center" HorizontalContentAlignment="Center" />
+                            <Label Content="Name" Foreground="{DynamicResource QuasarTextColor}" Grid.Column="1" VerticalAlignment="Center" HorizontalContentAlignment="Center"/>
+                            <Label Content="Mod Types" Foreground="{DynamicResource QuasarTextColor}" Grid.Column="2" VerticalAlignment="Center" HorizontalContentAlignment="Center" />
+                            <Label Content="Association" Foreground="{DynamicResource QuasarTextColor}" Grid.Column="3" VerticalAlignment="Center" HorizontalContentAlignment="Center" />
+
+
+                            <ListBox x:Name="AssociationGameDataList" Grid.Row="1" Grid.Column="0" Style="{DynamicResource QuasarListBox}" SelectionChanged="AssociationGameDataList_SelectionChanged">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Label Content="{Binding Name}" Width="120" Foreground="White" />
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+
+                            <ListBox x:Name="AssociationGameElementDataList" Grid.Row="1" Grid.Column="1" Style="{DynamicResource QuasarListBox}">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Label Content="{Binding Name}" Width="120" Foreground="White" />
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+
+                            <ListBox x:Name="AssociationTypeDataList" Grid.Row="1" Grid.Column="2" Style="{DynamicResource QuasarListBox}">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Label Content="{Binding Name}" Width="120" Foreground="White" />
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                            <Grid x:Name="AssociationGrid" Grid.Column="3" Grid.Row="1" Margin="10,0,0,0" Background="#33000000">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="30"/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+
+                                <Label Content="Available items" Grid.Row="0" Grid.Column="0" Foreground="{DynamicResource QuasarTextColor}" HorizontalContentAlignment="Center"/>
+                                <Label Content="Available slots" Grid.Row="0" Grid.Column="1" Foreground="{DynamicResource QuasarTextColor}" HorizontalContentAlignment="Center"/>
+
+                                <ListBox x:Name="ItemSourceListBox" Grid.Row="1" Grid.Column="0" Style="{DynamicResource QuasarListBox}">
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid Margin="0,5,0,5">
+                                                <Path x:Name="BorderColor" Stroke="{Binding BorderColor}" StrokeThickness="2" Fill="{DynamicResource QuasarBackgroundDark}">
+                                                    <Path.Data>
+                                                        <RectangleGeometry x:Name="ColoredRectangle" Rect="0,0,270,30" RadiusX="5" RadiusY="10"   />
+                                                    </Path.Data>
+                                                </Path>
+                                                <Label Content="{Binding Name}" HorizontalContentAlignment="Center" Foreground="{DynamicResource QuasarTextColor}"/>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
+
+                                <ListBox x:Name="ItemSlotListBox" Grid.Row="1" Grid.Column="1" Style="{DynamicResource QuasarListBox}">
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid Margin="0,5,0,5">
+                                                <Path x:Name="BorderColor" Stroke="{Binding BorderColor}" StrokeThickness="2" Fill="{DynamicResource QuasarBackgroundDark}">
+                                                    <Path.Data>
+                                                        <RectangleGeometry x:Name="ColoredRectangle" Rect="0,0,270,30" RadiusX="5" RadiusY="10"   />
+                                                    </Path.Data>
+                                                </Path>
+                                                <Label Content="{Binding Name}" HorizontalContentAlignment="Center" Foreground="{DynamicResource QuasarTextColor}"/>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
+                            </Grid>
+                        </Grid>
                     </Grid>
                 </TabItem>
                 <TabItem x:Name="Build" Header="Build" d:IsHidden="True">

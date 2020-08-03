@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Quasar.Controls"
              mc:Ignorable="d" 
-             d:DesignHeight="100" d:DesignWidth="450" Width="450" Height="100" MouseUp="UserControl_MouseUp" HorizontalAlignment="Stretch">
+             d:DesignHeight="100" d:DesignWidth="1175" Width="1170" Height="30" MouseUp="UserControl_MouseUp" HorizontalAlignment="Stretch">
     <UserControl.Resources>
         <SolidColorBrush x:Key="BlueText" Color="#FF0B397C"/>
         <SolidColorBrush x:Key="RedText" Color="#FF9E1904"/>
@@ -34,33 +34,135 @@
                 </DataTrigger>
             </Style.Triggers>
         </Style>
+
     </UserControl.Resources>
     <Grid Background="{DynamicResource QuasarBackgroundLight}" x:Name="MLEGrid" >
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="160"/>
+            <ColumnDefinition Width="5"/>
             <ColumnDefinition/>
-            <ColumnDefinition Width="45"/>
         </Grid.ColumnDefinitions>
 
-        <Image x:Name="ModImage" Stretch="UniformToFill" Margin="0" MouseLeftButtonUp="ModImage_MouseLeftButtonUp"/>
+        <Path x:Name="BorderColor" Stroke="Black" StrokeThickness="2" Fill="Green" Grid.ColumnSpan="2">
+            <Path.Data>
+                <RectangleGeometry x:Name="ColoredRectangle" Rect="0,0,450,30" RadiusX="5" RadiusY="10"  />
+            </Path.Data>
+        </Path>
+        <Grid Grid.Column="1" Background="{DynamicResource QuasarBackgroundAccent}">
 
 
-        <Label x:Name="ModGame" Style="{StaticResource ActiveLabel}" Content="Mod Game" VerticalAlignment="Top" Foreground="{DynamicResource QuasarTextColor}" Grid.Column="1" Margin="10,0"/>
-        <Label x:Name="Title" Style="{StaticResource ActiveLabel}" Content="ModName" VerticalAlignment="Top" Foreground="{DynamicResource QuasarTextColor}" Margin="10,26,10,0" Grid.Column="1"/>
-        <Label x:Name="Status" Style="{StaticResource ActiveLabel}" Content="Status" Margin="10,74,10,0" VerticalAlignment="Top" Foreground="{DynamicResource QuasarTextColor}" Grid.Column="1" Grid.ColumnSpan="2"/>
-        <ProgressBar x:Name="Progress" Height="10" Margin="0,82,0,0" VerticalAlignment="Top" Background="#6B000000" BorderBrush="{x:Null}" BorderThickness="0" Foreground="{DynamicResource BlackText}" Grid.Column="1"/>
-        <Rectangle x:Name="Border" Stroke="{DynamicResource BlackText}" d:IsHidden="True" Grid.ColumnSpan="3"/>
+
+            <Rectangle x:Name="Border" Stroke="Black" StrokeThickness="2" Grid.ColumnSpan="5" OpacityMask="Black" />
+            <Grid Grid.ColumnSpan="5" Background="#33000000">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="30*"/>
+                    <ColumnDefinition Width="20*"/>
+                    <ColumnDefinition Width="20*"/>
+                    <ColumnDefinition Width="20*"/>
+                    <ColumnDefinition Width="10*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="5"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+
+                <Label x:Name="Title" Style="{StaticResource ActiveLabel}" Content="" Foreground="{DynamicResource QuasarTextColor}" Grid.Column="0" Grid.Row="0" HorizontalContentAlignment="Left" VerticalContentAlignment="Center"/>
+                <Label x:Name="Status" Style="{StaticResource ActiveLabel}" Content="" Foreground="{DynamicResource QuasarTextColor}" Grid.Column="0" Grid.Row="0"  HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Visibility="Hidden"/>
+
+                <ProgressBar x:Name="Progress" Height="10" Background="#6B000000" BorderBrush="{x:Null}" BorderThickness="0" Foreground="#FF003A00" Grid.Column="1" Grid.Row="0" Grid.ColumnSpan="4"/>
+
+                <Label x:Name="ModType" Style="{StaticResource ActiveLabel}" Content="" Foreground="{DynamicResource QuasarTextColor}" Grid.Column="1" Grid.Row="0"  HorizontalContentAlignment="Left" VerticalContentAlignment="Center" />
+                <Label x:Name="ModCategory" Style="{StaticResource ActiveLabel}"  Content="" Foreground="{DynamicResource QuasarTextColor}" Grid.Column="2" Grid.Row="0"    HorizontalContentAlignment="Left" VerticalContentAlignment="Center"/>
+                <Label x:Name="ModGame" Style="{StaticResource ActiveLabel}" Content="" Foreground="{DynamicResource QuasarTextColor}" Grid.Column="3" Grid.Row="0"  HorizontalContentAlignment="Left" VerticalContentAlignment="Center"/>
+
+                <StackPanel Orientation="Horizontal" Grid.Column="4" Grid.Row="0" FlowDirection="RightToLeft">
+                    <Button x:Name="Trash" Margin="0,0,0,0" Click="Trash_Click" Visibility="Hidden">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Path x:Name="Trash" Stroke="Black" Fill="Red" Data="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zm2.46-7.12l1.41-1.41L12 12.59l2.12-2.12 1.41 1.41L13.41 14l2.12 2.12-1.41 1.41L12 15.41l-2.12 2.12-1.41-1.41L10.59 14l-2.13-2.12zM15.5 4l-1-1h-5l-1 1H5v2h14V4z" Height="15" Width="15" Margin="10,0,0,0" Stretch="Uniform" ToolTip="View Mod Details" />
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                    <Button x:Name="Treeview" Margin="0,0,0,0" Click="Treeview_Click" Visibility="Hidden">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Path x:Name="TreeView" Stroke="White" Fill="White" Data="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z" Height="15" Width="15" Margin="10,0,0,0" Stretch="Uniform" ToolTip="Open File Tree" />
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                    <Button x:Name="Update" Margin="0,0,0,0" Visibility="Collapsed" Click="Update_Click">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Path x:Name="Update" Stroke="Green" Fill="Green" Data="M12 6v3l4-4-4-4v3c-4.42 0-8 3.58-8 8 0 1.57.46 3.03 1.24 4.26L6.7 14.8c-.45-.83-.7-1.79-.7-2.8 0-3.31 2.69-6 6-6zm6.76 1.74L17.3 9.2c.44.84.7 1.79.7 2.8 0 3.31-2.69 6-6 6v-3l-4 4 4 4v-3c4.42 0 8-3.58 8-8 0-1.57-.46-3.03-1.24-4.26z" Height="15" Width="15"  Stretch="Uniform" ToolTip="Your mod is up to date !" />
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                    <Button x:Name="Minimize" Margin="0,0,0,0" Visibility="Hidden" Click="ExpandRetract_Click">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Path x:Name="Minimize" Stroke="White" Fill="White" Data="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14zM7 9h5v1H7z" Margin="10,0,0,0" Height="15" Width="15"  Stretch="Uniform" ToolTip="Your mod is up to date !" />
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
 
 
-        <Label x:Name="ModType" Style="{StaticResource VersoLabel}" Visibility="Hidden" Content="" Margin="5,0,5,74" Foreground="{DynamicResource QuasarTextColor}" Grid.Column="1" Grid.ColumnSpan="2"/>
-        <Label x:Name="ModCategory" Style="{StaticResource VersoLabel}"  Content="Category" VerticalAlignment="Bottom" Foreground="{DynamicResource QuasarTextColor}" Margin="10,0,10,22" Grid.Column="1"/>
+                </StackPanel>
 
-        <StackPanel Orientation="Vertical" Grid.Column="2" Margin="0">
-            <Path x:Name="Update" Stroke="Green" Fill="Green" Data="M12 6v3l4-4-4-4v3c-4.42 0-8 3.58-8 8 0 1.57.46 3.03 1.24 4.26L6.7 14.8c-.45-.83-.7-1.79-.7-2.8 0-3.31 2.69-6 6-6zm6.76 1.74L17.3 9.2c.44.84.7 1.79.7 2.8 0 3.31-2.69 6-6 6v-3l-4 4 4 4v-3c4.42 0 8-3.58 8-8 0-1.57-.46-3.03-1.24-4.26z" Height="20" Width="20" Margin="0,10,0,0" Stretch="Uniform" ToolTip="Your mod is up to date !" />
-            <Path x:Name="TreeView" Stroke="White" Fill="White" Data="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z" Height="20" Width="20" Margin="0,10,0,0" Stretch="Uniform" ToolTip="Open File Tree" />
-            <Path x:Name="Description" Stroke="White" Fill="White" Data="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" Height="20" Width="20" Margin="0,10,0,0" Stretch="Uniform" ToolTip="View Mod Details" />
+                <Separator Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="5"></Separator>
+                <Grid Grid.ColumnSpan="5" Grid.Row="2" Background="#33000000">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="225"/>
+                        <ColumnDefinition Width="40*"/>
+                        <ColumnDefinition Width="1"/>
+                        <ColumnDefinition Width="50*"/>
+                    </Grid.ColumnDefinitions>
 
-        </StackPanel>
-        
+                    <Image x:Name="ModImage" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center" />
+
+                    <Grid x:Name="UpdateGrid" Grid.Column="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="100"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+
+                        <Label x:Name="VersionControl" Content="Version Control :" Foreground="{StaticResource QuasarTextColor}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan=" 2" HorizontalAlignment="Center"/>
+
+                        <StackPanel Orientation="Vertical" Grid.Column="0" Grid.Row="1">
+                            <Label Style="{StaticResource ActiveLabel}" Content="Version :" Foreground="{DynamicResource QuasarTextColor}" />
+                            <Label Style="{StaticResource ActiveLabel}" Content="Up to Date :" Foreground="{DynamicResource QuasarTextColor}" />
+
+                        </StackPanel>
+                        <StackPanel Orientation="Vertical" Grid.Column="1" Grid.Row="1">
+                            <Label Style="{StaticResource ActiveLabel}" Content="1.0" Foreground="{DynamicResource QuasarTextColor}" />
+                            <Label Style="{StaticResource ActiveLabel}" Content="Verified" Foreground="{DynamicResource QuasarTextColor}" />
+                        </StackPanel>
+
+                    </Grid>
+                    <Grid Background="Gray" Grid.Column="2"/>
+
+
+                    <Grid x:Name="CreatorsGrid"  Grid.Column="3">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="250"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Label x:Name="Creators" Content="Creators :" Foreground="{StaticResource QuasarTextColor}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan=" 2" HorizontalAlignment="Center"/>
+                        <StackPanel x:Name="AutorNameStackPanel" Orientation="Vertical" Grid.Column="0" Grid.Row="1"/>
+                        <StackPanel x:Name="AutorRoleStackPanel" Orientation="Vertical" Grid.Column="1" Grid.Row="1"/>
+
+                    </Grid>
+                </Grid>
+            </Grid>
+
+        </Grid>
+
     </Grid>
 </UserControl>

@@ -15,6 +15,8 @@ using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Linq;
 using System.Diagnostics;
+using System.Drawing;
+using System.Windows.Media;
 
 namespace Quasar
 {
@@ -32,6 +34,8 @@ namespace Quasar
         public List<ModListElement> ListMods { get; set; }
         public List<LibraryMod> WorkingModList;
         public LibraryMod SelectedMod { get; set; }
+
+        public List<ContentListElement> ListContents { get; set; }
 
         //Quasar Downloads
         readonly Mutex serverMutex;
@@ -73,7 +77,8 @@ namespace Quasar
             //Loading things
             LoadBasicLists();
             LoadLibraryMods();
-            
+            LoadContentLibrary();
+
             readytoSelect = true;
 
         }
@@ -104,14 +109,37 @@ namespace Quasar
 
         }
 
+        private void LoadContentLibrary()
+        {
+            ContentMappings = ContentXML.GetContentMappings();
+            ListContents = new List<ContentListElement>();
+            int modID = 0;
+            int colorID = 0;
+
+            foreach(ContentMapping cm in ContentMappings)
+            {
+                LibraryMod lm = Mods.Single(l => l.ID == cm.ModID);
+                InternalModType imt = InternalModTypes.Single(i => i.ID == cm.InternalModType);
+
+                colorID = modID != lm.ID ? colorID == 0 ? 1 : 0 : colorID;
+                modID = modID != lm.ID ? lm.ID : modID;
+                List<GameDataCategory> gdc = GameData.Find(gd => gd.GameID == lm.GameID).Categories;
+                ContentListElement cle = new ContentListElement(cm, lm, imt, gdc);
+                cle.setColor(colorID);
+                ListContents.Add(cle);
+            }
+            ContentListView.ItemsSource = ListContents;
+
+        }
+
         private void LoadBasicLists()
         {
             Games = XML.GetGames();
             GamesListView.ItemsSource = Games;
             InternalModTypes = XML.GetInternalModTypes();
             GameData = XML.GetGameData();
-            ContentMappings = ContentXML.GetContentMappings();
-            DetectionList.ItemsSource = ContentMappings;
+           
+            
 
             //Game Selected = Games.Find(g => g.ID == Properties.Settings.Default.LastSelectedGame);
             //SelectGame(Selected);
@@ -172,6 +200,7 @@ namespace Quasar
             {
                 List<GameDataCategory> gameDataCategories = GameData.Find(g => g.GameID == gamu.ID).Categories;
                 IMTAssotiationSelect.ItemsSource = gameDataCategories;
+                AssociationGameDataList.ItemsSource = gameDataCategories;
             }
             else
             {
@@ -208,6 +237,35 @@ namespace Quasar
         #endregion
 
         #region ModManagements
+
+        //--------------------------------------
+        //Mod Actions
+        private void ModSelected(object sender, SelectionChangedEventArgs e)
+        {
+            ModListElement mle = (ModListElement)ModListView.SelectedItem;
+            SelectedMod = mle.LocalMod;
+            foreach (ModListElement m in ModListView.Items)
+            {
+                m.RetractUI();
+            }
+            if (mle.Downloaded)
+            {
+                mle.ExpandUI();
+            }
+
+        }
+
+        private void ContentSelected(object sender, SelectionChangedEventArgs e)
+        {
+            ContentListElement cle = (ContentListElement)ContentListView.SelectedItem;
+            foreach (ContentListElement cl in ContentListView.Items)
+            {
+                cl.RetractUI();
+            }
+            cle.ExpandUI();
+
+        }
+
         //Version actions
         private async void CheckUpdates(object sender, RoutedEventArgs e)
         {
@@ -233,44 +291,10 @@ namespace Quasar
             }
         }
 
-        //Refreshes the contents of the filter combobox
-        public void PrintModInformation(LibraryMod _item)
-        {
-            //Thrashing the place
-            //ModInfoStackPanelValues.Children.Clear();
-            //VersionStackPanel.Children.Clear();
 
-            //Showing Name, Category and Authors
-            //ModInfoStackPanelValues.Children.Add(new Label() { Content = _item.Name });
-            //ModInfoStackPanelValues.Children.Add(new Label() { Content = _item.TypeLabel });
-            //ModInfoStackPanelValues.Children.Add(new Label() { Content = _item.APICategoryName });
-            foreach (String[] author in _item.Authors)
-            {
-                //ModInfoStackPanelValues.Children.Add(new Label() { Content = " - " + author[0] });
-            }
+        //--------------------------------------
+        //Filtering Actions
 
-            //Showing Version info
-            //VersionStackPanel.Children.Add(new Label() { Content = _item.Updates });
-            //VersionStackPanel.Children.Add(new Label() { Content = "Up to Date" });
-
-            Game modGame = Games.Find(g => g.ID == _item.GameID);
-
-            //Loading Tree View
-            //LoadTreeView(ModFileView, new ModFileManager(_item, modGame).LibraryContentFolderPath);
-            LoadImage(_item);
-        }
-        //Refreshes the contents of the File Mod Tree View
-        
-        private void ModSelected(object sender, SelectionChangedEventArgs e)
-        {
-            ModListElement mle = (ModListElement)ModListView.SelectedItem;
-            SelectedMod = mle.LocalMod;
-            if (mle.Downloaded)
-            {
-                PrintModInformation(mle.LocalMod);
-            }
-
-        }
         //Refreshes the content of the mod list based on mod type
         private void ModTypeSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -316,6 +340,10 @@ namespace Quasar
 
         }
 
+
+        //--------------------------------------
+        //Filtering Mechanics
+
         private void ShowBasicFilters(Game _Game)
         {
             ModTypeSelect.ItemsSource = null;
@@ -356,55 +384,43 @@ namespace Quasar
             ModListView.Items.Refresh();
         }
 
-        private static TreeViewItem CreateDirectoryNode(DirectoryInfo directoryInfo)
-        {
-            var directoryNode = new TreeViewItem { Header = directoryInfo.Name };
-            foreach (var directory in directoryInfo.GetDirectories())
-                directoryNode.Items.Add(CreateDirectoryNode(directory));
-
-            foreach (var file in directoryInfo.GetFiles())
-                directoryNode.Items.Add(new TreeViewItem { Header = file.Name });
-
-            return directoryNode;
-        }
-
-        //Tree view actions
-        private void ExpandTree(object sender, RoutedEventArgs e)
-        {
-            //ExpandTree(ModFileView);
-
-        }
-
-        private void MinimizeTree(object sender, RoutedEventArgs e)
-        {
-            //MinimizeTree(ModFileView);
-        }
-
-        private void LoadImage(LibraryMod libraryMod)
-        {
-            string imageSource = Properties.Settings.Default.DefaultDir + @"\Library\Screenshots\"  ;
-            string imagename = libraryMod.GameID + "_" + libraryMod.TypeID + "_" + libraryMod.ID;
-            string[] files = Directory.GetFiles(imageSource,imagename + ".*");
-
-            if (files.Length > 0)
-            {
-                //ModImage.Source = new BitmapImage(new Uri(files[0], UriKind.RelativeOrAbsolute));
-            }
-            else
-            {
-                //ModImage.Source = null;
-            }
-        }
         #endregion
 
         #region Mod Content
         private void ContentDataGridItemSelected(object sender, SelectionChangedEventArgs e)
         {
+            ContentListElement cle = (ContentListElement)ContentListView.SelectedItem;
+            foreach (ContentListElement cl in ContentListView.Items)
+            {
+                cl.RetractUI();
+            }
+            cle.ExpandUI();
         }
 
         private void AutoDetectLaunch(object sender, RoutedEventArgs e)
         {
         }
+        #endregion
+
+        #region Mod Association
+        private void AssociationGameDataList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ListBox lb = (ListBox)sender;
+            GameDataCategory gdc = (GameDataCategory)lb.SelectedItem;
+            AssociationGameElementDataList.ItemsSource = gdc.Items;
+
+            List<InternalModType> correspondingTypes = InternalModTypes.FindAll(imt => imt.Association == gdc.ID);
+            AssociationTypeDataList.ItemsSource = correspondingTypes;
+
+            SolidColorBrush green = new SolidColorBrush(Colors.Green);
+            SolidColorBrush white = new SolidColorBrush(Colors.White);
+
+            List<FakeDetectedItem> FakeItems = new List<FakeDetectedItem> { new FakeDetectedItem("Terry Hat Pikachu Blue", green), new FakeDetectedItem("Terry Hat Pikachu Black", green)};
+            List<FakeDetectedItem> FakeSlots = new List<FakeDetectedItem> { new FakeDetectedItem("Slot 1", white), new FakeDetectedItem("Slot 2", white), new FakeDetectedItem("Slot 3", white), new FakeDetectedItem("Terry Hat Pikachu Blue", green), new FakeDetectedItem("Slot 5", white), new FakeDetectedItem("Slot 6", white), new FakeDetectedItem("Slot 7", white), new FakeDetectedItem("Slot 8", white) };
+            ItemSourceListBox.ItemsSource = FakeItems;
+            ItemSlotListBox.ItemsSource = FakeSlots;
+        }
+
         #endregion
 
         #region InternalModTypes
@@ -524,41 +540,6 @@ namespace Quasar
         }
         #endregion
 
-        #region Global
-        private void ExpandTree(TreeView tv)
-        {
-            foreach (var item in tv.Items)
-            {
-                if (item is TreeViewItem tvi)
-                {
-                    tvi.ExpandSubtree();
-                }
-            }
-        }
-
-        private void MinimizeTree(TreeView tv)
-        {
-            foreach (var item in tv.Items)
-            {
-                if (item is TreeViewItem tvi)
-                {
-                    tvi.IsExpanded = false;
-                }
-            }
-        }
-
-        public void LoadTreeView(System.Windows.Controls.TreeView _tv, string _fp)
-        {
-            _tv.Items.Clear();
-
-            foreach (string s in Directory.GetDirectories(_fp))
-            {
-                var rootDirectory = new DirectoryInfo(s);
-                _tv.Items.Add(CreateDirectoryNode(rootDirectory));
-            }
-        }
-        #endregion
-
         #region Settings
         //Deletes Everything Quasar has stored cause that's the easy way out
         private void DeleteDocumentFolderContents(object sender, RoutedEventArgs e)
@@ -623,6 +604,7 @@ namespace Quasar
 
         private void DetectionList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            /*
             DetectionTreeView.Items.Clear();
             ContentMapping m = (ContentMapping)DetectionList.SelectedItem;
             if(DetectionList.SelectedIndex != -1)
@@ -632,7 +614,7 @@ namespace Quasar
                     DetectionTreeView.Items.Add(new TreeViewItem() { Header = cmf.SourcePath});
                 }
             }
-            
+            */
         }
 
         #endregion
@@ -788,9 +770,30 @@ namespace Quasar
 
 
 
+
         #endregion
 
-       
+       public class FakeDetectedItem
+        {
+            public String Name { get; set; }
+            public SolidColorBrush BorderColor { get; set; }
+
+            public FakeDetectedItem()
+            {
+
+            }
+            public FakeDetectedItem(String name)
+            {
+                Name = name;
+            }
+
+            public FakeDetectedItem(String name, SolidColorBrush color)
+            {
+                Name = name;
+                BorderColor = color;
+            }
+
+        }
     }
 
     
