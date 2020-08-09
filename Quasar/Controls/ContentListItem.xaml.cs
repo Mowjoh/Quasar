@@ -84,6 +84,21 @@ namespace Quasar.Controls
                 OnPropertyChanged("GameData");
             }
         }
+
+        private GameDataItem _SelectedGDI;
+
+        public GameDataItem SelectedGDI
+        {
+            get
+            {
+                return _SelectedGDI;
+            }
+            set
+            {
+                _SelectedGDI = value;
+                OnPropertyChanged("SelectedGDI");
+            }
+        }
         #endregion
 
         #region Triggers
@@ -248,10 +263,17 @@ namespace Quasar.Controls
             LocalModType = imt;
 
             GameData = Categories.Find(gd => gd.ID == LocalModType.GameID);
+            GameDataItem gdi = GameData.Items.Find(g => g.ID == LocalMapping.GameDataItemID);
+            SelectedGDI = gdi != null ? gdi : null;
+
+            ContentMappingAssociation.SelectedItem = SelectedGDI;
+
+            //Displaying files
             foreach(ContentMappingFile cmf in LocalMapping.Files)
             {
                 FilesTextBlock.Text += cmf.SourcePath + "\r\n";
             }
+
             ColorValue = colorID;
 
             Smol = true;
@@ -282,7 +304,11 @@ namespace Quasar.Controls
         private void SaveContentMapping(object sender, RoutedEventArgs e)
         {
             if (this.SaveRequested != null)
+            {
+                SelectedGDI = (GameDataItem)ContentMappingAssociation.SelectedItem;
                 this.SaveRequested(this, new EventArgs());
+            }
+                
         }
     }
 }

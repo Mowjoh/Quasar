@@ -72,7 +72,7 @@ namespace Quasar.Quasar_Sys
                             }
 
 
-                            string MatchGroup = type.Name+" "+mod.Name+ " - " + slot;
+                            string MatchGroup = type.Name+" - "+mod.Name+ " - " + slot;
 
                             ContentMapping newMapping = content.Find(map => map.Name == MatchGroup && map.InternalModType == type.ID && map.Folder == previousPath && map.ModID.ToString() == modFileManager.ModID);
                             if (newMapping != null)

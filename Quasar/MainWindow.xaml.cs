@@ -685,7 +685,11 @@ namespace Quasar
         {
             ContentListItem item = (ContentListItem)sender;
             ContentMapping cm = ContentMappings.ElementAt(ContentMappings.IndexOf(item.LocalMapping));
+            GameDataItem gdi = (GameDataItem)item.ContentMappingAssociation.SelectedItem;
+
             cm.Name = item.ContentMappingName.Text;
+            cm.GameDataItemID = gdi != null ? gdi.ID : -1;
+
             ContentXML.WriteContentMappingListFile(ContentMappings);
         }
         #endregion
@@ -1029,11 +1033,11 @@ namespace Quasar
                 int modIndex = Mods.IndexOf(Mod);
                 if(modIndex == -1)
                 {
-                    Mods[Mods.IndexOf(newmod)].FinishedProcessing = FirstScanLibraryMod(Mod, game, InternalModTypes);
+                    Mods[Mods.IndexOf(newmod)].FinishedProcessing = FirstScanLibraryMod(newmod, game, InternalModTypes);
                 }
                 else
                 {
-                    Mods[modIndex].FinishedProcessing = FirstScanLibraryMod(Mod, game, InternalModTypes);
+                    Mods[modIndex].FinishedProcessing = FirstScanLibraryMod(newmod, game, InternalModTypes);
                 }
 
                 //Refreshing  Interface
