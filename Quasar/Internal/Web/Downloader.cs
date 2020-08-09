@@ -19,33 +19,22 @@ namespace Quasar
     {
         //Setting Default Directory Path
         readonly string DefaultDirectoryPath = Properties.Settings.Default["DefaultDir"].ToString();
-        readonly ProgressBar DownloadProgressBar;
-        readonly Label StatusLabel;
-        readonly Label TypeLabel;
+
+        ModListItem ModListItem;
 
         string DownloadURL;
         public string ModTypeID;
         public string ModID;
         public string ArchiveExtension;
 
-        public Downloader(ProgressBar _ProgressBar, Label _StatusLabel, Label _TypeLabel)
+        public Downloader(ModListItem mli)
         {
-            DownloadProgressBar = _ProgressBar;
-            StatusLabel = _StatusLabel;
-            TypeLabel = _TypeLabel;
+            ModListItem = mli;
         }
 
         //The big boi, the download Task
         public async Task<bool> DownloadArchiveAsync(ModFileManager _ModFileManager)
         {
-            //Setting Status and ProgressBar
-            await StatusLabel.Dispatcher.BeginInvoke(new Action(() =>
-            {
-                DownloadProgressBar.Value = 0;
-                StatusLabel.Visibility = Visibility.Hidden;
-                DownloadProgressBar.Visibility = Visibility.Visible;
-            }), DispatcherPriority.Background);
-
             //Getting info from Quasar URL
             ParseQueryStringParameters(_ModFileManager);
             var DownloadURL = new Uri(this.DownloadURL);
@@ -57,21 +46,13 @@ namespace Quasar
             void DownloadProgressChangedEvent(object s, DownloadProgressChangedEventArgs e)
             {
                 //Changing ProgressBar value
-                DownloadProgressBar.Dispatcher.BeginInvoke((Action)(() =>
-                {
-                    DownloadProgressBar.Value = e.ProgressPercentage;
-                }));
+                ModListItem.Progress.Dispatcher.BeginInvoke((Action)(() => { ModListItem.ProgressBarValue = e.ProgressPercentage; }));
 
                 //Making a proper string to display
-                var downloadProgress = string.Format("{0} MB / {1} MB",
-                        (e.BytesReceived / 1024d / 1024d).ToString("0.00"),
-                        (e.TotalBytesToReceive / 1024d / 1024d).ToString("0.00"));
+                var downloadProgress = string.Format("{0} MB / {1} MB", (e.BytesReceived / 1024d / 1024d).ToString("0.00"), (e.TotalBytesToReceive / 1024d / 1024d).ToString("0.00"));
 
                 //Displaying value
-                TypeLabel.Dispatcher.BeginInvoke((Action)(() =>
-                {
-                    TypeLabel.Content = downloadProgress;
-                }));
+                ModListItem.ModStatusTextLabel.Dispatcher.BeginInvoke((Action)(() => { ModListItem.ModStatusTextValue = downloadProgress; }));
             }
 
             //File Download
@@ -81,13 +62,6 @@ namespace Quasar
                 await webClient.DownloadFileTaskAsync(DownloadURL, DestinationFilePath);
             }
             
-            //Setting UI for finished state
-            await StatusLabel.Dispatcher.BeginInvoke(new Action(() =>
-            {
-                StatusLabel.Visibility = Visibility.Visible;
-                DownloadProgressBar.Visibility = Visibility.Hidden;
-            }), DispatcherPriority.Background);
-
             return true;
         }
 

@@ -203,7 +203,7 @@ namespace Quasar
             }
             catch(Exception e)
             {
-
+                Console.Write("fak");
             }
 
             return 0;

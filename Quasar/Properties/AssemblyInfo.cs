@@ -12,7 +12,7 @@ using System.Windows;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Quasar")]
-[assembly: AssemblyCopyright("Copyright Mowjoh©  2019")]
+[assembly: AssemblyCopyright("Copyright Mowjoh©  2020")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
