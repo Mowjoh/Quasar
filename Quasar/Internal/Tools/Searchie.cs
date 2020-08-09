@@ -19,7 +19,7 @@ namespace Quasar.Quasar_Sys
                 ModFileManager modFileManager = new ModFileManager(mod, _Game);
                 foreach (InternalModType type in types)
                 {
-                    List<ContentMapping> temp = EvaluatePossibility(type, modFileManager);
+                    List<ContentMapping> temp = EvaluatePossibility(type, modFileManager, mod);
                     foreach(ContentMapping map in temp)
                     {
                         mappings.Add(map);
@@ -31,7 +31,7 @@ namespace Quasar.Quasar_Sys
         }
 
         //Evaluates possibilities of instances of the selected InternalModType
-        public static List<ContentMapping> EvaluatePossibility(InternalModType type, ModFileManager modFileManager)
+        public static List<ContentMapping> EvaluatePossibility(InternalModType type, ModFileManager modFileManager, LibraryMod mod)
         {
             //List of mapped contents
             List<ContentMapping> content = new List<ContentMapping>();
@@ -59,19 +59,20 @@ namespace Quasar.Quasar_Sys
                             string match = Groups[0].Value;
                             string previousPath = filepath.Substring(0, matchoum.Index);
 
-                            string slot = "default";
+                            string slot = "Default";
                             foreach(Group g in Groups)
                             {
                                 if(g.Name.Length > 4)
                                 {
                                     if (g.Name.Substring(0, 4).Equals("Slot"))
                                     {
-                                        slot = g.Value;
+                                        slot = "Slot " + g.Value;
                                     }
                                 }
                             }
 
-                            string MatchGroup = type.Name+"_"+modFileManager.ModID+"_"+slot;
+
+                            string MatchGroup = type.Name+" "+mod.Name+ " - " + slot;
 
                             ContentMapping newMapping = content.Find(map => map.Name == MatchGroup && map.InternalModType == type.ID && map.Folder == previousPath && map.ModID.ToString() == modFileManager.ModID);
                             if (newMapping != null)
@@ -80,7 +81,7 @@ namespace Quasar.Quasar_Sys
                             }
                             else
                             {
-                                newMapping = new ContentMapping() { Name = MatchGroup, InternalModType = type.ID, Files = new List<ContentMappingFile>(), Folder = previousPath, ModID = Int32.Parse(modFileManager.ModID) };
+                                newMapping = new ContentMapping() { Name = MatchGroup, InternalModType = type.ID, Files = new List<ContentMappingFile>(), Folder = previousPath, ModID = Int32.Parse(modFileManager.ModID), SlotName = slot };
                                 newMapping.Files.Add(new ContentMappingFile() { Path = IMTFile.Path, InternalModTypeFileID = IMTFile.ID, SourcePath = outputPath });
                                 content.Add(newMapping);
                             }

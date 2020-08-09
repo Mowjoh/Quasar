@@ -4,6 +4,7 @@ using System.Linq;
 using System.Xml.Serialization;
 using System.IO;
 using System.Collections;
+using System.Collections.ObjectModel;
 
 namespace Quasar.XMLResources
 {

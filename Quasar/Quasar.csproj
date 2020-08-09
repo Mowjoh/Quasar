@@ -63,7 +63,11 @@
   <PropertyGroup>
     <ApplicationIcon>Quasar.ico</ApplicationIcon>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>Quasar.App</StartupObject>
+  </PropertyGroup>
   <ItemGroup>
+    <Reference Include="PresentationFramework.Aero2" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
@@ -90,18 +94,18 @@
     <Compile Include="Controls\FileView.xaml.cs">
       <DependentUpon>FileView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ContentListElement.xaml.cs">
-      <DependentUpon>ContentListElement.xaml</DependentUpon>
+    <Compile Include="Controls\ContentListItem.xaml.cs">
+      <DependentUpon>ContentListItem.xaml</DependentUpon>
     </Compile>
-    <Compile Include="FileSystem\ModFileManager.cs" />
-    <Compile Include="Resources\ContentXML.cs" />
-    <Compile Include="Resources\AssociationXML.cs" />
-    <Compile Include="FileSystem\Unarchiver.cs" />
-    <Compile Include="Quasar_Sys\Checker.cs" />
-    <Compile Include="Controls\ModListElement.xaml.cs">
-      <DependentUpon>ModListElement.xaml</DependentUpon>
+    <Compile Include="Controls\ModListItem.xaml.cs">
+      <DependentUpon>ModListItem.xaml</DependentUpon>
     </Compile>
-    <Compile Include="FileSystem\Folderino.cs" />
+    <Compile Include="Internal\FileSystem\ModFileManager.cs" />
+    <Compile Include="Internal\Libraries\ContentXML.cs" />
+    <Compile Include="Internal\Libraries\AssociationXML.cs" />
+    <Compile Include="Internal\FileSystem\Unarchiver.cs" />
+    <Compile Include="Internal\Tools\Checker.cs" />
+    <Compile Include="Internal\FileSystem\Folderino.cs" />
     <Compile Include="Properties\Resources.en.Designer.cs">
       <DependentUpon>Resources.en.resx</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -112,22 +116,25 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
-    <Compile Include="Quasar_Sys\Protoman.cs" />
-    <Compile Include="Quasar_Sys\Searchie.cs" />
-    <Compile Include="Singleton\PipeClient.cs" />
-    <Compile Include="Singleton\PipeServer.cs" />
-    <Compile Include="Web\Downloader.cs" />
-    <Compile Include="Resources\LibraryXML.cs" />
-    <Compile Include="Resources\XML.cs" />
+    <Compile Include="Internal\Tools\Protoman.cs" />
+    <Compile Include="Internal\Tools\Searchie.cs" />
+    <Compile Include="Internal\Pipes\PipeClient.cs" />
+    <Compile Include="Internal\Pipes\PipeServer.cs" />
+    <Compile Include="Internal\Web\Downloader.cs" />
+    <Compile Include="Internal\Libraries\LibraryXML.cs" />
+    <Compile Include="Internal\Libraries\XML.cs" />
+    <Compile Include="Views\SettingsView.xaml.cs">
+      <DependentUpon>SettingsView.xaml</DependentUpon>
+    </Compile>
     <Page Include="Controls\FileView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\ContentListElement.xaml">
+    <Page Include="Controls\ContentListItem.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Controls\ModListElement.xaml">
+    <Page Include="Controls\ModListItem.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -135,7 +142,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="Web\API.cs" />
+    <Compile Include="Internal\Web\API.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -144,6 +151,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Views\SettingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -167,6 +178,7 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <Resource Include="Controls\fonts\sofiapro-light.otf" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -174,7 +186,6 @@
     <Resource Include="Quasar.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="quasar_MRq_icon.ico" />
     <Content Include="References\InternalModTypes\SmashUltimate\Stage_SkinModel.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

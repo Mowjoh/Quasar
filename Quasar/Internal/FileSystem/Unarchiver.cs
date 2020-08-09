@@ -1,4 +1,5 @@
-﻿using SharpCompress.Archives;
+﻿using Quasar.Controls;
+using SharpCompress.Archives;
 using SharpCompress.Archives.Rar;
 using SharpCompress.Archives.SevenZip;
 using SharpCompress.Archives.Zip;
@@ -17,36 +18,21 @@ namespace Quasar.FileSystem
 {
     public class Unarchiver
     {
-        readonly ProgressBar progressBar;
-        readonly Label statusLabel;
+        ModListItem ModListItem;
 
-        public Unarchiver(ProgressBar _progressBar, Label _statusLabel)
+        public Unarchiver(ModListItem mli)
         {
-            progressBar = _progressBar;
-            statusLabel = _statusLabel;
+            ModListItem = mli;
         }
 
         //Archive Extraction async process
         public async Task<int> ExtractArchiveAsync(string _ArchiveSource, string ArchiveDestination, string _ArchiveType)
         {
             //Setting up Extraction UI
-            await progressBar.Dispatcher.BeginInvoke(new Action(() =>
-            {
-                progressBar.Value = 0;
-                statusLabel.Visibility = Visibility.Hidden;
-                progressBar.Visibility = Visibility.Visible;
-                progressBar.IsIndeterminate = true;
-            }), DispatcherPriority.Background);
+            await ModListItem.Progress.Dispatcher.BeginInvoke(new Action(() => { ModListItem.Progress.IsIndeterminate = true; ModListItem.ModStatusTextValue = ""; }), DispatcherPriority.Background);
 
             //Launching Extraction Task
             await Task.Run(() => Extract(_ArchiveSource, ArchiveDestination, _ArchiveType));
-
-            //Setting up Finished UI
-            await statusLabel.Dispatcher.BeginInvoke(new Action(() =>
-            {
-                statusLabel.Visibility = Visibility.Visible;
-                progressBar.Visibility = Visibility.Hidden;
-            }), DispatcherPriority.Background);
 
             return 0;
         }

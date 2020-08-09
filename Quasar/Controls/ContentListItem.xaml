@@ -1,0 +1,60 @@
+﻿<UserControl x:Class="Quasar.Controls.ContentListItem"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Quasar.Controls"
+             mc:Ignorable="d" 
+             d:DesignHeight="30" d:DesignWidth="1200" Background="{DynamicResource QD0}" Height="{Binding ElementHeight}" Width="Auto">
+    <UserControl.Resources>
+        <SolidColorBrush x:Key="ColorA" Color="#FF0B397C"/>
+        <SolidColorBrush x:Key="ColorB" Color="#FF9E1904"/>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="5"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <Path x:Name="BorderColor" Stroke="Black" StrokeThickness="2" Fill="{Binding ContentOddEven}" Grid.ColumnSpan="2" Grid.RowSpan="2">
+            <Path.Data>
+                <RectangleGeometry x:Name="ColoredRectangle" Rect="{Binding Rekt}" RadiusX="5" RadiusY="10"  />
+            </Path.Data>
+        </Path>
+        
+        <Grid x:Name="TopGrid" Background="{DynamicResource QD2}" Grid.Column="1" Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="35*"/>
+                <ColumnDefinition Width="20*"/>
+                <ColumnDefinition Width="20*"/>
+                <ColumnDefinition Width="20*"/>
+                <ColumnDefinition Width="20*"/>
+                <ColumnDefinition Width="10*"/>
+            </Grid.ColumnDefinitions>
+
+            <Label x:Name="ModName" Grid.Column="0" Content="{Binding LocalMod.Name}" Foreground="White"/>
+            <Label x:Name="ContentName" Grid.Column="1" Content="{Binding LocalMapping.Name}" Foreground="White" />
+            <Label x:Name="InternalModType" Grid.Column="2" Content="{Binding LocalModType.Name}" Foreground="White"/>
+            <Label x:Name="Association" Grid.Column="3" Content="{Binding GameData.Name}" Foreground="White"/>
+            <Label x:Name="Slot" Grid.Column="4" Content="{Binding LocalMapping.SlotName}" Foreground="White"/>
+
+            <StackPanel Grid.Column="5" Orientation="Horizontal" FlowDirection="RightToLeft">
+                <Button x:Name="Minimize" Margin="0,0,0,0" Visibility="Hidden" Click="ExpandRetract_Click">
+                    <Button.Template>
+                        <ControlTemplate TargetType="{x:Type Button}">
+                            <Path x:Name="Minimize" Stroke="White" Fill="White" Data="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14zM7 9h5v1H7z" Margin="10,0,0,0" Height="15" Width="15"  Stretch="Uniform" ToolTip="Your mod is up to date !" />
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+            </StackPanel>
+
+        </Grid>
+        <Grid Background="{DynamicResource QD2}" Grid.Column="1" Grid.Row="1">
+        </Grid>
+    </Grid>
+</UserControl>
