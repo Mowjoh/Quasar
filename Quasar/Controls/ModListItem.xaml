@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Quasar.Controls"
              mc:Ignorable="d" 
-             d:DesignHeight="30" d:DesignWidth="1200" Background="{DynamicResource QD0}" Height="{Binding ElementHeight}" Width="Auto" Visibility="{Binding Path=Filtered}">
+             d:DesignHeight="30" d:DesignWidth="1200" Background="{DynamicResource QD0}" Height="{Binding ElementHeight}" Width="Auto">
     <UserControl.Resources>
         <SolidColorBrush x:Key="DefaultColor" Color="#8c8c94"/>
         <SolidColorBrush x:Key="SkinColor" Color="#bc3991"/>

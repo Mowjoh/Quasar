@@ -28,6 +28,7 @@ namespace Quasar.Controls
     /// </summary>
     public partial class ContentListItem : UserControl, INotifyPropertyChanged
     {
+        #region Data
         private InternalModType _LocalModType;
         public InternalModType LocalModType
         {
@@ -83,10 +84,11 @@ namespace Quasar.Controls
                 OnPropertyChanged("GameData");
             }
         }
-        
+        #endregion
 
+        #region Triggers
         //Handlers
-        public event EventHandler TrashRequested;
+        public event EventHandler SaveRequested;
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected void OnPropertyChanged(string name)
@@ -95,6 +97,44 @@ namespace Quasar.Controls
             if (handler != null)
             {
                 handler(this, new PropertyChangedEventArgs(name));
+            }
+        }
+
+        private Visibility _Filtered;
+
+        public Visibility Filtered
+        {
+            get
+            {
+                return _Filtered;
+            }
+
+            set
+            {
+                _Filtered = value;
+                OnPropertyChanged("Filtered");
+            }
+        }
+
+        private bool _Filter;
+
+        public bool Filter
+        {
+            get
+            {
+                return _Filter;
+            }
+            set
+            {
+                _Filter = value;
+                if (value)
+                {
+                    Filtered = Visibility.Collapsed;
+                }
+                else
+                {
+                    Filtered = Visibility.Visible;
+                }
             }
         }
 
@@ -131,6 +171,9 @@ namespace Quasar.Controls
             }
         }
 
+        #endregion
+
+        #region Visuals
         private int _ElementHeight;
         public int ElementHeight
         {
@@ -188,6 +231,7 @@ namespace Quasar.Controls
                 setColor(value);
             }
         }
+        #endregion
 
         public ContentListItem()
         {
@@ -204,7 +248,10 @@ namespace Quasar.Controls
             LocalModType = imt;
 
             GameData = Categories.Find(gd => gd.ID == LocalModType.GameID);
-
+            foreach(ContentMappingFile cmf in LocalMapping.Files)
+            {
+                FilesTextBlock.Text += cmf.SourcePath + "\r\n";
+            }
             ColorValue = colorID;
 
             Smol = true;
@@ -230,6 +277,12 @@ namespace Quasar.Controls
         private void ExpandRetract_Click(object sender, RoutedEventArgs e)
         {
             Smol = true;
+        }
+
+        private void SaveContentMapping(object sender, RoutedEventArgs e)
+        {
+            if (this.SaveRequested != null)
+                this.SaveRequested(this, new EventArgs());
         }
     }
 }

@@ -19,11 +19,14 @@ using System.Drawing;
 using System.Windows.Media;
 using Quasar.Views;
 using System.ComponentModel;
+using System.Windows.Data;
 
 namespace Quasar
 {
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
+
+        #region Triggers
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected void OnPropertyChanged(string name)
@@ -35,7 +38,37 @@ namespace Quasar
             }
         }
 
+        //Interface Triggers
+        private bool _GameSelectOverlayDisplay;
+        public bool GameSelectOverlayDisplay
+        {
+            get
+            {
+                return _GameSelectOverlayDisplay;
+            }
+            set
+            {
+                _GameSelectOverlayDisplay = value;
+                GameSelectVisibility = value ? Visibility.Visible : Visibility.Collapsed;
+            }
+        }
 
+        private Visibility _GameSelectVisibility;
+        public Visibility GameSelectVisibility
+        {
+            get
+            {
+                return _GameSelectVisibility;
+            }
+            set
+            {
+                _GameSelectVisibility = value;
+                OnPropertyChanged("GameSelectVisibility");
+            }
+        }
+        #endregion
+        
+        #region Data
         //Mod Library References
         private List<LibraryMod> _Mods;
         public List<LibraryMod> Mods
@@ -61,6 +94,7 @@ namespace Quasar
             set
             {
                 _ListMods = value;
+
                 OnPropertyChanged("ListMods");
             }
         }
@@ -113,7 +147,7 @@ namespace Quasar
                 OnPropertyChanged("CurrentGameApiModType");
             }
         }
-        
+
         private ObservableCollection<Category> _GameAPISubCategories;
         public ObservableCollection<Category> GameAPISubCategories
         {
@@ -130,11 +164,15 @@ namespace Quasar
         private void setGameAPICategories()
         {
             GameAPISubCategories = new ObservableCollection<Category>();
-            List<Category> categories = CurrentGame.GameModTypes.Find(gmt => gmt.ID == CurrentGameApiModType.ID).Categories;
-            foreach (Category c in categories)
+            if (CurrentGameApiModType != null)
             {
-                GameAPISubCategories.Add(c);
+                List<Category> categories = CurrentGame.GameModTypes.Find(gmt => gmt.ID == CurrentGameApiModType.ID).Categories;
+                foreach (Category c in categories)
+                {
+                    GameAPISubCategories.Add(c);
+                }
             }
+
         }
 
 
@@ -198,6 +236,20 @@ namespace Quasar
             }
         }
 
+        private GameDataCategory _CurrentGDC;
+        public GameDataCategory CurrentGDC
+        {
+            get
+            {
+                return _CurrentGDC;
+            }
+            set
+            {
+                _CurrentGDC = value;
+                OnPropertyChanged("CurrentGDC");
+            }
+        }
+
         //Internal Mod Types
         List<InternalModType> InternalModTypes { get; set; }
 
@@ -227,34 +279,56 @@ namespace Quasar
             }
         }
 
-        //Interface Triggers
-        private bool _GameSelectOverlayDisplay;
-        public bool GameSelectOverlayDisplay
+        private InternalModType _CurrentIMT;
+        public InternalModType CurrentIMT
         {
             get
             {
-                return _GameSelectOverlayDisplay;
+                return _CurrentIMT;
             }
             set
             {
-                _GameSelectOverlayDisplay = value;
-                GameSelectVisibility = value ? Visibility.Visible : Visibility.Collapsed;
+                _CurrentIMT = value;
+                OnPropertyChanged("CurrentIMT");
+            }
+        }
+        #endregion
+
+        #region Filters
+        private void ShowOnlyNonFilteredMods(object sender, FilterEventArgs e)
+        {
+            ModListItem mle = e.Item as ModListItem;
+            if (mle != null)
+            {
+                if (mle.Filter == false)
+                {
+                    e.Accepted = true;
+                }
+                else
+                {
+                    e.Accepted = false;
+                }
             }
         }
 
-        private Visibility _GameSelectVisibility;
-        public Visibility GameSelectVisibility
+        private void ShowOnlyNonFilteredContents(object sender, FilterEventArgs e)
         {
-            get
+            ContentListItem cli = e.Item as ContentListItem;
+            if (cli != null)
             {
-                return _GameSelectVisibility;
-            }
-            set
-            {
-                _GameSelectVisibility = value;
-                OnPropertyChanged("GameSelectVisibility");
+                if (cli.Filter == false)
+                {
+                    e.Accepted = true;
+                }
+                else
+                {
+                    e.Accepted = false;
+                }
             }
         }
+
+        #endregion
+
         //Quasar Downloads
         readonly Mutex serverMutex;
         public QuasarDownloads DLS;
@@ -262,8 +336,6 @@ namespace Quasar
         public bool readytoSelect { get; set; }
 
 
-
-        
         public MainWindow()
         {
             //Setting up Server or Client
@@ -296,6 +368,11 @@ namespace Quasar
             LoadBasicLists();
             LoadModLibrary();
             LoadContentLibrary();
+
+            CollectionViewSource cvs = new CollectionViewSource();
+            cvs.Source = ListMods;
+            cvs.Filter += ShowOnlyNonFilteredMods;
+
 
             SetInterfaceWithParams();
 
@@ -351,6 +428,7 @@ namespace Quasar
                 modID = modID != lm.ID ? lm.ID : modID;
                 List<GameDataCategory> gdc = GameData.Find(gd => gd.GameID == lm.GameID).Categories;
                 ContentListItem cli = new ContentListItem(cm, lm, imt, gdc, colorID);
+                cli.SaveRequested += Handler_SaveRequested;
                 newContentList.Add(cli);
             }
             return newContentList;
@@ -402,8 +480,7 @@ namespace Quasar
         private void SelectGame(Game gamu)
         {
             CurrentGame = gamu;
-
-            FilterList(-1, -1, CurrentGame.ID);
+            FilterModList(-1, -1, CurrentGame.ID);
         }
 
         private void HomeButton_Click(object sender, RoutedEventArgs e)
@@ -423,10 +500,10 @@ namespace Quasar
         private void ModSelected(object sender, SelectionChangedEventArgs e)
         {
 
-            ModListItem mli = (ModListItem)ModListView.SelectedItem;
+            ModListItem mli = (ModListItem)ManagementModListView.SelectedItem;
             if(mli != null)
             {
-                foreach (ModListItem m in ModListView.Items)
+                foreach (ModListItem m in ManagementModListView.Items)
                 {
                     m.Smol = true;
                 }
@@ -454,7 +531,7 @@ namespace Quasar
         //Version actions
         private async void CheckUpdates(object sender, RoutedEventArgs e)
         {
-            ModListItem element = (ModListItem)ModListView.SelectedItem;
+            ModListItem element = (ModListItem)ManagementModListView.SelectedItem;
             if (element != null)
             {
                 //Getting local Mod
@@ -509,75 +586,24 @@ namespace Quasar
         //Refreshes the content of the mod list based on mod type
         private void ModTypeSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            ComboBox comboBox = (ComboBox)sender;
-            GameModType selectedType = (GameModType)comboBox.SelectedItem;
-            if(selectedType != null)
-            {
-                FilterList(selectedType.ID, -1, CurrentGame.ID);
-                ShowAdvancedFilters(selectedType);
-            }
-            else
-            {
-                FilterList(-1, -1, CurrentGame.ID);
-                ModFilterSelect.ItemsSource = null;
-            }
-            
+            CurrentGameApiModType = (GameModType)ManagementAPITypeSelect.SelectedItem;
+            FilterModList(CurrentGameApiModType != null ? CurrentGameApiModType.ID : -1, -1, CurrentGame.ID);
         }
 
         //Refreshes the content of the mod list based on mod type and mod category
         private void FilterSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            ComboBox comboBox = (ComboBox)sender;
-            Category selectedItem = (Category)comboBox.SelectedItem;
-            GameModType selectedModType = (GameModType)ModTypeSelect.SelectedItem;
+            Category selectedItem = (Category)ManagementAPICategorySelect.SelectedItem;
 
-            if(selectedModType != null)
-            {
-                if (selectedItem != null)
-                {
-                    FilterList(selectedModType.ID, selectedItem.ID, CurrentGame.ID);
-                }
-                else
-                {
-                    FilterList(selectedModType.ID, -1, -1);
-                }
-            }
-            else
-            {
-                FilterList(-1, -1, -1);
-            }
-            
+            FilterModList(CurrentGameApiModType != null ? CurrentGameApiModType.ID : -1, selectedItem != null ? selectedItem.ID : -1, CurrentGame.ID);
 
-
-        }
-
-
-        //--------------------------------------
-        //Filtering Mechanics
-
-        private void ShowBasicFilters(Game _Game)
-        {
-            ModTypeSelect.ItemsSource = null;
-            if (_Game.GameModTypes.Count > 0)
-            {
-                ModTypeSelect.ItemsSource = _Game.GameModTypes;
-            }
-        }
-
-        //Fill Category filter list
-        private void ShowAdvancedFilters(GameModType modType)
-        {
-            ModFilterSelect.ItemsSource = null;
-            if (modType.Categories.Count > 0)
-            {
-                ModFilterSelect.ItemsSource = modType.Categories;
-            }
         }
 
         //Shows items according to filters
-        private void FilterList(int _modType, int modCategory, int _modGame)
+        private void FilterModList(int _modType, int modCategory, int _modGame)
         {
-            foreach (ModListItem mle in ModListView.Items)
+            
+            foreach (ModListItem mle in ListMods)
             {
                 bool AnyModType = _modType == -1;
                 bool AnyCategory = modCategory == -1;
@@ -585,15 +611,20 @@ namespace Quasar
 
                 if((AnyGame || mle.Game.ID == _modGame) && (AnyCategory || mle.LocalMod.APICategoryID == modCategory) && (AnyModType || mle.LocalMod.TypeID == _modType))
                 {
-                    mle.isActive = true;
+                    mle.Filter = false;
                 }
                 else
                 {
-                    mle.isActive = false;
+                    mle.Filter = true;
                 }
             }
-            ModListView.Items.Refresh();
+            CollectionViewSource cvs = (CollectionViewSource)this.Resources["CollectionOMods"];
+            cvs.View.Refresh();
         }
+
+        
+
+
 
         #endregion
 
@@ -607,29 +638,69 @@ namespace Quasar
             }
             cle.Smol = false;
         }
-
-        private void AutoDetectLaunch(object sender, RoutedEventArgs e)
+        private void IMTTypeSelect(object sender, SelectionChangedEventArgs e)
         {
+            CurrentIMT = (InternalModType)ContentIMTSelect.SelectedItem;
+            if(CurrentIMT != null)
+            {
+                CurrentGDC = GameDataCategories.Single(gdc => gdc.ID == CurrentIMT.Association);
+            }
+
+            FilterContentList(CurrentIMT != null ? CurrentIMT.ID : -1, -1, CurrentGame.ID);
+
+        }
+
+        private void IMTGDCItemSelect(object sender, SelectionChangedEventArgs e)
+        {
+            GameDataItem CurrentGDI = (GameDataItem)ContentGDCSelect.SelectedItem;
+            FilterContentList(CurrentIMT != null ? CurrentIMT.ID : -1, CurrentGDI != null ? CurrentGDI.ID : -1, CurrentGame.ID);
+        }
+
+        private void Reset_Click(object sender, RoutedEventArgs e)
+        {
+            ContentGDCSelect.SelectedIndex = -1;
+            ContentIMTSelect.SelectedIndex = -1;
+        }
+
+        private void FilterContentList(int _IMT, int _GDC, int _Game)
+        {
+            foreach (ContentListItem cli in ContentListView.Items)
+            {
+                bool AnyIMT = _IMT == -1;
+                bool AnyGDC = _GDC == -1;
+                bool AnyGame = _Game == -1;
+
+                if ((AnyGame || cli.LocalMod.GameID == _Game) && (AnyGDC || cli.GameData.ID == _GDC) && (AnyIMT || cli.LocalModType.ID == _IMT))
+                {
+                    cli.Filter = false;
+                }
+                else
+                {
+                    cli.Filter = true;
+                }
+            }
+        }
+
+        public void Handler_SaveRequested(object sender, EventArgs e)
+        {
+            ContentListItem item = (ContentListItem)sender;
+            ContentMapping cm = ContentMappings.ElementAt(ContentMappings.IndexOf(item.LocalMapping));
+            cm.Name = item.ContentMappingName.Text;
+            ContentXML.WriteContentMappingListFile(ContentMappings);
         }
         #endregion
 
         #region Mod Association
         private void AssociationGameDataList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            /*
             ListBox lb = (ListBox)sender;
             GameDataCategory gdc = (GameDataCategory)lb.SelectedItem;
             AssociationGameElementDataList.ItemsSource = gdc.Items;
 
             List<InternalModType> correspondingTypes = InternalModTypes.FindAll(imt => imt.Association == gdc.ID);
             AssociationTypeDataList.ItemsSource = correspondingTypes;
-
-            SolidColorBrush green = new SolidColorBrush(Colors.Green);
-            SolidColorBrush white = new SolidColorBrush(Colors.White);
-
-            List<FakeDetectedItem> FakeItems = new List<FakeDetectedItem> { new FakeDetectedItem("Terry Hat Pikachu Blue", green), new FakeDetectedItem("Terry Hat Pikachu Black", green)};
-            List<FakeDetectedItem> FakeSlots = new List<FakeDetectedItem> { new FakeDetectedItem("Slot 1", white), new FakeDetectedItem("Slot 2", white), new FakeDetectedItem("Slot 3", white), new FakeDetectedItem("Terry Hat Pikachu Blue", green), new FakeDetectedItem("Slot 5", white), new FakeDetectedItem("Slot 6", white), new FakeDetectedItem("Slot 7", white), new FakeDetectedItem("Slot 8", white) };
-            ItemSourceListBox.ItemsSource = FakeItems;
-            ItemSlotListBox.ItemsSource = FakeSlots;
+            */
         }
 
         #endregion
@@ -951,6 +1022,9 @@ namespace Quasar
                 mli.SetMod(newmod);
                 mli.Downloaded = true;
 
+                CollectionViewSource cvs = (CollectionViewSource)this.Resources["CollectionOMods"];
+                cvs.View.Refresh();
+
                 //Scanning Files
                 int modIndex = Mods.IndexOf(Mod);
                 if(modIndex == -1)
@@ -982,29 +1056,10 @@ namespace Quasar
             }
         }
 
+
         #endregion
 
-       public class FakeDetectedItem
-        {
-            public String Name { get; set; }
-            public SolidColorBrush BorderColor { get; set; }
-
-            public FakeDetectedItem()
-            {
-
-            }
-            public FakeDetectedItem(String name)
-            {
-                Name = name;
-            }
-
-            public FakeDetectedItem(String name, SolidColorBrush color)
-            {
-                Name = name;
-                BorderColor = color;
-            }
-
-        }
+        
     }
 
     

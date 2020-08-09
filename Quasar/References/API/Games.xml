@@ -363,6 +363,62 @@
     </GameModType>
   </Game>
   <Game ID="2" Name="Fire Emblem Three Houses" GameName="FETH" Image="FETH.jpg">
+    <GameModType Name="All Types" ID="-1" APIName="" LibraryFolder=""/>
+    <GameModType Name="Skin" ID="1" APIName="Skin" LibraryFolder="FETH/Skins">
+      <Category ID="-1" APICategory="0">
+        <Name>All Categories</Name>
+      </Category>
+      <Category ID="0" APICategory="0">
+        <Name>Uncategorized</Name>
+      </Category>
+      <Category ID="1" APICategory="9994">
+        <Name>Others</Name>
+      </Category>
+    </GameModType>
+    <GameModType Name="Maps" ID="2" APIName="Map" LibraryFolder="FETH/Maps">
+      <Category ID="-1" APICategory="0">
+        <Name>All Categories</Name>
+      </Category>
+      <Category ID="0" APICategory="0">
+        <Name>Uncategorized</Name>
+      </Category>
+      <Category ID="1" APICategory="9994">
+        <Name>Others</Name>
+      </Category>
+    </GameModType>
+    <GameModType Name="Skin" ID="3" APIName="Sound" LibraryFolder="FETH/Sounds">
+      <Category ID="-1" APICategory="0">
+        <Name>All Categories</Name>
+      </Category>
+      <Category ID="0" APICategory="0">
+        <Name>Uncategorized</Name>
+      </Category>
+      <Category ID="1" APICategory="9994">
+        <Name>Others</Name>
+      </Category>
+    </GameModType>
+    <GameModType Name="Game Files" ID="4" APIName="Gamefile" LibraryFolder="FETH/Gamefiles">
+      <Category ID="-1" APICategory="0">
+        <Name>All Categories</Name>
+      </Category>
+      <Category ID="0" APICategory="0">
+        <Name>Uncategorized</Name>
+      </Category>
+      <Category ID="1" APICategory="9994">
+        <Name>Others</Name>
+      </Category>
+    </GameModType>
+    <GameModType Name="Gui" ID="5" APIName="Gui" LibraryFolder="FETH/Gui">
+      <Category ID="-1" APICategory="0">
+        <Name>All Categories</Name>
+      </Category>
+      <Category ID="0" APICategory="0">
+        <Name>Uncategorized</Name>
+      </Category>
+      <Category ID="1" APICategory="9994">
+        <Name>Others</Name>
+      </Category>
+    </GameModType>
   </Game>
   <Game ID="3" Name="Mario Kart 8 Deluxe" GameName="Mario Kart 8 Deluxe" Image="mk8d.jpg">
     <GameModType Name="All Types" ID="-1" APIName="" LibraryFolder=""/>
