@@ -115,5 +115,17 @@ namespace Quasar.Properties {
                 this["LastSelectedGame"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int ContentID {
+            get {
+                return ((int)(this["ContentID"]));
+            }
+            set {
+                this["ContentID"] = value;
+            }
+        }
     }
 }

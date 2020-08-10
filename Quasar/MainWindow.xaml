@@ -28,6 +28,8 @@
                 <scm:SortDescription PropertyName="LocalMapping.Name" />
             </CollectionViewSource.SortDescriptions>
         </CollectionViewSource>
+        <CollectionViewSource Source="{Binding ContentMappings}" x:Key="CollectionOContentMappings" Filter="ShowOnlyRelatedAssociation" IsLiveFilteringRequested="True">
+        </CollectionViewSource>
     </Window.Resources>
     <Grid x:Name="QuasarGrid">
         <Grid x:Name="OverlayGrid" Panel.ZIndex="1000" Opacity="100" Background="#FF2D2D2D">
@@ -137,7 +139,7 @@
                             <RowDefinition Height="656*"/>
                         </Grid.RowDefinitions>
                         <ComboBox x:Name="ContentIMTSelect" ItemsSource="{Binding GameIMT}" DisplayMemberPath="Name" SelectedValuePath="ID" Margin="10,15,0,0" VerticalAlignment="Top" Height="22" IsReadOnly="True" IsEditable="True" Text="{x:Static p:Resources.ModTypeSelectText}" Foreground="Black" SelectionChanged="IMTTypeSelect" ShouldPreserveUserEnteredPrefix="True" Background="{DynamicResource QuasarBackgroundDark}" HorizontalAlignment="Left" Width="300"/>
-                        <ComboBox x:Name="ContentGDCSelect" ItemsSource="{Binding CurrentGDC.Items}" DisplayMemberPath="Name" SelectedValuePath="ID" Margin="315,15,0,0" VerticalAlignment="Top" Height="22" IsReadOnly="True" IsEditable="True" Text="{x:Static p:Resources.ModFilterSelectText}" Foreground="Black" IsEnabled="True" SelectionChanged="IMTGDCItemSelect" HorizontalAlignment="Left" Width="300"/>
+                        <ComboBox x:Name="ContentGDCSelect" ItemsSource="{Binding IMTCurrentGDC.Items}" DisplayMemberPath="Name" SelectedValuePath="ID" Margin="315,15,0,0" VerticalAlignment="Top" Height="22" IsReadOnly="True" IsEditable="True" Text="{x:Static p:Resources.ModFilterSelectText}" Foreground="Black" IsEnabled="True" SelectionChanged="IMTGDCItemSelect" HorizontalAlignment="Left" Width="300"/>
                         <Button x:Name="Reset" Width="15" Height="15" Margin="630,20,0,0" VerticalAlignment="Top" HorizontalAlignment="left" Click="Reset_Click">
                             <Button.Template>
                                 <ControlTemplate TargetType="{x:Type Button}">
@@ -183,7 +185,7 @@
                 </TabItem>
                 <TabItem x:Name="Assigning" Header="{x:Static p:Resources.AssignmentTabHeader}" Foreground="{DynamicResource QuasarTextColor}">
                     <Grid Background="#FFE5E5E5">
-                        <Grid x:Name="AssignationGameBlock" Grid.ColumnSpan="2" Grid.Column="2" Background ="Black" Panel.ZIndex="500"  Visibility="{Binding Path=GameSelectVisibility}">
+                        <Grid x:Name="AssignationGameBlock" Grid.ColumnSpan="2" Grid.Column="2" Background ="Black" Panel.ZIndex="500"  Visibility="Hidden">
                             <Label Content="Please select a game first" HorizontalAlignment="Center" Foreground="Wheat"  VerticalAlignment="Center" FontSize="36" />
                         </Grid>
                         <Grid x:Name="AssignmentGrid" Background="{DynamicResource QD1}">
@@ -213,7 +215,7 @@
                                 </ListBox.ItemTemplate>
                             </ListBox>
 
-                            <ListBox x:Name="AssociationGameElementDataList" Grid.Row="1" Grid.Column="1" Style="{DynamicResource QuasarListBox}" Background="{DynamicResource QD1}" BorderThickness="0">
+                            <ListBox x:Name="AssociationGameElementDataList" Grid.Row="1" Grid.Column="1" Style="{DynamicResource QuasarListBox}" Background="{DynamicResource QD1}" ItemsSource="{Binding AssociationCurrentGDC.Items}" BorderThickness="0" SelectionChanged="AssociationGameElementChanged">
                                 <ListBox.ItemTemplate>
                                     <DataTemplate>
                                         <StackPanel Orientation="Horizontal">
@@ -223,7 +225,7 @@
                                 </ListBox.ItemTemplate>
                             </ListBox>
 
-                            <ListBox x:Name="AssociationTypeDataList" Grid.Row="1" Grid.Column="2" Style="{DynamicResource QuasarListBox}" Background="{DynamicResource QD1}" BorderThickness="0">
+                            <ListBox x:Name="AssociationTypeDataList" Grid.Row="1" Grid.Column="2" Style="{DynamicResource QuasarListBox}" Background="{DynamicResource QD1}" ItemsSource="{Binding AssociationCorrespondingIMT}" BorderThickness="0" SelectionChanged="AssociationIMTChanged">
                                 <ListBox.ItemTemplate>
                                     <DataTemplate>
                                         <StackPanel Orientation="Horizontal">
@@ -245,11 +247,11 @@
                                 <Label Content="Available items" Grid.Row="0" Grid.Column="0" Foreground="{DynamicResource QuasarTextColor}" HorizontalContentAlignment="Center" Style="{DynamicResource QuasarLabel}"/>
                                 <Label Content="Available slots" Grid.Row="0" Grid.Column="1" Foreground="{DynamicResource QuasarTextColor}" HorizontalContentAlignment="Center" Style="{DynamicResource QuasarLabel}"/>
 
-                                <ListBox x:Name="ItemSourceListBox" Grid.Row="1" Grid.Column="0" Style="{DynamicResource QuasarListBox}" Background="{DynamicResource QD1}" BorderThickness="0">
-                                    <ListBox.ItemTemplate>
+                                <ListView x:Name="ItemSourceListBox"  Grid.Row="1" Grid.Column="0" Style="{DynamicResource QuasarListBox}" ItemsSource="{Binding AssociationContentMappings}" Background="{DynamicResource QD1}" BorderThickness="0" AllowDrop="True" DragEnter="ItemSourceListBox_DragEnter" PreviewMouseLeftButtonDown="ItemSourceListBox_PreviewMouseLeftButtonDown" MouseMove="ItemSourceListBox_MouseMove">
+                                    <ListView.ItemTemplate>
                                         <DataTemplate>
                                             <Grid Margin="0,5,0,5">
-                                                <Path x:Name="BorderColor" Stroke="{Binding BorderColor}" StrokeThickness="2" Fill="{DynamicResource QuasarBackgroundDark}">
+                                                <Path x:Name="BorderColor" Stroke="Gray" StrokeThickness="2" Fill="{DynamicResource QuasarBackgroundDark}">
                                                     <Path.Data>
                                                         <RectangleGeometry x:Name="ColoredRectangle" Rect="0,0,270,30" RadiusX="5" RadiusY="10"   />
                                                     </Path.Data>
@@ -257,13 +259,14 @@
                                                 <Label Content="{Binding Name}" HorizontalContentAlignment="Center" Foreground="{DynamicResource QuasarTextColor}"/>
                                             </Grid>
                                         </DataTemplate>
-                                    </ListBox.ItemTemplate>
-                                </ListBox>
+                                    </ListView.ItemTemplate>
+                                </ListView>
 
-                                <ListBox x:Name="ItemSlotListBox" Grid.Row="1" Grid.Column="1" Style="{DynamicResource QuasarListBox}" Background="{DynamicResource QD1}" BorderThickness="0">
-                                    <ListBox.ItemTemplate>
+                                <ListView x:Name="ItemSlotListBox" Grid.Row="1" Grid.Column="1" AllowDrop="True" Style="{DynamicResource QuasarListBox}" ItemsSource="{Binding AssociationSlots}" Background="{DynamicResource QD1}" BorderThickness="0">
+                                    <ListView.ItemTemplate>
                                         <DataTemplate>
-                                            <Grid Margin="0,5,0,5">
+                                            <Grid Margin="0,5,0,5" AllowDrop="True" Drop="ItemSlotListBox_Drop">
+                                                <Label Name="SlotName" Visibility="Hidden" Content="{Binding SlotName}"/>
                                                 <Path x:Name="BorderColor" Stroke="{Binding BorderColor}" StrokeThickness="2" Fill="{DynamicResource QuasarBackgroundDark}">
                                                     <Path.Data>
                                                         <RectangleGeometry x:Name="ColoredRectangle" Rect="0,0,270,30" RadiusX="5" RadiusY="10"   />
@@ -272,8 +275,8 @@
                                                 <Label Content="{Binding Name}" HorizontalContentAlignment="Center" Foreground="{DynamicResource QuasarTextColor}"/>
                                             </Grid>
                                         </DataTemplate>
-                                    </ListBox.ItemTemplate>
-                                </ListBox>
+                                    </ListView.ItemTemplate>
+                                </ListView>
                             </Grid>
                         </Grid>
                     </Grid>

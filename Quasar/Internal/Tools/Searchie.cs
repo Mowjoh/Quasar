@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 using Quasar.FileSystem;
+using Quasar.Internal.Tools;
 using Quasar.XMLResources;
 using static Quasar.XMLResources.Library;
 
@@ -60,6 +61,7 @@ namespace Quasar.Quasar_Sys
                             string previousPath = filepath.Substring(0, matchoum.Index);
 
                             string slot = "Default";
+                            int SlotNumber = 0;
                             foreach(Group g in Groups)
                             {
                                 if(g.Name.Length > 4)
@@ -67,6 +69,7 @@ namespace Quasar.Quasar_Sys
                                     if (g.Name.Substring(0, 4).Equals("Slot"))
                                     {
                                         slot = "Slot " + g.Value;
+                                        SlotNumber = int.Parse(g.Value);
                                     }
                                 }
                             }
@@ -81,7 +84,7 @@ namespace Quasar.Quasar_Sys
                             }
                             else
                             {
-                                newMapping = new ContentMapping() { Name = MatchGroup, InternalModType = type.ID, Files = new List<ContentMappingFile>(), Folder = previousPath, ModID = Int32.Parse(modFileManager.ModID), SlotName = slot };
+                                newMapping = new ContentMapping() {ID=IDGenerator.getNewContentID(), Name = MatchGroup, InternalModType = type.ID, Files = new List<ContentMappingFile>(), Folder = previousPath, ModID = Int32.Parse(modFileManager.ModID), SlotName = slot, Slot = SlotNumber };
                                 newMapping.Files.Add(new ContentMappingFile() { Path = IMTFile.Path, InternalModTypeFileID = IMTFile.ID, SourcePath = outputPath });
                                 content.Add(newMapping);
                             }

@@ -140,6 +140,9 @@ namespace Quasar.XMLResources
         [XmlAttribute("SlotName")]
         public string SlotName { get; set; }
 
+        [XmlAttribute("Slot")]
+        public int Slot { get; set; }
+
         [XmlAttribute("ModID")]
         public int ModID { get; set; }
 

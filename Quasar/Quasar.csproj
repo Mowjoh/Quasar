@@ -106,6 +106,7 @@
     <Compile Include="Internal\FileSystem\Unarchiver.cs" />
     <Compile Include="Internal\Tools\Checker.cs" />
     <Compile Include="Internal\FileSystem\Folderino.cs" />
+    <Compile Include="Internal\Tools\IDGenerator.cs" />
     <Compile Include="Properties\Resources.en.Designer.cs">
       <DependentUpon>Resources.en.resx</DependentUpon>
       <AutoGen>True</AutoGen>

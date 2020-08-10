@@ -20,11 +20,16 @@ using System.Windows.Media;
 using Quasar.Views;
 using System.ComponentModel;
 using System.Windows.Data;
+using static Quasar.XMLResources.AssociationXML;
+using System.Windows.Input;
+using Point = System.Windows.Point;
 
 namespace Quasar
 {
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
+        protected bool m_IsDraging = false;
+        protected Point _dragStartPoint;
 
         #region Triggers
         public event PropertyChangedEventHandler PropertyChanged;
@@ -67,9 +72,11 @@ namespace Quasar
             }
         }
         #endregion
-        
+
         #region Data
-        //Mod Library References
+
+        #region ModLibrary
+
         private List<LibraryMod> _Mods;
         public List<LibraryMod> Mods
         {
@@ -100,9 +107,10 @@ namespace Quasar
         }
 
         public ObservableCollection<LibraryMod> WorkingModList;
+        #endregion
 
+        #region API Library
 
-        //API Library References
         private List<Game> _Games { get; set; }
         public List<Game> Games
         {
@@ -174,9 +182,9 @@ namespace Quasar
             }
 
         }
+        #endregion
 
-
-        //Content Library References
+        #region Content Library
 
         private List<ContentMapping> _ContentMappings;
         public List<ContentMapping> ContentMappings
@@ -190,6 +198,34 @@ namespace Quasar
                 _ContentMappings = value;
                 ListContents = LoadContentMappings();
                 OnPropertyChanged("ContentMappings");
+            }
+        }
+
+        private ObservableCollection<ContentMapping> _AssociationContentMappings;
+        public ObservableCollection<ContentMapping> AssociationContentMappings
+        {
+            get
+            {
+                return _AssociationContentMappings;
+            }
+            set
+            {
+                _AssociationContentMappings = value;
+                OnPropertyChanged("AssociationContentMappings");
+            }
+        }
+
+        private ObservableCollection<ContentMapping> _AssociationSlots;
+        public ObservableCollection<ContentMapping> AssociationSlots
+        {
+            get
+            {
+                return _AssociationSlots;
+            }
+            set
+            {
+                _AssociationSlots = value;
+                OnPropertyChanged("AssociationSlots");
             }
         }
 
@@ -207,7 +243,14 @@ namespace Quasar
             }
         }
 
-        //GameData
+        #endregion
+
+        #region Associations
+        List<Association> Associations;
+        #endregion
+
+        #region Game Data
+
         List<GameData> GameData { get; set; }
 
         private ObservableCollection<GameDataCategory> _GameDataCategories;
@@ -236,21 +279,36 @@ namespace Quasar
             }
         }
 
-        private GameDataCategory _CurrentGDC;
-        public GameDataCategory CurrentGDC
+        private GameDataCategory _IMTCurrentGDC;
+        public GameDataCategory IMTCurrentGDC
         {
             get
             {
-                return _CurrentGDC;
+                return _IMTCurrentGDC;
             }
             set
             {
-                _CurrentGDC = value;
-                OnPropertyChanged("CurrentGDC");
+                _IMTCurrentGDC = value;
+                OnPropertyChanged("IMTCurrentGDC");
             }
         }
 
-        //Internal Mod Types
+        private GameDataCategory _AssociationCurrentGDC;
+        public GameDataCategory AssociationCurrentGDC
+        {
+            get
+            {
+                return _AssociationCurrentGDC;
+            }
+            set
+            {
+                _AssociationCurrentGDC = value;
+                OnPropertyChanged("AssociationCurrentGDC");
+            }
+        }
+        #endregion
+
+        #region Internal Mod Types
         List<InternalModType> InternalModTypes { get; set; }
 
         private ObservableCollection<InternalModType> _GameIMT;
@@ -279,19 +337,38 @@ namespace Quasar
             }
         }
 
-        private InternalModType _CurrentIMT;
-        public InternalModType CurrentIMT
+        private InternalModType _ContentCurrentIMT;
+        public InternalModType ContentCurrentIMT
         {
             get
             {
-                return _CurrentIMT;
+                return _ContentCurrentIMT;
             }
             set
             {
-                _CurrentIMT = value;
+                _ContentCurrentIMT = value;
                 OnPropertyChanged("CurrentIMT");
             }
         }
+
+        private ObservableCollection<InternalModType> _AssociationCorrespondingIMT;
+
+        public ObservableCollection<InternalModType> AssociationCorrespondingIMT
+        {
+            get
+            {
+                return _AssociationCorrespondingIMT;
+            }
+            set
+            {
+                _AssociationCorrespondingIMT = value;
+                OnPropertyChanged("AssociationCorrespondingIMT");
+            }
+        }
+        #endregion
+
+
+
         #endregion
 
         #region Filters
@@ -327,6 +404,25 @@ namespace Quasar
             }
         }
 
+        private void ShowOnlyRelatedAssociation(object sender, FilterEventArgs e)
+        {
+            ContentListItem cli = e.Item as ContentListItem;
+            if (cli != null)
+            {
+                if (cli.Filter == false)
+                {
+                    e.Accepted = true;
+                }
+                else
+                {
+                    e.Accepted = false;
+                }
+            }
+        }
+        #endregion
+
+        #region Sorting
+
         #endregion
 
         //Quasar Downloads
@@ -349,9 +445,9 @@ namespace Quasar
             Folderino.CompareReferences();
             bool Debug = false;
 
-            #if DEBUG
+#if DEBUG
             Debug = true;
-            #endif
+#endif
 
             if (Update || Debug)
             {
@@ -368,6 +464,8 @@ namespace Quasar
             LoadBasicLists();
             LoadModLibrary();
             LoadContentLibrary();
+            LoadAssociationsLibrary();
+
 
             CollectionViewSource cvs = new CollectionViewSource();
             cvs.Source = ListMods;
@@ -390,10 +488,14 @@ namespace Quasar
             WorkingModList = new ObservableCollection<LibraryMod>();
         }
 
-
         private void LoadContentLibrary()
         {
             ContentMappings = ContentXML.GetContentMappings();
+        }
+
+        private void LoadAssociationsLibrary()
+        {
+            Associations = AssociationXML.GetAssociations(); 
         }
 
         private ObservableCollection<ModListItem> LoadLibraryMods()
@@ -434,6 +536,13 @@ namespace Quasar
             return newContentList;
         }
 
+        private ObservableCollection<Association> LoadAssociations()
+        {
+            ObservableCollection<Association> newAssociationsList = new ObservableCollection<Association>();
+
+            return newAssociationsList;
+        }
+
         private void LoadBasicLists()
         {
             Games = XML.GetGames();
@@ -469,7 +578,7 @@ namespace Quasar
 
                 SelectGame(selectedGame);
 
-                //Properties.Settings.Default.LastSelectedGame = selectedGame.ID;
+                Properties.Settings.Default.LastSelectedGame = selectedGame.ID;
                 Properties.Settings.Default.Save();
 
                 ReturnAnimation.Begin();
@@ -485,7 +594,7 @@ namespace Quasar
 
         private void HomeButton_Click(object sender, RoutedEventArgs e)
         {
-            if(CurrentGame.ID != -1)
+            if (CurrentGame.ID != -1)
             {
                 GamesListView.SelectedItem = GamesListView.Items[GamesListView.Items.IndexOf(CurrentGame)];
             }
@@ -501,7 +610,7 @@ namespace Quasar
         {
 
             ModListItem mli = (ModListItem)ManagementModListView.SelectedItem;
-            if(mli != null)
+            if (mli != null)
             {
                 foreach (ModListItem m in ManagementModListView.Items)
                 {
@@ -559,7 +668,7 @@ namespace Quasar
 
             //Removing from ContentMappings
             List<ContentMapping> relatedMappings = ContentMappings.FindAll(cm => cm.ModID == item.LocalMod.ID);
-            foreach(ContentMapping cm in relatedMappings)
+            foreach (ContentMapping cm in relatedMappings)
             {
                 ContentMappings.Remove(cm);
             }
@@ -602,14 +711,14 @@ namespace Quasar
         //Shows items according to filters
         private void FilterModList(int _modType, int modCategory, int _modGame)
         {
-            
+
             foreach (ModListItem mle in ListMods)
             {
                 bool AnyModType = _modType == -1;
                 bool AnyCategory = modCategory == -1;
                 bool AnyGame = _modGame == -1;
 
-                if((AnyGame || mle.Game.ID == _modGame) && (AnyCategory || mle.LocalMod.APICategoryID == modCategory) && (AnyModType || mle.LocalMod.TypeID == _modType))
+                if ((AnyGame || mle.Game.ID == _modGame) && (AnyCategory || mle.LocalMod.APICategoryID == modCategory) && (AnyModType || mle.LocalMod.TypeID == _modType))
                 {
                     mle.Filter = false;
                 }
@@ -622,7 +731,7 @@ namespace Quasar
             cvs.View.Refresh();
         }
 
-        
+
 
 
 
@@ -640,20 +749,20 @@ namespace Quasar
         }
         private void IMTTypeSelect(object sender, SelectionChangedEventArgs e)
         {
-            CurrentIMT = (InternalModType)ContentIMTSelect.SelectedItem;
-            if(CurrentIMT != null)
+            ContentCurrentIMT = (InternalModType)ContentIMTSelect.SelectedItem;
+            if (ContentCurrentIMT != null)
             {
-                CurrentGDC = GameDataCategories.Single(gdc => gdc.ID == CurrentIMT.Association);
+                IMTCurrentGDC = GameDataCategories.Single(gdc => gdc.ID == ContentCurrentIMT.Association);
             }
 
-            FilterContentList(CurrentIMT != null ? CurrentIMT.ID : -1, -1, CurrentGame.ID);
+            FilterContentList(ContentCurrentIMT != null ? ContentCurrentIMT.ID : -1, -1, CurrentGame.ID);
 
         }
 
         private void IMTGDCItemSelect(object sender, SelectionChangedEventArgs e)
         {
             GameDataItem CurrentGDI = (GameDataItem)ContentGDCSelect.SelectedItem;
-            FilterContentList(CurrentIMT != null ? CurrentIMT.ID : -1, CurrentGDI != null ? CurrentGDI.ID : -1, CurrentGame.ID);
+            FilterContentList(ContentCurrentIMT != null ? ContentCurrentIMT.ID : -1, CurrentGDI != null ? CurrentGDI.ID : -1, CurrentGame.ID);
         }
 
         private void Reset_Click(object sender, RoutedEventArgs e)
@@ -697,15 +806,178 @@ namespace Quasar
         #region Mod Association
         private void AssociationGameDataList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            /*
-            ListBox lb = (ListBox)sender;
-            GameDataCategory gdc = (GameDataCategory)lb.SelectedItem;
-            AssociationGameElementDataList.ItemsSource = gdc.Items;
+            AssociationCorrespondingIMT = new ObservableCollection<InternalModType>();
 
-            List<InternalModType> correspondingTypes = InternalModTypes.FindAll(imt => imt.Association == gdc.ID);
-            AssociationTypeDataList.ItemsSource = correspondingTypes;
-            */
+            GameDataCategory gdc = (GameDataCategory)AssociationGameDataList.SelectedItem;
+            if (gdc != null)
+            {
+                AssociationCurrentGDC = gdc;
+                List<InternalModType> correspondingTypes = InternalModTypes.FindAll(imt => imt.Association == gdc.ID);
+                foreach (InternalModType imt in correspondingTypes)
+                {
+                    AssociationCorrespondingIMT.Add(imt);
+                }
+
+            }
         }
+        private void AssociationGameElementChanged(object sender, SelectionChangedEventArgs e)
+        {
+            FilterSlots();
+        }
+
+        private void AssociationIMTChanged(object sender, SelectionChangedEventArgs e)
+        {
+            FilterSlots();
+        }
+
+        private void FilterSlots()
+        {
+            AssociationContentMappings = new ObservableCollection<ContentMapping>();
+            AssociationSlots = new ObservableCollection<ContentMapping>();
+            GameDataItem SelectedCategory = (GameDataItem)AssociationGameElementDataList.SelectedItem;
+            InternalModType SelectedIMT = (InternalModType)AssociationTypeDataList.SelectedItem;
+
+            if (SelectedIMT != null)
+            {
+                int AnyCategory = SelectedCategory == null ? -1 : SelectedCategory.ID;
+
+                List<ContentMapping> relatedMappings = ContentMappings.FindAll(cm => cm.GameDataItemID == AnyCategory && cm.InternalModType == SelectedIMT.ID);
+                for (int i = 0; i < SelectedIMT.Slots; i++)
+                {
+                    AssociationSlots.Add(new ContentMapping() { Name = "Empty Slot n°" + (i + 1), SlotName = "FakeIMT" + (i + 1) });
+                    
+                }
+                foreach (ContentMapping cm in relatedMappings)
+                {
+                    AssociationContentMappings.Add(cm);
+                    List<Association> Slots = Associations.FindAll(asso => asso.ContentMappingID == cm.ID);
+                    if(Slots != null)
+                    {
+                        foreach(Association ass in Slots)
+                        {
+                            setSlot(cm, ass.Slot);
+                        }
+                       
+                    }
+                }
+                
+                
+            }
+
+
+        }
+
+        private void setSlot(int indexSource, int indexDestination)
+        {
+            if(AssociationSlots.Count > 0)
+            {
+                ContentMapping DestinationMapping = AssociationContentMappings.ElementAt(indexSource);
+                DestinationMapping.Slot = indexDestination;
+
+                ContentMapping SourceMapping = (ContentMapping)ItemSlotListBox.Items.GetItemAt(indexDestination);
+                if (!SourceMapping.SlotName.Substring(0, 7).Equals("FakeIMT"))
+                {
+                    List<Association> asso = Associations.FindAll(a=> a.ContentMappingID == SourceMapping.ID && a.Slot == SourceMapping.Slot);
+                    foreach(Association a in asso)
+                    {
+                        Associations.Remove(a);
+                    }
+                }
+
+                AssociationSlots.RemoveAt(indexDestination);
+                AssociationSlots.Insert(indexDestination, DestinationMapping);
+
+                saveSlots();
+            }
+            
+            
+        }
+
+        private void setSlot(ContentMapping input, int indexDestination)
+        {
+            if (AssociationSlots.Count > 0)
+            {
+                AssociationSlots.RemoveAt(indexDestination);
+                input.Slot = indexDestination;
+                AssociationSlots.Insert(indexDestination, input);
+            }
+            
+        }
+
+        private void saveSlots()
+        {
+            foreach(ContentMapping cm in AssociationSlots)
+            {
+                if (!cm.SlotName.Substring(0, 7).Equals("FakeIMT"))
+                {
+                    Association aa = Associations.Find(a => a.ContentMappingID == cm.ID && a.Slot == cm.Slot);
+                    if(aa == null)
+                    {
+                        Association asso = new Association() { ContentMappingID = cm.ID, Slot = cm.Slot };
+                        Associations.Add(asso);
+                    }
+                }
+            }
+            AssociationXML.WriteAssociationFile(Associations);
+        }
+
+        #region Drag Drop
+        private void ItemSourceListBox_DragEnter(object sender, DragEventArgs e)
+        {
+            e.Effects = DragDropEffects.Copy;
+        }
+
+        private void ItemSourceListBox_PreviewMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            _dragStartPoint = e.GetPosition(null);
+        }
+
+        private void ItemSourceListBox_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            Point point = e.GetPosition(null);
+            Vector diff = _dragStartPoint - point;
+            if (e.LeftButton == MouseButtonState.Pressed &&
+                (Math.Abs(diff.X) > SystemParameters.MinimumHorizontalDragDistance ||
+                    Math.Abs(diff.Y) > SystemParameters.MinimumVerticalDragDistance))
+            {
+                var lb = sender as ListBox;
+                var lbi = FindVisualParent<ListBoxItem>(((DependencyObject)e.OriginalSource));
+                if (lbi != null)
+                {
+                    DragDrop.DoDragDrop(lbi, lbi.DataContext, DragDropEffects.Move);
+                }
+            }
+        }
+
+        private void ItemSlotListBox_Drop(object sender, DragEventArgs e)
+        {
+            if (sender is Grid)
+            {
+                var source = e.Data.GetData(typeof(ContentMapping)) as ContentMapping;
+                var target = (Grid)sender;
+                Label l = (Label)target.Children[0];
+                ContentMapping cm = AssociationSlots.Where(c => c.SlotName == l.Content.ToString()).ElementAt(0);
+
+                int sourceIndex = ItemSourceListBox.Items.IndexOf(source);
+                int targetIndex = ItemSlotListBox.Items.IndexOf(cm);
+
+                setSlot(sourceIndex, targetIndex);
+            }
+        }
+
+        private T FindVisualParent<T>(DependencyObject child)
+            where T : DependencyObject
+        {
+            var parentObject = VisualTreeHelper.GetParent(child);
+            if (parentObject == null)
+                return null;
+            T parent = parentObject as T;
+            if (parent != null)
+                return parent;
+            return FindVisualParent<T>(parentObject);
+        }
+        #endregion
+
 
         #endregion
 
@@ -717,7 +989,7 @@ namespace Quasar
             GameData gameData = GameData.Find(g => g.GameID == CurrentGame.ID);
             InternalModType type = (InternalModType)InternalModTypeSelect.SelectedItem;
             IMTDataGrid.ItemsSource = type.Files;
-            GameDataCategory cat = gameData.Categories.Find(c =>c.ID == type.Association);
+            GameDataCategory cat = gameData.Categories.Find(c => c.ID == type.Association);
 
             //Resetting info
             IMTFileText.Text = "";
@@ -772,7 +1044,7 @@ namespace Quasar
         private void IMTAddFile(object sender, RoutedEventArgs e)
         {
             InternalModType type = (InternalModType)InternalModTypeSelect.SelectedItem;
-            if(type != null)
+            if (type != null)
             {
                 type.Files.Add(new InternalModTypeFile());
                 IMTDataGrid.Items.Refresh();
@@ -811,7 +1083,7 @@ namespace Quasar
             if (type != null)
             {
                 int i = 0;
-                foreach(InternalModTypeFile file in type.Files)
+                foreach (InternalModTypeFile file in type.Files)
                 {
                     file.ID = i;
                     i++;
@@ -822,7 +1094,7 @@ namespace Quasar
                 XML.SaveInternalModType(type);
             }
 
-            
+
         }
         #endregion
 
@@ -860,9 +1132,9 @@ namespace Quasar
         {
             List<ContentMapping> FullList = new List<ContentMapping>();
 
-            if(CurrentGame != null)
+            if (CurrentGame != null)
             {
-                if(CurrentGame.ID != -1)
+                if (CurrentGame.ID != -1)
                 {
                     foreach (LibraryMod lm in Mods)
                     {
@@ -876,7 +1148,7 @@ namespace Quasar
                 }
             }
             ContentMappings = FullList;
-            
+
         }
 
         private bool FirstScanLibraryMod(LibraryMod libraryMod, Game game, List<InternalModType> types)
@@ -885,7 +1157,7 @@ namespace Quasar
             List<ContentMapping> SearchList = Searchie.AutoDetectinator(libraryMod, types, game);
 
             List<ContentMapping> WorkingList = ContentMappings;
-            foreach(ContentMapping cm in SearchList)
+            foreach (ContentMapping cm in SearchList)
             {
                 WorkingList.Add(cm);
                 processed = true;
@@ -932,7 +1204,7 @@ namespace Quasar
             string downloadText = "";
             ModListItem mli = new ModListItem(true);
             mli.TrashRequested += Handler_TrashRequested;
-            
+
             //Setting base ModFileManager
             ModFileManager ModFileManager = new ModFileManager(_URL);
 
@@ -953,12 +1225,12 @@ namespace Quasar
 
             //Create Mod from API information
             LibraryMod newmod = GetLibraryMod(newAPIMod, game);
-            
+
             bool needupdate = true;
             //Checking if Mod is already in library
             if (Mod != null)
             {
-                if(Mod.Updates < newmod.Updates)
+                if (Mod.Updates < newmod.Updates)
                 {
                     var query = ListMods.Where(ml => ml.LocalMod == Mod);
                     mli = query.ElementAt(0);
@@ -1031,7 +1303,7 @@ namespace Quasar
 
                 //Scanning Files
                 int modIndex = Mods.IndexOf(Mod);
-                if(modIndex == -1)
+                if (modIndex == -1)
                 {
                     Mods[Mods.IndexOf(newmod)].FinishedProcessing = FirstScanLibraryMod(newmod, game, InternalModTypes);
                 }
@@ -1042,7 +1314,7 @@ namespace Quasar
 
                 //Refreshing  Interface
                 mli.Operation = false;
-                
+
 
                 //Saving XML
                 WriteModListFile(Mods);
@@ -1061,10 +1333,12 @@ namespace Quasar
         }
 
 
+
+
+
         #endregion
 
         
     }
-
     
 }
