@@ -32,7 +32,7 @@
         </CollectionViewSource>
     </Window.Resources>
     <Grid x:Name="QuasarGrid">
-        <Grid x:Name="OverlayGrid" Panel.ZIndex="1000" Opacity="100" Background="#FF2D2D2D">
+        <Grid x:Name="OverlayGrid" Panel.ZIndex="1000" Opacity="100" Background="#FF2D2D2D" d:IsHidden="True">
             <Grid.RenderTransform>
                 <ScaleTransform ScaleX="0" ScaleY="1"/>
             </Grid.RenderTransform>
@@ -353,7 +353,7 @@
                             <ColumnDefinition Width="1*"/>
                             <ColumnDefinition Width="1*"/>
                         </Grid.ColumnDefinitions>
-                        <Grid x:Name="IMTGameBlock" Grid.ColumnSpan="2" Background ="Black" Panel.ZIndex="500" Visibility="{Binding Path=GameSelectVisibility}">
+                        <Grid x:Name="IMTGameBlock" Grid.ColumnSpan="2" Background ="Black" Panel.ZIndex="500" Visibility="{Binding Path=GameSelectVisibility}" d:IsHidden="True">
                             <Label Content="Please select a game first" HorizontalAlignment="Center" Foreground="Wheat"  VerticalAlignment="Center" FontSize="36" />
                         </Grid>
                         <Grid x:Name="IMTTreeGrid" Background="{DynamicResource QD1}">
@@ -364,11 +364,11 @@
                             <Label x:Name="IMTContentsLabel" Content="Contents :" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="101" Foreground="{DynamicResource QuasarTextColor}" Style="{DynamicResource QuasarLabel}"/>
                             <Button x:Name="IMTAddFileButton" Content="Add File" Margin="116,13,0,0" VerticalAlignment="Top" Height="22" RenderTransformOrigin="-0.441,0.545" HorizontalAlignment="Left" Width="130" Click="IMTAddFile"/>
                             <Button x:Name="IMTDelFileButton" Content="Delete File" Margin="0,12,10,0" VerticalAlignment="Top" Height="22" RenderTransformOrigin="-0.441,0.545" Click="IMTDeleteFile" HorizontalAlignment="Right" Width="130"/>
-                            <DataGrid x:Name="IMTDataGrid" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False"  Margin="10" Grid.Row="1" SelectionChanged="DataGridRowSelected" Foreground="{DynamicResource QuasarTextColor}" Background="{DynamicResource QD1}">
+                            <DataGrid x:Name="IMTDataGrid" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False"  Margin="10" Grid.Row="1" SelectionChanged="DataGridRowSelected" Style="{DynamicResource QuasarDatagrid}" RowStyle="{DynamicResource QuasarDataGridRow}">
                                 <DataGrid.Columns>
-                                    <DataGridTextColumn Header="Path" Binding="{Binding Path}" Width="8*"/>
-                                    <DataGridTextColumn Header="FileName" Binding="{Binding File}" Width="6*"/>
-                                    <DataGridCheckBoxColumn Header="Mandatory" Binding="{Binding Mandatory}" Width="2*"/>
+                                    <DataGridTextColumn Header="Path" Binding="{Binding Path}" Width="8*" HeaderStyle="{DynamicResource QuasarDataGridHeader}"/>
+                                    <DataGridTextColumn Header="FileName" Binding="{Binding File}" Width="6*" HeaderStyle="{DynamicResource QuasarDataGridHeader}"/>
+                                    <DataGridCheckBoxColumn Header="Mandatory" Binding="{Binding Mandatory}" Width="2*" HeaderStyle="{DynamicResource QuasarDataGridHeader}"/>
                                 </DataGrid.Columns>
                             </DataGrid>
                         </Grid>

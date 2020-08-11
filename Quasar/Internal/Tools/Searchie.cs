@@ -75,7 +75,7 @@ namespace Quasar.Quasar_Sys
                             }
 
 
-                            string MatchGroup = type.Name+" - "+mod.Name+ " - " + slot;
+                            string MatchGroup = mod.Name+ " - " + slot;
 
                             ContentMapping newMapping = content.Find(map => map.Name == MatchGroup && map.InternalModType == type.ID && map.Folder == previousPath && map.ModID.ToString() == modFileManager.ModID);
                             if (newMapping != null)
@@ -88,7 +88,6 @@ namespace Quasar.Quasar_Sys
                                 newMapping.Files.Add(new ContentMappingFile() { Path = IMTFile.Path, InternalModTypeFileID = IMTFile.ID, SourcePath = outputPath });
                                 content.Add(newMapping);
                             }
-
                         }
                     }
                 }
@@ -118,6 +117,11 @@ namespace Quasar.Quasar_Sys
             //Replacing Slot digits
             output = output.Replace(@"{S00}", @"(?'SlotDoubleDigit'\d{2})");
             output = output.Replace(@"{S0}", @"(?'SlotSingleDigit'\d{1})");
+
+            //Replacing game data
+            output = output.Replace(@"{Characters}", @"(?'gamedata_characters'[A-Za-z0-9\_\-]*)");
+            output = output.Replace(@"{Stages}", @"(?'gamedata_stages'[A-Za-z0-9\_\-]*)");
+            output = output.Replace(@"{Music}", @"(?'gamedata_music'[A-Za-z0-9\_\-]*)");
 
             //Replacing points for regex interpretation
             output = output.Replace(@".", "\\.");

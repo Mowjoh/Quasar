@@ -43,7 +43,19 @@
         </Style>
 
         <Style x:Key="QuasarDatagrid" TargetType="{x:Type DataGrid}">
+            <Setter Property="Background" Value="Black"/>
+            <Setter Property="Foreground" Value="White"/>
+            
+        </Style>
 
+        <Style x:Key="QuasarDataGridRow" TargetType="{x:Type DataGridRow}">
+            <Setter Property="Background" Value="Black"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderBrush" Value="Pink"/>
+        </Style>
+        <Style x:Key="QuasarDataGridHeader" TargetType="{x:Type DataGridColumnHeader}">
+            <Setter Property="Background" Value="Black"/>
+            <Setter Property="Foreground" Value="White"/>
         </Style>
 
 
