@@ -322,7 +322,9 @@
                             <TextBox Grid.Column="3" HorizontalAlignment="Left" Height="23" Margin="194,41,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="60" IsEnabled="False"/>
                             <Button Content="Test Connection" Grid.Column="3" HorizontalAlignment="Left" Margin="10,69,0,0" VerticalAlignment="Top" Width="244" IsEnabled="False"/>
                             <Label Content="Statistics :" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="103" Foreground="{DynamicResource QuasarTextColor}" Grid.Row="2" Style="{DynamicResource QuasarLabel}"/>
-                            <TextBlock Grid.Column="2" HorizontalAlignment="Left" Margin="10,10,0,0" Grid.Row="2" TextWrapping="Wrap" Text="Logs will appear here" VerticalAlignment="Top" Grid.ColumnSpan="2" Height="349" Width="935" Foreground="White" Background="#33000000"/>
+                            <ScrollViewer Grid.Column="2" HorizontalAlignment="Left" Margin="10,10,0,0" Grid.Row="2" VerticalAlignment="Top" Grid.ColumnSpan="2" Height="293" Width="961" >
+                                <TextBlock x:Name="BuilderLogs" TextWrapping="Wrap" Foreground="White" Background="#33000000" />
+                            </ScrollViewer>
                             <ProgressBar Grid.Column="2" Grid.ColumnSpan="2" Value="62" Height="10" VerticalAlignment="Bottom"/>
                             <Label Content="Build Status like Copying Mods 62/100" Grid.Column="2" HorizontalAlignment="Left" Margin="10,324,0,0" VerticalAlignment="Top" Width="935" Foreground="{DynamicResource QuasarTextColor}" Grid.ColumnSpan="2" Style="{DynamicResource QuasarLabel}"/>
                             <RadioButton Content="Local Transfer" HorizontalAlignment="Left" Margin="10,255,0,0" VerticalAlignment="Top" Foreground="{DynamicResource QuasarTextColor}" GroupName="BuildMethod" IsChecked="True"/>
@@ -373,14 +375,14 @@
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="100"/>
                                 <RowDefinition Height="40"/>
-                                <RowDefinition Height="100"/>
-                                <RowDefinition Height="52*"/>
-                                <RowDefinition Height="23*"/>
+                                <RowDefinition Height="176"/>
+                                <RowDefinition Height="193*"/>
+                                <RowDefinition Height="119*"/>
                             </Grid.RowDefinitions>
-                            <Label x:Name="IMTSelectLabel" Content="Select an Internal Mod Type" HorizontalAlignment="Left" Margin="0,12,0,0" VerticalAlignment="Top" Width="166" Foreground="{DynamicResource QuasarTextColor}" Style="{DynamicResource QuasarLabel}"/>
+                            <Label x:Name="IMTSelectLabel" Content="Select an Internal Mod Type" HorizontalAlignment="Left" Margin="0,12,0,0" VerticalAlignment="Top" Width="166" Foreground="{DynamicResource QuasarTextColor}" Style="{DynamicResource QuasarLabel}" Height="24"/>
                             <ComboBox x:Name="InternalModTypeSelect" ItemsSource="{Binding GameIMT}" DisplayMemberPath="Name" Margin="171,16,152,0" VerticalAlignment="Top" Height="22" SelectionChanged="InternalModTypeSelected"/>
                             <Button x:Name="IMTAddTypeButton" Content="Add New Type" Margin="0,16,10,0" VerticalAlignment="Top" Height="22" HorizontalAlignment="Right" Width="118"/>
-                            <Label x:Name="IMTRefWarningLabel" Content="References : You can easily make your paths dynamic (detecting c00 by using c{00} for instance)" HorizontalAlignment="Left" Margin="10,74,0,0" VerticalAlignment="Top" FontStyle="Italic" Foreground="{DynamicResource QuasarTextColor}" Style="{DynamicResource QuasarLabel}"/>
+                            <Label x:Name="IMTRefWarningLabel" Content="References : You can easily make your paths dynamic (detecting c00 by using c{00} for instance)" HorizontalAlignment="Left" Margin="10,74,0,0" VerticalAlignment="Top" FontStyle="Italic" Foreground="{DynamicResource QuasarTextColor}" Style="{DynamicResource QuasarLabel}" Height="24" Width="504"/>
                             <Separator HorizontalAlignment="Left" Height="14" Margin="0,55,0,0" VerticalAlignment="Top" Width="588"/>
                             <Grid x:Name="IMTActionGrid" Grid.Row="1" Background="Transparent">
                                 <Grid.ColumnDefinitions>
@@ -400,12 +402,14 @@
                                 <Button x:Name="IMTAddRefButton" Content="Add Reference" Grid.Column="2" Margin="10,8,10,0" VerticalAlignment="Top" Height="22"/>
                             </Grid>
                             <Grid x:Name="IMTFileManagementGrid" Grid.Row="2" Background="Transparent">
-                                <Button x:Name="IMTSaveButton" Content="Save File and Path" Margin="0,65,10,0" VerticalAlignment="Top" Height="23" RenderTransformOrigin="0.24,3.217" HorizontalAlignment="Right" Width="149" Click="IMTInfoSave"/>
+                                <Button x:Name="IMTSaveButton" Content="Save File and Path" Margin="0,113,10,0" VerticalAlignment="Top" Height="23" RenderTransformOrigin="0.24,3.217" HorizontalAlignment="Right" Width="149" Click="IMTInfoSave"/>
                                 <TextBox x:Name="IMTPathText" Height="23" Margin="82,3,10,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" IsEnabled="False"/>
                                 <Label x:Name="IMTPathLabel" Content="Path" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="3.333,0.962" Margin="10,5,0,0" Foreground="{DynamicResource QuasarTextColor}" Style="{DynamicResource QuasarLabel}"/>
                                 <TextBox x:Name="IMTFileText" Height="23" Margin="82,31,10,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" IsEnabled="False"/>
                                 <Label x:Name="IMTFileLabel" Content="File Name" HorizontalAlignment="Left" Margin="10,31,0,0" VerticalAlignment="Top" Foreground="{DynamicResource QuasarTextColor}" Style="{DynamicResource QuasarLabel}"/>
-                                <CheckBox x:Name="IMTMandatory" Content="Mandatory" HorizontalAlignment="Left" Margin="82,70,0,0" VerticalAlignment="Top" IsEnabled="False" Foreground="{DynamicResource QuasarTextColor}"/>
+                                <CheckBox x:Name="IMTMandatory" Content="Mandatory" HorizontalAlignment="Left" Margin="82,121,0,0" VerticalAlignment="Top" IsEnabled="False" Foreground="{DynamicResource QuasarTextColor}"/>
+                                <Label x:Name="IMTFileLabel_Copy" Content="File Name" HorizontalAlignment="Left" Margin="10,60,0,0" VerticalAlignment="Top" Foreground="{DynamicResource QuasarTextColor}" Style="{DynamicResource QuasarLabel}"/>
+                                <TextBox x:Name="IMTDestinationText" Height="23" Margin="82,61,10,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" IsEnabled="False"/>
                             </Grid>
                             <Grid x:Name="IMTAssociationGrid" Grid.Row="3" Background="Transparent">
                                 <Label x:Name="IMTAssociationLabel" Content="Internal Mod Type Association" HorizontalAlignment="Left" Margin="10,34,0,0" VerticalAlignment="Top" Foreground="{DynamicResource QuasarTextColor}" Style="{DynamicResource QuasarLabel}"/>
@@ -418,8 +422,8 @@
                                 <Separator HorizontalAlignment="Left" Height="14" Margin="0" VerticalAlignment="Top" Width="588"/>
                             </Grid>
                             <Separator HorizontalAlignment="Left" Height="14" Margin="0,10,0,0" VerticalAlignment="Top" Width="588" Grid.Row="4"/>
-                            <Label x:Name="IMTSaveWarningLabel" Content="Caution: This action will remove all associations with this type." HorizontalAlignment="Center" Margin="10,24,0,0" VerticalAlignment="Top" FontStyle="Italic" Grid.Row="4" Foreground="{DynamicResource QuasarTextColor}" Style="{DynamicResource QuasarLabel}"/>
-                            <Button x:Name="IMTSaveXMLButton" Content="Save Internal Mod Type" HorizontalAlignment="Center" Margin="10,55,0,0" VerticalAlignment="Top" Width="156" Grid.Row="4" Click="IMTSaveXML"/>
+                            <Label x:Name="IMTSaveWarningLabel" Content="Caution: This action will remove all associations with this type." HorizontalAlignment="Center" Margin="146,24,136,0" VerticalAlignment="Top" FontStyle="Italic" Grid.Row="4" Foreground="{DynamicResource QuasarTextColor}" Style="{DynamicResource QuasarLabel}" Height="24" Width="332"/>
+                            <Button x:Name="IMTSaveXMLButton" Content="Save Internal Mod Type" HorizontalAlignment="Center" Margin="234,55,224,0" VerticalAlignment="Top" Width="156" Grid.Row="4" Click="IMTSaveXML" Height="20"/>
                         </Grid>
                     </Grid>
                 </TabItem>

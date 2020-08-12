@@ -183,6 +183,9 @@ namespace Quasar.XMLResources
         [XmlElement("Path")]
         public string Path { get; set; }
 
+        [XmlElement("Destination")]
+        public string Destination { get; set; }
+
         [XmlElement("File")]
         public string File { get; set; }
 

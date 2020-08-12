@@ -60,6 +60,16 @@ namespace Quasar.FileSystem
             }
         }
 
+        public static void CheckCopyFile(string source, string destination)
+        {
+            string parent = Path.GetDirectoryName(destination);
+            if (!Directory.Exists(parent))
+            {
+                Directory.CreateDirectory(Path.GetDirectoryName(destination));
+            }
+            File.Copy(source, destination, true);
+        }
+
         //Copies non-existant resources in the user folder
         public static void CompareReferences()
         {

@@ -1071,6 +1071,7 @@ namespace Quasar
             //Resetting info
             IMTFileText.Text = "";
             IMTPathText.Text = "";
+            IMTDestinationText.Text = "";
             IMTMandatory.IsChecked = false;
             IMTMandatory.IsEnabled = false;
             IMTFileText.IsEnabled = false;
@@ -1091,9 +1092,11 @@ namespace Quasar
             {
                 IMTPathText.Text = file.Path;
                 IMTFileText.Text = file.File;
+                IMTDestinationText.Text = file.Destination;
                 IMTMandatory.IsChecked = file.Mandatory;
                 IMTFileText.IsEnabled = true;
                 IMTPathText.IsEnabled = true;
+                IMTDestinationText.IsEnabled = true;
                 IMTMandatory.IsEnabled = true;
             }
         }
@@ -1150,6 +1153,7 @@ namespace Quasar
             {
                 file.Path = IMTPathText.Text;
                 file.File = IMTFileText.Text;
+                file.Destination = IMTDestinationText.Text;
                 file.Mandatory = IMTMandatory.IsChecked ?? false;
             }
             IMTDataGrid.Items.Refresh();
@@ -1471,7 +1475,7 @@ namespace Quasar
 
         private void Build_Button(object sender, RoutedEventArgs e)
         {
-            Builder.Build();
+            Builder.Build("I:/", Mods, ContentMappings, CurrentWorkspace, InternalModTypes, CurrentGame, GameData, BuilderLogs );
         }
     }
     

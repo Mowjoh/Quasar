@@ -136,8 +136,12 @@ namespace Quasar.Quasar_Sys
             // Replacing the any tag
             output = output.Replace(@"*", @"([A-Za-z0-9\_\-]*)");
 
+            //Replacing the folder tag
+            output = output.Replace(@"{Folder}", @"(?'folder'[^\\]*)");
+            output = output.Replace(@"{Part}", @"(?'part'[^\\]*)");
+
             //Replacing game data
-            output = output.Replace(@"{Characters}", @"(?'gamedata_characters'[A-Za-z0-9\_\-]*)");
+            output = output.Replace(@"{Characters}", @"(?'gamedata_characters'[^\_\\]*)");
             output = output.Replace(@"{Stages}", @"(?'gamedata_stages'[A-Za-z0-9\_\-]*)");
             output = output.Replace(@"{Music}", @"(?'gamedata_music'[A-Za-z0-9\_\-]*)");
 
@@ -149,18 +153,14 @@ namespace Quasar.Quasar_Sys
 
 
             //Replacing base digits
-            output = output.Replace(@"{000}", @"(?'TripleDigit'\d{3})");
-            output = output.Replace(@"{00}", @"(?'DoubleDigit'\d{2})");
-            output = output.Replace(@"{0}", @"(?'SingleDigit'\d{1})");
+            output = output.Replace(@"{000}", @"(?'DigitTriple'\d{3})");
+            output = output.Replace(@"{00}", @"(?'DigitDouble'\d{2})");
+            output = output.Replace(@"{0}", @"(?'DigitSingle'\d{1})");
 
             //Replacing Slot digits
             output = output.Replace(@"{S000}", @"(?'SlotTripleDigit'\d{3})");
             output = output.Replace(@"{S00}", @"(?'SlotDoubleDigit'\d{2})");
             output = output.Replace(@"{S0}", @"(?'SlotSingleDigit'\d{1})");
-
-            
-
-            
 
             return output;
         }
