@@ -2,12 +2,12 @@
 <InternalModType xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="Fighter Voice" Filename="SmashUltimate/Fighter_Voice" ID="5" GameID="1" Association="1" Slots="1">
   <InternalModTypeFile ID="0">
     <Path>fighter_voice</Path>
-    <File>vc_*.nus3audio</File>
+    <File>vc_{Characters}.nus3audio</File>
     <Mandatory>true</Mandatory>
   </InternalModTypeFile>
   <InternalModTypeFile ID="1">
     <Path>fighter</Path>
-    <File>se_*.nus3audio</File>
+    <File>se_{Characters}.nus3audio</File>
     <Mandatory>true</Mandatory>
   </InternalModTypeFile>
 </InternalModType>

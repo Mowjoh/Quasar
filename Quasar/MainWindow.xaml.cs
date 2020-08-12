@@ -247,6 +247,20 @@ namespace Quasar
 
         #region Associations
         List<Workspace> Workspaces;
+
+        private Workspace _CurrentWorkspace;
+        public Workspace CurrentWorkspace
+        {
+            get
+            {
+                return _CurrentWorkspace;
+            }
+            set
+            {
+                _CurrentWorkspace = value;
+                OnPropertyChanged("CurrentWorkspace");
+            }
+        }
         #endregion
 
         #region Game Data
@@ -367,8 +381,6 @@ namespace Quasar
         }
         #endregion
 
-
-
         #endregion
 
         #region Filters
@@ -450,6 +462,8 @@ namespace Quasar
                 Folderino.UpdateBaseFiles();
             }
 
+            Checker.BaseWorkspace();
+
             //Setting language
             Thread.CurrentThread.CurrentUICulture = new System.Globalization.CultureInfo(Properties.Settings.Default.Language);
 
@@ -491,7 +505,7 @@ namespace Quasar
 
         private void LoadAssociationsLibrary()
         {
-            Workspaces = AssociationXML.GetAssociations(); 
+            Workspaces = AssociationXML.GetWorkspaces(); 
         }
 
         private ObservableCollection<ModListItem> LoadLibraryMods()
@@ -666,6 +680,14 @@ namespace Quasar
             List<ContentMapping> relatedMappings = ContentMappings.FindAll(cm => cm.ModID == item.LocalMod.ID);
             foreach (ContentMapping cm in relatedMappings)
             {
+                List<Association> associations = CurrentWorkspace.Associations.FindAll(ass => ass.ContentMappingID == cm.ID);
+                if(associations != null)
+                {
+                    foreach(Association ass in associations)
+                    {
+                        CurrentWorkspace.Associations.Remove(ass);
+                    }
+                }
                 ContentMappings.Remove(cm);
             }
 
@@ -681,6 +703,7 @@ namespace Quasar
             //Writing changes
             Library.WriteModListFile(Mods);
             ContentXML.WriteContentMappingListFile(ContentMappings);
+            SaveWorkspaces();
 
         }
 
@@ -820,7 +843,6 @@ namespace Quasar
         {
             FilterSlots();
         }
-
         private void AssociationIMTChanged(object sender, SelectionChangedEventArgs e)
         {
             FilterSlots();
@@ -828,7 +850,7 @@ namespace Quasar
 
         private void FilterSlots()
         {
-            /*
+            
             AssociationContentMappings = new ObservableCollection<ContentMapping>();
             AssociationSlots = new ObservableCollection<ContentMapping>();
             GameDataItem SelectedCategory = (GameDataItem)AssociationGameElementDataList.SelectedItem;
@@ -847,7 +869,7 @@ namespace Quasar
                 foreach (ContentMapping cm in relatedMappings)
                 {
                     AssociationContentMappings.Add(cm);
-                    List<Association> Slots = Workspaces.FindAll(asso => asso.ContentMappingID == cm.ID);
+                    List<Association> Slots = CurrentWorkspace.Associations.FindAll(asso => asso.ContentMappingID == cm.ID);
                     if(Slots != null)
                     {
                         foreach(Association ass in Slots)
@@ -856,11 +878,11 @@ namespace Quasar
                         }
                     }
                 }
-            }*/
+            }
         }
 
         private void setSlot(int indexSource, int indexDestination)
-        {/*
+        {
             if(AssociationSlots.Count > 0)
             {
                 ContentMapping DestinationMapping = AssociationContentMappings.ElementAt(indexSource);
@@ -869,10 +891,10 @@ namespace Quasar
                 ContentMapping SourceMapping = (ContentMapping)ItemSlotListBox.Items.GetItemAt(indexDestination);
                 if (!SourceMapping.SlotName.Substring(0, 7).Equals("FakeIMT"))
                 {
-                    List<Association> asso = Workspaces.FindAll(a=> a.ContentMappingID == SourceMapping.ID && a.Slot == SourceMapping.Slot);
+                    List<Association> asso = CurrentWorkspace.Associations.FindAll(a=> a.ContentMappingID == SourceMapping.ID && a.Slot == SourceMapping.Slot);
                     foreach(Association a in asso)
                     {
-                        Workspaces.Remove(a);
+                        CurrentWorkspace.Associations.Remove(a);
                     }
                 }
 
@@ -881,36 +903,39 @@ namespace Quasar
 
                 saveSlots();
             }
-            
-            */
         }
 
         private void setSlot(ContentMapping input, int indexDestination)
         {
             if (AssociationSlots.Count > 0)
             {
-                AssociationSlots.RemoveAt(indexDestination);
-                input.Slot = indexDestination;
-                AssociationSlots.Insert(indexDestination, input);
+                if(indexDestination < AssociationSlots.Count)
+                {
+                    AssociationSlots.RemoveAt(indexDestination);
+                    input.Slot = indexDestination;
+                    AssociationSlots.Insert(indexDestination, input);
+                }
+                
             }
             
         }
 
         private void saveSlots()
-        {/*
+        {
             foreach(ContentMapping cm in AssociationSlots)
             {
                 if (!cm.SlotName.Substring(0, 7).Equals("FakeIMT"))
                 {
-                    Association aa = Workspaces.Find(a => a.ContentMappingID == cm.ID && a.Slot == cm.Slot);
+                    Association aa = CurrentWorkspace.Associations.Find(a => a.ContentMappingID == cm.ID && a.Slot == cm.Slot);
                     if(aa == null)
                     {
-                        Association asso = new Association() { ContentMappingID = cm.ID, Slot = cm.Slot };
-                        Workspaces.Add(asso);
+                        Association asso = new Association() { ContentMappingID = cm.ID, Slot = cm.Slot, GameDataItemID = cm.GameDataItemID, InternalModTypeID = cm.InternalModType };
+                        CurrentWorkspace.Associations.Add(asso);
                     }
                 }
             }
-            AssociationXML.WriteAssociationFile(Workspaces);*/
+
+            SaveWorkspaces();
         }
 
         #region Drag Drop
@@ -1114,6 +1139,16 @@ namespace Quasar
         {
             Game Selected = Games.Find(g => g.ID == Properties.Settings.Default.LastSelectedGame);
             SelectGame(Selected);
+
+            Workspace SelectedWorkspace = Workspaces.Find(w => w.ID == Properties.Settings.Default.LastSelectedWorkspace);
+            CurrentWorkspace = SelectedWorkspace;
+        }
+
+        private void SaveWorkspaces()
+        {
+            Workspace item = Workspaces.Find(w => w.ID == CurrentWorkspace.ID);
+            Workspaces[Workspaces.IndexOf(item)] = CurrentWorkspace;
+            AssociationXML.WriteAssociationFile(Workspaces);
         }
 
         #endregion
@@ -1132,7 +1167,7 @@ namespace Quasar
                 processed = true;
             }
             ContentMappings = WorkingList;
-
+            AutoSlotDetectedItems(SearchList);
             ContentXML.WriteContentMappingListFile(ContentMappings);
 
             return processed;
@@ -1153,6 +1188,26 @@ namespace Quasar
             */
         }
 
+
+        private void AutoSlotDetectedItems(List<ContentMapping> elements)
+        {
+            foreach(ContentMapping cm in elements)
+            {
+                if(cm.GameDataItemID != -1)
+                {
+                    Association associations = CurrentWorkspace.Associations.Find(ass => ass.GameDataItemID == cm.GameDataItemID && ass.InternalModTypeID == cm.InternalModType && ass.Slot == cm.Slot);
+                    if (associations != null)
+                    {
+                        CurrentWorkspace.Associations[CurrentWorkspace.Associations.IndexOf(associations)] = new Association() { ContentMappingID = cm.ID, GameDataItemID = cm.GameDataItemID, InternalModTypeID = cm.InternalModType, Slot = cm.Slot };
+                    }
+                    else
+                    {
+                        CurrentWorkspace.Associations.Add(new Association() { ContentMappingID = cm.ID, GameDataItemID = cm.GameDataItemID, InternalModTypeID = cm.InternalModType, Slot = cm.Slot });
+                    }
+                }
+            }
+            SaveWorkspaces();
+        }
         #endregion
 
         #region Downloads

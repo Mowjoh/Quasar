@@ -11,6 +11,11 @@ using System.Windows;
 using System.Deployment;
 using System.Deployment.Application;
 using System.Reflection;
+using System.IO;
+using static Quasar.XMLResources.AssociationXML;
+using Quasar.Internal.Tools;
+using Quasar.XMLResources;
+using Quasar.Properties;
 
 namespace Quasar.Quasar_Sys
 {
@@ -63,6 +68,20 @@ namespace Quasar.Quasar_Sys
             String AppPath = Environment.GetCommandLineArgs()[0];
             Properties.Settings.Default.AppPath = System.IO.Path.GetDirectoryName(AppPath);
 
+        }
+
+        public static void BaseWorkspace()
+        {
+            String AssociationsPath = Properties.Settings.Default.DefaultDir + @"\Library\Associations.xml";
+            if (!File.Exists(AssociationsPath))
+            {
+                Workspace defaultWorkspace = new Workspace() { ID = IDGenerator.getNewWorkspaceID(), Name = "Default Workspace" };
+                List<Workspace> DefaultFile = new List<Workspace>() { defaultWorkspace };
+                AssociationXML.WriteAssociationFile(DefaultFile);
+
+                Properties.Settings.Default.LastSelectedWorkspace = defaultWorkspace.ID;
+                Properties.Settings.Default.Save();
+            }
         }
 
         public static bool CheckQuasarUpdated()

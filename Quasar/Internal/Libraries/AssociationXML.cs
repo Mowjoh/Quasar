@@ -14,7 +14,7 @@ namespace Quasar.XMLResources
 
     public static class AssociationXML 
     {
-        public static List<Workspace> GetAssociations()
+        public static List<Workspace> GetWorkspaces()
         {
             List<Workspace> Workspaces = new List<Workspace>();
             string AssociationLibraryPath = Properties.Settings.Default.DefaultDir + @"\Library\Associations.xml";
@@ -70,9 +70,9 @@ namespace Quasar.XMLResources
                 }
             }
 
-            public Association this[int index]
+            public Workspace this[int index]
             {
-                get { return (Association)empArray[index]; }
+                get { return (Workspace)empArray[index]; }
             }
 
             public void CopyTo(Array a, int index)
@@ -96,9 +96,9 @@ namespace Quasar.XMLResources
                 return empArray.GetEnumerator();
             }
 
-            public void Add(Workspace newAssociation)
+            public void Add(Workspace newWorkspace)
             {
-                empArray.Add(newAssociation);
+                empArray.Add(newWorkspace);
             }
 
         }
