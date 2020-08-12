@@ -14,37 +14,34 @@ namespace Quasar.XMLResources
 
     public static class AssociationXML 
     {
-        public static List<Association> GetAssociations()
+        public static List<Workspace> GetAssociations()
         {
-            List<Association> Associations = new List<Association>();
+            List<Workspace> Workspaces = new List<Workspace>();
             string AssociationLibraryPath = Properties.Settings.Default.DefaultDir + @"\Library\Associations.xml";
-            XmlSerializer serializer = new XmlSerializer(typeof(AssociationList));
+            XmlSerializer serializer = new XmlSerializer(typeof(Workspaces));
 
             if (File.Exists(AssociationLibraryPath))
             {
                 using (FileStream fileStream = new FileStream(AssociationLibraryPath, FileMode.Open))
                 {
 
-                    AssociationList result = (AssociationList)serializer.Deserialize(fileStream);
-                    foreach (Association asso in result)
+                    Workspaces result = (Workspaces)serializer.Deserialize(fileStream);
+                    foreach (Workspace workspace in result)
                     {
-                        Associations.Add(asso);
+                        Workspaces.Add(workspace);
                     }
-
                 }
             }
-
-
-            return Associations;
+            return Workspaces;
         }
 
-        public static void WriteAssociationFile(List<Association> Associations)
+        public static void WriteAssociationFile(List<Workspace> Workspaces)
         {
             string AssociationLibraryPath = Properties.Settings.Default["DefaultDir"].ToString() + "\\Library\\Associations.xml";
 
-            AssociationList al = new AssociationList(Associations);
+            Workspaces al = new Workspaces(Workspaces);
 
-            XmlSerializer LibrarySerializer = new XmlSerializer(typeof(AssociationList));
+            XmlSerializer LibrarySerializer = new XmlSerializer(typeof(Workspaces));
             using (StreamWriter Writer = new StreamWriter(AssociationLibraryPath))
             {
                 LibrarySerializer.Serialize(Writer, al);
@@ -54,20 +51,20 @@ namespace Quasar.XMLResources
 
         //XML Serialization elements
         [Serializable()]
-        [XmlRoot("AssociationList")]
-        public class AssociationList : ICollection
+        [XmlRoot("Workspaces")]
+        public class Workspaces : ICollection
         {
             public string CollectionName;
             public ArrayList empArray = new ArrayList();
 
-            public AssociationList()
+            public Workspaces()
             {
 
             }
 
-            public AssociationList(List<Association> _inputList)
+            public Workspaces(List<Workspace> _inputList)
             {
-                foreach (Association m in _inputList)
+                foreach (Workspace m in _inputList)
                 {
                     empArray.Add(m);
                 }
@@ -99,11 +96,24 @@ namespace Quasar.XMLResources
                 return empArray.GetEnumerator();
             }
 
-            public void Add(Association newAssociation)
+            public void Add(Workspace newAssociation)
             {
                 empArray.Add(newAssociation);
             }
 
+        }
+
+        [Serializable]
+        public class Workspace
+        {
+            [XmlAttribute("ID")]
+            public int ID { get; set; }
+
+            [XmlAttribute("Name")]
+            public String Name { get; set; }
+
+            [XmlElement("Association")]
+            public List<Association> Associations { get; set; }
         }
 
         [Serializable]
@@ -114,6 +124,12 @@ namespace Quasar.XMLResources
 
             [XmlAttribute("ContentMappingID")]
             public int ContentMappingID { get; set; }
+
+            [XmlAttribute("GameDataItemID")]
+            public int GameDataItemID { get; set; }
+
+            [XmlAttribute("InternalModTypeID")]
+            public int InternalModTypeID { get; set; }
 
         }
 

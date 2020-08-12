@@ -246,7 +246,7 @@ namespace Quasar
         #endregion
 
         #region Associations
-        List<Association> Associations;
+        List<Workspace> Workspaces;
         #endregion
 
         #region Game Data
@@ -443,11 +443,7 @@ namespace Quasar
             bool Update = Checker.CheckQuasarUpdated();
             Folderino.CheckBaseFolders();
             Folderino.CompareReferences();
-            bool Debug = false;
-
-#if DEBUG
-            Debug = true;
-#endif
+            bool Debug = true;
 
             if (Update || Debug)
             {
@@ -495,7 +491,7 @@ namespace Quasar
 
         private void LoadAssociationsLibrary()
         {
-            Associations = AssociationXML.GetAssociations(); 
+            Workspaces = AssociationXML.GetAssociations(); 
         }
 
         private ObservableCollection<ModListItem> LoadLibraryMods()
@@ -832,6 +828,7 @@ namespace Quasar
 
         private void FilterSlots()
         {
+            /*
             AssociationContentMappings = new ObservableCollection<ContentMapping>();
             AssociationSlots = new ObservableCollection<ContentMapping>();
             GameDataItem SelectedCategory = (GameDataItem)AssociationGameElementDataList.SelectedItem;
@@ -850,25 +847,20 @@ namespace Quasar
                 foreach (ContentMapping cm in relatedMappings)
                 {
                     AssociationContentMappings.Add(cm);
-                    List<Association> Slots = Associations.FindAll(asso => asso.ContentMappingID == cm.ID);
+                    List<Association> Slots = Workspaces.FindAll(asso => asso.ContentMappingID == cm.ID);
                     if(Slots != null)
                     {
                         foreach(Association ass in Slots)
                         {
                             setSlot(cm, ass.Slot);
                         }
-                       
                     }
                 }
-                
-                
-            }
-
-
+            }*/
         }
 
         private void setSlot(int indexSource, int indexDestination)
-        {
+        {/*
             if(AssociationSlots.Count > 0)
             {
                 ContentMapping DestinationMapping = AssociationContentMappings.ElementAt(indexSource);
@@ -877,10 +869,10 @@ namespace Quasar
                 ContentMapping SourceMapping = (ContentMapping)ItemSlotListBox.Items.GetItemAt(indexDestination);
                 if (!SourceMapping.SlotName.Substring(0, 7).Equals("FakeIMT"))
                 {
-                    List<Association> asso = Associations.FindAll(a=> a.ContentMappingID == SourceMapping.ID && a.Slot == SourceMapping.Slot);
+                    List<Association> asso = Workspaces.FindAll(a=> a.ContentMappingID == SourceMapping.ID && a.Slot == SourceMapping.Slot);
                     foreach(Association a in asso)
                     {
-                        Associations.Remove(a);
+                        Workspaces.Remove(a);
                     }
                 }
 
@@ -890,7 +882,7 @@ namespace Quasar
                 saveSlots();
             }
             
-            
+            */
         }
 
         private void setSlot(ContentMapping input, int indexDestination)
@@ -905,20 +897,20 @@ namespace Quasar
         }
 
         private void saveSlots()
-        {
+        {/*
             foreach(ContentMapping cm in AssociationSlots)
             {
                 if (!cm.SlotName.Substring(0, 7).Equals("FakeIMT"))
                 {
-                    Association aa = Associations.Find(a => a.ContentMappingID == cm.ID && a.Slot == cm.Slot);
+                    Association aa = Workspaces.Find(a => a.ContentMappingID == cm.ID && a.Slot == cm.Slot);
                     if(aa == null)
                     {
                         Association asso = new Association() { ContentMappingID = cm.ID, Slot = cm.Slot };
-                        Associations.Add(asso);
+                        Workspaces.Add(asso);
                     }
                 }
             }
-            AssociationXML.WriteAssociationFile(Associations);
+            AssociationXML.WriteAssociationFile(Workspaces);*/
         }
 
         #region Drag Drop
@@ -1127,34 +1119,11 @@ namespace Quasar
         #endregion
 
         #region Detection
-        //When the detector engine gets launched
-        private void CMDetectStartButton_Click(object sender, RoutedEventArgs e)
-        {
-            List<ContentMapping> FullList = new List<ContentMapping>();
-
-            if (CurrentGame != null)
-            {
-                if (CurrentGame.ID != -1)
-                {
-                    foreach (LibraryMod lm in Mods)
-                    {
-                        List<ContentMapping> MahList = Searchie.AutoDetectinator(lm, InternalModTypes, CurrentGame);
-
-                        foreach (ContentMapping m in MahList)
-                        {
-                            FullList.Add(m);
-                        }
-                    }
-                }
-            }
-            ContentMappings = FullList;
-
-        }
 
         private bool FirstScanLibraryMod(LibraryMod libraryMod, Game game, List<InternalModType> types)
         {
             bool processed = false;
-            List<ContentMapping> SearchList = Searchie.AutoDetectinator(libraryMod, types, game);
+            List<ContentMapping> SearchList = Searchie.AutoDetectinator(libraryMod, types, game, GameData);
 
             List<ContentMapping> WorkingList = ContentMappings;
             foreach (ContentMapping cm in SearchList)
@@ -1331,10 +1300,6 @@ namespace Quasar
                 Dispatcher.BeginInvoke((Action)(() => { LaunchDownload(quasari); }));
             }
         }
-
-
-
-
 
         #endregion
 

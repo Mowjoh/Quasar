@@ -12,7 +12,7 @@ namespace Quasar.Quasar_Sys
     public class Searchie
     {
         //Launches Detection process for a specific Mod
-        public static List<ContentMapping> AutoDetectinator(LibraryMod mod,List<InternalModType> types, Game _Game)
+        public static List<ContentMapping> AutoDetectinator(LibraryMod mod,List<InternalModType> types, Game _Game, List<GameData> gamedata)
         {
             if(mod != null)
             {
@@ -20,7 +20,7 @@ namespace Quasar.Quasar_Sys
                 ModFileManager modFileManager = new ModFileManager(mod, _Game);
                 foreach (InternalModType type in types)
                 {
-                    List<ContentMapping> temp = EvaluatePossibility(type, modFileManager, mod);
+                    List<ContentMapping> temp = EvaluatePossibility(type, modFileManager, mod, gamedata);
                     foreach(ContentMapping map in temp)
                     {
                         mappings.Add(map);
@@ -32,15 +32,18 @@ namespace Quasar.Quasar_Sys
         }
 
         //Evaluates possibilities of instances of the selected InternalModType
-        public static List<ContentMapping> EvaluatePossibility(InternalModType type, ModFileManager modFileManager, LibraryMod mod)
+        public static List<ContentMapping> EvaluatePossibility(InternalModType type, ModFileManager modFileManager, LibraryMod mod, List<GameData> gamedata)
         {
             //List of mapped contents
             List<ContentMapping> content = new List<ContentMapping>();
 
             ContentMapping possibleMapping = new ContentMapping() { Files = new List<ContentMappingFile>() };
             IEnumerable<string> files = Directory.EnumerateFiles(modFileManager.LibraryContentFolderPath, "*.*", SearchOption.AllDirectories);
+            GameData gd = gamedata.Find(g => g.GameID == mod.GameID);
+            GameDataCategory cat = gd.Categories.Find(gdc => gdc.ID == type.Association);
             foreach (InternalModTypeFile IMTFile in type.Files)
             {
+                
                 //Setting up Regex
                 Regex fileRegex = new Regex(PrepareRegex(IMTFile.Path.Replace(@"/",@"\") + @"\" + IMTFile.File));
 
@@ -62,6 +65,10 @@ namespace Quasar.Quasar_Sys
 
                             string slot = "Default";
                             int SlotNumber = 0;
+
+                            string gamedatavalue = "";
+                            string gamedatatype = "";
+
                             foreach(Group g in Groups)
                             {
                                 if(g.Name.Length > 4)
@@ -70,6 +77,18 @@ namespace Quasar.Quasar_Sys
                                     {
                                         slot = "Slot " + g.Value;
                                         SlotNumber = int.Parse(g.Value);
+                                    }
+                                    if (g.Name.Substring(0, 8).Equals("gamedata"))
+                                    {
+                                        if (g.Value.Contains(@"\"))
+                                        {
+                                            gamedatavalue = g.Value.Split('\\')[g.Value.Split('\\').Length-1];
+                                        }
+                                        else
+                                        {
+                                            gamedatavalue = g.Value;
+                                        }
+                                        
                                     }
                                 }
                             }
@@ -84,7 +103,13 @@ namespace Quasar.Quasar_Sys
                             }
                             else
                             {
-                                newMapping = new ContentMapping() {ID=IDGenerator.getNewContentID(), Name = MatchGroup, InternalModType = type.ID, Files = new List<ContentMappingFile>(), Folder = previousPath, ModID = Int32.Parse(modFileManager.ModID), SlotName = slot, Slot = SlotNumber };
+                                int gdiID = -1;
+                                GameDataItem gdi = cat.Items.Find(i => i.Attributes[0].Value == gamedatavalue);
+                                if(gdi != null)
+                                {
+                                    gdiID = gdi.ID;
+                                }
+                                newMapping = new ContentMapping() {ID=IDGenerator.getNewContentID(), Name = MatchGroup, InternalModType = type.ID, Files = new List<ContentMappingFile>(), Folder = previousPath, ModID = Int32.Parse(modFileManager.ModID), SlotName = slot, Slot = SlotNumber, GameDataItemID = gdiID };
                                 newMapping.Files.Add(new ContentMappingFile() { Path = IMTFile.Path, InternalModTypeFileID = IMTFile.ID, SourcePath = outputPath });
                                 content.Add(newMapping);
                             }
@@ -105,26 +130,37 @@ namespace Quasar.Quasar_Sys
         {
             string output = input;
 
-            //Replacing the any tag
+            //Replacing underscores for regex interpretation
+            //output = output.Replace(@"_", "\\_");
+
+            // Replacing the any tag
             output = output.Replace(@"*", @"([A-Za-z0-9\_\-]*)");
-            //Replacing backslashes for regex interpretation
-            output = output.Replace(@"\", @"\\");
-
-            //Replacing base digits
-            output = output.Replace(@"{00}", @"(?'DoubleDigit'\d{2})");
-            output = output.Replace(@"{0}", @"(?'SingleDigit'\d{1})");
-
-            //Replacing Slot digits
-            output = output.Replace(@"{S00}", @"(?'SlotDoubleDigit'\d{2})");
-            output = output.Replace(@"{S0}", @"(?'SlotSingleDigit'\d{1})");
 
             //Replacing game data
             output = output.Replace(@"{Characters}", @"(?'gamedata_characters'[A-Za-z0-9\_\-]*)");
             output = output.Replace(@"{Stages}", @"(?'gamedata_stages'[A-Za-z0-9\_\-]*)");
             output = output.Replace(@"{Music}", @"(?'gamedata_music'[A-Za-z0-9\_\-]*)");
 
+            //Replacing backslashes for regex interpretation
+            output = output.Replace(@"\", @"\\");
+
             //Replacing points for regex interpretation
             output = output.Replace(@".", "\\.");
+
+
+            //Replacing base digits
+            output = output.Replace(@"{000}", @"(?'TripleDigit'\d{3})");
+            output = output.Replace(@"{00}", @"(?'DoubleDigit'\d{2})");
+            output = output.Replace(@"{0}", @"(?'SingleDigit'\d{1})");
+
+            //Replacing Slot digits
+            output = output.Replace(@"{S000}", @"(?'SlotTripleDigit'\d{3})");
+            output = output.Replace(@"{S00}", @"(?'SlotDoubleDigit'\d{2})");
+            output = output.Replace(@"{S0}", @"(?'SlotSingleDigit'\d{1})");
+
+            
+
+            
 
             return output;
         }

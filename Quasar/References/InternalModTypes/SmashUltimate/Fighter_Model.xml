@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <InternalModType xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="Fighter Model" Filename="SmashUltimate/Fighter_Model" ID="1" GameID="1" Association="1" Slots="1">
   <InternalModTypeFile ID="0">
-    <Path>c{S00}</Path>
-    <File>*.numshb</File>
+    <Path>{Characters}/model/*/c{S00}</Path>
+    <File>model.numshb</File>
     <Mandatory>true</Mandatory>
   </InternalModTypeFile>
   <InternalModTypeFile ID="1">
-    <Path>c{S00}</Path>
-    <File>*.numdlb</File>
+    <Path>{Characters}/model/*/c{S00}</Path>
+    <File>model.numdlb</File>
     <Mandatory>true</Mandatory>
   </InternalModTypeFile>
   <InternalModTypeFile ID="2">
-    <Path>c{S00}</Path>
-    <File>*.numatb</File>
+    <Path>{Characters}/model/*/c{S00}</Path>
+    <File>model.numatb</File>
     <Mandatory>false</Mandatory>
   </InternalModTypeFile>
 </InternalModType>

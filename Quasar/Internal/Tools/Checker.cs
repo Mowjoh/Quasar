@@ -28,7 +28,7 @@ namespace Quasar.Quasar_Sys
                     PipeClient.StartPipeClient("Quasarite", Args[1]);
                 }
                 mt.Close();
-                Application.Current.Shutdown();
+                Environment.Exit(0);
             }
             else
             {
