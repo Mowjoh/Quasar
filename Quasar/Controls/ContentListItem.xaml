@@ -30,10 +30,10 @@
         <Grid x:Name="TopGrid" Background="{DynamicResource QD2}" Grid.Column="1" Grid.Row="0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="35*"/>
+                <ColumnDefinition Width="35*"/>
                 <ColumnDefinition Width="20*"/>
                 <ColumnDefinition Width="20*"/>
-                <ColumnDefinition Width="20*"/>
-                <ColumnDefinition Width="20*"/>
+                <ColumnDefinition Width="10*"/>
                 <ColumnDefinition Width="10*"/>
             </Grid.ColumnDefinitions>
 
@@ -65,7 +65,7 @@
                 <Button x:Name="ContentMappingSaveButton" Margin="0,10,0,0" Content="Save" Click="SaveContentMapping"/>
             </StackPanel>
             <ScrollViewer Margin="10" Grid.Column="1">
-                <TextBlock x:Name="FilesTextBlock" Foreground="White"></TextBlock>
+                <TextBlock x:Name="FilesTextBlock" Foreground="White" Width="Auto"></TextBlock>
             </ScrollViewer>
         </Grid>
     </Grid>

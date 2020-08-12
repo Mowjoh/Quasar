@@ -303,6 +303,35 @@ namespace Quasar.Controls
             {
                 LoadImage(LocalMod);
             }
+            if(_LibraryMod != null)
+            {
+                //Dynamic info
+                int count = _LibraryMod.Authors.Length > 3 ? 3 : _LibraryMod.Authors.Length;
+                for (int i = 0; i < count; i++)
+                {
+                    if (_LibraryMod.Authors[i][2] == "0")
+                    {
+                        AutorNameStackPanel.Children.Add(new Label() { Content = _LibraryMod.Authors[i][0], Foreground = (SolidColorBrush)App.Current.Resources["QuasarTextColor"], Height = 28 });
+                    }
+                    else
+                    {
+                        Run run = new Run();
+                        run.Text = _LibraryMod.Authors[i][0];
+
+                        Hyperlink hl = new Hyperlink(run);
+                        hl.NavigateUri = new Uri(@"https://gamebanana.com/members/" + _LibraryMod.Authors[i][2]);
+                        hl.Click += new RoutedEventHandler(link_click);
+
+                        TextBlock textBlock = new TextBlock() { Margin = new Thickness(5, 0, 0, 0), Foreground = (SolidColorBrush)App.Current.Resources["QuasarTextColor"], Height = 28, TextAlignment = TextAlignment.Left, LineStackingStrategy = LineStackingStrategy.BlockLineHeight, LineHeight = 22 };
+                        textBlock.Inlines.Add(hl);
+
+                        AutorNameStackPanel.Children.Add(textBlock);
+                    }
+
+                    AutorRoleStackPanel.Children.Add(new Label() { Content = _LibraryMod.Authors[i][1], Foreground = (SolidColorBrush)App.Current.Resources["QuasarTextColor"], Height = 28 });
+                }
+            }
+            
             Filter = false;
         }
 
@@ -320,7 +349,7 @@ namespace Quasar.Controls
             {
                 if (_mod.Authors[i][2] == "0")
                 {
-                    //AutorNameStackPanel.Children.Add(new Label() { Content = _mod.Authors[i][0], Foreground = (SolidColorBrush)App.Current.Resources["QuasarTextColor"], Height = 28 });
+                    AutorNameStackPanel.Children.Add(new Label() { Content = _mod.Authors[i][0], Foreground = (SolidColorBrush)App.Current.Resources["QuasarTextColor"], Height = 28 });
                 }
                 else
                 {
@@ -334,10 +363,10 @@ namespace Quasar.Controls
                     TextBlock textBlock = new TextBlock() { Margin = new Thickness(5, 0, 0, 0), Foreground = (SolidColorBrush)App.Current.Resources["QuasarTextColor"], Height = 28, TextAlignment = TextAlignment.Left, LineStackingStrategy = LineStackingStrategy.BlockLineHeight, LineHeight = 22 };
                     textBlock.Inlines.Add(hl);
 
-                    //AutorNameStackPanel.Children.Add(textBlock);
+                    AutorNameStackPanel.Children.Add(textBlock);
                 }
 
-                //AutorRoleStackPanel.Children.Add(new Label() { Content = _mod.Authors[i][1], Foreground = (SolidColorBrush)App.Current.Resources["QuasarTextColor"], Height = 28 });
+                AutorRoleStackPanel.Children.Add(new Label() { Content = _mod.Authors[i][1], Foreground = (SolidColorBrush)App.Current.Resources["QuasarTextColor"], Height = 28 });
             }
 
         }

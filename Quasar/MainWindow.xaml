@@ -99,7 +99,7 @@
                         <ComboBox x:Name="ManagementAPICategorySelect" ItemsSource="{Binding Path=GameAPISubCategories}" DisplayMemberPath="Name" SelectedValuePath="ID" Margin="315,15,0,0" VerticalAlignment="Top" Height="22" IsEditable="True" Text="{x:Static p:Resources.ModFilterSelectText}" Foreground="Black" IsEnabled="True" SelectionChanged="FilterSelectionChanged" HorizontalAlignment="Left" Width="300"/>
                         <ListView x:Name="ManagementModListView" SelectionChanged="ModSelected" ItemsSource="{Binding Source={StaticResource CollectionOMods}, IsAsync=True}" Background="Transparent" Margin="0,0,0,0" Grid.Row="2" BorderThickness="0">
                             <ListView.Resources>
-                                
+
                             </ListView.Resources>
                             <ListView.ItemsPanel>
                                 <ItemsPanelTemplate>
@@ -167,10 +167,10 @@
                         <Grid Grid.Row="1" Margin="10,0,0,0" Background="{x:Null}">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="35*"/>
+                                <ColumnDefinition Width="35*"/>
                                 <ColumnDefinition Width="20*"/>
                                 <ColumnDefinition Width="20*"/>
-                                <ColumnDefinition Width="20*"/>
-                                <ColumnDefinition Width="20*"/>
+                                <ColumnDefinition Width="10*"/>
                                 <ColumnDefinition Width="10*"/>
                             </Grid.ColumnDefinitions>
                             <Label FontStyle="Italic" Content="Mod Name" Foreground="{DynamicResource QuasarTextColor}" Grid.Column="0" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Style="{DynamicResource QuasarLabel}"/>
@@ -427,7 +427,15 @@
                     </Grid>
                 </TabItem>
                 <TabItem x:Name="Setting" Header="{x:Static p:Resources.SettingsTabHeader}" Foreground="{DynamicResource QuasarTextColor}">
-                    <Grid x:Name="SettingsGrid" Background="{DynamicResource QD1}" Margin="0,0,1228,628"/>
+                    <Grid x:Name="SettingsGrid" Background="{DynamicResource QD1}">
+                        <ItemsControl x:Name="SettingsItemControl" ItemsSource="{Binding SettingsList}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                        </ItemsControl>
+                    </Grid>
                 </TabItem>
             </TabControl>
             <Grid Background="#FF2D2D2D">

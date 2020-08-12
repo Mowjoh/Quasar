@@ -381,6 +381,22 @@ namespace Quasar
         }
         #endregion
 
+        #region Settings
+        private ObservableCollection<QuasarSetting> _SettingsList;
+        public ObservableCollection<QuasarSetting> SettingsList
+        {
+            get
+            {
+                return _SettingsList;
+            }
+            set
+            {
+                _SettingsList = value;
+                OnPropertyChanged("SettingsList");
+            }
+        }
+        #endregion
+
         #endregion
 
         #region Filters
@@ -1142,6 +1158,25 @@ namespace Quasar
 
             Workspace SelectedWorkspace = Workspaces.Find(w => w.ID == Properties.Settings.Default.LastSelectedWorkspace);
             CurrentWorkspace = SelectedWorkspace;
+
+            SettingsList = new ObservableCollection<QuasarSetting>();
+
+            List<QuasarSettingComboData> list = new List<QuasarSettingComboData>
+            {
+                new QuasarSettingComboData() { Name = "French", Value = "FR" },
+                new QuasarSettingComboData() { Name = "English", Value = "EN" }
+            };
+
+            List<QuasarSettingComboData> WorkspaceList = new List<QuasarSettingComboData>();
+            foreach (Workspace w in Workspaces)
+            {
+                WorkspaceList.Add(new QuasarSettingComboData() { Name = w.Name, Value = w.ID.ToString()});
+            }
+
+            SettingsList.Add(new QuasarSetting(new QuasarSettingData() { SettingName = "Language", SettingCheck = false, Data = list }));
+            SettingsList.Add(new QuasarSetting(new QuasarSettingData() { SettingName = "Workspace", SettingCheck = false, Data = WorkspaceList }));
+            SettingsList.Add(new QuasarSetting(new QuasarSettingData() { SettingName = "Auto Slots", SettingCheck = true}));
+
         }
 
         private void SaveWorkspaces()
