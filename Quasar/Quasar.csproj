@@ -103,6 +103,7 @@
     <Compile Include="Controls\QuasarSetting.xaml.cs">
       <DependentUpon>QuasarSetting.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Internal\FileSystem\Builder.cs" />
     <Compile Include="Internal\FileSystem\ModFileManager.cs" />
     <Compile Include="Internal\Libraries\ContentXML.cs" />
     <Compile Include="Internal\Libraries\AssociationXML.cs" />

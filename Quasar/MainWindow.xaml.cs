@@ -23,6 +23,7 @@ using System.Windows.Data;
 using static Quasar.XMLResources.AssociationXML;
 using System.Windows.Input;
 using Point = System.Windows.Point;
+using Quasar.Internal.FileSystem;
 
 namespace Quasar
 {
@@ -246,7 +247,19 @@ namespace Quasar
         #endregion
 
         #region Associations
-        List<Workspace> Workspaces;
+        private List<Workspace> _Workspaces;
+        public List<Workspace> Workspaces
+        {
+            get
+            {
+                return _Workspaces;
+            }
+            set
+            {
+                _Workspaces = value;
+                OnPropertyChanged("Workspaces");
+            }
+        }
 
         private Workspace _CurrentWorkspace;
         public Workspace CurrentWorkspace
@@ -259,6 +272,36 @@ namespace Quasar
             {
                 _CurrentWorkspace = value;
                 OnPropertyChanged("CurrentWorkspace");
+            }
+        }
+        #endregion
+
+        #region Build
+        private ObservableCollection<DriveInfo> _USBDrives;
+        public ObservableCollection<DriveInfo> USBDrives
+        {
+            get
+            {
+                return _USBDrives;
+            }
+            set
+            {
+                _USBDrives = value;
+                OnPropertyChanged("USBDrives");
+            }
+        }
+
+        private ObservableCollection<string> _USBDriveLabels;
+        public ObservableCollection<string> USBDriveLabels
+        {
+            get
+            {
+                return _USBDriveLabels;
+            }
+            set
+            {
+                _USBDriveLabels = value;
+                OnPropertyChanged("USBDriveLabels");
             }
         }
         #endregion
@@ -462,6 +505,7 @@ namespace Quasar
 
         public MainWindow()
         {
+
             //Setting up Server or Client
             DLS = new QuasarDownloads();
             DLS.List.CollectionChanged += QuasarDownloadCollectionChanged;
@@ -1131,6 +1175,32 @@ namespace Quasar
         }
         #endregion
 
+        #region Build
+        public void getSDCards()
+        {
+            DriveInfo[] CurrentDrives = DriveInfo.GetDrives();
+            USBDrives = new ObservableCollection<DriveInfo>();
+
+            foreach(DriveInfo di in CurrentDrives)
+            {
+                if(di.DriveType == DriveType.Removable && di.IsReady)
+                {
+                    USBDrives.Add(di);
+                }
+            }
+            getSDLabels();
+        }
+
+        public void getSDLabels()
+        {
+            USBDriveLabels = new ObservableCollection<string>();
+            foreach (DriveInfo di in USBDrives)
+            {
+                USBDriveLabels.Add(di.VolumeLabel + " {" + di.Name + "}");
+            }
+        }
+        #endregion
+
         #region Settings
         //Deletes Everything Quasar has stored cause that's the easy way out
         private void DeleteDocumentFolderContents(object sender, RoutedEventArgs e)
@@ -1176,6 +1246,11 @@ namespace Quasar
             SettingsList.Add(new QuasarSetting(new QuasarSettingData() { SettingName = "Language", SettingCheck = false, Data = list }));
             SettingsList.Add(new QuasarSetting(new QuasarSettingData() { SettingName = "Workspace", SettingCheck = false, Data = WorkspaceList }));
             SettingsList.Add(new QuasarSetting(new QuasarSettingData() { SettingName = "Auto Slots", SettingCheck = true}));
+
+            BuilderModLoaderCombo.SelectedIndex = 0;
+            BuilderWorkspaceCombo.SelectedIndex = 0;
+
+            getSDCards();
 
         }
 
@@ -1391,9 +1466,13 @@ namespace Quasar
             }
         }
 
+
         #endregion
 
-        
+        private void Build_Button(object sender, RoutedEventArgs e)
+        {
+            Builder.Build();
+        }
     }
     
 }
