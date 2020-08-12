@@ -60,7 +60,14 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Quasar.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>Quasar.App</StartupObject>
+  </PropertyGroup>
   <ItemGroup>
+    <Reference Include="PresentationFramework.Aero2" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
@@ -84,15 +91,26 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="FileSystem\ModFileManager.cs" />
-    <Compile Include="Resources\ContentXML.cs" />
-    <Compile Include="Resources\AssociationXML.cs" />
-    <Compile Include="FileSystem\Unarchiver.cs" />
-    <Compile Include="Quasar_Sys\Checker.cs" />
-    <Compile Include="Controls\ModListElement.xaml.cs">
-      <DependentUpon>ModListElement.xaml</DependentUpon>
+    <Compile Include="Controls\FileView.xaml.cs">
+      <DependentUpon>FileView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="FileSystem\Folderino.cs" />
+    <Compile Include="Controls\ContentListItem.xaml.cs">
+      <DependentUpon>ContentListItem.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ModListItem.xaml.cs">
+      <DependentUpon>ModListItem.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\QuasarSetting.xaml.cs">
+      <DependentUpon>QuasarSetting.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Internal\FileSystem\Builder.cs" />
+    <Compile Include="Internal\FileSystem\ModFileManager.cs" />
+    <Compile Include="Internal\Libraries\ContentXML.cs" />
+    <Compile Include="Internal\Libraries\AssociationXML.cs" />
+    <Compile Include="Internal\FileSystem\Unarchiver.cs" />
+    <Compile Include="Internal\Tools\Checker.cs" />
+    <Compile Include="Internal\FileSystem\Folderino.cs" />
+    <Compile Include="Internal\Tools\IDGenerator.cs" />
     <Compile Include="Properties\Resources.en.Designer.cs">
       <DependentUpon>Resources.en.resx</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -103,14 +121,29 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
-    <Compile Include="Quasar_Sys\Protoman.cs" />
-    <Compile Include="Quasar_Sys\Searchie.cs" />
-    <Compile Include="Singleton\PipeClient.cs" />
-    <Compile Include="Singleton\PipeServer.cs" />
-    <Compile Include="Web\Downloader.cs" />
-    <Compile Include="Resources\LibraryXML.cs" />
-    <Compile Include="Resources\XML.cs" />
-    <Page Include="Controls\ModListElement.xaml">
+    <Compile Include="Internal\Tools\Protoman.cs" />
+    <Compile Include="Internal\Tools\Searchie.cs" />
+    <Compile Include="Internal\Pipes\PipeClient.cs" />
+    <Compile Include="Internal\Pipes\PipeServer.cs" />
+    <Compile Include="Internal\Web\Downloader.cs" />
+    <Compile Include="Internal\Libraries\LibraryXML.cs" />
+    <Compile Include="Internal\Libraries\XML.cs" />
+    <Compile Include="Views\SettingsView.xaml.cs">
+      <DependentUpon>SettingsView.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Controls\FileView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\ContentListItem.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\ModListItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\QuasarSetting.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -118,7 +151,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="Web\API.cs" />
+    <Compile Include="Internal\Web\API.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -127,6 +160,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Views\SettingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -150,38 +187,73 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <Content Include="References\QuasarUrlShortcuts\Smash Bros\Skins\Destroyer Toad.url">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Resource Include="Controls\fonts\sofiapro-light.otf" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <Content Include="References\QuasarUrlShortcuts\Foxie.url">
+    <Resource Include="Quasar.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Content Include="References\InternalModTypes\SmashUltimate\Stage_SkinModel.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="References\QuasarUrlShortcuts\Mon-Ika.url">
+    <Content Include="References\InternalModTypes\SmashUltimate\Fighter_Animation.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="References\QuasarUrlShortcuts\Peach Bomb.url">
+    <Content Include="References\QuasarUrlShortcuts\Mario Kart 8D\Thwomp Circuit.url">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="References\QuasarUrlShortcuts\Salt &amp; Pepper Icies.url">
+    <Content Include="References\QuasarUrlShortcuts\Smash Bros\Gamefiles\Peach Bomb.url">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="References\QuasarUrlShortcuts\Sans UI.url">
+    <Content Include="References\QuasarUrlShortcuts\Smash Bros\Gamefiles\Stretchy Falcon.url">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="References\QuasarUrlShortcuts\Shiny Mewtwo.url">
+    <Content Include="References\QuasarUrlShortcuts\Smash Bros\GUI\Sans UI.url">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="References\QuasarUrlShortcuts\TerryChu.url">
+    <Content Include="References\QuasarUrlShortcuts\Smash Bros\Skins\Mon-Ika.url">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="References\QuasarUrlShortcuts\The Gief.url">
+    <Content Include="References\QuasarUrlShortcuts\Smash Bros\Skins\n64 Fox.url">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="References\QuasarUrlShortcuts\Thwomp Circuit.url">
+    <Content Include="References\QuasarUrlShortcuts\Smash Bros\Skins\Salt &amp; Pepper Icies.url">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="References\QuasarUrlShortcuts\Training Map.url">
+    <Content Include="References\QuasarUrlShortcuts\Smash Bros\Skins\Sonic 4 Remasterd.url">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="References\QuasarUrlShortcuts\Smash Bros\Skins\TerryChu.url">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="References\QuasarUrlShortcuts\Smash Bros\Skins\The Gief.url">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="References\QuasarUrlShortcuts\Smash Bros\Sounds\DK64.url">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="References\QuasarUrlShortcuts\Smash Bros\Sounds\Mario Series Bowser.url">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="References\QuasarUrlShortcuts\Smash Bros\Stages\Cherish Ball PKS2.url">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="References\QuasarUrlShortcuts\Smash Bros\Stages\Training Map.url">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Resource Include="References\GameFiles\SmashUltimate.txt" />
+    <Content Include="References\InternalModTypes\SmashUltimate\Fighter_Model.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="References\InternalModTypes\SmashUltimate\Music.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="References\InternalModTypes\SmashUltimate\Stage_UI.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
@@ -192,13 +264,13 @@
     <Content Include="References\images\mk8d.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="References\InternalModTypes\CSP.xml">
+    <Content Include="References\InternalModTypes\SmashUltimate\Fighter_UI.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="References\InternalModTypes\FighterVoice.xml">
+    <Content Include="References\InternalModTypes\SmashUltimate\Fighter_Voice.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="References\InternalModTypes\Skin.xml">
+    <Content Include="References\InternalModTypes\SmashUltimate\Fighter_Skin.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="References\GameData\GameData.xml">

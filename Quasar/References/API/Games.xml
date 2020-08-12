@@ -306,7 +306,7 @@
         <Name>Others</Name>
       </Category>
     </GameModType>
-    <GameModType Name="Gamefiles"  ID="4" APIName="Gamefile" LibraryFolder="SmashUltimate">
+    <GameModType Name="Game Files"  ID="4" APIName="Gamefile" LibraryFolder="SmashUltimate">
       <Category ID="-1" APICategory="0">
         <Name>All Categories</Name>
       </Category>
@@ -315,6 +315,12 @@
       </Category>
       <Category ID="1" APICategory="4887">
         <Name>Others</Name>
+      </Category>
+      <Category ID="2" APICategory="5432">
+        <Name>Animation</Name>
+      </Category>
+      <Category ID="3" APICategory="5400">
+        <Name>Modpacks</Name>
       </Category>
     </GameModType>
     <GameModType Name="GUI"  ID="5" APIName="Gui" LibraryFolder="SmashUltimate">
@@ -357,10 +363,110 @@
     </GameModType>
   </Game>
   <Game ID="2" Name="Fire Emblem Three Houses" GameName="FETH" Image="FETH.jpg">
+    <GameModType Name="All Types" ID="-1" APIName="" LibraryFolder=""/>
+    <GameModType Name="Skin" ID="1" APIName="Skin" LibraryFolder="FETH/Skins">
+      <Category ID="-1" APICategory="0">
+        <Name>All Categories</Name>
+      </Category>
+      <Category ID="0" APICategory="0">
+        <Name>Uncategorized</Name>
+      </Category>
+      <Category ID="1" APICategory="9994">
+        <Name>Others</Name>
+      </Category>
+    </GameModType>
+    <GameModType Name="Maps" ID="2" APIName="Map" LibraryFolder="FETH/Maps">
+      <Category ID="-1" APICategory="0">
+        <Name>All Categories</Name>
+      </Category>
+      <Category ID="0" APICategory="0">
+        <Name>Uncategorized</Name>
+      </Category>
+      <Category ID="1" APICategory="9994">
+        <Name>Others</Name>
+      </Category>
+    </GameModType>
+    <GameModType Name="Skin" ID="3" APIName="Sound" LibraryFolder="FETH/Sounds">
+      <Category ID="-1" APICategory="0">
+        <Name>All Categories</Name>
+      </Category>
+      <Category ID="0" APICategory="0">
+        <Name>Uncategorized</Name>
+      </Category>
+      <Category ID="1" APICategory="9994">
+        <Name>Others</Name>
+      </Category>
+    </GameModType>
+    <GameModType Name="Game Files" ID="4" APIName="Gamefile" LibraryFolder="FETH/Gamefiles">
+      <Category ID="-1" APICategory="0">
+        <Name>All Categories</Name>
+      </Category>
+      <Category ID="0" APICategory="0">
+        <Name>Uncategorized</Name>
+      </Category>
+      <Category ID="1" APICategory="9994">
+        <Name>Others</Name>
+      </Category>
+    </GameModType>
+    <GameModType Name="Gui" ID="5" APIName="Gui" LibraryFolder="FETH/Gui">
+      <Category ID="-1" APICategory="0">
+        <Name>All Categories</Name>
+      </Category>
+      <Category ID="0" APICategory="0">
+        <Name>Uncategorized</Name>
+      </Category>
+      <Category ID="1" APICategory="9994">
+        <Name>Others</Name>
+      </Category>
+    </GameModType>
   </Game>
   <Game ID="3" Name="Mario Kart 8 Deluxe" GameName="Mario Kart 8 Deluxe" Image="mk8d.jpg">
     <GameModType Name="All Types" ID="-1" APIName="" LibraryFolder=""/>
-    <GameModType Name="Maps" ID="1" APIName="Map" LibraryFolder="MarioKart8D/Maps">
+    <GameModType Name="Skin" ID="1" APIName="Skin" LibraryFolder="MarioKart8D/Skins">
+      <Category ID="-1" APICategory="0">
+        <Name>All Categories</Name>
+      </Category>
+      <Category ID="0" APICategory="0">
+        <Name>Uncategorized</Name>
+      </Category>
+      <Category ID="1" APICategory="9994">
+        <Name>Others</Name>
+      </Category>
+    </GameModType>
+    <GameModType Name="Maps" ID="2" APIName="Map" LibraryFolder="MarioKart8D/Maps">
+      <Category ID="-1" APICategory="0">
+        <Name>All Categories</Name>
+      </Category>
+      <Category ID="0" APICategory="0">
+        <Name>Uncategorized</Name>
+      </Category>
+      <Category ID="1" APICategory="9994">
+        <Name>Others</Name>
+      </Category>
+    </GameModType>
+    <GameModType Name="Skin" ID="3" APIName="Sound" LibraryFolder="MarioKart8D/Sounds">
+      <Category ID="-1" APICategory="0">
+        <Name>All Categories</Name>
+      </Category>
+      <Category ID="0" APICategory="0">
+        <Name>Uncategorized</Name>
+      </Category>
+      <Category ID="1" APICategory="9994">
+        <Name>Others</Name>
+      </Category>
+    </GameModType>
+    <GameModType Name="Game Files" ID="4" APIName="Gamefile" LibraryFolder="MarioKart8D/Gamefiles">
+      <Category ID="-1" APICategory="0">
+        <Name>All Categories</Name>
+      </Category>
+      <Category ID="0" APICategory="0">
+        <Name>Uncategorized</Name>
+      </Category>
+      <Category ID="1" APICategory="9994">
+        <Name>Others</Name>
+      </Category>
+    </GameModType>
+    <GameModType Name="Gui" ID="5" APIName="Gui" LibraryFolder="MarioKart8D/Gui">
       <Category ID="-1" APICategory="0">
         <Name>All Categories</Name>
       </Category>

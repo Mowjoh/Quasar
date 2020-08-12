@@ -51,6 +51,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_A3FD12F614A241BF801939C10F8A7B6E"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_D3F486953354489DB751F2F563B8EBFB"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -353,6 +359,26 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_A3FD12F614A241BF801939C10F8A7B6E"
+            {
+            "SourcePath" = "8:..\\Quasar\\Quasar.ico"
+            "TargetName" = "8:Quasar.ico"
+            "Tag" = "8:"
+            "Folder" = "8:_98530811AAC548198210D459D2DE76BD"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_D49F4EAAB616D93ECD3C7F9C687C5A2A"
             {
             "AssemblyRegister" = "3:1"
@@ -463,7 +489,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Quasar"
         "ProductCode" = "8:{36FA1C28-EE12-4540-B862-F7C7B0F16686}"
-        "PackageCode" = "8:{D99D7D13-E28E-4566-9FB2-8A40218C2DF8}"
+        "PackageCode" = "8:{84E1BA26-7E29-46BA-8023-69913C137D69}"
         "UpgradeCode" = "8:{33FBFAE5-777F-41E5-9E5C-1629D77AAA77}"
         "AspNetVersion" = "8:2.0.50727.0"
         "RestartWWWService" = "11:FALSE"
@@ -688,7 +714,7 @@
             "Target" = "8:_D3F486953354489DB751F2F563B8EBFB"
             "Folder" = "8:_FA8E80E1039F4EEAB16684B3CE90C7CB"
             "WorkingFolder" = "8:_98530811AAC548198210D459D2DE76BD"
-            "Icon" = "8:"
+            "Icon" = "8:_A3FD12F614A241BF801939C10F8A7B6E"
             "Feature" = "8:"
             }
             "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_78854D635BBE4FB6B8CF95A9103FB2ED"

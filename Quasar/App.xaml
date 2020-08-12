@@ -2,23 +2,113 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:Quasar"
-             xmlns:System="clr-namespace:System;assembly=mscorlib" xmlns:Controls="clr-namespace:Quasar.Controls" x:Class="Quasar.App"
+             xmlns:System="clr-namespace:System;assembly=mscorlib" xmlns:Controls="clr-namespace:Quasar.Controls" xmlns:Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2" x:Class="Quasar.App"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
 
+        <SolidColorBrush x:Key="QD0" Color="#121212"/>
+        <SolidColorBrush x:Key="QD1" Color="#1e1e1e"/>
+        <SolidColorBrush x:Key="QD2" Color="#2e2e2e"/>
+
         <System:String x:Key="HeaderTabContent">qsd</System:String>
 
-        <Style x:Key="ModListElementStyle1" TargetType="{x:Type Controls:ModListElement}">
-            <Setter Property="Template">
+        <SolidColorBrush x:Key="QuasarButtonBackground" Color="#92DEC3"/>
+        <SolidColorBrush x:Key="QuasarButtonText" Color="#000000"/>
+
+        <SolidColorBrush x:Key="QuasarBackgroundDark" Color="#262833"/>
+        <SolidColorBrush x:Key="QuasarBackgroundLight" Color="#262833"/>
+        <SolidColorBrush x:Key="QuasarBackgroundAccent" Color="#262833"/>
+        <SolidColorBrush x:Key="QuasarTextColorAccent" Color="#4acfac"/>
+        <SolidColorBrush x:Key="QuasarTextColor" Color="#ececec"/>
+
+        <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+
+
+        <Style x:Key="QuasarButton" TargetType="{x:Type Button}">
+            <Setter Property="Background" Value="{StaticResource QuasarButtonBackground}"/>
+            <Setter Property="Foreground" Value="{StaticResource QuasarButtonText}"/>
+        </Style>
+
+        <Style x:Key="QuasarLabel" TargetType="{x:Type Label}">
+            <Setter Property="Foreground" Value="{StaticResource QuasarButtonText}"/>
+            <Setter Property="FontFamily" Value="/Controls/fonts/sofiapro-light.otf"/>
+        </Style>
+
+        <Style x:Key="QuasarListView" TargetType="{x:Type ListView}">
+            <Setter Property="BorderThickness" Value="0" />
+        </Style>
+
+        <Style x:Key="QuasarComboBox" TargetType="{x:Type ComboBox}">
+            
+        </Style>
+
+        <Style x:Key="QuasarDatagrid" TargetType="{x:Type DataGrid}">
+            <Setter Property="Background" Value="Black"/>
+            <Setter Property="Foreground" Value="White"/>
+            
+        </Style>
+
+        <Style x:Key="QuasarDataGridRow" TargetType="{x:Type DataGridRow}">
+            <Setter Property="Background" Value="Black"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderBrush" Value="Pink"/>
+        </Style>
+        <Style x:Key="QuasarDataGridHeader" TargetType="{x:Type DataGridColumnHeader}">
+            <Setter Property="Background" Value="Black"/>
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
+
+
+        <ControlTemplate TargetType="Button" x:Key="NewButton">
+            <Grid Height="Auto" Width="Auto">
+                <Border Height="Auto" Width="Auto">
+                    <Path Stroke="Black" StrokeThickness="1" Fill="{StaticResource QuasarButtonBackground}">
+                        <Path.Data>
+                            <RectangleGeometry Rect="0,0,200,50" RadiusX="10" RadiusY="10" />
+                        </Path.Data>
+                    </Path>
+                </Border>
+                <Label VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{StaticResource QuasarButtonText}" FontSize="14">Content</Label>
+                
+            </Grid>
+        </ControlTemplate>
+
+        <Style TargetType="{x:Type ListBox}" x:Key="ModListStyle">
+            <Setter Property="ItemsPanel">
                 <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type Controls:ModListElement}">
-                        <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Padding="0,0,0,0" SnapsToDevicePixels="True" Margin="0,0,0,0">
-                            <ContentPresenter ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" ContentStringFormat="{TemplateBinding ContentStringFormat}" HorizontalAlignment="Stretch" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
-                        </Border>
-                    </ControlTemplate>
+                    <ItemsPanelTemplate>
+                        <WrapPanel Width="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=ActualWidth}"/>
+                    </ItemsPanelTemplate>
                 </Setter.Value>
             </Setter>
         </Style>
 
+        <Style x:Key="QuasarListBox" TargetType="{x:Type ListBox}">
+            <Setter Property="Background" Value="{DynamicResource QuasarBackgroundDark}"/>
+        </Style>
+
+        <Style TargetType="ListBox" x:Key="QuasarList">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListBoxItem">
+                        <Border BorderThickness="1" BorderBrush="Transparent" 
+                                Margin="5,0,5,0" Background="Transparent" Name="itemBorder" Padding="5,0,0,0">
+                            <ContentPresenter />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="itemBorder" Property="BorderBrush" Value="Yellow"></Setter>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="itemBorder" Property="BorderBrush" Value="Pink"></Setter>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+      
     </Application.Resources>
+
+    
 </Application>
