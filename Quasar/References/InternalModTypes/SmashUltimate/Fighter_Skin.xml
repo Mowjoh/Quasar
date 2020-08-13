@@ -6,4 +6,10 @@
     <File>*_{Characters}_{000}_*.nutexb</File>
     <Mandatory>true</Mandatory>
   </InternalModTypeFile>
+  <InternalModTypeFile ID="1">
+    <Path>{Characters}/model/*/c{S00}</Path>
+    <Destination>fighter/{Characters}/model/{Folder}/c{S00}/model.numdlb</Destination>
+    <File>model.numdlb</File>
+    <Mandatory>false</Mandatory>
+  </InternalModTypeFile>
 </InternalModType>

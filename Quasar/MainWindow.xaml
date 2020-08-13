@@ -202,8 +202,15 @@
                             <Label Content="Game Element" Foreground="{DynamicResource QuasarTextColor}" Grid.Column="0" VerticalAlignment="Center" HorizontalContentAlignment="Center" Style="{DynamicResource QuasarLabel}" />
                             <Label Content="Name" Foreground="{DynamicResource QuasarTextColor}" Grid.Column="1" VerticalAlignment="Center" HorizontalContentAlignment="Center" Style="{DynamicResource QuasarLabel}"/>
                             <Label Content="Mod Types" Foreground="{DynamicResource QuasarTextColor}" Grid.Column="2" VerticalAlignment="Center" HorizontalContentAlignment="Center" Style="{DynamicResource QuasarLabel}" />
-                            <Label Content="Association" Foreground="{DynamicResource QuasarTextColor}" Grid.Column="3" VerticalAlignment="Center" HorizontalContentAlignment="Center" Style="{DynamicResource QuasarLabel}" />
+                            <Label Content="Association" Foreground="{DynamicResource QuasarTextColor}" Grid.Column="3" Margin="0,0,20,0" VerticalAlignment="Center" HorizontalContentAlignment="Center" Style="{DynamicResource QuasarLabel}" />
 
+                            <Button x:Name="ResetSlotsButton" HorizontalAlignment="Right" Grid.Column="3" Width="40" Click="ResetSlotsButton_Click" >
+                                <Button.Template>
+                                    <ControlTemplate TargetType="{x:Type Button}">
+                                        <Path x:Name="TreeView" Stroke="White" Fill="White" Data="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11H7v-2h10v2z" Height="15" Width="15" Margin="10,0,0,0" Stretch="Uniform" ToolTip="Open File Tree" />
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>
 
                             <ListBox x:Name="AssociationGameDataList" Grid.Row="1" Grid.Column="0" ItemsSource="{Binding Path=GameDataCategories}" Style="{DynamicResource QuasarListBox}" SelectionChanged="AssociationGameDataList_SelectionChanged" Background="{DynamicResource QD1}" BorderThickness="0">
                                 <ListBox.ItemTemplate>
@@ -299,42 +306,53 @@
                                 <RowDefinition Height="1*"/>
                             </Grid.RowDefinitions>
 
-                            <Grid Grid.Row="0" Grid.Column="1" Grid.RowSpan="3" Background="DarkGray"/>
-                            <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4" Background="DarkGray"/>
+                            <Grid x:Name="BuilderSettingsGrid" Grid.Row="0" Grid.Column="0" Background="{DynamicResource QD1}">
+                                <Label Content="Select your Workspace :" HorizontalAlignment="Left" VerticalAlignment="Top" Width="173" Foreground="{DynamicResource QuasarTextColor}"/>
+                                <ComboBox x:Name="BuilderWorkspaceCombo" Margin="10,41,10,0" VerticalAlignment="Top" ItemsSource="{Binding Workspaces}" DisplayMemberPath="Name"/>
+                                <Label Content="Mod Loader :" HorizontalAlignment="Left" Margin="10,78,0,0" VerticalAlignment="Top" Width="103" Foreground="{DynamicResource QuasarTextColor}" Style="{DynamicResource QuasarLabel}"/>
+                                <ComboBox x:Name="BuilderModLoaderCombo" Margin="9,109,10,0" VerticalAlignment="Top">
+                                    <ComboBoxItem x:Name="BothOptions" Content="ARCRopolis + Ultimate Mod Manager" HorizontalAlignment="Left" Width="217"/>
+                                    <ComboBoxItem x:Name="UMMOption" Content="Ultimate Mod Manager" HorizontalAlignment="Left" Width="217"/>
+                                    <ComboBoxItem x:Name="AcropolisOption" Content="ARCRopolis" HorizontalAlignment="Left" Width="217"/>
+                                </ComboBox>
+                                <Label Content="Transfer Options" HorizontalAlignment="Left" Margin="9,161,0,0" VerticalAlignment="Top" Width="103" Foreground="{DynamicResource QuasarTextColor}" Style="{DynamicResource QuasarLabel}"/>
+                                <RadioButton Content="Local Transfer" HorizontalAlignment="Left" Margin="10,190,0,0" VerticalAlignment="Top" Foreground="{DynamicResource QuasarTextColor}" GroupName="BuildMethod" IsChecked="True"/>
+                                <RadioButton Content="Wireless Transfer (FTP)" HorizontalAlignment="Left" Margin="10,210,0,0" VerticalAlignment="Top" Foreground="{DynamicResource QuasarTextColor}" GroupName="BuildMethod" IsEnabled="False"/>
+                                <RadioButton Content="Comparative mode" HorizontalAlignment="Left" Margin="9,261,0,0" VerticalAlignment="Top" Foreground="{DynamicResource QuasarTextColor}" GroupName="FileMethod" IsEnabled="False"/>
+                                <RadioButton x:Name="BuilderWipeCreateRadio" Content="Wipe and Recreate" HorizontalAlignment="Left" Margin="10,281,0,0" VerticalAlignment="Top" Foreground="{DynamicResource QuasarTextColor}" GroupName="FileMethod" IsChecked="True"/>
+                            </Grid>
+                            <Grid x:Name="BuilderLocalBuildGrid" Grid.Column="2" Background="{DynamicResource QD1}">
 
-                            <ComboBox x:Name="BuilderSDCombo" Grid.Column="2" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top" Width="226" ItemsSource="{Binding USBDriveLabels}" >
-                            </ComboBox>
-                            <Label Content="Select your SD :" Grid.Column="2" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="103" Foreground="{DynamicResource QuasarTextColor}" Style="{DynamicResource QuasarLabel}"/>
-                            <Label HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="103" Foreground="{DynamicResource QuasarTextColor}" Style="{DynamicResource QuasarLabel}">
-                                <Label Content="Select your Workspace :" HorizontalAlignment="Left" VerticalAlignment="Top" Width="103" Foreground="{DynamicResource QuasarTextColor}"/>
-                            </Label>
-                            <ComboBox x:Name="BuilderWorkspaceCombo" Margin="10,41,10,0" VerticalAlignment="Top" ItemsSource="{Binding Workspaces}" DisplayMemberPath="Name">
-                            </ComboBox>
-                            <Label Content="Mod Loader :" HorizontalAlignment="Left" Margin="10,104,0,0" VerticalAlignment="Top" Width="103" Foreground="{DynamicResource QuasarTextColor}" Style="{DynamicResource QuasarLabel}"/>
-                            <ComboBox x:Name="BuilderModLoaderCombo" Margin="9,135,10,0" VerticalAlignment="Top">
-                                <ComboBoxItem x:Name="Main_Workspace_Copy2" Content="ARCRopolis + Ultimate Mod Manager" HorizontalAlignment="Left" Width="217"/>
-                                <ComboBoxItem x:Name="Main_Workspace_Copy1" Content="ARCRopolis" HorizontalAlignment="Left" Width="217"/>
-                                <ComboBoxItem x:Name="Main_Workspace_Copy3" Content="Ultimate Mod Manager" HorizontalAlignment="Left" Width="217"/>
-                            </ComboBox>
-                            <Label Content="Enter your Switch's IP address :" Grid.Column="3" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="179" Foreground="{DynamicResource QuasarTextColor}" Style="{DynamicResource QuasarLabel}"/>
-                            <TextBox Grid.Column="3" HorizontalAlignment="Left" Height="23" Margin="10,41,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="179" IsEnabled="False"/>
-                            <Label Content="Port :" Grid.Column="3" HorizontalAlignment="Left" Margin="194,10,0,0" VerticalAlignment="Top" Width="179" Foreground="{DynamicResource QuasarTextColor}" Style="{DynamicResource QuasarLabel}"/>
-                            <TextBox Grid.Column="3" HorizontalAlignment="Left" Height="23" Margin="194,41,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="60" IsEnabled="False"/>
-                            <Button Content="Test Connection" Grid.Column="3" HorizontalAlignment="Left" Margin="10,69,0,0" VerticalAlignment="Top" Width="244" IsEnabled="False"/>
-                            <Label Content="Statistics :" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="103" Foreground="{DynamicResource QuasarTextColor}" Grid.Row="2" Style="{DynamicResource QuasarLabel}"/>
-                            <ScrollViewer Grid.Column="2" HorizontalAlignment="Left" Margin="10,10,0,0" Grid.Row="2" VerticalAlignment="Top" Grid.ColumnSpan="2" Height="293" Width="961" >
-                                <TextBlock x:Name="BuilderLogs" TextWrapping="Wrap" Foreground="White" Background="#33000000" />
-                            </ScrollViewer>
-                            <ProgressBar Grid.Column="2" Grid.ColumnSpan="2" Value="62" Height="10" VerticalAlignment="Bottom"/>
-                            <Label Content="Build Status like Copying Mods 62/100" Grid.Column="2" HorizontalAlignment="Left" Margin="10,324,0,0" VerticalAlignment="Top" Width="935" Foreground="{DynamicResource QuasarTextColor}" Grid.ColumnSpan="2" Style="{DynamicResource QuasarLabel}"/>
-                            <RadioButton Content="Local Transfer" HorizontalAlignment="Left" Margin="10,255,0,0" VerticalAlignment="Top" Foreground="{DynamicResource QuasarTextColor}" GroupName="BuildMethod" IsChecked="True"/>
-                            <RadioButton Content="Wireless Transfer (FTP)" HorizontalAlignment="Left" Margin="10,275,0,0" VerticalAlignment="Top" Foreground="{DynamicResource QuasarTextColor}" GroupName="BuildMethod" IsEnabled="False"/>
-                            <Button Content="Save as default" Grid.Column="3" HorizontalAlignment="Left" Margin="274,54,0,0" VerticalAlignment="Top" Width="194" IsEnabled="False"/>
-                            <Button Content="Save as default" Grid.Column="2" HorizontalAlignment="Left" Margin="10,74,0,0" VerticalAlignment="Top" Width="226"/>
-                            <RadioButton Content="Comparative mode" HorizontalAlignment="Left" Margin="10,315,0,0" VerticalAlignment="Top" Foreground="{DynamicResource QuasarTextColor}" GroupName="FileMethod"/>
-                            <RadioButton Content="Wipe and Recreate" HorizontalAlignment="Left" Margin="10,335,0,0" VerticalAlignment="Top" Foreground="{DynamicResource QuasarTextColor}" GroupName="FileMethod"/>
-                            <Label Content="Transfer Options" HorizontalAlignment="Left" Margin="9,210,0,0" VerticalAlignment="Top" Width="103" Foreground="{DynamicResource QuasarTextColor}" Style="{DynamicResource QuasarLabel}"/>
-                            <Button Content="Build IT !" Grid.Column="2" HorizontalAlignment="Left" Margin="8,231,0,0" VerticalAlignment="Top" Width="133" Click="Build_Button"/>
+                                <ComboBox x:Name="BuilderSDCombo" HorizontalAlignment="Left" Margin="10,31,-8,0" VerticalAlignment="Top" Width="226" ItemsSource="{Binding USBDriveLabels}" />
+                                <Label Content="Select your SD :" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Top" Width="103" Foreground="{DynamicResource QuasarTextColor}" Style="{DynamicResource QuasarLabel}"/>
+                                <Button Content="Save as default" HorizontalAlignment="Left" Margin="10,64,-8,0" VerticalAlignment="Top" Width="226" IsEnabled="False"/>
+                                <Button Content="Build IT !" HorizontalAlignment="Left" Margin="10,283,0,0" VerticalAlignment="Top" Width="133" Click="Build_Button"/>
+                                <Button x:Name="SetupSDButton" Content="Prepare ModLoaders" HorizontalAlignment="Left" Margin="347,283,0,0" VerticalAlignment="Top" Width="133" Click="PrepareModLoaders" IsEnabled="False"/>
+                                <RadioButton x:Name="BuilderVerboseRadio" Content="Verbose Mode" HorizontalAlignment="Left" Margin="385,263,0,0" VerticalAlignment="Top" Foreground="White" GroupName="VerboseGroup" IsEnabled="False"/>
+                                <RadioButton x:Name="BuilderNonVerboseRadio" Content="Silent Mode" HorizontalAlignment="Left" Margin="398,243,0,0" VerticalAlignment="Top" Foreground="White" GroupName="VerboseGroup" IsEnabled="False"/>
+                                <CheckBox Content="Auto eject SD?" HorizontalAlignment="Left" Margin="10,263,0,0" VerticalAlignment="Top" Width="133" Foreground="White" IsEnabled="False"/>
+                                <Button x:Name="BuilderDriveRefreshButton" Content="Refresh Drive List" HorizontalAlignment="Left" Margin="241,31,0,0" VerticalAlignment="Top" Width="133" Height="22" Click="BuilderDriveRefreshButton_Click"/>
+                            </Grid>
+                            <Grid x:Name="BuilderFTPGrid" Grid.Column="3"  Background="{DynamicResource QD1}">
+                                <Label Content="Enter your Switch's IP address :" HorizontalAlignment="Left" VerticalAlignment="Top" Width="179" Foreground="{DynamicResource QuasarTextColor}" Style="{DynamicResource QuasarLabel}" Margin="10,10,0,0"/>
+                                <TextBox HorizontalAlignment="Left" Height="23" Margin="10,41,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="179" IsEnabled="False"/>
+                                <Label Content="Port :" HorizontalAlignment="Left" Margin="194,10,0,0" VerticalAlignment="Top" Width="179" Foreground="{DynamicResource QuasarTextColor}" Style="{DynamicResource QuasarLabel}"/>
+                                <TextBox HorizontalAlignment="Left" Height="23" Margin="194,41,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="60" IsEnabled="False"/>
+                                <Button Content="Test Connection" HorizontalAlignment="Left" Margin="10,69,0,0" VerticalAlignment="Top" Width="244" IsEnabled="False"/>
+                                <Button Content="Save as default" HorizontalAlignment="Left" Margin="274,54,0,0" VerticalAlignment="Top" Width="194" IsEnabled="False"/>
+                            </Grid>
+                            <Grid x:Name="BuilderStatsGrid" Grid.Row="2" Grid.Column="0" Background="{DynamicResource QD1}">
+                                <Label Content="Statistics :" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="103" Foreground="{DynamicResource QuasarTextColor}" Style="{DynamicResource QuasarLabel}"/>
+                            </Grid>
+                            <Grid x:Name="BuilderBuildGrid" Grid.ColumnSpan="3" Grid.Column="1" Grid.RowSpan="1" Grid.Row="2" Background="{DynamicResource QD1}">
+                                <ProgressBar x:Name="BuilderProgress" Value="0" Height="10" VerticalAlignment="Top" />
+                                <ScrollViewer Margin="0,10,0,0" >
+                                    <TextBlock x:Name="BuilderLogs" TextWrapping="Wrap" Foreground="White" Background="#33000000" />
+                                </ScrollViewer>
+                            </Grid>
+
+                            <Grid x:Name="SeparatorGrid" Grid.Row="0" Grid.Column="1" Grid.RowSpan="3" Background="DarkGray"/>
+                            <Grid x:Name="SeparatorGrid1" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4" Background="DarkGray"/>
                         </Grid>
                     </Grid>
                 </TabItem>

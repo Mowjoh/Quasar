@@ -545,7 +545,12 @@ namespace Quasar
             SetInterfaceWithParams();
 
             readytoSelect = true;
+            BuilderLogs.Text += "Please note that for both mod loaders I assume you have them installed.\r\n";
+            BuilderLogs.Text += "For ARCropolis, that means you have copied the files from the release to your SD\r\n";
+            BuilderLogs.Text += "For Ultimate Mod Manager, that means you have copied the homebrew and your dump is made.\r\n";
+            BuilderLogs.Text += "Thanks for reading, I'll try to make it so you don't have to copy anything later on.\r\n \r\n";
 
+            BuilderModLoaderCombo.SelectedItem = 1;
 
         }
 
@@ -1473,9 +1478,85 @@ namespace Quasar
 
         #endregion
 
-        private void Build_Button(object sender, RoutedEventArgs e)
+        private async void Build_Button(object sender, RoutedEventArgs e)
         {
-            Builder.Build("I:/", Mods, ContentMappings, CurrentWorkspace, InternalModTypes, CurrentGame, GameData, BuilderLogs );
+            bool willrun = true;
+            if(BuilderModLoaderCombo.SelectedIndex == -1)
+            {
+                BuilderLogs.Text += "Please select a modloader first\r\n";
+                willrun = false;
+            }
+            if(BuilderSDCombo.SelectedIndex == -1)
+            {
+                BuilderLogs.Text += "Please select a SD Drive first\r\n";
+                willrun = false;
+            }
+            if (willrun)
+            {
+                await Builder.SmashBuild(USBDrives[BuilderSDCombo.SelectedIndex].Name, BuilderModLoaderCombo.SelectedIndex,BuilderWipeCreateRadio.IsChecked == true ? 1 : -1, Mods, ContentMappings, CurrentWorkspace, InternalModTypes, CurrentGame, GameData, BuilderLogs, BuilderProgress);
+                BuilderProgress.Value = 100;
+                BuilderLogs.Text += "Done\r\n";
+            }
+        }
+
+        private void PrepareModLoaders(object sender, RoutedEventArgs e)
+        {
+            string source = Properties.Settings.Default.AppPath + @"\References\ModLoaders\";
+            string destination = @"I:\atmosphere\contents\01006A800016E000\romfs\skyline\plugins\libarcropolis.nro";
+            if (BuilderVerboseRadio.IsChecked == true)
+            {
+                Folderino.CheckCopyFile(source + "verbose_libarcropolis.nro", destination);
+                BuilderLogs.Text += "ARCRopolis set to Verbose Mode \r\n";
+            }
+            else
+            {
+                Folderino.CheckCopyFile(source + "silent_libarcropolis.nro", destination);
+                BuilderLogs.Text += "ARCRopolis set to Silent Mode \r\n";
+            }
+            
+        }
+
+        private void AutoEjectSD()
+        {
+
+        }
+
+        private void BuilderDriveRefreshButton_Click(object sender, RoutedEventArgs e)
+        {
+            getSDCards();
+        }
+
+        private void ResetSlotsButton_Click(object sender, RoutedEventArgs e)
+        {
+            GameDataItem SelectedCategory = (GameDataItem)AssociationGameElementDataList.SelectedItem;
+            InternalModType SelectedIMT = (InternalModType)AssociationTypeDataList.SelectedItem;
+
+            if(SelectedIMT != null)
+            {
+                int AnyCategory = SelectedCategory == null ? -1 : SelectedCategory.ID;
+                List<ContentMapping> relatedMappings = ContentMappings.FindAll(cm => cm.GameDataItemID == AnyCategory && cm.InternalModType == SelectedIMT.ID);
+                for (int i = 0; i < SelectedIMT.Slots; i++)
+                {
+                    AssociationSlots.Add(new ContentMapping() { Name = "Empty Slot n°" + (i + 1), SlotName = "FakeIMT" + (i + 1) });
+
+                }
+                foreach (ContentMapping cm in relatedMappings)
+                {
+                    AssociationContentMappings.Add(cm);
+                    List<Association> Slots = CurrentWorkspace.Associations.FindAll(asso => asso.ContentMappingID == cm.ID);
+                    if (Slots != null)
+                    {
+                        foreach (Association ass in Slots)
+                        {
+                            CurrentWorkspace.Associations.Remove(ass);
+                        }
+                    }
+                }
+            }
+
+
+            SaveWorkspaces();
+            FilterSlots();
         }
     }
     

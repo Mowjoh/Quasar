@@ -3,6 +3,7 @@ using Quasar.Quasar_Sys;
 using Quasar.XMLResources;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -16,10 +17,11 @@ namespace Quasar.Internal.FileSystem
 {
     public class Builder
     {
-        public static void Build(string _DriveFolder, List<LibraryMod> _Mods, List<ContentMapping> _ContentMappings, Workspace _Workspace, List<InternalModType> _InternalModTypes, Game _Game, List<GameData> _GameData, TextBlock _TextBlock)
+        public static async Task<int> SmashBuild(string _DriveFolder,int ModLoader,int buildMode, List<LibraryMod> _Mods, List<ContentMapping> _ContentMappings, Workspace _Workspace, List<InternalModType> _InternalModTypes, Game _Game, List<GameData> _GameData, TextBlock _TextBlock, ProgressBar _ProgressBar)
         {
-            SmashBuilder sb = new SmashBuilder(_DriveFolder, _Mods, _ContentMappings, _Workspace, _InternalModTypes, _Game, _GameData, _TextBlock);
-            sb.Build();
+            SmashBuilder sb = new SmashBuilder(_DriveFolder, ModLoader, buildMode, _Mods, _ContentMappings, _Workspace, _InternalModTypes, _Game, _GameData, _TextBlock, _ProgressBar);
+            await sb.Build();
+            return 0;
         }
     }
 
@@ -44,14 +46,16 @@ namespace Quasar.Internal.FileSystem
 
         string[] DisabledARCropolisExtensions = new string[] { "nutexb", "eff" };
 
-        
-       
-        
+
+        int ModLoader;
+
+        int BuildMode;
         
 
         TextBlock TextConsole;
+        ProgressBar PeanutButter;
 
-        public SmashBuilder(string _DriveFolder,List<LibraryMod> _Mods, List<ContentMapping> _ContentMappings, Workspace _Workspace,  List<InternalModType> _InternalModTypes, Game _Game, List<GameData> _GameData, TextBlock _TextBlock)
+        public SmashBuilder(string _DriveFolder, int _ModLoader, int buildMode, List<LibraryMod> _Mods, List<ContentMapping> _ContentMappings, Workspace _Workspace,  List<InternalModType> _InternalModTypes, Game _Game, List<GameData> _GameData, TextBlock _TextBlock, ProgressBar _ProgressBar)
         {
             BuilderDriveFolder = _DriveFolder;
             BuilderMods = _Mods;
@@ -62,183 +66,272 @@ namespace Quasar.Internal.FileSystem
             BuilderGameData = _GameData.Find(gd => gd.GameID == BuilderGame.ID);
 
             TextConsole = _TextBlock;
+            PeanutButter = _ProgressBar;
+
+            ModLoader = _ModLoader;
+            BuildMode = buildMode;
             
             UMMPath += @"Quasar - " + BuilderWorkspace.Name + @"/";
         }
 
 
-        public void Build()
+        public async Task<int> Build()
         {
-            //Looping through each association in the workspace
-            foreach(Association ass in BuilderWorkspace.Associations)
+            await Task.Run(() => ExecuteBuildTask(TextConsole,PeanutButter));
+
+            return 0;
+        }
+
+        public void ExecuteBuildTask(TextBlock TB, ProgressBar PB)
+        {
+            int ContentMappingCount = BuilderWorkspace.Associations.Count;
+            int ContentMappingCurrentCount = 0;
+            double ProgressValue = 0;
+
+            
+            try
             {
-                Write("Content Mapping ID : "+ass.ContentMappingID + " for Slot : "+ass.Slot);
-                //Get associated Content Mapping
-                ContentMapping cm = BuilderContentMappings.Find(c => c.ID == ass.ContentMappingID);
-
-                foreach (ContentMappingFile cmf in cm.Files)
+                if (BuildMode == 1)
                 {
-                    //Looping through recognized files
-                    string source = cmf.SourcePath;
-                    string extension = source.Split('.')[source.Split('.').Length - 1];
-                    string basedestination = BuilderDriveFolder;
-                    Write("Internal Mod Type File ID is `" + cmf.InternalModTypeFileID + "`");
-
-                    //Source Setup
-                    LibraryMod lm = BuilderMods.Find(l => l.ID == cm.ModID);
-                    ModFileManager mfm = new ModFileManager(lm, BuilderGame);
-                    string FinalSource = mfm.LibraryContentFolderPath + source;
-                    Write("Source is `" + FinalSource + "`");
-
-                    //Destination setup
-                    basedestination = FormatPathForLoader(basedestination, extension);
-                    Write("Base Destination is `" + basedestination + "`");
-
-                    InternalModType imt = BuilderInternalModTypes.Find(t => t.ID == cm.InternalModType);
-                    InternalModTypeFile imtf = imt.Files.Find(f => f.ID == cmf.InternalModTypeFileID);
-
-                    
-                    string FinalPath = imtf.Destination;
-
-                    if(imtf.Destination != null)
+                    string basepath = BuilderDriveFolder;
+                    if (ModLoader == 0 || ModLoader == 1)
                     {
-                        //Setting up regex to prepare final path
-                        string RegexPattern = Searchie.PrepareRegex(FinalPath.Replace(@"/", @"\"));
-                        Regex FileRegex = new Regex(RegexPattern);
-                        Regex Replacinator = new Regex("{Folder}");
-
-                        //Matching with replaceable values
-                        Match matchoum = FileRegex.Match(FinalSource);
-                        if (matchoum.Groups.Count > 0)
+                        if(Directory.Exists(basepath + UMMPath))
                         {
-                            foreach (Group group in matchoum.Groups)
+                            Directory.Delete(basepath + UMMPath, true);
+                        }
+                        Directory.CreateDirectory(basepath + UMMPath);
+                    }
+                    if (ModLoader == 0 || ModLoader == 2)
+                    {
+                        if (Directory.Exists(basepath + ARCRopolisPath))
+                        {
+                            Directory.Delete(basepath + ARCRopolisPath, true);
+                        }
+                        
+                        Directory.CreateDirectory(basepath + ARCRopolisPath);
+                    }
+                }
+
+            }catch(Exception e)
+            {
+                Write("Something went wrong with the cleanup", TB);
+                Write("Exception : " + e.Message, TB);
+            }
+
+            //Looping through each association in the workspace
+            foreach (Association ass in BuilderWorkspace.Associations)
+            {
+                ProgressValue = ((double)ContentMappingCurrentCount / (double)ContentMappingCount) * 100;
+                PB.Dispatcher.BeginInvoke((Action)(() => { PB.Value = ProgressValue; }));
+
+                try
+                {
+                    //Get associated Content Mapping
+                    ContentMapping cm = BuilderContentMappings.Find(c => c.ID == ass.ContentMappingID);
+                    InternalModType imt = BuilderInternalModTypes.Find(t => t.ID == cm.InternalModType);
+
+                    bool succeded = true;
+                    try
+                    {
+                        foreach (ContentMappingFile cmf in cm.Files)
+                        {
+                            //Looping through recognized files
+                            string source = cmf.SourcePath;
+                            string extension = source.Split('.')[source.Split('.').Length - 1];
+                            string basedestination = BuilderDriveFolder;
+
+                            //Source Setup
+                            LibraryMod lm = BuilderMods.Find(l => l.ID == cm.ModID);
+                            ModFileManager mfm = new ModFileManager(lm, BuilderGame);
+                            string FinalSource = mfm.LibraryContentFolderPath + source;
+
+                            //Destination setup
+                            basedestination = FormatPathForLoader(basedestination, extension);
+
+
+                            InternalModTypeFile imtf = imt.Files.Find(f => f.ID == cmf.InternalModTypeFileID);
+
+
+                            string FinalPath = imtf.Destination;
+
+                            if (imtf.Destination != null)
                             {
-                                if (group.Name == "folder")
+                                //Setting up regex to prepare final path
+                                string RegexPattern = Searchie.PrepareRegex(FinalPath.Replace(@"/", @"\"));
+                                Regex FileRegex = new Regex(RegexPattern);
+                                Regex Replacinator = new Regex("{Folder}");
+
+                                //Matching with replaceable values
+                                Match matchoum = FileRegex.Match(FinalSource);
+                                if (matchoum.Groups.Count > 0)
                                 {
-                                    CaptureCollection caps = group.Captures;
-                                    if(caps.Count > 1)
+                                    foreach (Group group in matchoum.Groups)
                                     {
-                                        foreach(Capture cap in caps)
+                                        if (group.Name == "folder")
                                         {
-                                            FinalPath = Replacinator.Replace(FinalPath, cap.Value, 1);
-                                        }
-                                    }
-                                    else
-                                    {
-                                        FinalPath = Replacinator.Replace(FinalPath, group.Value, 1);
-                                    }
-
-
-                                }
-                                if (group.Name.Length > 8)
-                                {
-                                    if (group.Name.Substring(0, 8) == "gamedata")
-                                    {
-                                        GameDataCategory gdc = BuilderGameData.Categories.Find(c => c.ID == imt.Association);
-                                        GameDataItem item = gdc.Items.Find(i => i.ID == cm.GameDataItemID);
-                                        CaptureCollection caps = group.Captures;
-
-                                        if (caps.Count > 1)
-                                        {
-                                            foreach (Capture cap in caps)
+                                            CaptureCollection caps = group.Captures;
+                                            if (caps.Count > 1)
                                             {
-                                                FinalPath = FinalPath.Replace("{Characters}", item.Attributes[0].Value);
+                                                foreach (Capture cap in caps)
+                                                {
+                                                    FinalPath = Replacinator.Replace(FinalPath, cap.Value, 1);
+                                                }
+                                            }
+                                            else
+                                            {
+                                                FinalPath = Replacinator.Replace(FinalPath, group.Value, 1);
+                                            }
+
+
+                                        }
+                                        if (group.Name.Length > 8)
+                                        {
+                                            if (group.Name.Substring(0, 8) == "gamedata")
+                                            {
+                                                GameDataCategory gdc = BuilderGameData.Categories.Find(c => c.ID == imt.Association);
+                                                GameDataItem item = gdc.Items.Find(i => i.ID == cm.GameDataItemID);
+                                                CaptureCollection caps = group.Captures;
+
+                                                if (caps.Count > 1)
+                                                {
+                                                    foreach (Capture cap in caps)
+                                                    {
+                                                        FinalPath = FinalPath.Replace("{Characters}", item.Attributes[0].Value);
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    FinalPath = FinalPath.Replace("{Characters}", item.Attributes[0].Value);
+                                                }
+
+
                                             }
                                         }
-                                        else
+                                        if (group.Name.Length > 4)
                                         {
-                                            FinalPath = FinalPath.Replace("{Characters}", item.Attributes[0].Value);
-                                        }
+                                            if (group.Name.Substring(0, 4) == "Slot")
+                                            {
+                                                int desiredSlot = ass.Slot;
+                                                string newvalue = "";
+                                                switch (group.Name)
+                                                {
 
-                                        
-                                    }
-                                }
-                                if (group.Name.Length > 4)
-                                {
-                                    if (group.Name.Substring(0, 4) == "Slot")
-                                    {
-                                        int desiredSlot = ass.Slot;
-                                        string newvalue = "";
-                                        switch (group.Name)
-                                        {
+                                                    case "SlotSingleDigit":
+                                                        newvalue = desiredSlot.ToString("0");
+                                                        FinalPath = FinalPath.Replace("{S0}", newvalue);
+                                                        break;
+                                                    case "SlotDoubleDigit":
+                                                        newvalue = desiredSlot.ToString("00");
+                                                        FinalPath = FinalPath.Replace("{S00}", newvalue);
+                                                        break;
+                                                    case "SlotTripleDigit":
+                                                        newvalue = desiredSlot.ToString("000");
+                                                        FinalPath = FinalPath.Replace("{S000}", newvalue);
+                                                        break;
+                                                }
 
-                                            case "SlotSingleDigit":
-                                                newvalue = desiredSlot.ToString("0");
-                                                FinalPath = FinalPath.Replace("{S0}", newvalue);
-                                                break;
-                                            case "SlotDoubleDigit":
-                                                newvalue = desiredSlot.ToString("00");
-                                                FinalPath = FinalPath.Replace("{S00}", newvalue);
-                                                break;
-                                            case "SlotTripleDigit":
-                                                newvalue = desiredSlot.ToString("000");
-                                                FinalPath = FinalPath.Replace("{S000}", newvalue);
-                                                break;
-                                        }
-                                        
-                                    }
-                                    if (group.Name.Substring(0, 5) == "Digit")
-                                    {
-                                        int desiredSlot = ass.Slot;
-                                        string newvalue = "";
-                                        switch (group.Name)
-                                        {
+                                            }
+                                            if (group.Name.Substring(0, 5) == "Digit")
+                                            {
+                                                int desiredSlot = ass.Slot;
+                                                string newvalue = "";
+                                                switch (group.Name)
+                                                {
 
-                                            case "DigitSingle":
-                                                newvalue = desiredSlot.ToString("0");
-                                                FinalPath = FinalPath.Replace("{0}", newvalue);
-                                                break;
-                                            case "DigitDouble":
-                                                newvalue = desiredSlot.ToString("00");
-                                                FinalPath = FinalPath.Replace("{00}", newvalue);
-                                                break;
-                                            case "DigitTriple":
-                                                newvalue = desiredSlot.ToString("000");
-                                                FinalPath = FinalPath.Replace("{000}", newvalue);
-                                                break;
+                                                    case "DigitSingle":
+                                                        newvalue = desiredSlot.ToString("0");
+                                                        FinalPath = FinalPath.Replace("{0}", newvalue);
+                                                        break;
+                                                    case "DigitDouble":
+                                                        newvalue = desiredSlot.ToString("00");
+                                                        FinalPath = FinalPath.Replace("{00}", newvalue);
+                                                        break;
+                                                    case "DigitTriple":
+                                                        newvalue = desiredSlot.ToString("000");
+                                                        FinalPath = FinalPath.Replace("{000}", newvalue);
+                                                        break;
+                                                }
+
+                                            }
                                         }
 
                                     }
                                 }
-
                             }
+
+
+                            string FinalDestination = basedestination + FinalPath;
+                            FinalDestination = FinalDestination.Replace(@"/", @"\");
+                            Folderino.CheckCopyFile(@FinalSource, @FinalDestination);
+
+
                         }
                     }
-
-                   
-                    string FinalDestination = basedestination + FinalPath;
-                    FinalDestination = FinalDestination.Replace(@"/", @"\");
-                    Write("Destination is `" + FinalDestination + "`");
-
-                    Write("Attempt to copy file");
-                    Folderino.CheckCopyFile(@FinalSource, @FinalDestination);
-                    Write("File Copied");
+                    catch(Exception e)
+                    {
+                        succeded = false;
+                        Write("Something went wrong trying to process Content Files", TB);
+                        Write("Exception : " + e.Message, TB);
+                    }
 
 
+                    if (succeded)
+                    {
+                        Write("Finished with : " + cm.Name + " of Type : " + imt.Name + " Into Slot " + (ass.Slot + 1), TB);
+                    }
+                    else
+                    {
+                        Write("Aborted : " + cm.Name + " of Type : " + imt.Name + " Into Slot " + (ass.Slot + 1), TB);
+                    }
+                    
+                    ContentMappingCurrentCount++;
                 }
-                Write("");
+                catch(Exception e)
+                {
+                    Write("Something went wrong with finding the right Content", TB);
+                    Write("Exception : "+e.Message, TB);
+                }
+                
+
+                
+
+                
             }
         }
 
-        public void Write(string s)
+        public void Write(string s, TextBlock TB)
         {
-            TextConsole.Text += s + "\r\n";
+            TB.Dispatcher.BeginInvoke((Action)(() => { TB.Text += s + "\r\n"; }));
         }
 
         public string FormatPathForLoader(string _BasePath, string _FileExt)
         {
             string PreparedPath = _BasePath;
-
-            if (DisabledARCropolisExtensions.Contains(_FileExt))
+            if(ModLoader == 0)
+            {
+                if (DisabledARCropolisExtensions.Contains(_FileExt))
+                {
+                    PreparedPath += UMMPath;
+                }
+                else
+                {
+                    PreparedPath += ARCRopolisPath;
+                }
+            }
+            if(ModLoader == 1)
             {
                 PreparedPath += UMMPath;
             }
-            else
+            if(ModLoader == 2)
             {
                 PreparedPath += ARCRopolisPath;
             }
+            
 
             return PreparedPath;
         }
+
+        
     }
 }
