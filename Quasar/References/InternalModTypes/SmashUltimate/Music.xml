@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <InternalModType xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="Music" Filename="SmashUltimate/Music" ID="8" GameID="1" Association="3" Slots="1">
   <InternalModTypeFile ID="0">
-    <Path>bgm</Path>
-    <File>*.nus3audio</File>
+    <Path />
+    <Destination>stream/{Music}.nus3audio</Destination>
+    <File>{Music}.nus3audio</File>
     <Mandatory>true</Mandatory>
   </InternalModTypeFile>
 </InternalModType>

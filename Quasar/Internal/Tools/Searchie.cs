@@ -134,7 +134,7 @@ namespace Quasar.Quasar_Sys
             //output = output.Replace(@"_", "\\_");
 
             // Replacing the any tag
-            output = output.Replace(@"*", @"([A-Za-z0-9\_\-]*)");
+            output = output.Replace(@"*", @"([^\\]*)");
 
             //Replacing the folder tag
             output = output.Replace(@"{Folder}", @"(?'folder'[^\\]*)");
@@ -143,7 +143,7 @@ namespace Quasar.Quasar_Sys
             //Replacing game data
             output = output.Replace(@"{Characters}", @"(?'gamedata_characters'[^\_\\]*)");
             output = output.Replace(@"{Stages}", @"(?'gamedata_stages'[A-Za-z0-9\_\-]*)");
-            output = output.Replace(@"{Music}", @"(?'gamedata_music'[A-Za-z0-9\_\-]*)");
+            output = output.Replace(@"{Music}", @"(?'gamedata_music'[^\\\/]*)");
 
             //Replacing backslashes for regex interpretation
             output = output.Replace(@"\", @"\\");

@@ -1,4 +1,5 @@
-﻿using Quasar.FileSystem;
+﻿using FluentFTP;
+using Quasar.FileSystem;
 using Quasar.Quasar_Sys;
 using Quasar.XMLResources;
 using System;
@@ -17,9 +18,9 @@ namespace Quasar.Internal.FileSystem
 {
     public class Builder
     {
-        public static async Task<int> SmashBuild(string _DriveFolder,int ModLoader,int buildMode, List<LibraryMod> _Mods, List<ContentMapping> _ContentMappings, Workspace _Workspace, List<InternalModType> _InternalModTypes, Game _Game, List<GameData> _GameData, TextBlock _TextBlock, ProgressBar _ProgressBar)
+        public static async Task<int> SmashBuild(string _DriveFolder,int ModLoader, string ftp,int buildMode, List<LibraryMod> _Mods, List<ContentMapping> _ContentMappings, Workspace _Workspace, List<InternalModType> _InternalModTypes, Game _Game, List<GameData> _GameData, TextBlock _TextBlock, ProgressBar _ProgressBar)
         {
-            SmashBuilder sb = new SmashBuilder(_DriveFolder, ModLoader, buildMode, _Mods, _ContentMappings, _Workspace, _InternalModTypes, _Game, _GameData, _TextBlock, _ProgressBar);
+            SmashBuilder sb = new SmashBuilder(_DriveFolder, ModLoader, buildMode, ftp, _Mods,  _ContentMappings, _Workspace, _InternalModTypes, _Game, _GameData, _TextBlock, _ProgressBar);
             await sb.Build();
             return 0;
         }
@@ -55,7 +56,9 @@ namespace Quasar.Internal.FileSystem
         TextBlock TextConsole;
         ProgressBar PeanutButter;
 
-        public SmashBuilder(string _DriveFolder, int _ModLoader, int buildMode, List<LibraryMod> _Mods, List<ContentMapping> _ContentMappings, Workspace _Workspace,  List<InternalModType> _InternalModTypes, Game _Game, List<GameData> _GameData, TextBlock _TextBlock, ProgressBar _ProgressBar)
+        string BuilderFTP;
+
+        public SmashBuilder(string _DriveFolder, int _ModLoader, int buildMode, string ftp, List<LibraryMod> _Mods, List<ContentMapping> _ContentMappings, Workspace _Workspace,  List<InternalModType> _InternalModTypes, Game _Game, List<GameData> _GameData, TextBlock _TextBlock, ProgressBar _ProgressBar)
         {
             BuilderDriveFolder = _DriveFolder;
             BuilderMods = _Mods;
@@ -70,6 +73,7 @@ namespace Quasar.Internal.FileSystem
 
             ModLoader = _ModLoader;
             BuildMode = buildMode;
+            BuilderFTP = ftp;
             
             UMMPath += @"Quasar - " + BuilderWorkspace.Name + @"/";
         }
@@ -88,28 +92,33 @@ namespace Quasar.Internal.FileSystem
             int ContentMappingCurrentCount = 0;
             double ProgressValue = 0;
 
+            bool FTP = false;
+            FtpClient FTPClient = null;
+            if(BuilderFTP != "")
+            {
+                FTP = true;
+                string address = BuilderFTP.Split(':')[0];
+                FTPClient = new FtpClient(BuilderFTP.Split(':')[0]);
+                FTPClient.Port = Int32.Parse(BuilderFTP.Split(':')[1]);
+
+                FTPClient.Connect();
+            }
+            
             
             try
             {
                 if (BuildMode == 1)
                 {
-                    string basepath = BuilderDriveFolder;
+                    Write("Wiping mod folders", TB);
+                    PB.Dispatcher.BeginInvoke((Action)(() => { PB.IsIndeterminate = true; }));
+                    string basepath = FTP ? "" : BuilderDriveFolder;
                     if (ModLoader == 0 || ModLoader == 1)
                     {
-                        if(Directory.Exists(basepath + UMMPath))
-                        {
-                            Directory.Delete(basepath + UMMPath, true);
-                        }
-                        Directory.CreateDirectory(basepath + UMMPath);
+                        BuilderDelete(basepath + UMMPath, FTP, FTPClient);
                     }
                     if (ModLoader == 0 || ModLoader == 2)
                     {
-                        if (Directory.Exists(basepath + ARCRopolisPath))
-                        {
-                            Directory.Delete(basepath + ARCRopolisPath, true);
-                        }
-                        
-                        Directory.CreateDirectory(basepath + ARCRopolisPath);
+                        BuilderDelete(basepath + UMMPath, FTP, FTPClient);
                     }
                 }
 
@@ -119,6 +128,7 @@ namespace Quasar.Internal.FileSystem
                 Write("Exception : " + e.Message, TB);
             }
 
+            PB.Dispatcher.BeginInvoke((Action)(() => { PB.IsIndeterminate = false; }));
             //Looping through each association in the workspace
             foreach (Association ass in BuilderWorkspace.Associations)
             {
@@ -139,7 +149,7 @@ namespace Quasar.Internal.FileSystem
                             //Looping through recognized files
                             string source = cmf.SourcePath;
                             string extension = source.Split('.')[source.Split('.').Length - 1];
-                            string basedestination = BuilderDriveFolder;
+                            string basedestination = "";
 
                             //Source Setup
                             LibraryMod lm = BuilderMods.Find(l => l.ID == cm.ModID);
@@ -198,11 +208,13 @@ namespace Quasar.Internal.FileSystem
                                                     foreach (Capture cap in caps)
                                                     {
                                                         FinalPath = FinalPath.Replace("{Characters}", item.Attributes[0].Value);
+                                                        FinalPath = FinalPath.Replace("{Music}", item.Attributes[0].Value);
                                                     }
                                                 }
                                                 else
                                                 {
                                                     FinalPath = FinalPath.Replace("{Characters}", item.Attributes[0].Value);
+                                                    FinalPath = FinalPath.Replace("{Music}", item.Attributes[0].Value);
                                                 }
 
 
@@ -263,9 +275,7 @@ namespace Quasar.Internal.FileSystem
 
                             string FinalDestination = basedestination + FinalPath;
                             FinalDestination = FinalDestination.Replace(@"/", @"\");
-                            Folderino.CheckCopyFile(@FinalSource, @FinalDestination);
-
-
+                            BuilderCopy(FinalSource, FinalDestination, FTP, FTPClient);
                         }
                     }
                     catch(Exception e)
@@ -273,6 +283,7 @@ namespace Quasar.Internal.FileSystem
                         succeded = false;
                         Write("Something went wrong trying to process Content Files", TB);
                         Write("Exception : " + e.Message, TB);
+                        Write("Aborted : " + cm.Name + " of Type : " + imt.Name + " Into Slot " + (ass.Slot + 1), TB);
                     }
 
 
@@ -292,11 +303,6 @@ namespace Quasar.Internal.FileSystem
                     Write("Something went wrong with finding the right Content", TB);
                     Write("Exception : "+e.Message, TB);
                 }
-                
-
-                
-
-                
             }
         }
 
@@ -332,6 +338,36 @@ namespace Quasar.Internal.FileSystem
             return PreparedPath;
         }
 
-        
+        public void BuilderCopy(string source, string destination, Boolean FTP, FtpClient client = null)
+        {
+            if (FTP)
+            {
+                if(client != null)
+                {
+                    string filename = destination.Split('\\')[destination.Split('\\').Length-1];
+                    string destinationWithoutFile = destination.Substring(0,destination.Length - filename.Length);
+                    client.CreateDirectory(destinationWithoutFile);
+
+                    client.UploadFile(source, destination);
+                }
+            }
+            else
+            {
+                Folderino.CheckCopyFile(source, BuilderDriveFolder+destination);
+            }
+        }
+        public void BuilderDelete(string destination, Boolean FTP, FtpClient client = null)
+        {
+            if (FTP)
+            {
+                client.DeleteDirectory(destination);
+                client.CreateDirectory(destination);
+            }
+            else
+            {
+                Directory.Delete(destination, true);
+                Directory.CreateDirectory(destination);
+            }
+        }
     }
 }

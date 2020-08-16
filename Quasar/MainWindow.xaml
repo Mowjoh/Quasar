@@ -316,8 +316,8 @@
                                     <ComboBoxItem x:Name="AcropolisOption" Content="ARCRopolis" HorizontalAlignment="Left" Width="217"/>
                                 </ComboBox>
                                 <Label Content="Transfer Options" HorizontalAlignment="Left" Margin="9,161,0,0" VerticalAlignment="Top" Width="103" Foreground="{DynamicResource QuasarTextColor}" Style="{DynamicResource QuasarLabel}"/>
-                                <RadioButton Content="Local Transfer" HorizontalAlignment="Left" Margin="10,190,0,0" VerticalAlignment="Top" Foreground="{DynamicResource QuasarTextColor}" GroupName="BuildMethod" IsChecked="True"/>
-                                <RadioButton Content="Wireless Transfer (FTP)" HorizontalAlignment="Left" Margin="10,210,0,0" VerticalAlignment="Top" Foreground="{DynamicResource QuasarTextColor}" GroupName="BuildMethod" IsEnabled="False"/>
+                                <RadioButton x:Name="BuilderLocalRadio" Content="Local Transfer" HorizontalAlignment="Left" Margin="10,190,0,0" VerticalAlignment="Top" Foreground="{DynamicResource QuasarTextColor}" GroupName="BuildMethod" IsChecked="True"/>
+                                <RadioButton x:Name="BuilderFTPRadio" Content="Wireless Transfer (FTP)" HorizontalAlignment="Left" Margin="10,210,0,0" VerticalAlignment="Top" Foreground="{DynamicResource QuasarTextColor}" GroupName="BuildMethod"/>
                                 <RadioButton Content="Comparative mode" HorizontalAlignment="Left" Margin="9,261,0,0" VerticalAlignment="Top" Foreground="{DynamicResource QuasarTextColor}" GroupName="FileMethod" IsEnabled="False"/>
                                 <RadioButton x:Name="BuilderWipeCreateRadio" Content="Wipe and Recreate" HorizontalAlignment="Left" Margin="10,281,0,0" VerticalAlignment="Top" Foreground="{DynamicResource QuasarTextColor}" GroupName="FileMethod" IsChecked="True"/>
                             </Grid>
@@ -335,10 +335,10 @@
                             </Grid>
                             <Grid x:Name="BuilderFTPGrid" Grid.Column="3"  Background="{DynamicResource QD1}">
                                 <Label Content="Enter your Switch's IP address :" HorizontalAlignment="Left" VerticalAlignment="Top" Width="179" Foreground="{DynamicResource QuasarTextColor}" Style="{DynamicResource QuasarLabel}" Margin="10,10,0,0"/>
-                                <TextBox HorizontalAlignment="Left" Height="23" Margin="10,41,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="179" IsEnabled="False"/>
+                                <TextBox x:Name="BuildFTPAddress" HorizontalAlignment="Left" Height="23" Margin="10,41,0,0" TextWrapping="Wrap" Text="192.168.0.30" VerticalAlignment="Top" Width="179"/>
                                 <Label Content="Port :" HorizontalAlignment="Left" Margin="194,10,0,0" VerticalAlignment="Top" Width="179" Foreground="{DynamicResource QuasarTextColor}" Style="{DynamicResource QuasarLabel}"/>
-                                <TextBox HorizontalAlignment="Left" Height="23" Margin="194,41,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="60" IsEnabled="False"/>
-                                <Button Content="Test Connection" HorizontalAlignment="Left" Margin="10,69,0,0" VerticalAlignment="Top" Width="244" IsEnabled="False"/>
+                                <TextBox x:Name="BuildFTPPort" HorizontalAlignment="Left" Height="23" Margin="194,41,0,0" TextWrapping="Wrap" Text="5000" VerticalAlignment="Top" Width="60"/>
+                                <Button Content="Test Connection" HorizontalAlignment="Left" Margin="10,69,0,0" VerticalAlignment="Top" Width="244" Click="Button_Click"/>
                                 <Button Content="Save as default" HorizontalAlignment="Left" Margin="274,54,0,0" VerticalAlignment="Top" Width="194" IsEnabled="False"/>
                             </Grid>
                             <Grid x:Name="BuilderStatsGrid" Grid.Row="2" Grid.Column="0" Background="{DynamicResource QD1}">

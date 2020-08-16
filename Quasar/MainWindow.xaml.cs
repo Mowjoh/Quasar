@@ -24,6 +24,8 @@ using static Quasar.XMLResources.AssociationXML;
 using System.Windows.Input;
 using Point = System.Windows.Point;
 using Quasar.Internal.FileSystem;
+using FluentFTP;
+using System.Text.RegularExpressions;
 
 namespace Quasar
 {
@@ -1252,6 +1254,7 @@ namespace Quasar
                 WorkspaceList.Add(new QuasarSettingComboData() { Name = w.Name, Value = w.ID.ToString()});
             }
 
+            SettingsList.Add(new QuasarSetting(new QuasarSettingData() { SettingName = "Quasar Version : "+Properties.Settings.Default.AppVersion, SettingCheck = true }));
             SettingsList.Add(new QuasarSetting(new QuasarSettingData() { SettingName = "Language", SettingCheck = false, Data = list }));
             SettingsList.Add(new QuasarSetting(new QuasarSettingData() { SettingName = "Workspace", SettingCheck = false, Data = WorkspaceList }));
             SettingsList.Add(new QuasarSetting(new QuasarSettingData() { SettingName = "Auto Slots", SettingCheck = true}));
@@ -1481,19 +1484,41 @@ namespace Quasar
         private async void Build_Button(object sender, RoutedEventArgs e)
         {
             bool willrun = true;
-            if(BuilderModLoaderCombo.SelectedIndex == -1)
+            string address = BuildFTPAddress.Text;
+            string port = BuildFTPPort.Text;
+
+            //Checking ModLoader
+            if (BuilderModLoaderCombo.SelectedIndex == -1)
             {
                 BuilderLogs.Text += "Please select a modloader first\r\n";
                 willrun = false;
             }
-            if(BuilderSDCombo.SelectedIndex == -1)
+
+            //Checking FTP
+            if (BuilderFTPRadio.IsChecked == true)
+            {
+                if (!validateIP() || !validatePort())
+                {
+                    willrun = false;
+                }
+            }
+            
+            //Checking Local Transfer
+            if(BuilderSDCombo.SelectedIndex == -1 && BuilderLocalRadio.IsChecked == true)
             {
                 BuilderLogs.Text += "Please select a SD Drive first\r\n";
                 willrun = false;
             }
             if (willrun)
             {
-                await Builder.SmashBuild(USBDrives[BuilderSDCombo.SelectedIndex].Name, BuilderModLoaderCombo.SelectedIndex,BuilderWipeCreateRadio.IsChecked == true ? 1 : -1, Mods, ContentMappings, CurrentWorkspace, InternalModTypes, CurrentGame, GameData, BuilderLogs, BuilderProgress);
+                string pathname = BuilderSDCombo.SelectedIndex == -1 ? "" : USBDrives[BuilderSDCombo.SelectedIndex].Name;
+                string ftpPath = address + ":" + port;
+                if (BuilderLocalRadio.IsChecked == true)
+                {
+                    ftpPath = "";
+                }
+
+                await Builder.SmashBuild(pathname, BuilderModLoaderCombo.SelectedIndex, ftpPath, BuilderWipeCreateRadio.IsChecked == true ? 1 : -1, Mods, ContentMappings, CurrentWorkspace, InternalModTypes, CurrentGame, GameData, BuilderLogs, BuilderProgress);
                 BuilderProgress.Value = 100;
                 BuilderLogs.Text += "Done\r\n";
             }
@@ -1558,6 +1583,62 @@ namespace Quasar
             SaveWorkspaces();
             FilterSlots();
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            string address = BuildFTPAddress.Text;
+            string port = BuildFTPPort.Text;
+
+            bool ShouldConnect = true;
+            if (validateIP() && validatePort())
+            {
+                FtpClient client = new FtpClient(address);
+                client.Port = Int32.Parse(port);
+                client.Connect();
+
+
+                if (client.IsConnected)
+                {
+                    BuilderLogs.Text += "FTP Connection Successful \r\n";
+                }
+            }
+
+        }
+       
+        private bool validateIP()
+        {
+            string address = BuildFTPAddress.Text;
+            Regex IP = new Regex(@"\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}");
+
+            bool result = IP.IsMatch(address);
+            if (!result)
+            {
+                BuilderLogs.Text += "Please enter a valid IP\r\n";
+            }
+
+            return result;
+        }
+
+        private bool validatePort()
+        {
+            string port = BuildFTPPort.Text;
+            int val;
+
+            bool result = Int32.TryParse(port, out val);
+
+            if (result)
+            {
+                result = val > 0 && val < 70000;
+            }
+
+            if (!result)
+            {
+                BuilderLogs.Text += "Please enter a valid Port\r\n";
+            }
+            return result;
+        }
+
+
     }
     
 }
