@@ -3,7 +3,7 @@ Mod downloader, manager, "installer" for Super Smash Bros Ultimate and later on,
 
 ## Getting Started
 
-Getting Started with Quasar should be pretty straight-forward. The only step I would recommend doing before using it is making a backup of your mod folders on your SD.
+Getting Started with Quasar should be pretty straight-forward. The only step I would recommend doing before using it is making a backup of your mod folders on your Switch's SD.
 This will allow you to revert easily to your mods before you used Quasar, if that's your wish.
 
 ### Prerequisites
