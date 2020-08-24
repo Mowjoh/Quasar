@@ -1,5 +1,5 @@
 # Quasar
-Mod downloader, manager, "installer" for Super Smash Bros Ultimate and later on, other Switch games
+Mod downloader, manager, updater and workspace-building tool for Super Smash Bros Ultimate and later on, other Switch games
 ![Content](https://user-images.githubusercontent.com/12461420/91087430-b532d100-e650-11ea-9446-d416923546a7.png)
 
 ## Getting Started
