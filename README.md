@@ -20,8 +20,10 @@ Install the provided .msi in the releases section
 
 Quasar is an app that relies on the website https://gamebanana.com  
 To download mods for use, please head to the website and look for Super Smash Bros. Ultimate mods.
-When you browse the page, it will display a Quasar Download link.
-Click it and the mod will be downloaded by Quasar and ready for use.
+When you browse the page, it will display a Quasar Download link.  
+![Content](https://user-images.githubusercontent.com/12461420/91087981-997bfa80-e651-11ea-97e6-c5ddb713701a.png)
+
+Click it and the mod will be downloaded by Quasar and ready for use.  
 
 If you want additionnal info, please visit the included [wiki](https://github.com/Mowjoh/Quasar/wiki).
 
