@@ -64,6 +64,21 @@ namespace Quasar.XMLResources
             return categories;
         }
 
+        public static List<GameBuilder> GetBuilders()
+        {
+            List<GameBuilder> Builders = null;
+
+            XmlSerializer serializer = new XmlSerializer(typeof(GameBuilders));
+
+            using (FileStream fileStream = new FileStream(Properties.Settings.Default.DefaultDir + @"\References\Builder\Builders.xml", FileMode.Open))
+            {
+                GameBuilders result = (GameBuilders)serializer.Deserialize(fileStream);
+                Builders = result.Builders;
+            }
+
+            return Builders;
+        }
+
         //Saves
         public static void SaveInternalModType(InternalModType type)
         {
@@ -79,6 +94,7 @@ namespace Quasar.XMLResources
 
     }
 
+    #region APIGames
     [XmlRoot("Games")]
     public class GameList
     {
@@ -100,7 +116,7 @@ namespace Quasar.XMLResources
         [XmlAttribute("Image")]
         public string Image { get; set; }
 
-        public string ImagePath { get; set; }        
+        public string ImagePath { get; set; }
 
         [XmlElement("GameModType")]
         public List<GameModType> GameModTypes { get; set; }
@@ -108,7 +124,7 @@ namespace Quasar.XMLResources
 
     public class GameModType
     {
-        
+
         [XmlAttribute("ID")]
         public int ID { get; set; }
 
@@ -125,7 +141,6 @@ namespace Quasar.XMLResources
         public List<Category> Categories { get; set; }
 
     }
-
     public class Category
     {
         [XmlAttribute("ID")]
@@ -149,7 +164,9 @@ namespace Quasar.XMLResources
 
         }
     }
+    #endregion
 
+    #region InternalModTypes
     [XmlRoot("InternalModType")]
     public class InternalModType
     {
@@ -180,14 +197,17 @@ namespace Quasar.XMLResources
         [XmlAttribute("ID")]
         public int ID { get; set; }
 
-        [XmlElement("Path")]
-        public string Path { get; set; }
+        [XmlElement("SourcePath")]
+        public string SourcePath { get; set; }
 
-        [XmlElement("Destination")]
-        public string Destination { get; set; }
+        [XmlElement("SourceFile")]
+        public string SourceFile { get; set; }
 
-        [XmlElement("File")]
-        public string File { get; set; }
+        [XmlElement("BuilderFolder")]
+        public List<BuilderFolder> Destinations { get; set; }
+
+        [XmlElement("BuilderFile")]
+        public List<BuilderFile> Files { get; set; }
 
         [XmlElement("Mandatory")]
         public bool Mandatory { get; set; }
@@ -198,7 +218,26 @@ namespace Quasar.XMLResources
         }
     }
 
+    public class BuilderFile
+    {
+        [XmlAttribute("BuilderID")]
+        public int BuilderID { get; set; }
 
+        [XmlAttribute("Path")]
+        public string Path { get; set; }
+    }
+
+    public class BuilderFolder
+    {
+        [XmlAttribute("BuilderID")]
+        public int BuilderID { get; set; }
+
+        [XmlAttribute("Path")]
+        public string Path { get; set; }
+    }
+    #endregion
+
+    #region GameData
     [XmlRoot("GamesData")]
     public class GamesData
     {
@@ -249,5 +288,34 @@ namespace Quasar.XMLResources
         [XmlElement("Value")]
         public string Value { get; set; }
     }
+    #endregion
 
+    #region Builders
+    [XmlRoot("GameBuilders")]
+    public class GameBuilders
+    {
+        [XmlElement("GameBuilder")]
+        public List<GameBuilder> Builders { get; set; }
+    }
+
+    
+    public class GameBuilder
+    {
+        [XmlAttribute("ID")]
+        public int ID { get; set; }
+
+        [XmlAttribute("GameID")]
+        public int GameID { get; set; }
+
+        [XmlAttribute("Name")]
+        public string Name { get; set; }
+
+        [XmlAttribute("BasePath")]
+        public string BasePath { get; set; }
+
+        [XmlAttribute("InstallPath")]
+        public string InstallPath { get; set; }
+    }
+
+    #endregion
 }

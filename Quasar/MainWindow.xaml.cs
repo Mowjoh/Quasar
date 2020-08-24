@@ -26,6 +26,7 @@ using Point = System.Windows.Point;
 using Quasar.Internal.FileSystem;
 using FluentFTP;
 using System.Text.RegularExpressions;
+using System.Net;
 
 namespace Quasar
 {
@@ -279,6 +280,17 @@ namespace Quasar
         #endregion
 
         #region Build
+        private List<GameBuilder> _GameBuilders;
+        public List<GameBuilder> GameBuilders
+        {
+            get => _GameBuilders;
+            set
+            {
+                _GameBuilders = value;
+                OnPropertyChanged("GameBuilders");
+            }
+        }
+
         private ObservableCollection<DriveInfo> _USBDrives;
         public ObservableCollection<DriveInfo> USBDrives
         {
@@ -625,6 +637,7 @@ namespace Quasar
             Games = XML.GetGames();
             InternalModTypes = XML.GetInternalModTypes();
             GameData = XML.GetGameData();
+            GameBuilders = XML.GetBuilders();
         }
 
         #endregion
@@ -741,37 +754,54 @@ namespace Quasar
 
         public void Handler_TrashRequested(object sender, EventArgs e)
         {
-            ModListItem item = (ModListItem)sender;
-
-            //Removing from ContentMappings
-            List<ContentMapping> relatedMappings = ContentMappings.FindAll(cm => cm.ModID == item.LocalMod.ID);
-            foreach (ContentMapping cm in relatedMappings)
+            Boolean proceed = false;
+            if (!Properties.Settings.Default.SupressModDeletion)
             {
-                List<Association> associations = CurrentWorkspace.Associations.FindAll(ass => ass.ContentMappingID == cm.ID);
-                if(associations != null)
+                MessageBoxResult result = MessageBox.Show("Are you sure you want to delete this mod ?", "Mod Deletion", MessageBoxButton.YesNo);
+                switch (result)
                 {
-                    foreach(Association ass in associations)
-                    {
-                        CurrentWorkspace.Associations.Remove(ass);
-                    }
+                    case MessageBoxResult.Yes:
+                        proceed = true;
+                        break;
+                    case MessageBoxResult.No:
+                        break;
                 }
-                ContentMappings.Remove(cm);
             }
+            
 
-            //Refreshing Contents
-            ListContents = LoadContentMappings();
+            if (proceed || Properties.Settings.Default.SupressModDeletion)
+            {
+                ModListItem item = (ModListItem)sender;
 
-            //Removing from Library
-            Mods.Remove(item.LocalMod);
+                //Removing from ContentMappings
+                List<ContentMapping> relatedMappings = ContentMappings.FindAll(cm => cm.ModID == item.LocalMod.ID);
+                foreach (ContentMapping cm in relatedMappings)
+                {
+                    List<Association> associations = CurrentWorkspace.Associations.FindAll(ass => ass.ContentMappingID == cm.ID);
+                    if (associations != null)
+                    {
+                        foreach (Association ass in associations)
+                        {
+                            CurrentWorkspace.Associations.Remove(ass);
+                        }
+                    }
+                    ContentMappings.Remove(cm);
+                }
 
-            //Refreshing Mods
-            ListMods = LoadLibraryMods();
+                //Refreshing Contents
+                ListContents = LoadContentMappings();
 
-            //Writing changes
-            Library.WriteModListFile(Mods);
-            ContentXML.WriteContentMappingListFile(ContentMappings);
-            SaveWorkspaces();
+                //Removing from Library
+                Mods.Remove(item.LocalMod);
 
+                //Refreshing Mods
+                ListMods = LoadLibraryMods();
+
+                //Writing changes
+                Library.WriteModListFile(Mods);
+                ContentXML.WriteContentMappingListFile(ContentMappings);
+                SaveWorkspaces();
+            }
         }
 
 
@@ -783,6 +813,8 @@ namespace Quasar
         {
             CurrentGameApiModType = (GameModType)ManagementAPITypeSelect.SelectedItem;
             FilterModList(CurrentGameApiModType != null ? CurrentGameApiModType.ID : -1, -1, CurrentGame.ID);
+            CollectionViewSource cvs = (CollectionViewSource)this.Resources["ModManagementFilterCollection"];
+            cvs.View.Refresh();
         }
 
         //Refreshes the content of the mod list based on mod type and mod category
@@ -816,10 +848,6 @@ namespace Quasar
             CollectionViewSource cvs = (CollectionViewSource)this.Resources["CollectionOMods"];
             cvs.View.Refresh();
         }
-
-
-
-
 
         #endregion
 
@@ -859,7 +887,7 @@ namespace Quasar
 
         private void FilterContentList(int _IMT, int _GDC, int _Game)
         {
-            foreach (ContentListItem cli in ContentListView.Items)
+            foreach (ContentListItem cli in ListContents)
             {
                 bool AnyIMT = _IMT == -1;
                 bool AnyGDC = _GDC == -1;
@@ -873,6 +901,9 @@ namespace Quasar
                 {
                     cli.Filter = true;
                 }
+
+                CollectionViewSource cvs = (CollectionViewSource)this.Resources["CollectionOContents"];
+                cvs.View.Refresh();
             }
         }
 
@@ -1005,6 +1036,39 @@ namespace Quasar
             SaveWorkspaces();
         }
 
+        private void ResetSlotsButton_Click(object sender, RoutedEventArgs e)
+        {
+            GameDataItem SelectedCategory = (GameDataItem)AssociationGameElementDataList.SelectedItem;
+            InternalModType SelectedIMT = (InternalModType)AssociationTypeDataList.SelectedItem;
+
+            if (SelectedIMT != null)
+            {
+                int AnyCategory = SelectedCategory == null ? -1 : SelectedCategory.ID;
+                List<ContentMapping> relatedMappings = ContentMappings.FindAll(cm => cm.GameDataItemID == AnyCategory && cm.InternalModType == SelectedIMT.ID);
+                for (int i = 0; i < SelectedIMT.Slots; i++)
+                {
+                    AssociationSlots.Add(new ContentMapping() { Name = "Empty Slot n°" + (i + 1), SlotName = "FakeIMT" + (i + 1) });
+
+                }
+                foreach (ContentMapping cm in relatedMappings)
+                {
+                    AssociationContentMappings.Add(cm);
+                    List<Association> Slots = CurrentWorkspace.Associations.FindAll(asso => asso.ContentMappingID == cm.ID);
+                    if (Slots != null)
+                    {
+                        foreach (Association ass in Slots)
+                        {
+                            CurrentWorkspace.Associations.Remove(ass);
+                        }
+                    }
+                }
+            }
+
+
+            SaveWorkspaces();
+            FilterSlots();
+        }
+
         #region Drag Drop
         private void ItemSourceListBox_DragEnter(object sender, DragEventArgs e)
         {
@@ -1078,7 +1142,6 @@ namespace Quasar
             //Resetting info
             IMTFileText.Text = "";
             IMTPathText.Text = "";
-            IMTDestinationText.Text = "";
             IMTMandatory.IsChecked = false;
             IMTMandatory.IsEnabled = false;
             IMTFileText.IsEnabled = false;
@@ -1097,13 +1160,12 @@ namespace Quasar
             InternalModTypeFile file = (InternalModTypeFile)selectedGrid.SelectedItem;
             if (file != null)
             {
-                IMTPathText.Text = file.Path;
-                IMTFileText.Text = file.File;
-                IMTDestinationText.Text = file.Destination;
+                IMTPathText.Text = file.SourcePath;
+                IMTFileText.Text = file.SourceFile;
+                //IMTDestinationText.Text = file.Destination;
                 IMTMandatory.IsChecked = file.Mandatory;
                 IMTFileText.IsEnabled = true;
                 IMTPathText.IsEnabled = true;
-                IMTDestinationText.IsEnabled = true;
                 IMTMandatory.IsEnabled = true;
             }
         }
@@ -1125,6 +1187,33 @@ namespace Quasar
                 IMTSlotsText.Text = type.Slots.ToString();
 
             }
+        }
+
+        private void IMTGameBuilderSelected(object sender, SelectionChangedEventArgs e)
+        {
+            if (IMTGameBuilderCombo.SelectedIndex == -1)
+            {
+                IMTBuilderOutputFilePath.IsEnabled = false;
+                IMTBuilderOutputFilePath.Text = "";
+
+                IMTBuilderOutputFolderPath.IsEnabled = false;
+                IMTBuilderOutputFolderPath.Text = "";
+            }
+            else
+            {
+                IMTBuilderOutputFilePath.IsEnabled = true;
+                IMTBuilderOutputFolderPath.IsEnabled = true;
+                GameBuilder GB = (GameBuilder)IMTGameBuilderCombo.SelectedItem;
+                InternalModTypeFile file = (InternalModTypeFile)IMTDataGrid.SelectedItem;
+                
+                BuilderFolder BFol = file.Destinations.Find(f => f.BuilderID == GB.ID);
+                BuilderFile BFil = file.Files.Find(f => f.BuilderID == GB.ID);
+
+                IMTBuilderOutputFilePath.Text = BFil.Path;
+                IMTBuilderOutputFolderPath.Text = BFol.Path;
+
+            }
+
         }
 
         //IMT Actions
@@ -1158,9 +1247,9 @@ namespace Quasar
             InternalModTypeFile file = (InternalModTypeFile)IMTDataGrid.SelectedItem;
             if (file != null)
             {
-                file.Path = IMTPathText.Text;
-                file.File = IMTFileText.Text;
-                file.Destination = IMTDestinationText.Text;
+                file.SourcePath = IMTPathText.Text;
+                file.SourceFile = IMTFileText.Text;
+                //file.Destination = IMTDestinationText.Text;
                 file.Mandatory = IMTMandatory.IsChecked ?? false;
             }
             IMTDataGrid.Items.Refresh();
@@ -1210,6 +1299,187 @@ namespace Quasar
                 USBDriveLabels.Add(di.VolumeLabel + " {" + di.Name + "}");
             }
         }
+
+        private async void Build_Button(object sender, RoutedEventArgs e)
+        {
+            bool willrun = true;
+            string address = BuildFTPAddress.Text;
+            string port = BuildFTPPort.Text;
+
+            //Checking ModLoader
+            if (BuilderModLoaderCombo.SelectedIndex == -1)
+            {
+                BuilderLogs.Text += "Please select a modloader first\r\n";
+                willrun = false;
+            }
+
+            //Checking FTP
+            if (BuilderFTPRadio.IsChecked == true)
+            {
+                if (!validateIP() || !validatePort())
+                {
+                    willrun = false;
+                }
+            }
+
+            //Checking Local Transfer
+            if (BuilderSDCombo.SelectedIndex == -1 && BuilderLocalRadio.IsChecked == true)
+            {
+                BuilderLogs.Text += "Please select a SD Drive first\r\n";
+                willrun = false;
+            }
+            if (willrun)
+            {
+                BuilderBuild.IsEnabled = false;
+                BuilderFTPTest.IsEnabled = false;
+                Boolean proceed = false;
+                if (!Properties.Settings.Default.SupressBuildDeletion)
+                {
+                    MessageBoxResult result = MessageBox.Show("You are about to build the workspace. This will wipe your mod folders on your Switch to avoid conflicts. Do you wish to proceed with the build process?", "File Deletion Warning", MessageBoxButton.YesNo);
+                    switch (result)
+                    {
+                        case MessageBoxResult.Yes:
+                            proceed = true;
+                            break;
+                        case MessageBoxResult.No:
+                            break;
+                    }
+                }
+                if (proceed || Properties.Settings.Default.SupressBuildDeletion)
+                {
+                    string pathname = BuilderSDCombo.SelectedIndex == -1 ? "" : USBDrives[BuilderSDCombo.SelectedIndex].Name;
+                    string ftpPath = address + ":" + port;
+                    NetworkCredential NC = null;
+                    if (BuildPWRadio.IsChecked == true)
+                    {
+                        NC = new NetworkCredential(BuildFTPUN.Text, BuildFTPPW.Text);
+                        BuilderProgress.IsIndeterminate = true;
+                    }
+                    if (BuilderLocalRadio.IsChecked == true)
+                    {
+                        ftpPath = "";
+                    }
+
+                    await Builder.SmashBuild(pathname, BuilderModLoaderCombo.SelectedIndex, ftpPath, NC, BuilderWipeCreateRadio.IsChecked == true ? 1 : -1, Mods, ContentMappings, CurrentWorkspace, InternalModTypes, CurrentGame, GameData, BuilderLogs, BuilderProgress);
+                    BuilderProgress.Value = 100;
+                    BuilderLogs.Text += "Done\r\n";
+                    BuilderBuild.IsEnabled = true;
+                    BuilderFTPTest.IsEnabled = true;
+                }
+
+            }
+        }
+
+        private void PrepareModLoaders(object sender, RoutedEventArgs e)
+        {
+            string source = Properties.Settings.Default.AppPath + @"\References\ModLoaders\";
+            string destination = @"I:\atmosphere\contents\01006A800016E000\romfs\skyline\plugins\libarcropolis.nro";
+            /*if (BuilderVerboseRadio.IsChecked == true)
+            {
+                Folderino.CheckCopyFile(source + "verbose_libarcropolis.nro", destination);
+                BuilderLogs.Text += "ARCRopolis set to Verbose Mode \r\n";
+            }
+            else
+            {
+                Folderino.CheckCopyFile(source + "silent_libarcropolis.nro", destination);
+                BuilderLogs.Text += "ARCRopolis set to Silent Mode \r\n";
+            }*/
+
+        }
+
+        private void AutoEjectSD()
+        {
+
+        }
+
+        private void BuilderDriveRefreshButton_Click(object sender, RoutedEventArgs e)
+        {
+            getSDCards();
+        }
+
+        private async void FTP_Test(object sender, RoutedEventArgs e)
+        {
+            BuilderBuild.IsEnabled = false;
+            BuilderFTPTest.IsEnabled = false;
+            BuilderProgress.IsIndeterminate = true;
+            string address = BuildFTPAddress.Text;
+            string port = BuildFTPPort.Text;
+
+            bool ShouldConnect = true;
+            if (validateIP() && validatePort())
+            {
+                String errortext = "";
+                BuilderLogs.Text += "Please Wait... \r\n";
+                FtpClient client = new FtpClient(address);
+                if (BuildPWRadio.IsChecked == true)
+                {
+                    client.Credentials = new NetworkCredential(BuildFTPUN.Text, BuildFTPPW.Text);
+                }
+                
+
+                client.Port = Int32.Parse(port);
+                try
+                {
+                    await client.ConnectAsync();
+                }
+                catch(Exception ex)
+                {
+                    errortext = ex.Message;
+                }
+                
+
+                if (client.IsConnected)
+                {
+                    BuilderLogs.Text += "FTP Connection Successful \r\n";
+                }
+                else
+                {
+                    BuilderLogs.Text += "FTP Connection Unsuccessful "+errortext+" \r\n";
+                }
+            }
+            BuilderProgress.IsIndeterminate = false;
+            BuilderBuild.IsEnabled = true;
+            BuilderFTPTest.IsEnabled = true;
+
+        }
+
+        private bool validateIP()
+        {
+            string address = BuildFTPAddress.Text;
+            Regex IP = new Regex(@"\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}");
+
+            bool result = IP.IsMatch(address);
+            if (!result)
+            {
+                BuilderLogs.Text += "Please enter a valid IP\r\n";
+            }
+
+            return result;
+        }
+
+        private bool validatePort()
+        {
+            string port = BuildFTPPort.Text;
+            int val;
+
+            bool result = Int32.TryParse(port, out val);
+
+            if (result)
+            {
+                result = val > 0 && val < 70000;
+            }
+
+            if (!result)
+            {
+                BuilderLogs.Text += "Please enter a valid Port\r\n";
+            }
+            return result;
+        }
+
+        private void RadioButton_Checked(object sender, RoutedEventArgs e)
+        {
+
+        }
         #endregion
 
         #region Settings
@@ -1254,16 +1524,50 @@ namespace Quasar
                 WorkspaceList.Add(new QuasarSettingComboData() { Name = w.Name, Value = w.ID.ToString()});
             }
 
-            SettingsList.Add(new QuasarSetting(new QuasarSettingData() { SettingName = "Quasar Version : "+Properties.Settings.Default.AppVersion, SettingCheck = true }));
-            SettingsList.Add(new QuasarSetting(new QuasarSettingData() { SettingName = "Language", SettingCheck = false, Data = list }));
-            SettingsList.Add(new QuasarSetting(new QuasarSettingData() { SettingName = "Workspace", SettingCheck = false, Data = WorkspaceList }));
-            SettingsList.Add(new QuasarSetting(new QuasarSettingData() { SettingName = "Auto Slots", SettingCheck = true}));
+            SettingsList.Add(new QuasarSetting(new QuasarSettingData() { SettingName = "Quasar Version :",SettingValue= Properties.Settings.Default.AppVersion, NameOnly = true }));
+            SettingsList.Add(new QuasarSetting(new QuasarSettingData() { SettingName = "Supress Mod ", SettingValue= "deletion warning", SettingCheck = Properties.Settings.Default.SupressModDeletion, Reference = "SupressModDeletion" }));
+            SettingsList.Add(new QuasarSetting(new QuasarSettingData() { SettingName = "Supress Build", SettingValue = "deletion warning", SettingCheck = Properties.Settings.Default.SupressBuildDeletion, Reference = "SupressBuildDeletion" }));
+            SettingsList.Add(new QuasarSetting(new QuasarSettingData() { SettingName = "Enable", SettingValue = "Internal Mod Types", SettingCheck = Properties.Settings.Default.EnableIMT, Reference = "EnableIMT" }));
+
+            foreach(QuasarSetting QS in SettingsList)
+            {
+                QS.SettingsChanged += SettingsChanged;
+            }
 
             BuilderModLoaderCombo.SelectedIndex = 0;
             BuilderWorkspaceCombo.SelectedIndex = 0;
-
+            if (Properties.Settings.Default.EnableIMT)
+            {
+                IMTTab.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                IMTTab.Visibility = Visibility.Collapsed;
+                
+            }
             getSDCards();
 
+        }
+
+        public void SettingsChanged(object sender, EventArgs e)
+        {
+            QuasarSetting sen = (QuasarSetting)sender;
+            if(sen.LocalData.Reference != null)
+            {
+                if(sen.LocalData.Reference == "EnableIMT")
+                {
+                    BuilderWorkspaceCombo.SelectedIndex = 0;
+                    if (Properties.Settings.Default.EnableIMT)
+                    {
+                        IMTTab.Visibility = Visibility.Visible;
+                    }
+                    else
+                    {
+                        IMTTab.Visibility = Visibility.Collapsed;
+
+                    }
+                }
+            }
         }
 
         private void SaveWorkspaces()
@@ -1481,164 +1785,7 @@ namespace Quasar
 
         #endregion
 
-        private async void Build_Button(object sender, RoutedEventArgs e)
-        {
-            bool willrun = true;
-            string address = BuildFTPAddress.Text;
-            string port = BuildFTPPort.Text;
-
-            //Checking ModLoader
-            if (BuilderModLoaderCombo.SelectedIndex == -1)
-            {
-                BuilderLogs.Text += "Please select a modloader first\r\n";
-                willrun = false;
-            }
-
-            //Checking FTP
-            if (BuilderFTPRadio.IsChecked == true)
-            {
-                if (!validateIP() || !validatePort())
-                {
-                    willrun = false;
-                }
-            }
-            
-            //Checking Local Transfer
-            if(BuilderSDCombo.SelectedIndex == -1 && BuilderLocalRadio.IsChecked == true)
-            {
-                BuilderLogs.Text += "Please select a SD Drive first\r\n";
-                willrun = false;
-            }
-            if (willrun)
-            {
-                string pathname = BuilderSDCombo.SelectedIndex == -1 ? "" : USBDrives[BuilderSDCombo.SelectedIndex].Name;
-                string ftpPath = address + ":" + port;
-                if (BuilderLocalRadio.IsChecked == true)
-                {
-                    ftpPath = "";
-                }
-
-                await Builder.SmashBuild(pathname, BuilderModLoaderCombo.SelectedIndex, ftpPath, BuilderWipeCreateRadio.IsChecked == true ? 1 : -1, Mods, ContentMappings, CurrentWorkspace, InternalModTypes, CurrentGame, GameData, BuilderLogs, BuilderProgress);
-                BuilderProgress.Value = 100;
-                BuilderLogs.Text += "Done\r\n";
-            }
-        }
-
-        private void PrepareModLoaders(object sender, RoutedEventArgs e)
-        {
-            string source = Properties.Settings.Default.AppPath + @"\References\ModLoaders\";
-            string destination = @"I:\atmosphere\contents\01006A800016E000\romfs\skyline\plugins\libarcropolis.nro";
-            if (BuilderVerboseRadio.IsChecked == true)
-            {
-                Folderino.CheckCopyFile(source + "verbose_libarcropolis.nro", destination);
-                BuilderLogs.Text += "ARCRopolis set to Verbose Mode \r\n";
-            }
-            else
-            {
-                Folderino.CheckCopyFile(source + "silent_libarcropolis.nro", destination);
-                BuilderLogs.Text += "ARCRopolis set to Silent Mode \r\n";
-            }
-            
-        }
-
-        private void AutoEjectSD()
-        {
-
-        }
-
-        private void BuilderDriveRefreshButton_Click(object sender, RoutedEventArgs e)
-        {
-            getSDCards();
-        }
-
-        private void ResetSlotsButton_Click(object sender, RoutedEventArgs e)
-        {
-            GameDataItem SelectedCategory = (GameDataItem)AssociationGameElementDataList.SelectedItem;
-            InternalModType SelectedIMT = (InternalModType)AssociationTypeDataList.SelectedItem;
-
-            if(SelectedIMT != null)
-            {
-                int AnyCategory = SelectedCategory == null ? -1 : SelectedCategory.ID;
-                List<ContentMapping> relatedMappings = ContentMappings.FindAll(cm => cm.GameDataItemID == AnyCategory && cm.InternalModType == SelectedIMT.ID);
-                for (int i = 0; i < SelectedIMT.Slots; i++)
-                {
-                    AssociationSlots.Add(new ContentMapping() { Name = "Empty Slot n°" + (i + 1), SlotName = "FakeIMT" + (i + 1) });
-
-                }
-                foreach (ContentMapping cm in relatedMappings)
-                {
-                    AssociationContentMappings.Add(cm);
-                    List<Association> Slots = CurrentWorkspace.Associations.FindAll(asso => asso.ContentMappingID == cm.ID);
-                    if (Slots != null)
-                    {
-                        foreach (Association ass in Slots)
-                        {
-                            CurrentWorkspace.Associations.Remove(ass);
-                        }
-                    }
-                }
-            }
-
-
-            SaveWorkspaces();
-            FilterSlots();
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            string address = BuildFTPAddress.Text;
-            string port = BuildFTPPort.Text;
-
-            bool ShouldConnect = true;
-            if (validateIP() && validatePort())
-            {
-                FtpClient client = new FtpClient(address);
-                client.Port = Int32.Parse(port);
-                client.Connect();
-
-
-                if (client.IsConnected)
-                {
-                    BuilderLogs.Text += "FTP Connection Successful \r\n";
-                }
-            }
-
-        }
        
-        private bool validateIP()
-        {
-            string address = BuildFTPAddress.Text;
-            Regex IP = new Regex(@"\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}");
-
-            bool result = IP.IsMatch(address);
-            if (!result)
-            {
-                BuilderLogs.Text += "Please enter a valid IP\r\n";
-            }
-
-            return result;
-        }
-
-        private bool validatePort()
-        {
-            string port = BuildFTPPort.Text;
-            int val;
-
-            bool result = Int32.TryParse(port, out val);
-
-            if (result)
-            {
-                result = val > 0 && val < 70000;
-            }
-
-            if (!result)
-            {
-                BuilderLogs.Text += "Please enter a valid Port\r\n";
-            }
-            return result;
-        }
-
-
     }
     
 }

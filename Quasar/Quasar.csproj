@@ -187,6 +187,9 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <Content Include="References\Builder\Builders.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="References\QuasarUrlShortcuts\Smash Bros\Skins\Destroyer Toad.url">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

@@ -8,7 +8,8 @@
              d:DesignHeight="150" d:DesignWidth="150" Height="150" Width="150" DataContext="{Binding RelativeSource={RelativeSource Self}}" Margin="5,5,5,5">
     <Grid Background="{DynamicResource QD2}">
         <Label x:Name="test" Content="{Binding LocalData.SettingName}" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,10,0,0" Foreground="White"/>
+        <Label x:Name="test_Copy" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,30,0,0" Foreground="White" Content="{Binding LocalData.SettingValue}"/>
         <ComboBox ItemsSource="{Binding LocalData.Data}" HorizontalAlignment="Center" VerticalAlignment="Center" Width="130" Visibility="{Binding Path=ComboVisible, Converter={StaticResource BoolToVisibilityConverter}}" DisplayMemberPath="Name"/>
-        <CheckBox HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding LocalData.SettingCheck}" Visibility="{Binding Path=CheckVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
+        <CheckBox x:Name="SettingCheckBox" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding LocalData.SettingCheck}" Visibility="{Binding Path=CheckVisible, Converter={StaticResource BoolToVisibilityConverter}}" Checked="SettingCheckBox_Checked" Unchecked="SettingCheckBox_Checked"/>
     </Grid>
 </UserControl>

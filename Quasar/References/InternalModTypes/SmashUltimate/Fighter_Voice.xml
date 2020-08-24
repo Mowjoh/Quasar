@@ -1,14 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <InternalModType xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="Fighter Voice" Filename="SmashUltimate/Fighter_Voice" ID="5" GameID="1" Association="1" Slots="1">
   <InternalModTypeFile ID="0">
-    <Path>fighter_voice</Path>
-    <Destination>sound/bank/fighter_voice/vc_{Characters}.nus3audio</Destination>
-    <File>vc_{Characters}.nus3audio</File>
+    <SourcePath>fighter_voice</SourcePath>
+    <SourceFile>vc_{Characters}.nus3audio</SourceFile>
     <Mandatory>true</Mandatory>
+    <BuilderFolder BuilderID="0" Path ="sound/bank/fighter_voice/vc_{Characters}.nus3audio"/>
+    <BuilderFolder BuilderID="1" Path ="test"/>
+    <BuilderFolder BuilderID="2" Path ="test"/>
+    <BuilderFile BuilderID="0" Path ="test"/>
+    <BuilderFile BuilderID="1" Path ="test"/>
+    <BuilderFile BuilderID="2" Path ="test"/>
   </InternalModTypeFile>
   <InternalModTypeFile ID="1">
-    <Path>fighter</Path>
-    <File>se_{Characters}.nus3audio</File>
+    <SourcePath>fighter_voice</SourcePath>
+    <SourceFile>vc_{Characters}_c{S00}.nus3audio</SourceFile>
+    <Mandatory>false</Mandatory>
+    <BuilderFolder BuilderID="0" Path ="test"/>
+    <BuilderFolder BuilderID="1" Path ="test"/>
+    <BuilderFolder BuilderID="2" Path ="test"/>
+    <BuilderFile BuilderID="0" Path ="test"/>
+    <BuilderFile BuilderID="1" Path ="test"/>
+    <BuilderFile BuilderID="2" Path ="test"/>
+  </InternalModTypeFile>
+  <InternalModTypeFile ID="2">
+    <SourcePath>fighter_voice</SourcePath>
+    <SourceFile>vc_{Characters}+{Folder}.nus3audio</SourceFile>
     <Mandatory>true</Mandatory>
+    <BuilderFolder BuilderID="0" Path ="sound/bank/fighter_voice/vc_{Characters}.nus3audio"/>
+    <BuilderFolder BuilderID="1" Path ="test"/>
+    <BuilderFolder BuilderID="2" Path ="test"/>
+    <BuilderFile BuilderID="0" Path ="test"/>
+    <BuilderFile BuilderID="1" Path ="test"/>
+    <BuilderFile BuilderID="2" Path ="test"/>
+  </InternalModTypeFile>
+  <InternalModTypeFile ID="3">
+    <SourcePath>fighter_voice</SourcePath>
+    <SourceFile>vc_{Characters}_c{S00}+{Folder}.nus3audio</SourceFile>
+    <Mandatory>false</Mandatory>
+    <BuilderFolder BuilderID="0" Path ="test"/>
+    <BuilderFolder BuilderID="1" Path ="test"/>
+    <BuilderFolder BuilderID="2" Path ="test"/>
+    <BuilderFile BuilderID="0" Path ="test"/>
+    <BuilderFile BuilderID="1" Path ="test"/>
+    <BuilderFile BuilderID="2" Path ="test"/>
   </InternalModTypeFile>
 </InternalModType>

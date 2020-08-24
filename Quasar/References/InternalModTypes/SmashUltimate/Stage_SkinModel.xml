@@ -1,18 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <InternalModType xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="Stage" Filename="SmashUltimate/Stage_SkinModel" ID="6" GameID="1" Association="2" Slots="1">
   <InternalModTypeFile ID="0">
-    <Path>end/model/*</Path>
-    <File>*.nutexb</File>
+    <SourcePath>end/model/*</SourcePath>
+    <SourceFile>*.nutexb</SourceFile>
     <Mandatory>false</Mandatory>
+    <BuilderFolder BuilderID="0" Path ="test"/>
+    <BuilderFolder BuilderID="1" Path ="test"/>
+    <BuilderFolder BuilderID="2" Path ="test"/>
+    <BuilderFile BuilderID="0" Path ="test"/>
+    <BuilderFile BuilderID="1" Path ="test"/>
+    <BuilderFile BuilderID="2" Path ="test"/>
   </InternalModTypeFile>
   <InternalModTypeFile ID="1">
-    <Path>normal/model/*</Path>
-    <File>*.nutexb</File>
+    <SourcePath>normal/model/*</SourcePath>
+    <SourceFile>*.nutexb</SourceFile>
     <Mandatory>false</Mandatory>
+    <BuilderFolder BuilderID="0" Path ="test"/>
+    <BuilderFolder BuilderID="1" Path ="test"/>
+    <BuilderFolder BuilderID="2" Path ="test"/>
+    <BuilderFile BuilderID="0" Path ="test"/>
+    <BuilderFile BuilderID="1" Path ="test"/>
+    <BuilderFile BuilderID="2" Path ="test"/>
   </InternalModTypeFile>
   <InternalModTypeFile ID="2">
-    <Path>battle/model/*</Path>
-    <File>*.nutexb</File>
+    <SourcePath>battle/model/*</SourcePath>
+    <SourceFile>*.nutexb</SourceFile>
     <Mandatory>false</Mandatory>
+    <BuilderFolder BuilderID="0" Path ="test"/>
+    <BuilderFolder BuilderID="1" Path ="test"/>
+    <BuilderFolder BuilderID="2" Path ="test"/>
+    <BuilderFile BuilderID="0" Path ="test"/>
+    <BuilderFile BuilderID="1" Path ="test"/>
+    <BuilderFile BuilderID="2" Path ="test"/>
   </InternalModTypeFile>
 </InternalModType>

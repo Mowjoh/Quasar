@@ -151,5 +151,41 @@ namespace Quasar.Properties {
                 this["WorkspaceID"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool SupressModDeletion {
+            get {
+                return ((bool)(this["SupressModDeletion"]));
+            }
+            set {
+                this["SupressModDeletion"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool SupressBuildDeletion {
+            get {
+                return ((bool)(this["SupressBuildDeletion"]));
+            }
+            set {
+                this["SupressBuildDeletion"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool EnableIMT {
+            get {
+                return ((bool)(this["EnableIMT"]));
+            }
+            set {
+                this["EnableIMT"] = value;
+            }
+        }
     }
 }

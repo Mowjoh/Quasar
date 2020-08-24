@@ -1,15 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <InternalModType xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="Fighter Model" Filename="SmashUltimate/Fighter_Model" ID="1" GameID="1" Association="1" Slots="1">
   <InternalModTypeFile ID="0">
-    <Path>{Characters}/model/*/c{S00}</Path>
+    <SourcePath>{Characters}/model/*/c{S00}</SourcePath>
     <Destination>fighter/{Characters}/model/{Folder}/c{S00}/model.numshb</Destination>
-    <File>model.numshb</File>
+    <SourceFile>model.numshb</SourceFile>
     <Mandatory>true</Mandatory>
+    <BuilderFolder BuilderID="0" Path ="test"/>
+    <BuilderFolder BuilderID="1" Path ="test"/>
+    <BuilderFolder BuilderID="2" Path ="test"/>
+    <BuilderFile BuilderID="0" Path ="test"/>
+    <BuilderFile BuilderID="1" Path ="test"/>
+    <BuilderFile BuilderID="2" Path ="test"/>
   </InternalModTypeFile>
   <InternalModTypeFile ID="1">
-    <Path>{Characters}/model/*/c{S00}</Path>
+    <SourcePath>{Characters}/model/*/c{S00}</SourcePath>
     <Destination>fighter/{Characters}/model/{Folder}/c{S00}/model.numatb</Destination>
-    <File>model.numatb</File>
+    <SourceFile>model.numatb</SourceFile>
     <Mandatory>false</Mandatory>
+    <BuilderFolder BuilderID="0" Path ="test"/>
+    <BuilderFolder BuilderID="1" Path ="test"/>
+    <BuilderFolder BuilderID="2" Path ="test"/>
+    <BuilderFile BuilderID="0" Path ="test"/>
+    <BuilderFile BuilderID="1" Path ="test"/>
+    <BuilderFile BuilderID="2" Path ="test"/>
   </InternalModTypeFile>
 </InternalModType>
