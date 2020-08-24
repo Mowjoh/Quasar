@@ -30,4 +30,4 @@ If you want additionnal info, please visit the included [wiki](https://github.co
 ## Acknowledgments
 
 * Big thanks to anyone whose code was used
-* Pinkypie for the UX
+* My awesome buddy UX Designer : Antoine Scarfoglio / Pinky
