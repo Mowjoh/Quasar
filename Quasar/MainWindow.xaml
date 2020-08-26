@@ -205,7 +205,7 @@
                 </TabItem>
                 <TabItem x:Name="Assigning" Header="{x:Static p:Resources.AssignmentTabHeader}" Foreground="{DynamicResource QuasarTextColor}">
                     <Grid Background="#FFE5E5E5">
-                        <Grid x:Name="AssignationGameBlock" Grid.ColumnSpan="2" Grid.Column="2" Background ="Black" Panel.ZIndex="500"  Visibility="Hidden">
+                        <Grid x:Name="AssignationGameBlock" Grid.ColumnSpan="2" Grid.Column="2" Background ="Black" Panel.ZIndex="500" Visibility="{Binding Path=GameSelectVisibility}">
                             <Label Content="Please select a game first" HorizontalAlignment="Center" Foreground="Wheat"  VerticalAlignment="Center" FontSize="36" />
                         </Grid>
                         <Grid x:Name="AssignmentGrid" Background="{DynamicResource QD1}">
@@ -347,7 +347,7 @@
                             </Grid>
                             <Grid x:Name="BuilderFTPGrid" Grid.Column="3"  Background="{DynamicResource QD1}">
                                 <Label Content="Enter your Switch's IP address :" HorizontalAlignment="Left" VerticalAlignment="Top" Width="179" Foreground="{DynamicResource QuasarTextColor}" Style="{DynamicResource QuasarLabel}" Margin="10,10,0,0"/>
-                                <TextBox x:Name="BuildFTPAddress" HorizontalAlignment="Left" Height="23" Margin="10,41,0,0" TextWrapping="Wrap" Text="192.168.0.30" VerticalAlignment="Top" Width="179"/>
+                                <TextBox x:Name="BuildFTPAddress" HorizontalAlignment="Left" Height="23" Margin="10,41,0,0" TextWrapping="Wrap" Text="192.168." VerticalAlignment="Top" Width="179"/>
                                 <Label Content="Port :" HorizontalAlignment="Left" Margin="194,10,0,0" VerticalAlignment="Top" Width="179" Foreground="{DynamicResource QuasarTextColor}" Style="{DynamicResource QuasarLabel}"/>
                                 <TextBox x:Name="BuildFTPPort" HorizontalAlignment="Left" Height="23" Margin="194,41,0,0" TextWrapping="Wrap" Text="5000" VerticalAlignment="Top" Width="93"/>
                                 <Button x:Name="BuilderFTPTest" Content="Test Connection" HorizontalAlignment="Left" Margin="10,171,0,0" VerticalAlignment="Top" Width="244" Click="FTP_Test"/>

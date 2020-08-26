@@ -1,36 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <InternalModType xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="Stage" Filename="SmashUltimate/Stage_SkinModel" ID="6" GameID="1" Association="2" Slots="1">
   <InternalModTypeFile ID="0">
-    <SourcePath>end/model/*</SourcePath>
-    <SourceFile>*.nutexb</SourceFile>
+    <SourcePath>stage/{Stages}/end/model/{Folder}</SourcePath>
+    <SourceFile>{Folder}.nutexb</SourceFile>
     <Mandatory>false</Mandatory>
-    <BuilderFolder BuilderID="0" Path ="test"/>
-    <BuilderFolder BuilderID="1" Path ="test"/>
-    <BuilderFolder BuilderID="2" Path ="test"/>
-    <BuilderFile BuilderID="0" Path ="test"/>
-    <BuilderFile BuilderID="1" Path ="test"/>
-    <BuilderFile BuilderID="2" Path ="test"/>
+    <BuilderFolder BuilderID="0" Path ="stage/{Stages}/end/model/{Folder}"/>
+    <BuilderFolder BuilderID="1" Path ="arc/stage/{Stages}/end/model/{Folder}"/>
+    <BuilderFolder BuilderID="2" Path ="UltimateModManager/mods/{Workspace}/stage/{Stages}/end/model/{Folder}"/>
+    <BuilderFile BuilderID="0" Path ="{Folder}.nutexb"/>
+    <BuilderFile BuilderID="1" Path ="{Folder}.nutexb"/>
+    <BuilderFile BuilderID="2" Path ="{Folder}.nutexb"/>
   </InternalModTypeFile>
   <InternalModTypeFile ID="1">
-    <SourcePath>normal/model/*</SourcePath>
-    <SourceFile>*.nutexb</SourceFile>
+    <SourcePath>stage/{Stages}/battle/model/{Folder}</SourcePath>
+    <SourceFile>{Folder}.nutexb</SourceFile>
     <Mandatory>false</Mandatory>
-    <BuilderFolder BuilderID="0" Path ="test"/>
-    <BuilderFolder BuilderID="1" Path ="test"/>
-    <BuilderFolder BuilderID="2" Path ="test"/>
-    <BuilderFile BuilderID="0" Path ="test"/>
-    <BuilderFile BuilderID="1" Path ="test"/>
-    <BuilderFile BuilderID="2" Path ="test"/>
+    <BuilderFolder BuilderID="0" Path ="stage/{Stages}/end/model/{Folder}"/>
+    <BuilderFolder BuilderID="1" Path ="arc/stage/{Stages}/end/model/{Folder}"/>
+    <BuilderFolder BuilderID="2" Path ="UltimateModManager/mods/{Workspace}/stage/{Stages}/end/model/{Folder}"/>
+    <BuilderFile BuilderID="0" Path ="{Folder}.nutexb"/>
+    <BuilderFile BuilderID="1" Path ="{Folder}.nutexb"/>
+    <BuilderFile BuilderID="2" Path ="{Folder}.nutexb"/>
   </InternalModTypeFile>
   <InternalModTypeFile ID="2">
-    <SourcePath>battle/model/*</SourcePath>
-    <SourceFile>*.nutexb</SourceFile>
+    <SourcePath>stage/{Stages}/normal/model/{Folder}</SourcePath>
+    <SourceFile>{Folder}.nutexb</SourceFile>
     <Mandatory>false</Mandatory>
-    <BuilderFolder BuilderID="0" Path ="test"/>
-    <BuilderFolder BuilderID="1" Path ="test"/>
-    <BuilderFolder BuilderID="2" Path ="test"/>
-    <BuilderFile BuilderID="0" Path ="test"/>
-    <BuilderFile BuilderID="1" Path ="test"/>
-    <BuilderFile BuilderID="2" Path ="test"/>
+    <BuilderFolder BuilderID="0" Path ="stage/{Stages}/end/model/{Folder}"/>
+    <BuilderFolder BuilderID="1" Path ="arc/stage/{Stages}/end/model/{Folder}"/>
+    <BuilderFolder BuilderID="2" Path ="UltimateModManager/mods/{Workspace}/stage/{Stages}/end/model/{Folder}"/>
+    <BuilderFile BuilderID="0" Path ="{Folder}.nutexb"/>
+    <BuilderFile BuilderID="1" Path ="{Folder}.nutexb"/>
+    <BuilderFile BuilderID="2" Path ="{Folder}.nutexb"/>
   </InternalModTypeFile>
 </InternalModType>

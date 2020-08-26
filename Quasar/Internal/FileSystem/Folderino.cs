@@ -65,7 +65,7 @@ namespace Quasar.FileSystem
             string parent = Path.GetDirectoryName(destination);
             if (!Directory.Exists(parent))
             {
-                Directory.CreateDirectory(Path.GetDirectoryName(destination));
+                Directory.CreateDirectory(parent);
             }
             File.Copy(source, destination, true);
         }

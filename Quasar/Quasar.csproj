@@ -210,9 +210,6 @@
     <Content Include="References\InternalModTypes\SmashUltimate\Stage_SkinModel.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="References\InternalModTypes\SmashUltimate\Fighter_Animation.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="References\QuasarUrlShortcuts\Mario Kart 8D\Thwomp Circuit.url">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

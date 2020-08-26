@@ -19,9 +19,9 @@ namespace Quasar.Internal.FileSystem
 {
     public class Builder
     {
-        public static async Task<int> SmashBuild(string _DriveFolder,int ModLoader, string ftp, NetworkCredential NC, int buildMode, List<LibraryMod> _Mods, List<ContentMapping> _ContentMappings, Workspace _Workspace, List<InternalModType> _InternalModTypes, Game _Game, List<GameData> _GameData, TextBlock _TextBlock, ProgressBar _ProgressBar)
+        public static async Task<int> SmashBuild(string _DriveFolder,int ModLoader, string ftp, NetworkCredential NC, int buildMode, List<LibraryMod> _Mods, List<ContentMapping> _ContentMappings, Workspace _Workspace, List<InternalModType> _InternalModTypes, Game _Game, List<GameData> _GameData, TextBlock _TextBlock, ProgressBar _ProgressBar, GameBuilder GB)
         {
-            SmashBuilder sb = new SmashBuilder(_DriveFolder, ModLoader, buildMode, ftp, NC,  _Mods,  _ContentMappings, _Workspace, _InternalModTypes, _Game, _GameData, _TextBlock, _ProgressBar);
+            SmashBuilder sb = new SmashBuilder(_DriveFolder, ModLoader, buildMode, ftp, NC,  _Mods,  _ContentMappings, _Workspace, _InternalModTypes, _Game, _GameData, _TextBlock, _ProgressBar,GB);
             await sb.Build();
             return 0;
         }
@@ -38,6 +38,7 @@ namespace Quasar.Internal.FileSystem
         Game BuilderGame;
         GameData BuilderGameData;
 
+        GameBuilder GB;
 
         //Mod-loader Specifics
         string ARCRopolisBasePath = @"atmosphere/contents/01006A800016E000/romfs/skyline/plugins/";
@@ -60,7 +61,7 @@ namespace Quasar.Internal.FileSystem
         string BuilderFTP;
         NetworkCredential Creds;
 
-        public SmashBuilder(string _DriveFolder, int _ModLoader, int buildMode, string ftp,NetworkCredential NC, List<LibraryMod> _Mods, List<ContentMapping> _ContentMappings, Workspace _Workspace,  List<InternalModType> _InternalModTypes, Game _Game, List<GameData> _GameData, TextBlock _TextBlock, ProgressBar _ProgressBar)
+        public SmashBuilder(string _DriveFolder, int _ModLoader, int buildMode, string ftp,NetworkCredential NC, List<LibraryMod> _Mods, List<ContentMapping> _ContentMappings, Workspace _Workspace,  List<InternalModType> _InternalModTypes, Game _Game, List<GameData> _GameData, TextBlock _TextBlock, ProgressBar _ProgressBar, GameBuilder _GB)
         {
             BuilderDriveFolder = _DriveFolder;
             BuilderMods = _Mods;
@@ -77,6 +78,7 @@ namespace Quasar.Internal.FileSystem
             BuildMode = buildMode;
             BuilderFTP = ftp;
             Creds = NC;
+            GB = _GB;
             
             UMMPath += @"Quasar - " + BuilderWorkspace.Name + @"/";
         }
@@ -124,19 +126,23 @@ namespace Quasar.Internal.FileSystem
             
             if(!FTP || ftpOK)
             {
+                string basepath = "";
                 try
                 {
+                    
                     if (BuildMode == 1)
                     {
                         Write("Wiping mod folders", TB);
-                        string basepath = FTP ? "" : BuilderDriveFolder;
-                        if (ModLoader == 0 || ModLoader == 1)
+                        basepath = FTP ? "" : BuilderDriveFolder + GB.BasePath.Replace("{Workspace}", BuilderWorkspace.Name);
+                        if (ModLoader == 2)
                         {
-                            BuilderDelete(basepath + UMMPath, FTP, FTPClient);
+                            string based = FTP ? "" : BuilderDriveFolder;
+                            BuilderDelete(based + @"UltimateModManager/mods/"+ BuilderWorkspace.Name+"/", FTP, FTPClient);
+                            BuilderDelete(based + @"atmosphere/contents/01006A800016E000/romfs/arc/", FTP, FTPClient);
                         }
-                        if (ModLoader == 0 || ModLoader == 2)
+                        else
                         {
-                            BuilderDelete(basepath + UMMPath, FTP, FTPClient);
+                            BuilderDelete(basepath, FTP, FTPClient);
                         }
                     }
 
@@ -168,35 +174,39 @@ namespace Quasar.Internal.FileSystem
                                 //Looping through recognized files
                                 string source = cmf.SourcePath;
                                 string extension = source.Split('.')[source.Split('.').Length - 1];
-                                string basedestination = "";
+                                string basedestination = basepath;
 
                                 //Source Setup
                                 LibraryMod lm = BuilderMods.Find(l => l.ID == cm.ModID);
                                 ModFileManager mfm = new ModFileManager(lm, BuilderGame);
                                 string FinalSource = mfm.LibraryContentFolderPath + source;
 
-                                //Destination setup
-                                basedestination = FormatPathForLoader(basedestination, extension);
-
+                                string FinalFile = FinalSource.Split('\\')[FinalSource.Split('\\').Length - 1];
+                                string FinalFolder = FinalSource.Substring(0, FinalSource.Length - FinalFile.Length);
 
                                 InternalModTypeFile imtf = imt.Files.Find(f => f.ID == cmf.InternalModTypeFileID);
 
+                                BuilderFile bfi = imtf.Files[ModLoader];
+                                BuilderFolder bfo = imtf.Destinations[ModLoader];
 
-                                //string FinalPath = imtf.Destination;
-                                string FinalPath = null;
-
+                                string FinalPath = bfo.Path+"/"+bfi.Path;
+                                string OutputFolder = bfo.Path;
+                                string OutputFile = bfi.Path;
                                 if (FinalPath != null)
                                 {
                                     //Setting up regex to prepare final path
-                                    string RegexPattern = Searchie.PrepareRegex(FinalPath.Replace(@"/", @"\"));
-                                    Regex FileRegex = new Regex(RegexPattern);
+                                    string SourceFolderRegexString = Searchie.PrepareRegex(imtf.SourcePath.Replace(@"/", @"\"));
+                                    Regex SourceFolderRegex = new Regex(SourceFolderRegexString);
                                     Regex Replacinator = new Regex("{Folder}");
 
+                                    Regex SourceFileRegex = new Regex(Searchie.PrepareRegex(imtf.SourceFile));
+                                    
+
                                     //Matching with replaceable values
-                                    Match matchoum = FileRegex.Match(FinalSource);
-                                    if (matchoum.Groups.Count > 0)
+                                    Match FolderMatch = SourceFolderRegex.Match(FinalSource);
+                                    if (FolderMatch.Groups.Count > 0)
                                     {
-                                        foreach (Group group in matchoum.Groups)
+                                        foreach (Group group in FolderMatch.Groups)
                                         {
                                             if (group.Name == "folder")
                                             {
@@ -205,12 +215,12 @@ namespace Quasar.Internal.FileSystem
                                                 {
                                                     foreach (Capture cap in caps)
                                                     {
-                                                        FinalPath = Replacinator.Replace(FinalPath, cap.Value, 1);
+                                                        OutputFolder = Replacinator.Replace(OutputFolder, cap.Value, 1);
                                                     }
                                                 }
                                                 else
                                                 {
-                                                    FinalPath = Replacinator.Replace(FinalPath, group.Value, 1);
+                                                    OutputFolder = Replacinator.Replace(OutputFolder, group.Value, 1);
                                                 }
 
 
@@ -227,14 +237,16 @@ namespace Quasar.Internal.FileSystem
                                                     {
                                                         foreach (Capture cap in caps)
                                                         {
-                                                            FinalPath = FinalPath.Replace("{Characters}", item.Attributes[0].Value);
-                                                            FinalPath = FinalPath.Replace("{Music}", item.Attributes[0].Value);
+                                                            OutputFolder = OutputFolder.Replace("{Characters}", item.Attributes[0].Value);
+                                                            OutputFolder = OutputFolder.Replace("{Stages}", item.Attributes[0].Value);
+                                                            OutputFolder = OutputFolder.Replace("{Music}", item.Attributes[0].Value);
                                                         }
                                                     }
                                                     else
                                                     {
-                                                        FinalPath = FinalPath.Replace("{Characters}", item.Attributes[0].Value);
-                                                        FinalPath = FinalPath.Replace("{Music}", item.Attributes[0].Value);
+                                                        OutputFolder = OutputFolder.Replace("{Characters}", item.Attributes[0].Value);
+                                                        OutputFolder = OutputFolder.Replace("{Stages}", item.Attributes[0].Value);
+                                                        OutputFolder = OutputFolder.Replace("{Music}", item.Attributes[0].Value);
                                                     }
 
 
@@ -251,15 +263,15 @@ namespace Quasar.Internal.FileSystem
 
                                                         case "SlotSingleDigit":
                                                             newvalue = desiredSlot.ToString("0");
-                                                            FinalPath = FinalPath.Replace("{S0}", newvalue);
+                                                            OutputFolder = OutputFolder.Replace("{S0}", newvalue);
                                                             break;
                                                         case "SlotDoubleDigit":
                                                             newvalue = desiredSlot.ToString("00");
-                                                            FinalPath = FinalPath.Replace("{S00}", newvalue);
+                                                            OutputFolder = OutputFolder.Replace("{S00}", newvalue);
                                                             break;
                                                         case "SlotTripleDigit":
                                                             newvalue = desiredSlot.ToString("000");
-                                                            FinalPath = FinalPath.Replace("{S000}", newvalue);
+                                                            OutputFolder = OutputFolder.Replace("{S000}", newvalue);
                                                             break;
                                                     }
 
@@ -273,15 +285,116 @@ namespace Quasar.Internal.FileSystem
 
                                                         case "DigitSingle":
                                                             newvalue = desiredSlot.ToString("0");
-                                                            FinalPath = FinalPath.Replace("{0}", newvalue);
+                                                            OutputFolder = OutputFolder.Replace("{0}", newvalue);
                                                             break;
                                                         case "DigitDouble":
                                                             newvalue = desiredSlot.ToString("00");
-                                                            FinalPath = FinalPath.Replace("{00}", newvalue);
+                                                            OutputFolder = OutputFolder.Replace("{00}", newvalue);
                                                             break;
                                                         case "DigitTriple":
                                                             newvalue = desiredSlot.ToString("000");
-                                                            FinalPath = FinalPath.Replace("{000}", newvalue);
+                                                            OutputFolder = OutputFolder.Replace("{000}", newvalue);
+                                                            break;
+                                                    }
+
+                                                }
+                                            }
+
+                                        }
+                                    }
+
+                                    //Matching with replaceable values
+                                    Match FileMatch = SourceFileRegex.Match(FinalSource);
+                                    if (FileMatch.Groups.Count > 0)
+                                    {
+                                        foreach (Group group in FileMatch.Groups)
+                                        {
+                                            if (group.Name == "folder")
+                                            {
+                                                CaptureCollection caps = group.Captures;
+                                                if (caps.Count > 1)
+                                                {
+                                                    foreach (Capture cap in caps)
+                                                    {
+                                                        OutputFile = Replacinator.Replace(OutputFile, cap.Value, 1);
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    OutputFile = Replacinator.Replace(OutputFile, group.Value, 1);
+                                                }
+
+
+                                            }
+                                            if (group.Name.Length > 8)
+                                            {
+                                                if (group.Name.Substring(0, 8) == "gamedata")
+                                                {
+                                                    GameDataCategory gdc = BuilderGameData.Categories.Find(c => c.ID == imt.Association);
+                                                    GameDataItem item = gdc.Items.Find(i => i.ID == cm.GameDataItemID);
+                                                    CaptureCollection caps = group.Captures;
+
+                                                    if (caps.Count > 1)
+                                                    {
+                                                        foreach (Capture cap in caps)
+                                                        {
+                                                            OutputFile = OutputFile.Replace("{Characters}", item.Attributes[0].Value);
+                                                            OutputFolder = OutputFolder.Replace("{Stages}", item.Attributes[0].Value);
+                                                            OutputFile = OutputFile.Replace("{Music}", item.Attributes[0].Value);
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        OutputFile = OutputFile.Replace("{Characters}", item.Attributes[0].Value);
+                                                        OutputFolder = OutputFolder.Replace("{Stages}", item.Attributes[0].Value);
+                                                        OutputFile = OutputFile.Replace("{Music}", item.Attributes[0].Value);
+                                                    }
+
+
+                                                }
+                                            }
+                                            if (group.Name.Length > 4)
+                                            {
+                                                if (group.Name.Substring(0, 4) == "Slot")
+                                                {
+                                                    int desiredSlot = ass.Slot;
+                                                    string newvalue = "";
+                                                    switch (group.Name)
+                                                    {
+
+                                                        case "SlotSingleDigit":
+                                                            newvalue = desiredSlot.ToString("0");
+                                                            OutputFile = OutputFile.Replace("{S0}", newvalue);
+                                                            break;
+                                                        case "SlotDoubleDigit":
+                                                            newvalue = desiredSlot.ToString("00");
+                                                            OutputFile = OutputFile.Replace("{S00}", newvalue);
+                                                            break;
+                                                        case "SlotTripleDigit":
+                                                            newvalue = desiredSlot.ToString("000");
+                                                            OutputFile = OutputFile.Replace("{S000}", newvalue);
+                                                            break;
+                                                    }
+
+                                                }
+                                                if (group.Name.Substring(0, 5) == "Digit")
+                                                {
+                                                    int desiredSlot = ass.Slot;
+                                                    string newvalue = "";
+                                                    switch (group.Name)
+                                                    {
+
+                                                        case "DigitSingle":
+                                                            newvalue = desiredSlot.ToString("0");
+                                                            OutputFile = OutputFile.Replace("{0}", newvalue);
+                                                            break;
+                                                        case "DigitDouble":
+                                                            newvalue = desiredSlot.ToString("00");
+                                                            OutputFile = OutputFile.Replace("{00}", newvalue);
+                                                            break;
+                                                        case "DigitTriple":
+                                                            newvalue = desiredSlot.ToString("000");
+                                                            OutputFile = OutputFile.Replace("{000}", newvalue);
                                                             break;
                                                     }
 
@@ -293,8 +406,9 @@ namespace Quasar.Internal.FileSystem
                                 }
 
 
-                                string FinalDestination = basedestination + FinalPath;
+                                string FinalDestination = basedestination + OutputFolder +"/"+ OutputFile;
                                 FinalDestination = FinalDestination.Replace(@"/", @"\");
+                                FinalDestination = FinalDestination.Replace(@"{Workspace}", BuilderWorkspace.Name);
                                 BuilderCopy(FinalSource, FinalDestination, FTP, FTPClient);
                             }
                         }
@@ -379,7 +493,7 @@ namespace Quasar.Internal.FileSystem
             }
             else
             {
-                Folderino.CheckCopyFile(source, BuilderDriveFolder+destination);
+                Folderino.CheckCopyFile(source, destination);
             }
         }
         public void BuilderDelete(string destination, Boolean FTP, FtpClient client = null)

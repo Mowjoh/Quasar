@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <InternalModType xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="Fighter UI" Filename="SmashUltimate/Fighter_UI" ID="3" GameID="1" Association="1" Slots="8">
   <InternalModTypeFile ID="0">
-    <SourcePath>chara_{0}</SourcePath>
+    <SourcePath>chara_{Folder}</SourcePath>
     <Destination>ui/replace/chara/chara_{Folder}/chara_{Folder}_{Characters}_{S00}.bntx</Destination>
-    <SourceFile>chara_{0}_{Characters}_{S00}.bntx</SourceFile>
+    <SourceFile>chara_{Folder}_{Characters}_{S00}.bntx</SourceFile>
     <Mandatory>true</Mandatory>
-    <BuilderFolder BuilderID="0" Path ="test"/>
-    <BuilderFolder BuilderID="1" Path ="test"/>
-    <BuilderFolder BuilderID="2" Path ="test"/>
-    <BuilderFile BuilderID="0" Path ="test"/>
-    <BuilderFile BuilderID="1" Path ="test"/>
-    <BuilderFile BuilderID="2" Path ="test"/>
+    <BuilderFolder BuilderID="0" Path ="ui/replace/chara/chara_{Folder}"/>
+    <BuilderFolder BuilderID="1" Path ="arc/ui/replace/chara/chara_{Folder}"/>
+    <BuilderFolder BuilderID="2" Path ="atmosphere/contents/01006A800016E000/romfs/arc/ui/replace/chara/chara_{Folder}"/>
+    <BuilderFile BuilderID="0" Path ="chara_{Folder}_{Characters}_{S00}.bntx"/>
+    <BuilderFile BuilderID="1" Path ="chara_{Folder}_{Characters}_{S00}.bntx"/>
+    <BuilderFile BuilderID="2" Path ="chara_{Folder}_{Characters}_{S00}.bntx"/>
   </InternalModTypeFile>
 </InternalModType>

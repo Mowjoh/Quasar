@@ -529,7 +529,7 @@ namespace Quasar
             bool Update = Checker.CheckQuasarUpdated();
             Folderino.CheckBaseFolders();
             Folderino.CompareReferences();
-            bool Debug = true;
+            bool Debug = false;
 
             if (Update || Debug)
             {
@@ -1360,7 +1360,7 @@ namespace Quasar
                         ftpPath = "";
                     }
 
-                    await Builder.SmashBuild(pathname, BuilderModLoaderCombo.SelectedIndex, ftpPath, NC, BuilderWipeCreateRadio.IsChecked == true ? 1 : -1, Mods, ContentMappings, CurrentWorkspace, InternalModTypes, CurrentGame, GameData, BuilderLogs, BuilderProgress);
+                    await Builder.SmashBuild(pathname, BuilderModLoaderCombo.SelectedIndex, ftpPath, NC, BuilderWipeCreateRadio.IsChecked == true ? 1 : -1, Mods, ContentMappings, CurrentWorkspace, InternalModTypes, CurrentGame, GameData, BuilderLogs, BuilderProgress,GameBuilders.ElementAt(BuilderModLoaderCombo.SelectedIndex));
                     BuilderProgress.Value = 100;
                     BuilderLogs.Text += "Done\r\n";
                     BuilderBuild.IsEnabled = true;

@@ -57,7 +57,7 @@ namespace Quasar.Quasar_Sys
             //Searching for matches for each of the files included in the Internal Mod Type
             foreach (InternalModTypeFile IMTF in IMT.Files)
             {
-                FullMatches.AddRange(EvaluateForTypeFile(IMTF, LibraryModFiles, MFM));
+                FullMatches.AddRange(EvaluateForTypeFile(IMTF, LibraryModFiles, MFM, mod));
                 SearchResults = ParseContentFromMatches(FullMatches, SearchResults, IMTF,IMT, MFM, SpecificCategory);
             }
 
@@ -65,7 +65,7 @@ namespace Quasar.Quasar_Sys
         }
 
 
-        public static List<QuasarMatch> EvaluateForTypeFile(InternalModTypeFile IMTF, IEnumerable<string> ListOfFiles, ModFileManager MFM)
+        public static List<QuasarMatch> EvaluateForTypeFile(InternalModTypeFile IMTF, IEnumerable<string> ListOfFiles, ModFileManager MFM, LibraryMod mod)
         {
             List<QuasarMatch> quasarMatches = new List<QuasarMatch>();
             //Setting up Regex
@@ -88,7 +88,17 @@ namespace Quasar.Quasar_Sys
                     if (Groups.Count != 0)
                     {
                         //Parsing info from match
-                        QuasarMatch QM = GetRegexMatchData(Groups, "", filepath.Substring(0, FileMatch.Index));
+                        QuasarMatch QM = GetRegexMatchData(Groups,mod.Name, filepath.Substring(0, FileMatch.Index));
+                        if(FolderMatch.Groups.Count > 0)
+                        {
+                            QuasarMatch QFM = GetRegexMatchData(FolderMatch.Groups, mod.Name, filepath.Substring(0, FileMatch.Index));
+                            if(QFM.GameDataValue != "")
+                            {
+                                QM.GameDataValue = QFM.GameDataValue;
+                            }
+                        }
+                       
+
                         QM.OutputPath = filepath.Replace(MFM.LibraryContentFolderPath, "");
 
                         //If there is no parent match but a gamedata match
@@ -165,7 +175,7 @@ namespace Quasar.Quasar_Sys
                 if (QM.MatchType == (int)MatchTypes.FullMatch)
                 {
                     //Searching for existing mapping
-                    ContentMapping newMapping = _ContentMappings.Find(map => map.Name == QM.MatchGroup && map.InternalModType == IMT.ID && map.Folder == QM.OriginalParentFolder && map.ModID.ToString() == MFM.ModID);
+                    ContentMapping newMapping = _ContentMappings.Find(map => map.Name == QM.MatchGroup && map.InternalModType == IMT.ID && map.ModID.ToString() == MFM.ModID);
                     if (newMapping != null)
                     {
                         ContentMappingFile cmf = newMapping.Files.Find(f => f.SourcePath == QM.OutputPath);
@@ -214,7 +224,7 @@ namespace Quasar.Quasar_Sys
 
             //Replacing game data
             output = output.Replace(@"{Characters}", @"(?'gamedata_characters'[^\_\\]*)");
-            output = output.Replace(@"{Stages}", @"(?'gamedata_stages'[A-Za-z0-9\_\-]*)");
+            output = output.Replace(@"{Stages}", @"(?'gamedata_stages'[^\\]*)");
             output = output.Replace(@"{Music}", @"(?'gamedata_music'[^\\\/]*)");
 
             //Replacing backslashes for regex interpretation

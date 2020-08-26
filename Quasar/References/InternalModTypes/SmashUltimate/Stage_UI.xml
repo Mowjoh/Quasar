@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <InternalModType xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="Stage UI" Filename="SmashUltimate/Stage_UI" ID="7" GameID="1" Association="2" Slots="1">
   <InternalModTypeFile ID="0">
-    <SourcePath>stage_{0}</SourcePath>
-    <SourceFile>stage_{S0}_*.bntx</SourceFile>
+    <SourcePath>stage_{Folder}</SourcePath>
+    <SourceFile>stage_{Folder}_{Stages}.bntx</SourceFile>
     <Mandatory>true</Mandatory>
-    <BuilderFolder BuilderID="0" Path ="test"/>
-    <BuilderFolder BuilderID="1" Path ="test"/>
-    <BuilderFolder BuilderID="2" Path ="qq"/>
-    <BuilderFile BuilderID="0" Path ="test"/>
-    <BuilderFile BuilderID="1" Path ="test"/>
-    <BuilderFile BuilderID="2" Path ="test"/>
+    <BuilderFolder BuilderID="0" Path ="ui/replace/stage/stage_{Folder}"/>
+    <BuilderFolder BuilderID="1" Path ="arc/ui/replace/stage/stage_{Folder}"/>
+    <BuilderFolder BuilderID="2" Path ="atmosphere/contents/01006A800016E000/romfs/arc/ui/replace/stage/stage_{Folder}"/>
+    <BuilderFile BuilderID="0" Path ="stage_{Folder}_{Stages}.bntx"/>
+    <BuilderFile BuilderID="1" Path ="stage_{Folder}_{Stages}.bntx"/>
+    <BuilderFile BuilderID="2" Path ="stage_{Folder}_{Stages}.bntx"/>
   </InternalModTypeFile>
 </InternalModType>

@@ -4,44 +4,44 @@
     <SourcePath>fighter_voice</SourcePath>
     <SourceFile>vc_{Characters}.nus3audio</SourceFile>
     <Mandatory>true</Mandatory>
-    <BuilderFolder BuilderID="0" Path ="sound/bank/fighter_voice/vc_{Characters}.nus3audio"/>
-    <BuilderFolder BuilderID="1" Path ="test"/>
-    <BuilderFolder BuilderID="2" Path ="test"/>
-    <BuilderFile BuilderID="0" Path ="test"/>
-    <BuilderFile BuilderID="1" Path ="test"/>
-    <BuilderFile BuilderID="2" Path ="test"/>
+    <BuilderFolder BuilderID="0" Path ="sound/bank/fighter_voice"/>
+    <BuilderFolder BuilderID="1" Path ="arc/sound/bank/fighter_voice"/>
+    <BuilderFolder BuilderID="2" Path ="atmosphere/contents/01006A800016E000/romfs/arc/sound/bank/fighter_voice"/>
+    <BuilderFile BuilderID="0" Path ="vc_{Characters}.nus3audio"/>
+    <BuilderFile BuilderID="1" Path ="arc/vc_{Characters}.nus3audio"/>
+    <BuilderFile BuilderID="2" Path ="vc_{Characters}.nus3audio"/>
   </InternalModTypeFile>
   <InternalModTypeFile ID="1">
     <SourcePath>fighter_voice</SourcePath>
     <SourceFile>vc_{Characters}_c{S00}.nus3audio</SourceFile>
     <Mandatory>false</Mandatory>
-    <BuilderFolder BuilderID="0" Path ="test"/>
-    <BuilderFolder BuilderID="1" Path ="test"/>
-    <BuilderFolder BuilderID="2" Path ="test"/>
-    <BuilderFile BuilderID="0" Path ="test"/>
-    <BuilderFile BuilderID="1" Path ="test"/>
-    <BuilderFile BuilderID="2" Path ="test"/>
+    <BuilderFolder BuilderID="0" Path ="sound/bank/fighter_voice"/>
+    <BuilderFolder BuilderID="1" Path ="arc/sound/bank/fighter_voice"/>
+    <BuilderFolder BuilderID="2" Path ="atmosphere/contents/01006A800016E000/romfs/arc/sound/bank/fighter_voice"/>
+    <BuilderFile BuilderID="0" Path ="vc_{Characters}_c{S00}.nus3audio"/>
+    <BuilderFile BuilderID="1" Path ="vc_{Characters}_c{S00}.nus3audio"/>
+    <BuilderFile BuilderID="2" Path ="vc_{Characters}_c{S00}.nus3audio"/>
   </InternalModTypeFile>
   <InternalModTypeFile ID="2">
     <SourcePath>fighter_voice</SourcePath>
     <SourceFile>vc_{Characters}+{Folder}.nus3audio</SourceFile>
     <Mandatory>true</Mandatory>
-    <BuilderFolder BuilderID="0" Path ="sound/bank/fighter_voice/vc_{Characters}.nus3audio"/>
-    <BuilderFolder BuilderID="1" Path ="test"/>
-    <BuilderFolder BuilderID="2" Path ="test"/>
-    <BuilderFile BuilderID="0" Path ="test"/>
-    <BuilderFile BuilderID="1" Path ="test"/>
-    <BuilderFile BuilderID="2" Path ="test"/>
+    <BuilderFolder BuilderID="0" Path ="sound/bank/fighter_voice/"/>
+    <BuilderFolder BuilderID="1" Path ="arc/sound/bank/fighter_voice"/>
+    <BuilderFolder BuilderID="2" Path ="sound/bank/fighter_voice"/>
+    <BuilderFile BuilderID="0" Path ="vc_{Characters}+{Folder}.nus3audio"/>
+    <BuilderFile BuilderID="1" Path ="vc_{Characters}+{Folder}.nus3audio"/>
+    <BuilderFile BuilderID="2" Path ="vc_{Characters}+{Folder}.nus3audio"/>
   </InternalModTypeFile>
   <InternalModTypeFile ID="3">
     <SourcePath>fighter_voice</SourcePath>
     <SourceFile>vc_{Characters}_c{S00}+{Folder}.nus3audio</SourceFile>
     <Mandatory>false</Mandatory>
-    <BuilderFolder BuilderID="0" Path ="test"/>
-    <BuilderFolder BuilderID="1" Path ="test"/>
-    <BuilderFolder BuilderID="2" Path ="test"/>
-    <BuilderFile BuilderID="0" Path ="test"/>
-    <BuilderFile BuilderID="1" Path ="test"/>
-    <BuilderFile BuilderID="2" Path ="test"/>
+    <BuilderFolder BuilderID="0" Path ="sound/bank/fighter_voice"/>
+    <BuilderFolder BuilderID="1" Path ="arc/sound/bank/fighter_voice"/>
+    <BuilderFolder BuilderID="2" Path ="atmosphere/contents/01006A800016E000/romfs/arc/sound/bank/fighter_voice"/>
+    <BuilderFile BuilderID="0" Path ="vc_{Characters}_c{S00}+{Folder}.nus3audio"/>
+    <BuilderFile BuilderID="1" Path ="vc_{Characters}_c{S00}+{Folder}.nus3audio"/>
+    <BuilderFile BuilderID="2" Path ="vc_{Characters}_c{S00}+{Folder}.nus3audio"/>
   </InternalModTypeFile>
 </InternalModType>
