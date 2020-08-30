@@ -1,0 +1,27 @@
+﻿<Window x:Class="Quasar.Controls.ManualAdd"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Quasar.Controls"
+        mc:Ignorable="d"
+        Title="ManualAdd" Height="450" Width="800">
+    <Grid>
+        <Label Content="Enter a name" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+        <Button Content="Select an archive" HorizontalAlignment="Left" Margin="120,16,0,0" VerticalAlignment="Top" Width="220"/>
+        <Label Content="Chemin de la ressource" HorizontalAlignment="Left" Margin="15,66,0,0" VerticalAlignment="Top" Width="460"/>
+        <ListView HorizontalAlignment="Left" Height="213" Margin="15,92,0,0" VerticalAlignment="Top" Width="767">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <Button Content="Fermer le mode de test" HorizontalAlignment="Left" Margin="290,385,0,0" VerticalAlignment="Top" Width="220" Click="Button_Click"/>
+        <Button Content="Finish Test" HorizontalAlignment="Left" Margin="290,310,0,0" VerticalAlignment="Top" Width="220"/>
+        <Label Content="T'as quitté le jeu?" HorizontalAlignment="Left" Margin="10,330,0,0" VerticalAlignment="Top" Width="460"/>
+        <Button Content="Oui" HorizontalAlignment="Left" Margin="290,335,0,0" VerticalAlignment="Top" Width="220"/>
+        <Label Content="OK je nettoye" HorizontalAlignment="Left" Margin="10,359,0,0" VerticalAlignment="Top" Width="460"/>
+
+    </Grid>
+</Window>

@@ -112,6 +112,12 @@ namespace Quasar.XMLResources
             [XmlAttribute("Name")]
             public String Name { get; set; }
 
+            [XmlAttribute("BuildDate")]
+            public String BuildDate { get; set; }
+
+            [XmlAttribute("Built")]
+            public bool Built { get; set; }
+
             [XmlElement("Association")]
             public List<Association> Associations { get; set; }
         }

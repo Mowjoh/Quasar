@@ -187,5 +187,101 @@ namespace Quasar.Properties {
                 this["EnableIMT"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int WorkspaceIdGenerator {
+            get {
+                return ((int)(this["WorkspaceIdGenerator"]));
+            }
+            set {
+                this["WorkspaceIdGenerator"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string FTPIP {
+            get {
+                return ((string)(this["FTPIP"]));
+            }
+            set {
+                this["FTPIP"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string FTPPort {
+            get {
+                return ((string)(this["FTPPort"]));
+            }
+            set {
+                this["FTPPort"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string FTPUN {
+            get {
+                return ((string)(this["FTPUN"]));
+            }
+            set {
+                this["FTPUN"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string FTPPW {
+            get {
+                return ((string)(this["FTPPW"]));
+            }
+            set {
+                this["FTPPW"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool FTPValid {
+            get {
+                return ((bool)(this["FTPValid"]));
+            }
+            set {
+                this["FTPValid"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public int ModLoader {
+            get {
+                return ((int)(this["ModLoader"]));
+            }
+            set {
+                this["ModLoader"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool Wireless {
+            get {
+                return ((bool)(this["Wireless"]));
+            }
+            set {
+                this["Wireless"] = value;
+            }
+        }
     }
 }

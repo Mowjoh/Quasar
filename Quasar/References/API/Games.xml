@@ -361,6 +361,14 @@
         <Name>Other/Misc</Name>
       </Category>
     </GameModType>
+    <GameModType Name="Effects" ID="6" APIName="Effect" LibraryFolder="SmashUltimate">
+      <Category ID="-1" APICategory="0">
+        <Name>All Categories</Name>
+      </Category>
+      <Category ID="0" APICategory="0">
+        <Name>Uncategorized</Name>
+      </Category>
+    </GameModType>
   </Game>
   <Game ID="2" Name="Fire Emblem Three Houses" GameName="FETH" Image="FETH.jpg">
     <GameModType Name="All Types" ID="-1" APIName="" LibraryFolder=""/>

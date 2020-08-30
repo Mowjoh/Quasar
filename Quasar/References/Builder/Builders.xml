@@ -1,5 +1,5 @@
 ﻿<GameBuilders>
   <GameBuilder ID="0" Name="UMM" BasePath="UltimateModManager/mods/{Workspace}/" InstallPath="" GameID="1"/>
-  <GameBuilder ID="1" Name="ARCropolis" BasePath="atmosphere/contents/01006A800016E000/romfs/" InstallPath="" GameID="1"/>
+  <GameBuilder ID="1" Name="ARCropolis" BasePath="atmosphere/contents/01006A800016E000/romfs/{Workspace}/" InstallPath="" GameID="1"/>
   <GameBuilder ID="2" Name="ARCropolis and UMM" BasePath="" InstallPath="" GameID="1"/>
 </GameBuilders>

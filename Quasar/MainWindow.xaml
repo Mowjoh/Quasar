@@ -10,6 +10,11 @@
         xmlns:Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2" x:Name="MainWindow1" x:Class="Quasar.MainWindow"
         mc:Ignorable="d"
         Title="Quasar" MinWidth="1280" MinHeight="720" Width="1280" Height="720" Icon="Quasar.ico" DataContext="{Binding RelativeSource={RelativeSource Self}}" >
+    <Window.TaskbarItemInfo>
+        <TaskbarItemInfo x:Name="QuasarTaskBar">
+
+        </TaskbarItemInfo>
+    </Window.TaskbarItemInfo>
 
     <Window.Resources>
         <CollectionViewSource Source="{Binding ListMods}" x:Key="CollectionOMods" Filter="ShowOnlyNonFilteredMods" x:Name="ModsCollectionViewSource" IsLiveFilteringRequested="True">
@@ -327,10 +332,10 @@
                             </Grid.RowDefinitions>
 
                             <Grid x:Name="BuilderSettingsGrid" Grid.Row="0" Grid.Column="0" Background="{DynamicResource QD1}">
-                                <Label Content="Select your Workspace :" HorizontalAlignment="Left" VerticalAlignment="Top" Width="173" Foreground="{DynamicResource QuasarTextColor}"/>
-                                <ComboBox x:Name="BuilderWorkspaceCombo" Margin="10,41,10,0" VerticalAlignment="Top" ItemsSource="{Binding Workspaces}" DisplayMemberPath="Name"/>
+                                <Label Content="Active Workspace :" HorizontalAlignment="Left" VerticalAlignment="Top" Width="173" Foreground="{DynamicResource QuasarTextColor}" Margin="10,0,0,0"/>
+                                <Label x:Name="BuilderWorkspaceName" Content="WorkspaceName" VerticalAlignment="Top" Foreground="{DynamicResource QuasarTextColor}" Margin="10,26,10,0"/>
                                 <Label Content="Mod Loader :" HorizontalAlignment="Left" Margin="10,78,0,0" VerticalAlignment="Top" Width="103" Foreground="{DynamicResource QuasarTextColor}" Style="{DynamicResource QuasarLabel}"/>
-                                <ComboBox x:Name="BuilderModLoaderCombo" Margin="9,109,10,0" VerticalAlignment="Top" ItemsSource="{Binding GameBuilders}" DisplayMemberPath="Name">
+                                <ComboBox x:Name="BuilderModLoaderCombo" Margin="10,109,10,0" VerticalAlignment="Top" ItemsSource="{Binding GameBuilders}" DisplayMemberPath="Name">
                                 </ComboBox>
                                 <Label Content="Transfer Options" HorizontalAlignment="Left" Margin="9,161,0,0" VerticalAlignment="Top" Width="103" Foreground="{DynamicResource QuasarTextColor}" Style="{DynamicResource QuasarLabel}"/>
                                 <RadioButton x:Name="BuilderLocalRadio" Content="Local Transfer" HorizontalAlignment="Left" Margin="10,190,0,0" VerticalAlignment="Top" Foreground="{DynamicResource QuasarTextColor}" GroupName="BuildMethod" IsChecked="True"/>
@@ -350,7 +355,7 @@
                                 <TextBox x:Name="BuildFTPAddress" HorizontalAlignment="Left" Height="23" Margin="10,41,0,0" TextWrapping="Wrap" Text="192.168." VerticalAlignment="Top" Width="179"/>
                                 <Label Content="Port :" HorizontalAlignment="Left" Margin="194,10,0,0" VerticalAlignment="Top" Width="179" Foreground="{DynamicResource QuasarTextColor}" Style="{DynamicResource QuasarLabel}"/>
                                 <TextBox x:Name="BuildFTPPort" HorizontalAlignment="Left" Height="23" Margin="194,41,0,0" TextWrapping="Wrap" Text="5000" VerticalAlignment="Top" Width="93"/>
-                                <Button x:Name="BuilderFTPTest" Content="Test Connection" HorizontalAlignment="Left" Margin="10,171,0,0" VerticalAlignment="Top" Width="244" Click="FTP_Test"/>
+                                <Button x:Name="BuilderFTPTest" Content="Test And Save Connection Info" HorizontalAlignment="Left" Margin="10,171,0,0" VerticalAlignment="Top" Width="244" Click="FTP_Test"/>
                                 <TextBox x:Name="BuildFTPUN" HorizontalAlignment="Left" Height="23" Margin="10,106,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="136" IsEnabled="{Binding BuildPWRadio.IsChecked}"/>
                                 <RadioButton x:Name="BuildAnonRadio" Content="Anonymous" HorizontalAlignment="Left" Margin="292,37,0,0" VerticalAlignment="Top" GroupName="AnonGroup" Foreground="White" IsChecked="True"/>
                                 <RadioButton x:Name="BuildPWRadio" Content="Username / Password" HorizontalAlignment="Left" Margin="292,52,0,0" VerticalAlignment="Top" GroupName="AnonGroup" Foreground="White" Checked="RadioButton_Checked"/>
@@ -397,7 +402,8 @@
                             </Grid.RowDefinitions>
                             <Label x:Name="IMTContentsLabel" Content="Contents :" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="101" Foreground="{DynamicResource QuasarTextColor}" Style="{DynamicResource QuasarLabel}"/>
                             <Button x:Name="IMTAddFileButton" Content="Add File" Margin="116,13,0,0" VerticalAlignment="Top" Height="22" RenderTransformOrigin="-0.441,0.545" HorizontalAlignment="Left" Width="130" Click="IMTAddFile"/>
-                            <Button x:Name="IMTDelFileButton" Content="Delete File" Margin="0,12,10,0" VerticalAlignment="Top" Height="22" RenderTransformOrigin="-0.441,0.545" Click="IMTDeleteFile" HorizontalAlignment="Right" Width="130"/>
+                            <Button x:Name="IMTDelFileButton" Content="Delete File" Margin="0,12,233,0" VerticalAlignment="Top" Height="22" RenderTransformOrigin="-0.441,0.545" Click="IMTDeleteFile" HorizontalAlignment="Right" Width="130"/>
+                            <Button x:Name="Test_Files" Content="Test Definitions" Margin="0,13,10,0" VerticalAlignment="Top" Height="22" RenderTransformOrigin="-0.441,0.545" Click="IMTTestFile" HorizontalAlignment="Right" Width="130"/>
                             <DataGrid x:Name="IMTDataGrid" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False"  Margin="10" Grid.Row="1" SelectionChanged="DataGridRowSelected" Style="{DynamicResource QuasarDatagrid}" RowStyle="{DynamicResource QuasarDataGridRow}">
                                 <DataGrid.Columns>
                                     <DataGridTextColumn Header="Path" Binding="{Binding SourcePath}" Width="8*" HeaderStyle="{DynamicResource QuasarDataGridHeader}"/>
@@ -475,6 +481,42 @@
                                 </ItemsPanelTemplate>
                             </ItemsControl.ItemsPanel>
                         </ItemsControl>
+                    </Grid>
+                </TabItem>
+                <TabItem x:Name="QuasarWorkspaceTab" Header="Workspaces" Foreground="{DynamicResource QuasarTextColor}">
+                    <Grid Background="#FFE5E5E5">
+                        <Grid x:Name="CreationGameBlock1" Grid.ColumnSpan="2" Grid.Column="2" Background ="Black" Panel.ZIndex="500"  Visibility="{Binding Path=GameSelectVisibility}" d:IsHidden="True">
+                            <Label Content="Please select a game first" HorizontalAlignment="Center" Foreground="Wheat"  VerticalAlignment="Center" FontSize="36" />
+                        </Grid>
+                        <Grid x:Name="WorkspaceGrid">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="500"/>
+                                <ColumnDefinition Width="250"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Button x:Name="WorkspaceAddButton" Content="Add a new Workspace" Margin="0,0,0,10" VerticalAlignment="Bottom" Height="26" HorizontalAlignment="Center" Width="153" RenderTransformOrigin="1.172,0.308" Click="AddWorkspace"/>
+                            <ListBox x:Name="WorkspaceListBox" Margin="10,45,10,47" Style="{DynamicResource QuasarListBox}" ItemsSource="{Binding QuasarWorkspaces}" SelectionChanged="WorkspaceSelected">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Label Content="{Binding Name}" Width="Auto" Foreground="White" />
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                            <TextBox x:Name="WorkspaceNameTextBox" Grid.Column="2" HorizontalAlignment="Left" Height="23" Margin="10,14,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="458"/>
+                            <Button x:Name="WorkspaceSaveNameButton" Content="Save name" Grid.Column="2" HorizontalAlignment="Left" Margin="10,42,0,0" VerticalAlignment="Top" Width="143" Height="24" Click="RenameWorkspaces"/>
+                            <Button x:Name="WorkspaceEmptyButton" Content="Empty this Workspace" Grid.Column="2" HorizontalAlignment="Left" Margin="10,196,0,0" VerticalAlignment="Top" Width="143" Height="26" Background="#FFD3945E" Click="EmptyWorkspace"/>
+                            <Button x:Name="WorkspaceDuplicateButton" Content="Duplicate this Workspace" Grid.Column="2" HorizontalAlignment="Left" Margin="10,140,0,0" VerticalAlignment="Top" Width="143" Height="26" Click="DuplicateWorkspace"/>
+                            <Label Content="Workspace Name" Grid.Column="1" Margin="10,10,10,0" VerticalAlignment="Top" Foreground="White"/>
+                            <Label Content="Workspace Actions" Grid.Column="1" Margin="10,140,10,0" VerticalAlignment="Top" Foreground="White"/>
+                            <Label Content="Workspace Info :" Grid.Column="1" Margin="10,346,10,0" VerticalAlignment="Top" Foreground="White"/>
+                            <Label x:Name="WorkspaceAssignmentLabel" Content="Assignments :" Grid.Column="2" Margin="10,346,10,0" VerticalAlignment="Top" Foreground="White"/>
+                            <Label x:Name="WorkspaceBuildLabel" Content="Latest Build Date :" Grid.Column="2" Margin="10,372,10,0" VerticalAlignment="Top" Foreground="White"/>
+                            <Button x:Name="WorkspaceEnableButton_Copy" Content="(FTP Only) Set as default ARCropolis Workspace" Grid.Column="2" HorizontalAlignment="Left" Margin="10,285,0,0" VerticalAlignment="Top" Width="313" Height="26"/>
+                            <Label x:Name="WorkspaceActiveWorkspaceName" Content="Active Workspace :" Margin="10,14,10,0" VerticalAlignment="Top" Foreground="White"/>
+                            <Button x:Name="WorkspaceDeleteButton_Copy" Content="Delete this Workspace" Grid.Column="2" HorizontalAlignment="Left" Margin="180,196,0,0" VerticalAlignment="Top" Width="143" Height="26" Background="#FFAE6060" Click="DeleteWorkspace"/>
+                        </Grid>
                     </Grid>
                 </TabItem>
             </TabControl>

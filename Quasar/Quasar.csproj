@@ -91,11 +91,17 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controls\DefinitionsWindow.xaml.cs">
+      <DependentUpon>DefinitionsWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\FileView.xaml.cs">
       <DependentUpon>FileView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\ContentListItem.xaml.cs">
       <DependentUpon>ContentListItem.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ManualAdd.xaml.cs">
+      <DependentUpon>ManualAdd.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\ModListItem.xaml.cs">
       <DependentUpon>ModListItem.xaml</DependentUpon>
@@ -131,6 +137,10 @@
     <Compile Include="Views\SettingsView.xaml.cs">
       <DependentUpon>SettingsView.xaml</DependentUpon>
     </Compile>
+    <Page Include="Controls\DefinitionsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\FileView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -138,6 +148,10 @@
     <Page Include="Controls\ContentListItem.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\ManualAdd.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\ModListItem.xaml">
       <SubType>Designer</SubType>
@@ -190,6 +204,12 @@
     <Content Include="References\Builder\Builders.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Resource Include="References\InternalModTypes\SmashUltimate\Fighter_Effect.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="References\InternalModTypes\SmashUltimate\Items.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
     <Content Include="References\QuasarUrlShortcuts\Smash Bros\Skins\Destroyer Toad.url">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

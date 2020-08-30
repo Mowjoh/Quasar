@@ -163,6 +163,21 @@ namespace Quasar.XMLResources
         [XmlAttribute("InternalModTypeFileID")]
         public int InternalModTypeFileID { get; set; }
 
+        [XmlElement("AnyFile")]
+        public string AnyFile { get; set; }
+
+        [XmlElement("FilePart")]
+        public List<string> FileParts { get; set; }
+
+        [XmlElement("FolderPart")]
+        public List<string> FolderParts { get; set; }
+
+        [XmlElement("FileFolder")]
+        public List<string> FileFolders { get; set; }
+
+        [XmlElement("FolderFolder")]
+        public List<string> FolderFolders { get; set; }
+
         [XmlElement("SourcePath")]
         public string SourcePath { get; set; }
 

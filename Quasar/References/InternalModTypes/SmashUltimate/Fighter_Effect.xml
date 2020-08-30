@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<InternalModType xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="Fighter Effect" Filename="SmashUltimate/Fighter_Effect" ID="4" GameID="1" Association="1" Slots="8">
+  <InternalModTypeFile ID="0">
+    <SourcePath>effect/fighter/{GameData}</SourcePath>
+    <SourceFile>{AnyFile}.eff</SourceFile>
+    <Mandatory>true</Mandatory>
+    <BuilderFolder BuilderID="0" Path ="effect/fighter/{GameData}"/>
+    <BuilderFolder BuilderID="1" Path ="arc/effect/fighter/{GameData}"/>
+    <BuilderFolder BuilderID="2" Path ="UltimateModManager/mods/{Workspace}/effect/fighter/{GameData}"/>
+    <BuilderFile BuilderID="0" Path ="{AnyFile}.eff"/>
+    <BuilderFile BuilderID="1" Path ="{AnyFile}.eff"/>
+    <BuilderFile BuilderID="2" Path ="{AnyFile}.eff"/>
+  </InternalModTypeFile>
+  <InternalModTypeFile ID="1">
+    <SourcePath>effect/fighter/{GameData}/{Folder}</SourcePath>
+    <SourceFile>{AnyFile}.nutexb</SourceFile>
+    <Mandatory>true</Mandatory>
+    <BuilderFolder BuilderID="0" Path ="effect/fighter/{GameData}/{Folder}"/>
+    <BuilderFolder BuilderID="1" Path ="arc/effect/fighter/{GameData}/{Folder}"/>
+    <BuilderFolder BuilderID="2" Path ="UltimateModManager/mods/{Workspace}/effect/fighter/{GameData}/{Folder}"/>
+    <BuilderFile BuilderID="0" Path ="{AnyFile}.nutexb"/>
+    <BuilderFile BuilderID="1" Path ="{AnyFile}.nutexb"/>
+    <BuilderFile BuilderID="2" Path ="{AnyFile}.nutexb"/>
+  </InternalModTypeFile>
+</InternalModType>

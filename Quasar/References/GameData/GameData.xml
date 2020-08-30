@@ -8463,6 +8463,1221 @@
       </Item>
 
     </Category>
+    <Category ID="4">
+      <Name>Items</Name>
+      <Item ID="1">
+        <Name>smashballheavy</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>smashballheavy</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="2">
+        <Name>wariobikea</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>wariobikea</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="3">
+        <Name>wariobike</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>wariobike</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="4">
+        <Name>staffshot</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>staffshot</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="5">
+        <Name>finalpeach</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>finalpeach</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="6">
+        <Name>pacmancherry</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>pacmancherry</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="7">
+        <Name>killereyeshot</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>killereyeshot</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="8">
+        <Name>honeycombbee</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>honeycombbee</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="9">
+        <Name>st_shell</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>st_shell</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="10">
+        <Name>diddypeanuts</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>diddypeanuts</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="11">
+        <Name>chicken</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>chicken</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="12">
+        <Name>soccerball</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>soccerball</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="13">
+        <Name>starrodshot</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>starrodshot</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="14">
+        <Name>club</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>club</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="15">
+        <Name>barrel</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>barrel</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="16">
+        <Name>st_fruit</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>st_fruit</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="17">
+        <Name>boomerang</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>boomerang</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="18">
+        <Name>capsule</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>capsule</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="19">
+        <Name>hammer</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>hammer</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="20">
+        <Name>crossbomb</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>crossbomb</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="21">
+        <Name>st_ice_yasai</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>st_ice_yasai</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="22">
+        <Name>book</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>book</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="23">
+        <Name>wariobiked</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>wariobiked</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="24">
+        <Name>common</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>common</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="25">
+        <Name>specialflag</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>specialflag</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="26">
+        <Name>kroolcrown</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>kroolcrown</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="27">
+        <Name>doseisan</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>doseisan</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="28">
+        <Name>mechakoopa</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>mechakoopa</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="29">
+        <Name>walkmush</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>walkmush</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="30">
+        <Name>explosionbomb</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>explosionbomb</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="31">
+        <Name>raygun</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>raygun</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="32">
+        <Name>superscope</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>superscope</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="33">
+        <Name>ripstickflower</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>ripstickflower</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="34">
+        <Name>log</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>log</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="35">
+        <Name>thundersword</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>thundersword</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="36">
+        <Name>superleaf</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>superleaf</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="37">
+        <Name>grass</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>grass</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="38">
+        <Name>linkbomb</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>linkbomb</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="39">
+        <Name>killereye</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>killereye</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="40">
+        <Name>smashbomb</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>smashbomb</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="41">
+        <Name>assist</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>assist</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="42">
+        <Name>walkmushshot</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>walkmushshot</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="43">
+        <Name>powblock</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>powblock</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="44">
+        <Name>starrod</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>starrod</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="45">
+        <Name>masterball</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>masterball</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="46">
+        <Name>robotgyro</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>robotgyro</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="47">
+        <Name>beamsword</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>beamsword</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="48">
+        <Name>magicpot</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>magicpot</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="49">
+        <Name>peachdaikon</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>peachdaikon</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="50">
+        <Name>staff</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>staff</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="51">
+        <Name>sensorbomb</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>sensorbomb</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="52">
+        <Name>pellet</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>pellet</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="53">
+        <Name>steeldiver</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>steeldiver</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="54">
+        <Name>clubshot</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>clubshot</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="55">
+        <Name>wiifitball</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>wiifitball</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="56">
+        <Name>banana</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>banana</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="57">
+        <Name>deathscythe</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>deathscythe</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="58">
+        <Name>mushroom</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>mushroom</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="59">
+        <Name>staffroulette</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>staffroulette</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="60">
+        <Name>powderbox</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>powderbox</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="61">
+        <Name>sandbaghr</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>sandbaghr</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="62">
+        <Name>carrierbox</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>carrierbox</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="63">
+        <Name>bumper</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>bumper</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="64">
+        <Name>egg</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>egg</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="65">
+        <Name>younglinkbomb</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>younglinkbomb</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="66">
+        <Name>kusudama</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>kusudama</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="67">
+        <Name>toonlinkbomb</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>toonlinkbomb</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="68">
+        <Name>smashball</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>smashball</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="69">
+        <Name>bananagunshot</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>bananagunshot</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="70">
+        <Name>superleaftail</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>superleaftail</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="71">
+        <Name>murabitofruit</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>murabitofruit</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="72">
+        <Name>maximtomato</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>maximtomato</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="73">
+        <Name>healball</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>healball</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="74">
+        <Name>magicball</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>magicball</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="75">
+        <Name>heart</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>heart</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="76">
+        <Name>st_apple</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>st_apple</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="77">
+        <Name>fairybottle</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>fairybottle</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="78">
+        <Name>bombhei</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>bombhei</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="79">
+        <Name>dolphinbomb</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>dolphinbomb</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="80">
+        <Name>goldenhammer</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>goldenhammer</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="81">
+        <Name>st_usa_egg</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>st_usa_egg</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="82">
+        <Name>raygunshot</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>raygunshot</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="83">
+        <Name>walkmushflower</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>walkmushflower</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="84">
+        <Name>killertransform</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>killertransform</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="85">
+        <Name>steeldivershot</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>steeldivershot</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="86">
+        <Name>dragoon</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>dragoon</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="87">
+        <Name>stage</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>stage</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="88">
+        <Name>pacmankey</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>pacmankey</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="89">
+        <Name>superstar</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>superstar</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="90">
+        <Name>bombchu</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>bombchu</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="91">
+        <Name>prizehr</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>prizehr</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="92">
+        <Name>genesis</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>genesis</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="93">
+        <Name>buddybomb</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>buddybomb</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="94">
+        <Name>revengeshootershot</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>revengeshootershot</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="95">
+        <Name>poweresa</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>poweresa</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="96">
+        <Name>metalblock</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>metalblock</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="97">
+        <Name>pitfall</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>pitfall</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="98">
+        <Name>homerunbathr</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>homerunbathr</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="99">
+        <Name>simonholywater</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>simonholywater</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="100">
+        <Name>bomber</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>bomber</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="101">
+        <Name>rocketbelt</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>rocketbelt</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="102">
+        <Name>slow</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>slow</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="103">
+        <Name>deku</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>deku</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="104">
+        <Name>unira</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>unira</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="105">
+        <Name>smashbombheavy</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>smashbombheavy</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="106">
+        <Name>usagihat</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>usagihat</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="107">
+        <Name>blackball</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>blackball</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="108">
+        <Name>honeycomb</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>honeycomb</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="109">
+        <Name>wariobikec</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>wariobikec</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="110">
+        <Name>homerunbat</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>homerunbat</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="111">
+        <Name>firebar</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>firebar</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="112">
+        <Name>mushd</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>mushd</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="113">
+        <Name>smartbomb</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>smartbomb</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="114">
+        <Name>box</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>box</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="115">
+        <Name>ripstick</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>ripstick</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="116">
+        <Name>starring</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>starring</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="117">
+        <Name>drillshot</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>drillshot</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="118">
+        <Name>drill</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>drill</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="119">
+        <Name>doll</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>doll</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="120">
+        <Name>st_fruitbomb</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>st_fruitbomb</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="121">
+        <Name>hammerhead</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>hammerhead</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="122">
+        <Name>pacmanbell</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>pacmanbell</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="123">
+        <Name>linkarrow</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>linkarrow</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="124">
+        <Name>smokescreen</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>smokescreen</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="125">
+        <Name>pasaran</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>pasaran</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="126">
+        <Name>magicpotwind</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>magicpotwind</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="127">
+        <Name>screw</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>screw</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="128">
+        <Name>greenshell</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>greenshell</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="129">
+        <Name>pacmanmelon</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>pacmanmelon</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="130">
+        <Name>richterholywater</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>richterholywater</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="131">
+        <Name>tabemono</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>tabemono</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="132">
+        <Name>backshield</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>backshield</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="133">
+        <Name>freezer</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>freezer</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="134">
+        <Name>thunder</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>thunder</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="135">
+        <Name>teamhealfield</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>teamhealfield</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="136">
+        <Name>genesisset</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>genesisset</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="137">
+        <Name>revengeshooter</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>revengeshooter</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="138">
+        <Name>pacmanstrawberry</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>pacmanstrawberry</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="139">
+        <Name>dragoonsight</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>dragoonsight</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="140">
+        <Name>daisydaikon</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>daisydaikon</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="141">
+        <Name>fireflower</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>fireflower</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="142">
+        <Name>badge</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>badge</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="143">
+        <Name>finaldaisy</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>finaldaisy</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="144">
+        <Name>curry</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>curry</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="145">
+        <Name>st_yamabuki_egg</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>st_yamabuki_egg</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="146">
+        <Name>warpstar</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>warpstar</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="147">
+        <Name>snakecbox</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>snakecbox</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="148">
+        <Name>beetle</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>beetle</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="149">
+        <Name>ripstickshot</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>ripstickshot</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="150">
+        <Name>killer</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>killer</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="151">
+        <Name>metalblade</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>metalblade</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="152">
+        <Name>pacmanapple</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>pacmanapple</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="153">
+        <Name>machstamp</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>machstamp</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="154">
+        <Name>dragoonset</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>dragoonset</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="155">
+        <Name>bossgalaga</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>bossgalaga</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="156">
+        <Name>togezoshell</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>togezoshell</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="157">
+        <Name>pacmanboss</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>pacmanboss</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="158">
+        <Name>pacmanorange</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>pacmanorange</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="159">
+        <Name>snakegrenade</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>snakegrenade</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="160">
+        <Name>chickenparty</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>chickenparty</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="161">
+        <Name>pokeball</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>pokeball</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="162">
+        <Name>superscopeshot</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>superscopeshot</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="163">
+        <Name>wariobikee</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>wariobikee</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="164">
+        <Name>chewing</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>chewing</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="165">
+        <Name>curryshot</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>curryshot</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="166">
+        <Name>wariobikeb</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>wariobikeb</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="167">
+        <Name>staffrouletteshot</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>staffrouletteshot</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="168">
+        <Name>st_crab</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>st_crab</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="169">
+        <Name>wood</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>wood</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="170">
+        <Name>fireflowershot</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>fireflowershot</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="171">
+        <Name>killsword</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>killsword</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="172">
+        <Name>sandbag</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>sandbag</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="173">
+        <Name>bananagun</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>bananagun</Value>
+        </ItemAttribute>
+      </Item>
+
+    </Category>
   </GameData>
   <GameData GameID ="2">
     <Category ID ="0">

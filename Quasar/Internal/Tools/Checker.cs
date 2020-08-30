@@ -75,7 +75,7 @@ namespace Quasar.Quasar_Sys
             String AssociationsPath = Properties.Settings.Default.DefaultDir + @"\Library\Associations.xml";
             if (!File.Exists(AssociationsPath))
             {
-                Workspace defaultWorkspace = new Workspace() { ID = IDGenerator.getNewWorkspaceID(), Name = "Default Workspace" };
+                Workspace defaultWorkspace = new Workspace() { Name = "Default Workspace", ID = IDGenerator.getNewWorkspaceID(), Associations = new List<Association>(), Built = false, BuildDate = "" };
                 List<Workspace> DefaultFile = new List<Workspace>() { defaultWorkspace };
                 AssociationXML.WriteAssociationFile(DefaultFile);
 

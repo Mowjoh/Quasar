@@ -27,6 +27,7 @@ using Quasar.Internal.FileSystem;
 using FluentFTP;
 using System.Text.RegularExpressions;
 using System.Net;
+using Quasar.Internal.Tools;
 
 namespace Quasar
 {
@@ -250,17 +251,17 @@ namespace Quasar
         #endregion
 
         #region Associations
-        private List<Workspace> _Workspaces;
-        public List<Workspace> Workspaces
+        private List<Workspace> _QuasarWorkspaces;
+        public List<Workspace> QuasarWorkspaces
         {
             get
             {
-                return _Workspaces;
+                return _QuasarWorkspaces;
             }
             set
             {
-                _Workspaces = value;
-                OnPropertyChanged("Workspaces");
+                _QuasarWorkspaces = value;
+                OnPropertyChanged("QuasarWorkspaces");
             }
         }
 
@@ -278,6 +279,7 @@ namespace Quasar
             }
         }
         #endregion
+
 
         #region Build
         private List<GameBuilder> _GameBuilders;
@@ -534,6 +536,22 @@ namespace Quasar
             if (Update || Debug)
             {
                 Folderino.UpdateBaseFiles();
+                if(Properties.Settings.Default.AppVersion == "1100")
+                {
+                    String AssociationsPath = Properties.Settings.Default.DefaultDir + @"\Library\Associations.xml";
+                    String ContentPath = Properties.Settings.Default.DefaultDir + @"\Library\ContentMapping.xml";
+
+                    if (File.Exists(AssociationsPath))
+                    {
+                        File.Delete(AssociationsPath);
+                    }
+                    if (File.Exists(ContentPath))
+                    {
+                        File.Delete(ContentPath);
+                    }
+
+                }
+
             }
 
             Checker.BaseWorkspace();
@@ -550,6 +568,7 @@ namespace Quasar
             LoadContentLibrary();
             LoadAssociationsLibrary();
 
+            
 
             CollectionViewSource cvs = new CollectionViewSource();
             cvs.Source = ListMods;
@@ -557,6 +576,15 @@ namespace Quasar
 
 
             SetInterfaceWithParams();
+
+            if (Update)
+            {
+                if (Properties.Settings.Default.AppVersion == "1100")
+                {
+                    ScanEverythingIntoWorkspace();
+                }
+
+            }
 
             readytoSelect = true;
             BuilderLogs.Text += "Please note that for both mod loaders I assume you have them installed.\r\n";
@@ -584,7 +612,7 @@ namespace Quasar
 
         private void LoadAssociationsLibrary()
         {
-            Workspaces = AssociationXML.GetWorkspaces(); 
+            QuasarWorkspaces = AssociationXML.GetWorkspaces(); 
         }
 
         private ObservableCollection<ModListItem> LoadLibraryMods()
@@ -1205,13 +1233,14 @@ namespace Quasar
                 IMTBuilderOutputFolderPath.IsEnabled = true;
                 GameBuilder GB = (GameBuilder)IMTGameBuilderCombo.SelectedItem;
                 InternalModTypeFile file = (InternalModTypeFile)IMTDataGrid.SelectedItem;
-                
-                BuilderFolder BFol = file.Destinations.Find(f => f.BuilderID == GB.ID);
-                BuilderFile BFil = file.Files.Find(f => f.BuilderID == GB.ID);
+                if( file != null)
+                {
+                    BuilderFolder BFol = file.Destinations.Find(f => f.BuilderID == GB.ID);
+                    BuilderFile BFil = file.Files.Find(f => f.BuilderID == GB.ID);
 
-                IMTBuilderOutputFilePath.Text = BFil.Path;
-                IMTBuilderOutputFolderPath.Text = BFol.Path;
-
+                    IMTBuilderOutputFilePath.Text = BFil.Path;
+                    IMTBuilderOutputFolderPath.Text = BFol.Path;
+                }
             }
 
         }
@@ -1273,6 +1302,16 @@ namespace Quasar
 
 
         }
+
+        private void IMTTestFile(object sender, RoutedEventArgs e)
+        {
+            if(ManagementModListView.SelectedIndex != -1){
+                ModListItem lm = (ModListItem)ManagementModListView.SelectedItem;
+                ModFileManager mfm = new ModFileManager(lm.LocalMod, CurrentGame);
+                new DefinitionsWindow(mfm, IMTFileText.Text, IMTBuilderOutputFilePath.Text, IMTPathText.Text, IMTBuilderOutputFolderPath.Text, GameDataCategories.ToList(), GameIMT.ToList(), (int)IMTGameBuilderCombo.SelectedIndex).Show();
+            }
+        }
+
         #endregion
 
         #region Build
@@ -1330,6 +1369,10 @@ namespace Quasar
             }
             if (willrun)
             {
+                Properties.Settings.Default.ModLoader = BuilderModLoaderCombo.SelectedIndex;
+                Properties.Settings.Default.Wireless = (bool)BuilderFTPRadio.IsChecked;
+                Properties.Settings.Default.Save();
+
                 BuilderBuild.IsEnabled = false;
                 BuilderFTPTest.IsEnabled = false;
                 Boolean proceed = false;
@@ -1347,21 +1390,25 @@ namespace Quasar
                 }
                 if (proceed || Properties.Settings.Default.SupressBuildDeletion)
                 {
+                    BuilderProgress.IsIndeterminate = true;
+                    QuasarTaskBar.ProgressState = System.Windows.Shell.TaskbarItemProgressState.Indeterminate;
+
                     string pathname = BuilderSDCombo.SelectedIndex == -1 ? "" : USBDrives[BuilderSDCombo.SelectedIndex].Name;
                     string ftpPath = address + ":" + port;
                     NetworkCredential NC = null;
                     if (BuildPWRadio.IsChecked == true)
                     {
                         NC = new NetworkCredential(BuildFTPUN.Text, BuildFTPPW.Text);
-                        BuilderProgress.IsIndeterminate = true;
+                        
                     }
                     if (BuilderLocalRadio.IsChecked == true)
                     {
                         ftpPath = "";
                     }
 
-                    await Builder.SmashBuild(pathname, BuilderModLoaderCombo.SelectedIndex, ftpPath, NC, BuilderWipeCreateRadio.IsChecked == true ? 1 : -1, Mods, ContentMappings, CurrentWorkspace, InternalModTypes, CurrentGame, GameData, BuilderLogs, BuilderProgress,GameBuilders.ElementAt(BuilderModLoaderCombo.SelectedIndex));
+                    await Builder.SmashBuild(pathname, BuilderModLoaderCombo.SelectedIndex, ftpPath, NC, BuilderWipeCreateRadio.IsChecked == true ? 1 : -1, Mods, ContentMappings, CurrentWorkspace, InternalModTypes, CurrentGame, GameData, BuilderLogs, BuilderProgress,GameBuilders.ElementAt(BuilderModLoaderCombo.SelectedIndex), QuasarTaskBar);
                     BuilderProgress.Value = 100;
+                    QuasarTaskBar.ProgressValue = 100;
                     BuilderLogs.Text += "Done\r\n";
                     BuilderBuild.IsEnabled = true;
                     BuilderFTPTest.IsEnabled = true;
@@ -1430,6 +1477,15 @@ namespace Quasar
 
                 if (client.IsConnected)
                 {
+                    Properties.Settings.Default.FTPIP = address;
+                    Properties.Settings.Default.FTPPort = port;
+                    if (BuildPWRadio.IsChecked == true)
+                    {
+                        Properties.Settings.Default.FTPUN = BuildFTPUN.Text;
+                        Properties.Settings.Default.FTPPW = BuildFTPPW.Text;
+                    }
+                    Properties.Settings.Default.FTPValid = true;
+                    Properties.Settings.Default.Save();
                     BuilderLogs.Text += "FTP Connection Successful \r\n";
                 }
                 else
@@ -1507,8 +1563,8 @@ namespace Quasar
             Game Selected = Games.Find(g => g.ID == Properties.Settings.Default.LastSelectedGame);
             SelectGame(Selected);
 
-            Workspace SelectedWorkspace = Workspaces.Find(w => w.ID == Properties.Settings.Default.LastSelectedWorkspace);
-            CurrentWorkspace = SelectedWorkspace;
+            Workspace SelectedWorkspace = QuasarWorkspaces.Find(w => w.ID == Properties.Settings.Default.LastSelectedWorkspace);
+            SetCurrentWorkspace(SelectedWorkspace);
 
             SettingsList = new ObservableCollection<QuasarSetting>();
 
@@ -1517,12 +1573,6 @@ namespace Quasar
                 new QuasarSettingComboData() { Name = "French", Value = "FR" },
                 new QuasarSettingComboData() { Name = "English", Value = "EN" }
             };
-
-            List<QuasarSettingComboData> WorkspaceList = new List<QuasarSettingComboData>();
-            foreach (Workspace w in Workspaces)
-            {
-                WorkspaceList.Add(new QuasarSettingComboData() { Name = w.Name, Value = w.ID.ToString()});
-            }
 
             SettingsList.Add(new QuasarSetting(new QuasarSettingData() { SettingName = "Quasar Version :",SettingValue= Properties.Settings.Default.AppVersion, NameOnly = true }));
             SettingsList.Add(new QuasarSetting(new QuasarSettingData() { SettingName = "Supress Mod ", SettingValue= "deletion warning", SettingCheck = Properties.Settings.Default.SupressModDeletion, Reference = "SupressModDeletion" }));
@@ -1535,7 +1585,6 @@ namespace Quasar
             }
 
             BuilderModLoaderCombo.SelectedIndex = 0;
-            BuilderWorkspaceCombo.SelectedIndex = 0;
             if (Properties.Settings.Default.EnableIMT)
             {
                 IMTTab.Visibility = Visibility.Visible;
@@ -1547,6 +1596,24 @@ namespace Quasar
             }
             getSDCards();
 
+            if (Properties.Settings.Default.FTPValid)
+            {
+                BuildFTPAddress.Text = Properties.Settings.Default.FTPIP;
+                BuildFTPPort.Text = Properties.Settings.Default.FTPPort;
+                BuildFTPUN.Text = Properties.Settings.Default.FTPUN;
+                BuildFTPPW.Text = Properties.Settings.Default.FTPPW;
+                if(BuildFTPUN.Text != "")
+                {
+                    BuildPWRadio.IsChecked = true;
+                }
+
+            }
+
+            if (Properties.Settings.Default.Wireless)
+            {
+                BuilderFTPRadio.IsChecked = true;
+            }
+
         }
 
         public void SettingsChanged(object sender, EventArgs e)
@@ -1556,7 +1623,6 @@ namespace Quasar
             {
                 if(sen.LocalData.Reference == "EnableIMT")
                 {
-                    BuilderWorkspaceCombo.SelectedIndex = 0;
                     if (Properties.Settings.Default.EnableIMT)
                     {
                         IMTTab.Visibility = Visibility.Visible;
@@ -1572,11 +1638,101 @@ namespace Quasar
 
         private void SaveWorkspaces()
         {
-            Workspace item = Workspaces.Find(w => w.ID == CurrentWorkspace.ID);
-            Workspaces[Workspaces.IndexOf(item)] = CurrentWorkspace;
-            AssociationXML.WriteAssociationFile(Workspaces);
+            Workspace item = QuasarWorkspaces.Find(w => w.ID == CurrentWorkspace.ID);
+            QuasarWorkspaces[QuasarWorkspaces.IndexOf(item)] = CurrentWorkspace;
+            AssociationXML.WriteAssociationFile(QuasarWorkspaces);
         }
 
+        #endregion
+
+        #region Workspaces
+        private void WorkspaceSelected(object sender, SelectionChangedEventArgs e)
+        {
+            if(WorkspaceListBox.SelectedIndex != -1)
+            {
+                SetCurrentWorkspace((Workspace)WorkspaceListBox.SelectedItem);
+            }
+            
+        }
+
+        public void SetCurrentWorkspace(Workspace workspace)
+        {
+            CurrentWorkspace = workspace;
+            WorkspaceActiveWorkspaceName.Content = String.Format("Active Workspace : {0} ", CurrentWorkspace.Name);
+            WorkspaceNameTextBox.Text = CurrentWorkspace.Name;
+            WorkspaceAssignmentLabel.Content = String.Format("Assignments : {0} ", CurrentWorkspace.Associations.Count);
+            WorkspaceBuildLabel.Content = String.Format("Latest Build Date : {0} ", CurrentWorkspace.BuildDate);
+            BuilderWorkspaceName.Content = CurrentWorkspace.Name;
+        }
+
+        public void AddWorkspace(object sender, RoutedEventArgs e)
+        {
+            Workspace newWorkspace = new Workspace() { Name = "New Workspace", ID = IDGenerator.getNewWorkspaceID(), Associations = new List<Association>(), Built = false, BuildDate = "" };
+            QuasarWorkspaces.Add(newWorkspace);
+            AssociationXML.WriteAssociationFile(QuasarWorkspaces);
+            WorkspaceListBox.Items.Refresh();
+        }
+
+        public void DeleteWorkspace(object sender, RoutedEventArgs e)
+        {
+            if(CurrentWorkspace.ID != 0)
+            {
+                bool proceed = false;
+                MessageBoxResult result = MessageBox.Show("Are you sure you want to delete this workspace ?", "Workspace Deletion", MessageBoxButton.YesNo);
+                switch (result)
+                {
+                    case MessageBoxResult.Yes:
+                        proceed = true;
+                        break;
+                    case MessageBoxResult.No:
+                        break;
+                }
+                if (proceed)
+                {
+                    QuasarWorkspaces.Remove(CurrentWorkspace);
+                    SetCurrentWorkspace(QuasarWorkspaces[0]);
+                    AssociationXML.WriteAssociationFile(QuasarWorkspaces);
+                    WorkspaceListBox.Items.Refresh();
+                }
+            }
+        }
+
+        public void DuplicateWorkspace(object sender, RoutedEventArgs e)
+        {
+            Workspace Clone = new Workspace() { Name = String.Format("{0} - Copy", CurrentWorkspace.Name), ID = IDGenerator.getNewWorkspaceID(), Associations = CurrentWorkspace.Associations, Built = false, BuildDate = "" };
+            QuasarWorkspaces.Add(Clone);
+            AssociationXML.WriteAssociationFile(QuasarWorkspaces);
+            WorkspaceListBox.Items.Refresh();
+        }
+
+        public void EmptyWorkspace(object sender, RoutedEventArgs e)
+        {
+            bool proceed = false;
+            MessageBoxResult result = MessageBox.Show("Are you sure you want to empty this workspace ?", "Workspace associations", MessageBoxButton.YesNo);
+            switch (result)
+            {
+                case MessageBoxResult.Yes:
+                    proceed = true;
+                    break;
+                case MessageBoxResult.No:
+                    break;
+            }
+            if (proceed)
+            {
+                CurrentWorkspace.Associations = new List<Association>();
+                SetCurrentWorkspace(QuasarWorkspaces[0]);
+                AssociationXML.WriteAssociationFile(QuasarWorkspaces);
+                WorkspaceListBox.Items.Refresh();
+            }
+        }
+
+        public void RenameWorkspaces(object sender, RoutedEventArgs e)
+        {
+            CurrentWorkspace.Name = WorkspaceNameTextBox.Text;
+            AssociationXML.WriteAssociationFile(QuasarWorkspaces);
+            SetCurrentWorkspace(CurrentWorkspace);
+            WorkspaceListBox.Items.Refresh();
+        }
         #endregion
 
         #region Detection
@@ -1614,7 +1770,13 @@ namespace Quasar
             */
         }
 
-
+        private void ScanEverythingIntoWorkspace()
+        {
+            foreach(LibraryMod lm in Mods)
+            {
+                FirstScanLibraryMod(lm, CurrentGame, InternalModTypes);
+            }
+        }
         private void AutoSlotDetectedItems(List<ContentMapping> elements)
         {
             foreach(ContentMapping cm in elements)
@@ -1650,6 +1812,7 @@ namespace Quasar
         //Launches a Quasar Download from it's URL
         private async void LaunchDownload(string _URL)
         {
+            QuasarTaskBar.ProgressState = System.Windows.Shell.TaskbarItemProgressState.Indeterminate;
             bool newElement = false;
             string downloadText = "";
             ModListItem mli = new ModListItem(true);
@@ -1771,6 +1934,7 @@ namespace Quasar
 
                 //Removing mod from Working List
                 WorkingModList.Remove(Mod);
+                QuasarTaskBar.ProgressState = System.Windows.Shell.TaskbarItemProgressState.None;
             }
         }
 
@@ -1783,9 +1947,11 @@ namespace Quasar
         }
 
 
+
+
+
         #endregion
 
-       
     }
     
 }
