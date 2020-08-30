@@ -1,5 +1,6 @@
 ﻿using FluentFTP;
 using Quasar.FileSystem;
+using Quasar.Internal.Tools;
 using Quasar.Quasar_Sys;
 using Quasar.XMLResources;
 using System;
@@ -157,6 +158,54 @@ namespace Quasar.Internal.FileSystem
                     Write("Exception : " + e.Message, TB);
                 }
 
+
+                if(ModLoader == 1 ||ModLoader == 2)
+                {
+                    if (FTP)
+                    {
+                        bool distant = TouchmARC.GetDistantConfig(FTPClient);
+                        if (!distant)
+                        {
+                            TouchmARC.sendRemote(FTPClient);
+                            TouchmARC.GetLocalConfig();
+                        }
+                        else
+                        {
+                            if (TouchmARC.LocalNewer())
+                            {
+                                TouchmARC.sendRemote(FTPClient);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        bool local = TouchmARC.GetSDConfig(BuilderDriveFolder);
+                        if (!local)
+                        {
+                            TouchmARC.sendLocal(BuilderDriveFolder);
+                            TouchmARC.GetLocalConfig();
+                        }
+                        else
+                        {
+                            if (TouchmARC.LocalNewer())
+                            {
+                                TouchmARC.sendLocal(BuilderDriveFolder);
+                            }
+                        }
+                    }
+
+                    TouchmARC.ModifyTouchmARCConfig(BuilderWorkspace.Name + "/arc", BuilderWorkspace.Name + "/stream");
+
+                    if (FTP)
+                    {
+                        TouchmARC.SendDistantConfig(FTPClient);
+                    }
+                    else
+                    {
+                        TouchmARC.SendSDConfig(BuilderDriveFolder);
+                    }
+                }
+
                 PB.Dispatcher.BeginInvoke((Action)(() => { PB.IsIndeterminate = false; }));
                 TBII.Dispatcher.BeginInvoke((Action)(() => { TBII.ProgressState = TaskbarItemProgressState.Normal; }));
                 //Looping through each association in the workspace
@@ -222,6 +271,7 @@ namespace Quasar.Internal.FileSystem
                         Write("Exception : " + e.Message, TB);
                     }
                 }
+                
             }
             else
             {

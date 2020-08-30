@@ -1,0 +1,10 @@
+[infos]
+version = "1.1.1"
+
+[paths]
+arc = "rom:/arc"
+stream = "rom:/arc/stream"
+umm = "sd:/ultimate/mods"
+
+[misc]
+debug = false

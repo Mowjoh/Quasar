@@ -99,8 +99,11 @@ namespace Quasar.Quasar_Sys
                 {
                     BaseUserSettings();
                 }
+                string previous = Properties.Settings.Default.AppVersion;
                 Properties.Settings.Default.UpgradeRequired = false;
                 Properties.Settings.Default.AppVersion = executionVersion;
+                Properties.Settings.Default.PreviousVersion = previous;
+
                 Properties.Settings.Default.Save();
             }
             return Update;

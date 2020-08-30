@@ -117,6 +117,7 @@
     <Compile Include="Internal\Tools\Checker.cs" />
     <Compile Include="Internal\FileSystem\Folderino.cs" />
     <Compile Include="Internal\Tools\IDGenerator.cs" />
+    <Compile Include="Internal\Tools\TouchmARC.cs" />
     <Compile Include="Properties\Resources.en.Designer.cs">
       <DependentUpon>Resources.en.resx</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -204,6 +205,18 @@
     <Content Include="References\Builder\Builders.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="References\ModLoaders\TouchmARC\arcropolis.toml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="References\ModLoaders\TouchmARC\atmosphere\contents\01006A800016E000\exefs\main.npdm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="References\ModLoaders\TouchmARC\atmosphere\contents\01006A800016E000\exefs\subsdk9">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="References\ModLoaders\TouchmARC\atmosphere\contents\01006A800016E000\romfs\skyline\plugins\libarcropolis.nro">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Resource Include="References\InternalModTypes\SmashUltimate\Fighter_Effect.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
@@ -211,12 +224,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
     <Content Include="References\QuasarUrlShortcuts\Smash Bros\Skins\Destroyer Toad.url">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="References\ModLoaders\silent_libarcropolis.nro">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="References\ModLoaders\verbose_libarcropolis.nro">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Resource Include="Controls\fonts\sofiapro-light.otf" />
@@ -345,6 +352,9 @@
     </PackageReference>
     <PackageReference Include="NamedPipeWrapper">
       <Version>1.5.0</Version>
+    </PackageReference>
+    <PackageReference Include="Nett">
+      <Version>0.15.0</Version>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>12.0.2</Version>

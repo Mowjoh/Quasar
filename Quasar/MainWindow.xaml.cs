@@ -536,7 +536,7 @@ namespace Quasar
             if (Update || Debug)
             {
                 Folderino.UpdateBaseFiles();
-                if(Properties.Settings.Default.AppVersion == "1100")
+                if(Properties.Settings.Default.AppVersion == "1100" && Properties.Settings.Default.PreviousVersion == "1000")
                 {
                     String AssociationsPath = Properties.Settings.Default.DefaultDir + @"\Library\Associations.xml";
                     String ContentPath = Properties.Settings.Default.DefaultDir + @"\Library\ContentMapping.xml";
@@ -579,7 +579,7 @@ namespace Quasar
 
             if (Update)
             {
-                if (Properties.Settings.Default.AppVersion == "1100")
+                if (Properties.Settings.Default.AppVersion == "1100" && Properties.Settings.Default.PreviousVersion == "1000")
                 {
                     ScanEverythingIntoWorkspace();
                 }
@@ -1367,6 +1367,10 @@ namespace Quasar
                 BuilderLogs.Text += "Please select a SD Drive first\r\n";
                 willrun = false;
             }
+
+           
+
+
             if (willrun)
             {
                 Properties.Settings.Default.ModLoader = BuilderModLoaderCombo.SelectedIndex;
@@ -1378,7 +1382,7 @@ namespace Quasar
                 Boolean proceed = false;
                 if (!Properties.Settings.Default.SupressBuildDeletion)
                 {
-                    MessageBoxResult result = MessageBox.Show("You are about to build the workspace. This will wipe your mod folders on your Switch to avoid conflicts. Do you wish to proceed with the build process?", "File Deletion Warning", MessageBoxButton.YesNo);
+                    MessageBoxResult result = MessageBox.Show("You are about to build the workspace. This will wipe your Workspace on your Switch to avoid conflicts. Do you wish to proceed with the build process?", "File Deletion Warning", MessageBoxButton.YesNo);
                     switch (result)
                     {
                         case MessageBoxResult.Yes:
@@ -1406,12 +1410,17 @@ namespace Quasar
                         ftpPath = "";
                     }
 
+                    
+
                     await Builder.SmashBuild(pathname, BuilderModLoaderCombo.SelectedIndex, ftpPath, NC, BuilderWipeCreateRadio.IsChecked == true ? 1 : -1, Mods, ContentMappings, CurrentWorkspace, InternalModTypes, CurrentGame, GameData, BuilderLogs, BuilderProgress,GameBuilders.ElementAt(BuilderModLoaderCombo.SelectedIndex), QuasarTaskBar);
                     BuilderProgress.Value = 100;
                     QuasarTaskBar.ProgressValue = 100;
                     BuilderLogs.Text += "Done\r\n";
                     BuilderBuild.IsEnabled = true;
                     BuilderFTPTest.IsEnabled = true;
+
+                    CurrentWorkspace.Built = true;
+                    AssociationXML.WriteAssociationFile(QuasarWorkspaces);
                 }
 
             }
@@ -1536,6 +1545,19 @@ namespace Quasar
         {
 
         }
+
+        private void GetTouchmARC(bool FTP, FtpClient ftp = null)
+        {
+            if (FTP)
+            {
+
+            }
+            else
+            {
+
+            }
+        }
+
         #endregion
 
         #region Settings
@@ -1613,6 +1635,8 @@ namespace Quasar
             {
                 BuilderFTPRadio.IsChecked = true;
             }
+
+            
 
         }
 
@@ -1732,6 +1756,39 @@ namespace Quasar
             AssociationXML.WriteAssociationFile(QuasarWorkspaces);
             SetCurrentWorkspace(CurrentWorkspace);
             WorkspaceListBox.Items.Refresh();
+        }
+
+        public void setTouchmARCWorkspace(object sender, RoutedEventArgs e)
+        {
+            if (CurrentWorkspace.Built)
+            {
+                if (Properties.Settings.Default.FTPValid)
+                {
+                    try
+                    {
+                        FtpClient ftp = new FtpClient(Properties.Settings.Default.FTPIP);
+                        ftp.Port = int.Parse(Properties.Settings.Default.FTPPort);
+                        if (Properties.Settings.Default.FTPUN != "")
+                        {
+                            ftp.Credentials = new NetworkCredential(Properties.Settings.Default.FTPUN, Properties.Settings.Default.FTPPW);
+                        }
+
+                        bool distant = TouchmARC.GetDistantConfig(ftp);
+                        if (distant)
+                        {
+                            TouchmARC.ModifyTouchmARCConfig(CurrentWorkspace.Name + "/arc", CurrentWorkspace.Name + "/stream");
+                            TouchmARC.SendDistantConfig(ftp);
+                        }
+                        MessageBoxResult result = MessageBox.Show("Workspace activated", "Success", MessageBoxButton.OK);
+                    }
+                    catch(Exception ez)
+                    {
+                        MessageBoxResult result = MessageBox.Show("Could not send the new config file. \r\n "+ez.Message, "Error", MessageBoxButton.OK);
+                    }
+                    
+                }
+            }
+            
         }
         #endregion
 

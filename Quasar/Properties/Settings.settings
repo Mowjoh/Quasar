@@ -68,5 +68,8 @@
     <Setting Name="Wireless" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
+    <Setting Name="PreviousVersion" Type="System.String" Scope="User">
+      <Value Profile="(Default)">0000</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

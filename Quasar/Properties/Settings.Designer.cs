@@ -283,5 +283,17 @@ namespace Quasar.Properties {
                 this["Wireless"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0000")]
+        public string PreviousVersion {
+            get {
+                return ((string)(this["PreviousVersion"]));
+            }
+            set {
+                this["PreviousVersion"] = value;
+            }
+        }
     }
 }

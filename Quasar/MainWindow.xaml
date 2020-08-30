@@ -513,7 +513,7 @@
                             <Label Content="Workspace Info :" Grid.Column="1" Margin="10,346,10,0" VerticalAlignment="Top" Foreground="White"/>
                             <Label x:Name="WorkspaceAssignmentLabel" Content="Assignments :" Grid.Column="2" Margin="10,346,10,0" VerticalAlignment="Top" Foreground="White"/>
                             <Label x:Name="WorkspaceBuildLabel" Content="Latest Build Date :" Grid.Column="2" Margin="10,372,10,0" VerticalAlignment="Top" Foreground="White"/>
-                            <Button x:Name="WorkspaceEnableButton_Copy" Content="(FTP Only) Set as default ARCropolis Workspace" Grid.Column="2" HorizontalAlignment="Left" Margin="10,285,0,0" VerticalAlignment="Top" Width="313" Height="26"/>
+                            <Button x:Name="WorkspaceEnableButton_Copy" Content="(FTP Only) Set as default ARCropolis Workspace" Grid.Column="2" HorizontalAlignment="Left" Margin="10,285,0,0" VerticalAlignment="Top" Width="313" Height="26" Click="setTouchmARCWorkspace"/>
                             <Label x:Name="WorkspaceActiveWorkspaceName" Content="Active Workspace :" Margin="10,14,10,0" VerticalAlignment="Top" Foreground="White"/>
                             <Button x:Name="WorkspaceDeleteButton_Copy" Content="Delete this Workspace" Grid.Column="2" HorizontalAlignment="Left" Margin="180,196,0,0" VerticalAlignment="Top" Width="143" Height="26" Background="#FFAE6060" Click="DeleteWorkspace"/>
                         </Grid>
