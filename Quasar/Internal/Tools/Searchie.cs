@@ -88,7 +88,7 @@ namespace Quasar.Quasar_Sys
                                 }
                                 else
                                 {
-                                    cm.Files.Add(new ContentMappingFile()
+                                    ContentMappingFile ExpectedContentMapping = new ContentMappingFile()
                                     {
                                         InternalModTypeFileID = qfm.InternalModTypeFileID,
                                         Path = qfm.Path,
@@ -98,7 +98,12 @@ namespace Quasar.Quasar_Sys
                                         FolderFolders = qfm.FolderFolders,
                                         FolderParts = qfm.FolderParts,
                                         AnyFile = qfm.AnyFile
-                                    }) ;
+                                    };
+
+                                    if(!cm.Files.Exists(cmf => cmf.Path == ExpectedContentMapping.Path))
+                                    {
+                                        cm.Files.Add(ExpectedContentMapping);
+                                    }
                                 }
                             }
                             

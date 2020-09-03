@@ -98,185 +98,200 @@ namespace Quasar.Internal.FileSystem
 
         public void ExecuteBuildTask(TextBlock TB, ProgressBar PB, TaskbarItemInfo TBII)
         {
-            int ContentMappingCount = BuilderWorkspace.Associations.Count;
-            int ContentMappingCurrentCount = 0;
-            double ProgressValue = 0;
-
-            bool FTP = false;
-            FtpClient FTPClient = null;
-            bool ftpOK = false;
-            if(BuilderFTP != "")
+            try
             {
-                Write("Trying to connect to the Switch, Please Wait...", TB);
-                FTP = true;
-                string address = BuilderFTP.Split(':')[0];
-                FTPClient = new FtpClient(BuilderFTP.Split(':')[0]);
-                FTPClient.Port = Int32.Parse(BuilderFTP.Split(':')[1]);
-                if(Creds != null)
+                int ContentMappingCount = BuilderWorkspace.Associations.Count;
+                int ContentMappingCurrentCount = 0;
+                double ProgressValue = 0;
+
+                bool FTP = false;
+                FtpClient FTPClient = null;
+                bool ftpOK = false;
+                if (BuilderFTP != "")
                 {
-                    FTPClient.Credentials = Creds;
-                }
-                try
-                {
-                    FTPClient.Connect();
-                    ftpOK = true;
-                    Write("FTP OK", TB);
-                }
-                catch(Exception e)
-                {
-                    Write("FTP Error : " + e.Message, TB);
-                }
-                
-            }
-            
-            if(!FTP || ftpOK)
-            {
-                string basepath = "";
-                try
-                {
-                    
-                    if (BuildMode == 1)
+                    Write("Trying to connect to the Switch, Please Wait...", TB);
+                    FTP = true;
+                    string address = BuilderFTP.Split(':')[0];
+                    FTPClient = new FtpClient(BuilderFTP.Split(':')[0]);
+                    FTPClient.Port = Int32.Parse(BuilderFTP.Split(':')[1]);
+                    if (Creds != null)
                     {
-                        Write("Wiping mod folders", TB);
-                        basepath = FTP ? GB.BasePath.Replace("{Workspace}", BuilderWorkspace.Name) : BuilderDriveFolder + GB.BasePath.Replace("{Workspace}", BuilderWorkspace.Name);
-                        if (ModLoader == 2)
-                        {
-                            string based = FTP ? "" : BuilderDriveFolder;
-                            BuilderDelete(based + @"UltimateModManager/mods/"+ BuilderWorkspace.Name+"/", FTP, FTPClient);
-                            BuilderDelete(based + @"atmosphere/contents/01006A800016E000/romfs/arc/" + BuilderWorkspace.Name + "/", FTP, FTPClient);
-                        }
-                        else
-                        {
-                            BuilderDelete(basepath, FTP, FTPClient);
-                        }
+                        FTPClient.Credentials = Creds;
                     }
-
-                }
-                catch (Exception e)
-                {
-                    Write("Something went wrong with the cleanup", TB);
-                    Write("Exception : " + e.Message, TB);
-                }
-
-
-                if(ModLoader == 1 ||ModLoader == 2)
-                {
-                    if (FTP)
-                    {
-                        bool distant = TouchmARC.GetDistantConfig(FTPClient);
-                        if (!distant)
-                        {
-                            TouchmARC.sendRemote(FTPClient);
-                            TouchmARC.GetLocalConfig();
-                        }
-                        else
-                        {
-                            if (TouchmARC.LocalNewer())
-                            {
-                                TouchmARC.sendRemote(FTPClient);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        bool local = TouchmARC.GetSDConfig(BuilderDriveFolder);
-                        if (!local)
-                        {
-                            TouchmARC.sendLocal(BuilderDriveFolder);
-                            TouchmARC.GetLocalConfig();
-                        }
-                        else
-                        {
-                            if (TouchmARC.LocalNewer())
-                            {
-                                TouchmARC.sendLocal(BuilderDriveFolder);
-                            }
-                        }
-                    }
-
-                    TouchmARC.ModifyTouchmARCConfig(BuilderWorkspace.Name + "/arc", BuilderWorkspace.Name + "/stream");
-
-                    if (FTP)
-                    {
-                        TouchmARC.SendDistantConfig(FTPClient);
-                    }
-                    else
-                    {
-                        TouchmARC.SendSDConfig(BuilderDriveFolder);
-                    }
-                }
-
-                PB.Dispatcher.BeginInvoke((Action)(() => { PB.IsIndeterminate = false; }));
-                TBII.Dispatcher.BeginInvoke((Action)(() => { TBII.ProgressState = TaskbarItemProgressState.Normal; }));
-                //Looping through each association in the workspace
-                foreach (Association ass in BuilderWorkspace.Associations)
-                {
-                    ProgressValue = ((double)ContentMappingCurrentCount / (double)ContentMappingCount) * 100;
-                    double WinProgressValue = ((double)ContentMappingCurrentCount / (double)ContentMappingCount);
-                    PB.Dispatcher.BeginInvoke((Action)(() => { PB.Value = ProgressValue; }));
-                    TBII.Dispatcher.BeginInvoke((Action)(() => { TBII.ProgressValue = WinProgressValue; }));
-
                     try
                     {
-                        //Get associated Content Mapping
-                        ContentMapping cm = BuilderContentMappings.Find(c => c.ID == ass.ContentMappingID);
-                        InternalModType imt = BuilderInternalModTypes.Find(t => t.ID == cm.InternalModType);
-                        GameDataCategory GDC = BuilderGameData.Categories.Find(c => c.ID == imt.Association);
-                        GameDataItem GDI = GDC.Items.Find(i => i.ID == cm.GameDataItemID);
-
-                        bool succeded = true;
-                        try
-                        {
-                            foreach (ContentMappingFile cmf in cm.Files)
-                            {
-                                //Looping through recognized files
-                                string source = cmf.SourcePath;
-                                string basedestination = basepath;
-
-                                InternalModTypeFile imtf = imt.Files.Find(f => f.ID == cmf.InternalModTypeFileID);
-
-                                BuilderFile bfi = imtf.Files[ModLoader];
-                                BuilderFolder bfo = imtf.Destinations[ModLoader];
-
-                                string[] output = FormatOutput(bfi.Path, bfo.Path, GDI.Attributes[0].Value, cmf, cm);
-                                string FinalDestination = basedestination + output[0] + "/" + output[1];
-                                FinalDestination = FinalDestination.Replace(@"{Workspace}", BuilderWorkspace.Name);
-                                FinalDestination = FinalDestination.Replace(@"/", @"\");
-                                BuilderCopy(source, FinalDestination, FTP, FTPClient);
-                            }
-                        }
-                        catch (Exception e)
-                        {
-                            succeded = false;
-                            Write("Something went wrong trying to process Content Files", TB);
-                            Write("Exception : " + e.Message, TB);
-                            Write("Aborted : " + cm.Name + " of Type : " + imt.Name + " Into Slot " + (ass.Slot + 1), TB);
-                        }
-
-
-                        if (succeded)
-                        {
-                            Write("Finished with : " + cm.Name + " of Type : " + imt.Name + " Into Slot " + (ass.Slot + 1), TB);
-                        }
-                        else
-                        {
-                            Write("Aborted : " + cm.Name + " of Type : " + imt.Name + " Into Slot " + (ass.Slot + 1), TB);
-                        }
-
-                        ContentMappingCurrentCount++;
+                        FTPClient.Connect();
+                        ftpOK = true;
+                        Write("FTP OK", TB);
                     }
                     catch (Exception e)
                     {
-                        Write("Something went wrong with finding the right Content", TB);
+                        Pasterino.sendPaste(e);
+                        Write("FTP Error : " + e.Message, TB);
+                    }
+
+                }
+
+                if (!FTP || ftpOK)
+                {
+                    string basepath = "";
+                    try
+                    {
+
+                        if (BuildMode == 1)
+                        {
+                            Write("Wiping mod folders", TB);
+                            basepath = FTP ? GB.BasePath.Replace("{Workspace}", BuilderWorkspace.Name) : BuilderDriveFolder + GB.BasePath.Replace("{Workspace}", BuilderWorkspace.Name);
+                            if (ModLoader == 2)
+                            {
+                                string based = FTP ? "" : BuilderDriveFolder;
+                                BuilderDelete(based + @"UltimateModManager/mods/" + BuilderWorkspace.Name + "/", FTP, FTPClient);
+                                BuilderDelete(based + @"atmosphere/contents/01006A800016E000/romfs/arc/" + BuilderWorkspace.Name + "/", FTP, FTPClient);
+                            }
+                            else
+                            {
+                                BuilderDelete(basepath, FTP, FTPClient);
+                            }
+                        }
+
+                    }
+                    catch (Exception e)
+                    {
+                        Write("Something went wrong with the cleanup", TB);
                         Write("Exception : " + e.Message, TB);
                     }
+
+
+                    if (ModLoader == 1 || ModLoader == 2)
+                    {
+                        if (FTP)
+                        {
+                            bool distant = TouchmARC.GetDistantConfig(FTPClient);
+                            if (!distant)
+                            {
+                                TouchmARC.GetLocalConfig();
+                                TouchmARC.sendRemote(FTPClient);
+
+                            }
+                            else
+                            {
+                                if (TouchmARC.LocalNewer())
+                                {
+                                    TouchmARC.GetLocalConfig();
+                                    TouchmARC.sendRemote(FTPClient);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            bool local = TouchmARC.GetSDConfig(BuilderDriveFolder);
+                            if (!local)
+                            {
+                                TouchmARC.GetLocalConfig();
+                                TouchmARC.sendLocal(BuilderDriveFolder);
+
+                            }
+                            else
+                            {
+                                if (TouchmARC.LocalNewer())
+                                {
+                                    TouchmARC.GetLocalConfig();
+                                    TouchmARC.sendLocal(BuilderDriveFolder);
+                                }
+                            }
+                        }
+
+                        TouchmARC.ModifyTouchmARCConfig(BuilderWorkspace.Name + "/arc", BuilderWorkspace.Name + "/stream");
+
+                        if (FTP)
+                        {
+                            TouchmARC.SendDistantConfig(FTPClient);
+                        }
+                        else
+                        {
+                            TouchmARC.SendSDConfig(BuilderDriveFolder);
+                        }
+                    }
+
+                    PB.Dispatcher.BeginInvoke((Action)(() => { PB.IsIndeterminate = false; }));
+                    TBII.Dispatcher.BeginInvoke((Action)(() => { TBII.ProgressState = TaskbarItemProgressState.Normal; }));
+                    //Looping through each association in the workspace
+                    foreach (Association ass in BuilderWorkspace.Associations)
+                    {
+                        ProgressValue = ((double)ContentMappingCurrentCount / (double)ContentMappingCount) * 100;
+                        double WinProgressValue = ((double)ContentMappingCurrentCount / (double)ContentMappingCount);
+                        PB.Dispatcher.BeginInvoke((Action)(() => { PB.Value = ProgressValue; }));
+                        TBII.Dispatcher.BeginInvoke((Action)(() => { TBII.ProgressValue = WinProgressValue; }));
+
+                        try
+                        {
+                            //Get associated Content Mapping
+                            ContentMapping cm = BuilderContentMappings.Find(c => c.ID == ass.ContentMappingID);
+                            InternalModType imt = BuilderInternalModTypes.Find(t => t.ID == cm.InternalModType);
+                            GameDataCategory GDC = BuilderGameData.Categories.Find(c => c.ID == imt.Association);
+                            GameDataItem GDI = GDC.Items.Find(i => i.ID == cm.GameDataItemID);
+
+                            bool succeded = true;
+                            try
+                            {
+                                foreach (ContentMappingFile cmf in cm.Files)
+                                {
+                                    //Looping through recognized files
+                                    string source = cmf.SourcePath;
+                                    string basedestination = basepath;
+
+                                    InternalModTypeFile imtf = imt.Files.Find(f => f.ID == cmf.InternalModTypeFileID);
+
+                                    BuilderFile bfi = imtf.Files[ModLoader];
+                                    BuilderFolder bfo = imtf.Destinations[ModLoader];
+
+                                    string[] output = FormatOutput(bfi.Path, bfo.Path, GDI.Attributes[0].Value, cmf, cm);
+                                    string FinalDestination = basedestination + output[0] + "/" + output[1];
+                                    FinalDestination = FinalDestination.Replace(@"{Workspace}", BuilderWorkspace.Name);
+                                    FinalDestination = FinalDestination.Replace(@"/", @"\");
+                                    BuilderCopy(source, FinalDestination, FTP, FTPClient);
+                                }
+                            }
+                            catch (Exception e)
+                            {
+                                Pasterino.sendPaste(e);
+                                succeded = false;
+                                Write("Something went wrong trying to process Content Files", TB);
+                                Write("Exception : " + e.Message, TB);
+                                Write("Aborted : " + cm.Name + " of Type : " + imt.Name + " Into Slot " + (ass.Slot + 1), TB);
+                            }
+
+
+                            if (succeded)
+                            {
+                                Write("Finished with : " + cm.Name + " of Type : " + imt.Name + " Into Slot " + (ass.Slot + 1), TB);
+                            }
+                            else
+                            {
+                                Write("Aborted : " + cm.Name + " of Type : " + imt.Name + " Into Slot " + (ass.Slot + 1), TB);
+                            }
+
+                            ContentMappingCurrentCount++;
+                        }
+                        catch (Exception e)
+                        {
+                            Write("Something went wrong with finding the right Content", TB);
+                            Write("Exception : " + e.Message, TB);
+                            Pasterino.sendPaste(e);
+                        }
+                    }
+
                 }
-                
+                else
+                {
+                    Write("Cannot Build", TB);
+                }
             }
-            else
+            catch
             {
-                Write("Cannot Build", TB);
+
             }
+            
             
         }
 
@@ -399,12 +414,19 @@ namespace Quasar.Internal.FileSystem
         {
             if (FTP)
             {
-                client.DeleteDirectory(destination);
+                if (client.DirectoryExists(destination))
+                {
+                    client.DeleteDirectory(destination);
+                }
                 client.CreateDirectory(destination);
             }
             else
             {
-                Directory.Delete(destination, true);
+                if (Directory.Exists(destination))
+                {
+                    Directory.Delete(destination, true);
+                }
+                
                 Directory.CreateDirectory(destination);
             }
         }

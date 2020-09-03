@@ -20,8 +20,8 @@ namespace Quasar.Internal.Tools
             string path = Properties.Settings.Default.DefaultDir + "\\Library\\arcropolis.toml";
             TouchmARCConfig config = Toml.ReadFile<TouchmARCConfig>(path);
 
-            config.paths.arc = a;
-            config.paths.stream = s;
+            config.paths.arc = @"sd:/Quasar/"+a;
+            config.paths.stream = @"sd:/Quasar/" + s;
 
             Toml.WriteFile<TouchmARCConfig>(config, path);
         }
@@ -30,7 +30,7 @@ namespace Quasar.Internal.Tools
         {
             string source = Properties.Settings.Default.DefaultDir + "\\References\\ModLoaders\\TouchmARC\\arcropolis.toml";
             string path = Properties.Settings.Default.DefaultDir + "\\Library\\arcropolis.toml";
-            File.Copy(source, path, true);
+            Folderino.CheckCopyFile(source, path);
         }
 
         public static bool GetSDConfig(string Letter)
@@ -41,7 +41,7 @@ namespace Quasar.Internal.Tools
             if (File.Exists(inputpath))
             {
                 exists = true;
-                File.Copy(inputpath, path, true);
+                Folderino.CheckCopyFile(inputpath, path);
             }
 
             return exists;
@@ -75,7 +75,7 @@ namespace Quasar.Internal.Tools
             string inputPath = "atmosphere\\contents\\01006A800016E000\\romfs\\arcropolis.toml";
             string path = Properties.Settings.Default.DefaultDir + "\\Library\\arcropolis.toml";
 
-            ftp.UploadFile(path, inputPath, FtpRemoteExists.Overwrite);
+            ftp.UploadFile(path, inputPath, FtpRemoteExists.Overwrite,true);
         }
 
         public static bool LocalNewer()
@@ -111,7 +111,12 @@ namespace Quasar.Internal.Tools
             };
             foreach(string s in Paths)
             {
-                ftp.UploadFile(basefolder+s, s, FtpRemoteExists.Overwrite);
+                string source = basefolder + s;
+                if (File.Exists(source))
+                {
+                    ftp.UploadFile(source, s, FtpRemoteExists.Overwrite, true);
+                }
+                
             }
             
         }
@@ -160,5 +165,6 @@ namespace Quasar.Internal.Tools
     public class misc
     {
         public bool debug { get; set; }
+        public string region { get; set; }
     }
 }

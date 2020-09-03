@@ -210,7 +210,7 @@
                 </TabItem>
                 <TabItem x:Name="Assigning" Header="{x:Static p:Resources.AssignmentTabHeader}" Foreground="{DynamicResource QuasarTextColor}">
                     <Grid Background="#FFE5E5E5">
-                        <Grid x:Name="AssignationGameBlock" Grid.ColumnSpan="2" Grid.Column="2" Background ="Black" Panel.ZIndex="500" Visibility="{Binding Path=GameSelectVisibility}">
+                        <Grid x:Name="AssignationGameBlock" Grid.ColumnSpan="2" Grid.Column="2" Background ="Black" Panel.ZIndex="500" Visibility="{Binding Path=GameSelectVisibility}" d:IsHidden="True">
                             <Label Content="Please select a game first" HorizontalAlignment="Center" Foreground="Wheat"  VerticalAlignment="Center" FontSize="36" />
                         </Grid>
                         <Grid x:Name="AssignmentGrid" Background="{DynamicResource QD1}">
@@ -297,7 +297,7 @@
                                 <ListView x:Name="ItemSlotListBox" Grid.Row="1" Grid.Column="1" AllowDrop="True" Style="{DynamicResource QuasarListBox}" ItemsSource="{Binding AssociationSlots}" Background="{DynamicResource QD1}" BorderThickness="0">
                                     <ListView.ItemTemplate>
                                         <DataTemplate>
-                                            <Grid Margin="0,5,0,5" AllowDrop="True" Drop="ItemSlotListBox_Drop">
+                                            <Grid Margin="0,5,0,5" AllowDrop="True" Drop="ItemSlotListBox_Drop"  MouseRightButtonDown="ItemSlotListBox_MouseRightButtonDown">
                                                 <Label Name="SlotName" Visibility="Hidden" Content="{Binding SlotName}"/>
                                                 <Path x:Name="BorderColor" Stroke="{Binding BorderColor}" StrokeThickness="2" Fill="{DynamicResource QuasarBackgroundDark}">
                                                     <Path.Data>
@@ -483,7 +483,7 @@
                         </ItemsControl>
                     </Grid>
                 </TabItem>
-                <TabItem x:Name="QuasarWorkspaceTab" Header="Workspaces" Foreground="{DynamicResource QuasarTextColor}">
+                <TabItem x:Name="QuasarWorkspaceTab" Header="Workspaces" Foreground="{DynamicResource QuasarTextColor}" Visibility="Collapsed">
                     <Grid Background="#FFE5E5E5">
                         <Grid x:Name="CreationGameBlock1" Grid.ColumnSpan="2" Grid.Column="2" Background ="Black" Panel.ZIndex="500"  Visibility="{Binding Path=GameSelectVisibility}" d:IsHidden="True">
                             <Label Content="Please select a game first" HorizontalAlignment="Center" Foreground="Wheat"  VerticalAlignment="Center" FontSize="36" />
@@ -516,8 +516,12 @@
                             <Button x:Name="WorkspaceEnableButton_Copy" Content="(FTP Only) Set as default ARCropolis Workspace" Grid.Column="2" HorizontalAlignment="Left" Margin="10,285,0,0" VerticalAlignment="Top" Width="313" Height="26" Click="setTouchmARCWorkspace"/>
                             <Label x:Name="WorkspaceActiveWorkspaceName" Content="Active Workspace :" Margin="10,14,10,0" VerticalAlignment="Top" Foreground="White"/>
                             <Button x:Name="WorkspaceDeleteButton_Copy" Content="Delete this Workspace" Grid.Column="2" HorizontalAlignment="Left" Margin="180,196,0,0" VerticalAlignment="Top" Width="143" Height="26" Background="#FFAE6060" Click="DeleteWorkspace"/>
+                            <Button x:Name="WorkspaceReload" Content="Add every content" Grid.Column="2" HorizontalAlignment="Left" Margin="180,140,0,0" VerticalAlignment="Top" Width="143" Height="26" Click="ReloadWorkspace"/>
                         </Grid>
                     </Grid>
+                </TabItem>
+                <TabItem x:Name="NewSettings" Header="NewSettings" Foreground="{DynamicResource QuasarTextColor}">
+                    
                 </TabItem>
             </TabControl>
             <Grid Background="#FF2D2D2D">

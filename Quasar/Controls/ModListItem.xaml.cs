@@ -62,6 +62,7 @@ namespace Quasar.Controls
 
         //Handlers
         public event EventHandler TrashRequested;
+        public event EventHandler AddRequested;
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected void OnPropertyChanged(string name)
@@ -449,6 +450,12 @@ namespace Quasar.Controls
         {
             if (this.TrashRequested != null)
                 this.TrashRequested(this, new EventArgs());
+        }
+
+        private void Add_Click(object sender, RoutedEventArgs e)
+        {
+            if (this.AddRequested != null)
+                this.AddRequested(this, new EventArgs());
         }
     }
 }

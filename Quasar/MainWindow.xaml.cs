@@ -532,24 +532,22 @@ namespace Quasar
             Folderino.CheckBaseFolders();
             Folderino.CompareReferences();
             bool Debug = false;
+            Folderino.UpdateBaseFiles();
 
-            if (Update || Debug)
+            int version = int.Parse(Properties.Settings.Default.AppVersion);
+            int previous = int.Parse(Properties.Settings.Default.PreviousVersion);
+            if (Update && version >= 1140 && previous < 1140)
             {
-                Folderino.UpdateBaseFiles();
-                if(Properties.Settings.Default.AppVersion == "1100" && Properties.Settings.Default.PreviousVersion == "1000")
+                String AssociationsPath = Properties.Settings.Default.DefaultDir + @"\Library\Associations.xml";
+                String ContentPath = Properties.Settings.Default.DefaultDir + @"\Library\ContentMapping.xml";
+
+                if (File.Exists(AssociationsPath))
                 {
-                    String AssociationsPath = Properties.Settings.Default.DefaultDir + @"\Library\Associations.xml";
-                    String ContentPath = Properties.Settings.Default.DefaultDir + @"\Library\ContentMapping.xml";
-
-                    if (File.Exists(AssociationsPath))
-                    {
-                        File.Delete(AssociationsPath);
-                    }
-                    if (File.Exists(ContentPath))
-                    {
-                        File.Delete(ContentPath);
-                    }
-
+                    File.Delete(AssociationsPath);
+                }
+                if (File.Exists(ContentPath))
+                {
+                    File.Delete(ContentPath);
                 }
 
             }
@@ -562,37 +560,38 @@ namespace Quasar
             //Aww, here we go again
             InitializeComponent();
 
-            //Loading things
-            LoadBasicLists();
-            LoadModLibrary();
-            LoadContentLibrary();
-            LoadAssociationsLibrary();
-
-            
-
-            CollectionViewSource cvs = new CollectionViewSource();
-            cvs.Source = ListMods;
-            cvs.Filter += ShowOnlyNonFilteredMods;
-
-
-            SetInterfaceWithParams();
-
-            if (Update)
+            try
             {
-                if (Properties.Settings.Default.AppVersion == "1100" && Properties.Settings.Default.PreviousVersion == "1000")
+                //Loading things
+                LoadBasicLists();
+                LoadModLibrary();
+                LoadContentLibrary();
+                LoadAssociationsLibrary();
+
+
+
+                CollectionViewSource cvs = new CollectionViewSource();
+                cvs.Source = ListMods;
+                cvs.Filter += ShowOnlyNonFilteredMods;
+
+
+                SetInterfaceWithParams();
+
+                if (Update && version >= 1140 && previous < 1140)
                 {
                     ScanEverythingIntoWorkspace();
                 }
 
+                readytoSelect = true;
+
+                BuilderModLoaderCombo.SelectedItem = 1;
+            }catch(Exception e)
+            {
+                Pasterino.sendPaste(e);
+                MessageBoxResult result = MessageBox.Show("Quasar did not boot properly and crashed.", "Crash", MessageBoxButton.OK);
+                Environment.Exit(0);
             }
-
-            readytoSelect = true;
-            BuilderLogs.Text += "Please note that for both mod loaders I assume you have them installed.\r\n";
-            BuilderLogs.Text += "For ARCropolis, that means you have copied the files from the release to your SD\r\n";
-            BuilderLogs.Text += "For Ultimate Mod Manager, that means you have copied the homebrew and your dump is made.\r\n";
-            BuilderLogs.Text += "Thanks for reading, I'll try to make it so you don't have to copy anything later on.\r\n \r\n";
-
-            BuilderModLoaderCombo.SelectedItem = 1;
+            
 
         }
 
@@ -626,6 +625,7 @@ namespace Quasar
                 ModListItem mli = new ModListItem(_OperationActive: false, _LibraryMod: lm, _Game: gamu);
                 mli.Downloaded = true;
                 mli.TrashRequested += Handler_TrashRequested;
+                mli.AddRequested += Handler_AddRequested;
                 newMods.Add(mli);
             }
 
@@ -832,6 +832,30 @@ namespace Quasar
             }
         }
 
+        public void Handler_AddRequested(object sender, EventArgs e)
+        {
+            ModListItem item = (ModListItem)sender;
+
+            //Removing from ContentMappings
+            List<ContentMapping> relatedMappings = ContentMappings.FindAll(cm => cm.ModID == item.LocalMod.ID);
+            foreach (ContentMapping cm in relatedMappings)
+            {
+                if (cm.GameDataItemID != -1)
+                {
+                    Association associations = CurrentWorkspace.Associations.Find(ass => ass.GameDataItemID == cm.GameDataItemID && ass.InternalModTypeID == cm.InternalModType && ass.Slot == cm.Slot);
+                    if (associations != null)
+                    {
+                        CurrentWorkspace.Associations[CurrentWorkspace.Associations.IndexOf(associations)] = new Association() { ContentMappingID = cm.ID, GameDataItemID = cm.GameDataItemID, InternalModTypeID = cm.InternalModType, Slot = cm.Slot };
+                    }
+                    else
+                    {
+                        CurrentWorkspace.Associations.Add(new Association() { ContentMappingID = cm.ID, GameDataItemID = cm.GameDataItemID, InternalModTypeID = cm.InternalModType, Slot = cm.Slot });
+                    }
+                }
+            }
+            AssociationXML.WriteAssociationFile(QuasarWorkspaces);
+        }
+
 
         //--------------------------------------
         //Filtering Actions
@@ -1013,16 +1037,17 @@ namespace Quasar
             {
                 ContentMapping DestinationMapping = AssociationContentMappings.ElementAt(indexSource);
                 DestinationMapping.Slot = indexDestination;
-
                 ContentMapping SourceMapping = (ContentMapping)ItemSlotListBox.Items.GetItemAt(indexDestination);
-                if (!SourceMapping.SlotName.Substring(0, 7).Equals("FakeIMT"))
-                {
-                    List<Association> asso = CurrentWorkspace.Associations.FindAll(a=> a.ContentMappingID == SourceMapping.ID && a.Slot == SourceMapping.Slot);
-                    foreach(Association a in asso)
+                Regex SlotRegex = new Regex(@"FakeIMT(\d[1-3])");
+                if (!SlotRegex.IsMatch(SourceMapping.SlotName))
                     {
-                        CurrentWorkspace.Associations.Remove(a);
+                        List<Association> asso = CurrentWorkspace.Associations.FindAll(a => a.ContentMappingID == SourceMapping.ID && a.Slot == SourceMapping.Slot);
+                        foreach (Association a in asso)
+                        {
+                            CurrentWorkspace.Associations.Remove(a);
+                        }
                     }
-                }
+                
 
                 AssociationSlots.RemoveAt(indexDestination);
                 AssociationSlots.Insert(indexDestination, DestinationMapping);
@@ -1050,10 +1075,11 @@ namespace Quasar
         {
             foreach(ContentMapping cm in AssociationSlots)
             {
-                if (!cm.SlotName.Substring(0, 7).Equals("FakeIMT"))
+                Regex SlotRegex = new Regex(@"FakeIMT(\d[1-3])");
+                if (!SlotRegex.IsMatch(cm.SlotName))
                 {
                     Association aa = CurrentWorkspace.Associations.Find(a => a.ContentMappingID == cm.ID && a.Slot == cm.Slot);
-                    if(aa == null)
+                    if (aa == null)
                     {
                         Association asso = new Association() { ContentMappingID = cm.ID, Slot = cm.Slot, GameDataItemID = cm.GameDataItemID, InternalModTypeID = cm.InternalModType };
                         CurrentWorkspace.Associations.Add(asso);
@@ -1410,9 +1436,9 @@ namespace Quasar
                         ftpPath = "";
                     }
 
-                    
 
-                    await Builder.SmashBuild(pathname, BuilderModLoaderCombo.SelectedIndex, ftpPath, NC, BuilderWipeCreateRadio.IsChecked == true ? 1 : -1, Mods, ContentMappings, CurrentWorkspace, InternalModTypes, CurrentGame, GameData, BuilderLogs, BuilderProgress,GameBuilders.ElementAt(BuilderModLoaderCombo.SelectedIndex), QuasarTaskBar);
+                    GameBuilder gamubuilder = (GameBuilder)BuilderModLoaderCombo.SelectedItem;
+                    await Builder.SmashBuild(pathname, gamubuilder.ID, ftpPath, NC, BuilderWipeCreateRadio.IsChecked == true ? 1 : -1, Mods, ContentMappings, CurrentWorkspace, InternalModTypes, CurrentGame, GameData, BuilderLogs, BuilderProgress,GameBuilders.ElementAt(BuilderModLoaderCombo.SelectedIndex), QuasarTaskBar);
                     BuilderProgress.Value = 100;
                     QuasarTaskBar.ProgressValue = 100;
                     BuilderLogs.Text += "Done\r\n";
@@ -1586,7 +1612,18 @@ namespace Quasar
             SelectGame(Selected);
 
             Workspace SelectedWorkspace = QuasarWorkspaces.Find(w => w.ID == Properties.Settings.Default.LastSelectedWorkspace);
-            SetCurrentWorkspace(SelectedWorkspace);
+            if(SelectedWorkspace == null)
+            {
+                Workspace Default = QuasarWorkspaces.Find(w => w.ID == 0);
+                Properties.Settings.Default.LastSelectedWorkspace = 0;
+                Properties.Settings.Default.Save();
+                SetCurrentWorkspace(Default);
+            }
+            else
+            {
+                SetCurrentWorkspace(SelectedWorkspace);
+            }
+            
 
             SettingsList = new ObservableCollection<QuasarSetting>();
 
@@ -1600,8 +1637,9 @@ namespace Quasar
             SettingsList.Add(new QuasarSetting(new QuasarSettingData() { SettingName = "Supress Mod ", SettingValue= "deletion warning", SettingCheck = Properties.Settings.Default.SupressModDeletion, Reference = "SupressModDeletion" }));
             SettingsList.Add(new QuasarSetting(new QuasarSettingData() { SettingName = "Supress Build", SettingValue = "deletion warning", SettingCheck = Properties.Settings.Default.SupressBuildDeletion, Reference = "SupressBuildDeletion" }));
             SettingsList.Add(new QuasarSetting(new QuasarSettingData() { SettingName = "Enable", SettingValue = "Internal Mod Types", SettingCheck = Properties.Settings.Default.EnableIMT, Reference = "EnableIMT" }));
+            SettingsList.Add(new QuasarSetting(new QuasarSettingData() { SettingName = "Enable", SettingValue = "Pastebin", SettingCheck = Properties.Settings.Default.EnablePastebin, Reference = "EnablePastebin" }));
 
-            foreach(QuasarSetting QS in SettingsList)
+            foreach (QuasarSetting QS in SettingsList)
             {
                 QS.SettingsChanged += SettingsChanged;
             }
@@ -1727,6 +1765,29 @@ namespace Quasar
             QuasarWorkspaces.Add(Clone);
             AssociationXML.WriteAssociationFile(QuasarWorkspaces);
             WorkspaceListBox.Items.Refresh();
+        }
+
+        public void ReloadWorkspace(object sender, RoutedEventArgs e)
+        {
+            bool proceed = false;
+            MessageBoxResult result = MessageBox.Show("Are you sure you want to add everything to this workspace ?", "Workspace associations", MessageBoxButton.YesNo);
+            switch (result)
+            {
+                case MessageBoxResult.Yes:
+                    proceed = true;
+                    break;
+                case MessageBoxResult.No:
+                    break;
+            }
+            if (proceed)
+            {
+                CurrentWorkspace.Associations = new List<Association>();
+                SetCurrentWorkspace(QuasarWorkspaces[0]);
+                AssociationXML.WriteAssociationFile(QuasarWorkspaces);
+                WorkspaceListBox.Items.Refresh();
+
+                ScanEverythingIntoWorkspace();
+            }
         }
 
         public void EmptyWorkspace(object sender, RoutedEventArgs e)
@@ -1869,130 +1930,141 @@ namespace Quasar
         //Launches a Quasar Download from it's URL
         private async void LaunchDownload(string _URL)
         {
-            QuasarTaskBar.ProgressState = System.Windows.Shell.TaskbarItemProgressState.Indeterminate;
-            bool newElement = false;
-            string downloadText = "";
-            ModListItem mli = new ModListItem(true);
-            mli.TrashRequested += Handler_TrashRequested;
-
-            //Setting base ModFileManager
-            ModFileManager ModFileManager = new ModFileManager(_URL);
-
-            //Parsing mod info from API
-            APIMod newAPIMod = await APIRequest.GetAPIMod(ModFileManager.APIType, ModFileManager.ModID);
-
-            //Finding related game
-            Game game = Games.Find(g => g.GameName == newAPIMod.GameName);
-
-            //Resetting ModFileManager based on new info
-            ModFileManager = new ModFileManager(_URL, game);
-
-            //Setting game UI
-            mli.setGame(game);
-
-            //Finding existing mod
-            LibraryMod Mod = Mods.Find(mm => mm.ID == Int32.Parse(ModFileManager.ModID) && mm.TypeID == Int32.Parse(ModFileManager.ModTypeID));
-
-            //Create Mod from API information
-            LibraryMod newmod = GetLibraryMod(newAPIMod, game);
-
-            bool needupdate = true;
-            //Checking if Mod is already in library
-            if (Mod != null)
+            try
             {
-                if (Mod.Updates < newmod.Updates)
+                QuasarTaskBar.ProgressState = System.Windows.Shell.TaskbarItemProgressState.Indeterminate;
+                bool newElement = false;
+                string downloadText = "";
+                ModListItem mli = new ModListItem(true);
+                mli.TrashRequested += Handler_TrashRequested;
+                mli.AddRequested += Handler_AddRequested;
+
+                //Setting base ModFileManager
+                ModFileManager ModFileManager = new ModFileManager(_URL);
+
+                //Parsing mod info from API
+                APIMod newAPIMod = await APIRequest.GetAPIMod(ModFileManager.APIType, ModFileManager.ModID);
+
+                //Finding related game
+                Game game = Games.Find(g => g.GameName == newAPIMod.GameName);
+
+                //Resetting ModFileManager based on new info
+                ModFileManager = new ModFileManager(_URL, game);
+
+                //Setting game UI
+                mli.setGame(game);
+
+                //Finding existing mod
+                LibraryMod Mod = Mods.Find(mm => mm.ID == Int32.Parse(ModFileManager.ModID) && mm.TypeID == Int32.Parse(ModFileManager.ModTypeID));
+
+                //Create Mod from API information
+                LibraryMod newmod = GetLibraryMod(newAPIMod, game);
+
+                bool needupdate = true;
+                //Checking if Mod is already in library
+                if (Mod != null)
                 {
-                    var query = ListMods.Where(ml => ml.LocalMod == Mod);
-                    mli = query.ElementAt(0);
-                    downloadText = "Updating mod";
+                    if (Mod.Updates < newmod.Updates)
+                    {
+                        var query = ListMods.Where(ml => ml.LocalMod == Mod);
+                        mli = query.ElementAt(0);
+                        downloadText = "Updating mod";
+                    }
+                    else
+                    {
+                        needupdate = false;
+                    }
                 }
                 else
                 {
-                    needupdate = false;
+                    Mod = new LibraryMod(Int32.Parse(ModFileManager.ModID), Int32.Parse(ModFileManager.ModTypeID), false);
+                    newElement = true;
+                    downloadText = "Downloading new mod";
+                }
+                if (!WorkingModList.Contains(Mod) && needupdate)
+                {
+                    WorkingModList.Add(Mod);
+
+                    //Setting up new ModList
+                    if (newElement)
+                    {
+                        //Adding element to list
+                        Mods.Add(newmod);
+                        ListMods.Add(mli);
+                    }
+                    else
+                    {
+                        //Updating List
+                        Mods[Mods.IndexOf(Mod)] = newmod;
+                    }
+
+                    //Setting download UI
+                    mli.ModStatusValue = downloadText;
+
+                    Downloader modDownloader = new Downloader(mli);
+
+                    //Wait for download completion
+                    await modDownloader.DownloadArchiveAsync(ModFileManager);
+
+                    //Setting extract UI
+                    mli.ModStatusValue = "Extracting mod";
+
+                    //Preparing Extraction
+                    Unarchiver un = new Unarchiver(mli);
+
+                    //Wait for Archive extraction
+                    await un.ExtractArchiveAsync(ModFileManager.DownloadDestinationFilePath, ModFileManager.ArchiveContentFolderPath, ModFileManager.ModArchiveFormat);
+
+                    //Setting extract UI
+                    mli.ModStatusValue = "Moving files";
+
+                    //Moving files
+                    await ModFileManager.MoveDownload();
+
+                    //Cleanup
+                    ModFileManager.ClearDownloadContents();
+
+                    //Getting Screenshot from Gamebanana
+                    await APIRequest.GetScreenshot(ModFileManager.APIType, ModFileManager.ModID, game.ID.ToString(), Mod.TypeID.ToString(), Mod.ID.ToString());
+
+
+                    //Providing mod to ModListElement and showing info
+                    mli.SetMod(newmod);
+                    mli.Downloaded = true;
+
+                    CollectionViewSource cvs = (CollectionViewSource)this.Resources["CollectionOMods"];
+                    cvs.View.Refresh();
+
+                    //Scanning Files
+                    int modIndex = Mods.IndexOf(Mod);
+                    if (modIndex == -1)
+                    {
+                        Mods[Mods.IndexOf(newmod)].FinishedProcessing = FirstScanLibraryMod(newmod, game, InternalModTypes);
+                    }
+                    else
+                    {
+                        Mods[modIndex].FinishedProcessing = FirstScanLibraryMod(newmod, game, InternalModTypes);
+                    }
+
+                    //Refreshing  Interface
+                    mli.Operation = false;
+
+
+                    //Saving XML
+                    WriteModListFile(Mods);
+
+                    //Removing mod from Working List
+                    WorkingModList.Remove(Mod);
+                    QuasarTaskBar.ProgressState = System.Windows.Shell.TaskbarItemProgressState.None;
                 }
             }
-            else
+            catch(Exception e)
             {
-                Mod = new LibraryMod(Int32.Parse(ModFileManager.ModID), Int32.Parse(ModFileManager.ModTypeID), false);
-                newElement = true;
-                downloadText = "Downloading new mod";
+                Pasterino.sendPaste(e);
+                MessageBoxResult result = MessageBox.Show("One of Quasar's downloads failed. The app will shutdown due to a potential unknown state. Sorry !", "Crash", MessageBoxButton.OK);
+                Environment.Exit(0);
             }
-            if (!WorkingModList.Contains(Mod) && needupdate)
-            {
-                WorkingModList.Add(Mod);
-
-                //Setting up new ModList
-                if (newElement)
-                {
-                    //Adding element to list
-                    Mods.Add(newmod);
-                    ListMods.Add(mli);
-                }
-                else
-                {
-                    //Updating List
-                    Mods[Mods.IndexOf(Mod)] = newmod;
-                }
-
-                //Setting download UI
-                mli.ModStatusValue = downloadText;
-
-                Downloader modDownloader = new Downloader(mli);
-
-                //Wait for download completion
-                await modDownloader.DownloadArchiveAsync(ModFileManager);
-
-                //Setting extract UI
-                mli.ModStatusValue = "Extracting mod";
-
-                //Preparing Extraction
-                Unarchiver un = new Unarchiver(mli);
-
-                //Wait for Archive extraction
-                await un.ExtractArchiveAsync(ModFileManager.DownloadDestinationFilePath, ModFileManager.ArchiveContentFolderPath, ModFileManager.ModArchiveFormat);
-
-                //Setting extract UI
-                mli.ModStatusValue = "Moving files";
-
-                //Moving files
-                await ModFileManager.MoveDownload();
-
-                //Cleanup
-                ModFileManager.ClearDownloadContents();
-
-                //Getting Screenshot from Gamebanana
-                await APIRequest.GetScreenshot(ModFileManager.APIType, ModFileManager.ModID, game.ID.ToString(), Mod.TypeID.ToString(), Mod.ID.ToString());
-
-
-                //Providing mod to ModListElement and showing info
-                mli.SetMod(newmod);
-                mli.Downloaded = true;
-
-                CollectionViewSource cvs = (CollectionViewSource)this.Resources["CollectionOMods"];
-                cvs.View.Refresh();
-
-                //Scanning Files
-                int modIndex = Mods.IndexOf(Mod);
-                if (modIndex == -1)
-                {
-                    Mods[Mods.IndexOf(newmod)].FinishedProcessing = FirstScanLibraryMod(newmod, game, InternalModTypes);
-                }
-                else
-                {
-                    Mods[modIndex].FinishedProcessing = FirstScanLibraryMod(newmod, game, InternalModTypes);
-                }
-
-                //Refreshing  Interface
-                mli.Operation = false;
-
-
-                //Saving XML
-                WriteModListFile(Mods);
-
-                //Removing mod from Working List
-                WorkingModList.Remove(Mod);
-                QuasarTaskBar.ProgressState = System.Windows.Shell.TaskbarItemProgressState.None;
-            }
+            
         }
 
         public void QuasarDownloadCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -2009,6 +2081,22 @@ namespace Quasar
 
         #endregion
 
+        private void ItemSlotListBox_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            /*
+            ContentMapping cm = (ContentMapping)ItemSlotListBox.SelectedItem;
+            int index = AssociationSlots.IndexOf(cm);
+            Regex SlotRegex = new Regex(@"FakeIMT(\d[1-3])");
+
+            if (!SlotRegex.IsMatch(AssociationSlots.ElementAt(index).Name))
+            {
+                AssociationSlots.RemoveAt(index);
+                AssociationSlots.Insert(index,new ContentMapping() { Name = "Empty Slot n°" + (index + 1), SlotName = "FakeIMT" + (index + 1) });
+            }
+
+            SaveWorkspaces();
+            FilterSlots();*/
+        }
     }
     
 }

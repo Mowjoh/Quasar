@@ -1,5 +1,5 @@
 [infos]
-version = "1.1.1"
+version = "1.2.0"
 
 [paths]
 arc = "rom:/arc"
@@ -8,3 +8,4 @@ umm = "sd:/ultimate/mods"
 
 [misc]
 debug = false
+region = "us_en"
