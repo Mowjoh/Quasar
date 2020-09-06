@@ -14,14 +14,14 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Shell;
-using static Quasar.XMLResources.AssociationXML;
+using static Quasar.XMLResources.WorkspaceXML;
 using static Quasar.XMLResources.Library;
 
 namespace Quasar.Internal.FileSystem
 {
     public class Builder
     {
-        public static async Task<int> SmashBuild(string _DriveFolder,int ModLoader, string ftp, NetworkCredential NC, int buildMode, List<LibraryMod> _Mods, List<ContentMapping> _ContentMappings, Workspace _Workspace, List<InternalModType> _InternalModTypes, Game _Game, List<GameData> _GameData, TextBlock _TextBlock, ProgressBar _ProgressBar, GameBuilder GB, TaskbarItemInfo TB)
+        public static async Task<int> SmashBuild(string _DriveFolder,int ModLoader, string ftp, NetworkCredential NC, int buildMode, List<LibraryMod> _Mods, List<ContentMapping> _ContentMappings, Workspace _Workspace, List<InternalModType> _InternalModTypes, Game _Game, List<GameData> _GameData, TextBlock _TextBlock, ProgressBar _ProgressBar, ModLoader GB, TaskbarItemInfo TB)
         {
             SmashBuilder sb = new SmashBuilder(_DriveFolder, ModLoader, buildMode, ftp, NC,  _Mods,  _ContentMappings, _Workspace, _InternalModTypes, _Game, _GameData, _TextBlock, _ProgressBar,GB, TB);
             await sb.Build();
@@ -40,7 +40,7 @@ namespace Quasar.Internal.FileSystem
         Game BuilderGame;
         GameData BuilderGameData;
 
-        GameBuilder GB;
+        ModLoader GB;
 
         //Mod-loader Specifics
         string ARCRopolisBasePath = @"atmosphere/contents/01006A800016E000/romfs/skyline/plugins/";
@@ -65,7 +65,7 @@ namespace Quasar.Internal.FileSystem
 
         TaskbarItemInfo TBII;
 
-        public SmashBuilder(string _DriveFolder, int _ModLoader, int buildMode, string ftp,NetworkCredential NC, List<LibraryMod> _Mods, List<ContentMapping> _ContentMappings, Workspace _Workspace,  List<InternalModType> _InternalModTypes, Game _Game, List<GameData> _GameData, TextBlock _TextBlock, ProgressBar _ProgressBar, GameBuilder _GB, TaskbarItemInfo _TBII)
+        public SmashBuilder(string _DriveFolder, int _ModLoader, int buildMode, string ftp,NetworkCredential NC, List<LibraryMod> _Mods, List<ContentMapping> _ContentMappings, Workspace _Workspace,  List<InternalModType> _InternalModTypes, Game _Game, List<GameData> _GameData, TextBlock _TextBlock, ProgressBar _ProgressBar, ModLoader _GB, TaskbarItemInfo _TBII)
         {
             BuilderDriveFolder = _DriveFolder;
             BuilderMods = _Mods;
@@ -126,7 +126,6 @@ namespace Quasar.Internal.FileSystem
                     }
                     catch (Exception e)
                     {
-                        Pasterino.sendPaste(e);
                         Write("FTP Error : " + e.Message, TB);
                     }
 
@@ -254,7 +253,6 @@ namespace Quasar.Internal.FileSystem
                             }
                             catch (Exception e)
                             {
-                                Pasterino.sendPaste(e);
                                 succeded = false;
                                 Write("Something went wrong trying to process Content Files", TB);
                                 Write("Exception : " + e.Message, TB);
@@ -277,7 +275,6 @@ namespace Quasar.Internal.FileSystem
                         {
                             Write("Something went wrong with finding the right Content", TB);
                             Write("Exception : " + e.Message, TB);
-                            Pasterino.sendPaste(e);
                         }
                     }
 

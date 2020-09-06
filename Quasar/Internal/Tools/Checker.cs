@@ -12,7 +12,7 @@ using System.Deployment;
 using System.Deployment.Application;
 using System.Reflection;
 using System.IO;
-using static Quasar.XMLResources.AssociationXML;
+using static Quasar.XMLResources.WorkspaceXML;
 using Quasar.Internal.Tools;
 using Quasar.XMLResources;
 using Quasar.Properties;
@@ -21,7 +21,7 @@ namespace Quasar.Quasar_Sys
 {
     static class Checker
     {
-        public static Mutex Instances(Mutex _serverMutex,ObservableCollection<string> _DLS)
+        public static Mutex Instances(Mutex _serverMutex)
         {
             string[] Args = Environment.GetCommandLineArgs();
             //Checking if Quasar is running alright
@@ -41,11 +41,11 @@ namespace Quasar.Quasar_Sys
                 _serverMutex = new Mutex(true, "Quasarite");
                 if (Args.Length == 2)
                 {
-                    new PipeServer("Quasarite", _DLS, Args[1]);
+                    new PipeServer("Quasarite", Args[1]);
                 }
                 else
                 {
-                    new PipeServer("Quasarite", _DLS, "");
+                    new PipeServer("Quasarite", "");
                 }
 
             }
@@ -77,7 +77,7 @@ namespace Quasar.Quasar_Sys
             {
                 Workspace defaultWorkspace = new Workspace() { Name = "Default Workspace", ID = IDGenerator.getNewWorkspaceID(), Associations = new List<Association>(), Built = false, BuildDate = "" };
                 List<Workspace> DefaultFile = new List<Workspace>() { defaultWorkspace };
-                AssociationXML.WriteAssociationFile(DefaultFile);
+                WorkspaceXML.WriteWorkspaces(DefaultFile);
 
                 Properties.Settings.Default.LastSelectedWorkspace = defaultWorkspace.ID;
                 Properties.Settings.Default.Save();

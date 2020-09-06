@@ -316,5 +316,29 @@ namespace Quasar.Properties {
                 this["EnablePastebin"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string FTPAddress {
+            get {
+                return ((string)(this["FTPAddress"]));
+            }
+            set {
+                this["FTPAddress"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool Wipe {
+            get {
+                return ((bool)(this["Wipe"]));
+            }
+            set {
+                this["Wipe"] = value;
+            }
+        }
     }
 }

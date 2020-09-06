@@ -1,4 +1,6 @@
 ﻿using NamedPipeWrapper;
+using Quasar.Controls.Mod.Models;
+using Quasar.Internal;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -14,7 +16,7 @@ namespace Quasar.Singleton
     {
         
 
-        public PipeServer(string pipeName,ObservableCollection<string> _DLS,string Args)
+        public PipeServer(string pipeName,string Args)
         {
             
             Mutex ClientReady = new Mutex();
@@ -34,8 +36,7 @@ namespace Quasar.Singleton
 
             server.ClientMessage += delegate (NamedPipeConnection<string, string> connection, string message)
             {
-                _DLS.Clear();
-                _DLS.Add(message);
+                EventSystem.Publish<QuasarDownload>(new QuasarDownload() { QuasarURL = message });
                 connection.PushMessage("Oukay");
             };
 
@@ -46,8 +47,7 @@ namespace Quasar.Singleton
             server.Start();
             if(Args != "")
             {
-                _DLS.Clear();
-                _DLS.Add(Args);
+                EventSystem.Publish<QuasarDownload>(new QuasarDownload() { QuasarURL = Args });
             }
 
             Console.WriteLine("Server Started");

@@ -29,7 +29,7 @@ namespace Quasar.FileSystem
         public async Task<int> ExtractArchiveAsync(string _ArchiveSource, string ArchiveDestination, string _ArchiveType)
         {
             //Setting up Extraction UI
-            await ModListItem.Progress.Dispatcher.BeginInvoke(new Action(() => { ModListItem.Progress.IsIndeterminate = true; ModListItem.ModStatusTextValue = ""; }), DispatcherPriority.Background);
+            //await ModListItem.Progress.Dispatcher.BeginInvoke(new Action(() => { ModListItem.Progress.IsIndeterminate = true; ModListItem.ModStatusTextValue = ""; }), DispatcherPriority.Background);
 
             //Launching Extraction Task
             await Task.Run(() => Extract(_ArchiveSource, ArchiveDestination, _ArchiveType));

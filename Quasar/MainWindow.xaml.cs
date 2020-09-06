@@ -17,10 +17,9 @@ using System.Linq;
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Media;
-using Quasar.Views;
 using System.ComponentModel;
 using System.Windows.Data;
-using static Quasar.XMLResources.AssociationXML;
+using static Quasar.XMLResources.WorkspaceXML;
 using System.Windows.Input;
 using Point = System.Windows.Point;
 using Quasar.Internal.FileSystem;
@@ -92,7 +91,6 @@ namespace Quasar
             set
             {
                 _Mods = value;
-                ListMods = LoadLibraryMods();
             }
         }
 
@@ -201,7 +199,6 @@ namespace Quasar
             set
             {
                 _ContentMappings = value;
-                ListContents = LoadContentMappings();
                 OnPropertyChanged("ContentMappings");
             }
         }
@@ -282,14 +279,14 @@ namespace Quasar
 
 
         #region Build
-        private List<GameBuilder> _GameBuilders;
-        public List<GameBuilder> GameBuilders
+        private List<ModLoader> _ModLoaders;
+        public List<ModLoader> ModLoaders
         {
-            get => _GameBuilders;
+            get => _ModLoaders;
             set
             {
-                _GameBuilders = value;
-                OnPropertyChanged("GameBuilders");
+                _ModLoaders = value;
+                OnPropertyChanged("ModLoaders");
             }
         }
 
@@ -440,27 +437,11 @@ namespace Quasar
         }
         #endregion
 
-        #region Settings
-        private ObservableCollection<QuasarSetting> _SettingsList;
-        public ObservableCollection<QuasarSetting> SettingsList
-        {
-            get
-            {
-                return _SettingsList;
-            }
-            set
-            {
-                _SettingsList = value;
-                OnPropertyChanged("SettingsList");
-            }
-        }
-        #endregion
-
         #endregion
 
         #region Filters
         private void ShowOnlyNonFilteredMods(object sender, FilterEventArgs e)
-        {
+        {/*
             ModListItem mle = e.Item as ModListItem;
             if (mle != null)
             {
@@ -472,7 +453,7 @@ namespace Quasar
                 {
                     e.Accepted = false;
                 }
-            }
+            }*/
         }
 
         private void ShowOnlyNonFilteredContents(object sender, FilterEventArgs e)
@@ -512,20 +493,12 @@ namespace Quasar
 
         #endregion
 
-        //Quasar Downloads
-        readonly Mutex serverMutex;
-        public QuasarDownloads DLS;
-
         public bool readytoSelect { get; set; }
 
-
+        MainUIViewModel MUVM { get; set; }
         public MainWindow()
         {
-
-            //Setting up Server or Client
-            DLS = new QuasarDownloads();
-            DLS.List.CollectionChanged += QuasarDownloadCollectionChanged;
-            serverMutex = Checker.Instances(serverMutex, DLS.List);
+            
 
             //Pre-run checks
             bool Update = Checker.CheckQuasarUpdated();
@@ -557,25 +530,18 @@ namespace Quasar
             //Setting language
             Thread.CurrentThread.CurrentUICulture = new System.Globalization.CultureInfo(Properties.Settings.Default.Language);
 
+            MUVM = new MainUIViewModel();
+
             //Aww, here we go again
             InitializeComponent();
 
             try
             {
-                //Loading things
-                LoadBasicLists();
-                LoadModLibrary();
-                LoadContentLibrary();
-                LoadAssociationsLibrary();
-
-
-
                 CollectionViewSource cvs = new CollectionViewSource();
                 cvs.Source = ListMods;
                 cvs.Filter += ShowOnlyNonFilteredMods;
 
 
-                SetInterfaceWithParams();
 
                 if (Update && version >= 1140 && previous < 1140)
                 {
@@ -584,91 +550,17 @@ namespace Quasar
 
                 readytoSelect = true;
 
-                BuilderModLoaderCombo.SelectedItem = 1;
             }catch(Exception e)
             {
-                Pasterino.sendPaste(e);
                 MessageBoxResult result = MessageBox.Show("Quasar did not boot properly and crashed.", "Crash", MessageBoxButton.OK);
                 Environment.Exit(0);
             }
+
             
-
+            NewTabControl.DataContext = MUVM;
         }
 
 
-        #region XML LOAD
-        //Load Mod Library into memory
-        private void LoadModLibrary()
-        {
-            Mods = GetLibraryModList();
-            WorkingModList = new ObservableCollection<LibraryMod>();
-        }
-
-        private void LoadContentLibrary()
-        {
-            ContentMappings = ContentXML.GetContentMappings();
-        }
-
-        private void LoadAssociationsLibrary()
-        {
-            QuasarWorkspaces = AssociationXML.GetWorkspaces(); 
-        }
-
-        private ObservableCollection<ModListItem> LoadLibraryMods()
-        {
-            ObservableCollection<ModListItem> newMods = new ObservableCollection<ModListItem>();
-
-            foreach (LibraryMod lm in Mods)
-            {
-                Game gamu = Games.Find(g => g.ID == lm.GameID);
-
-                ModListItem mli = new ModListItem(_OperationActive: false, _LibraryMod: lm, _Game: gamu);
-                mli.Downloaded = true;
-                mli.TrashRequested += Handler_TrashRequested;
-                mli.AddRequested += Handler_AddRequested;
-                newMods.Add(mli);
-            }
-
-            return newMods;
-        }
-
-        private ObservableCollection<ContentListItem> LoadContentMappings()
-        {
-            ObservableCollection<ContentListItem> newContentList = new ObservableCollection<ContentListItem>();
-            int modID = 0;
-            int colorID = 0;
-
-            foreach (ContentMapping cm in ContentMappings)
-            {
-                LibraryMod lm = Mods.Single(l => l.ID == cm.ModID);
-                InternalModType imt = InternalModTypes.Single(i => i.ID == cm.InternalModType);
-
-                colorID = modID != lm.ID ? colorID == 0 ? 1 : 0 : colorID;
-                modID = modID != lm.ID ? lm.ID : modID;
-                List<GameDataCategory> gdc = GameData.Find(gd => gd.GameID == lm.GameID).Categories;
-                ContentListItem cli = new ContentListItem(cm, lm, imt, gdc, colorID);
-                cli.SaveRequested += Handler_SaveRequested;
-                newContentList.Add(cli);
-            }
-            return newContentList;
-        }
-
-        private ObservableCollection<Association> LoadAssociations()
-        {
-            ObservableCollection<Association> newAssociationsList = new ObservableCollection<Association>();
-
-            return newAssociationsList;
-        }
-
-        private void LoadBasicLists()
-        {
-            Games = XML.GetGames();
-            InternalModTypes = XML.GetInternalModTypes();
-            GameData = XML.GetGameData();
-            GameBuilders = XML.GetBuilders();
-        }
-
-        #endregion
 
         #region GameSelectOverlay
         private void ContentIMTSelect_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -707,7 +599,6 @@ namespace Quasar
         private void SelectGame(Game gamu)
         {
             CurrentGame = gamu;
-            FilterModList(-1, -1, CurrentGame.ID);
         }
 
         private void HomeButton_Click(object sender, RoutedEventArgs e)
@@ -724,40 +615,13 @@ namespace Quasar
 
         //--------------------------------------
         //Mod Actions
-        private void ModSelected(object sender, SelectionChangedEventArgs e)
-        {
 
-            ModListItem mli = (ModListItem)ManagementModListView.SelectedItem;
-            if (mli != null)
-            {
-                foreach (ModListItem m in ManagementModListView.Items)
-                {
-                    m.Smol = true;
-                }
-                if (mli.Downloaded)
-                {
-                    mli.Smol = false;
-                }
-            }
-        }
 
-        private void ContentSelected(object sender, SelectionChangedEventArgs e)
-        {
-            ContentListItem cle = (ContentListItem)ContentListView.SelectedItem;
-            foreach (ContentListItem cl in ContentListView.Items)
-            {
-                cl.Smol = true;
-            }
-
-            if (cle != null)
-            {
-                cle.Smol = false;
-            }
-        }
 
         //Version actions
         private async void CheckUpdates(object sender, RoutedEventArgs e)
         {
+            /*
             ModListItem element = (ModListItem)ManagementModListView.SelectedItem;
             if (element != null)
             {
@@ -777,7 +641,7 @@ namespace Quasar
                     string quasarURL = APIRequest.GetQuasarDownloadURL(newDL[0], newDL[1], mt.APIName, element.LocalMod.ID.ToString());
                     LaunchDownload(quasarURL);
                 }
-            }
+            }*/
         }
 
         public void Handler_TrashRequested(object sender, EventArgs e)
@@ -802,7 +666,7 @@ namespace Quasar
                 ModListItem item = (ModListItem)sender;
 
                 //Removing from ContentMappings
-                List<ContentMapping> relatedMappings = ContentMappings.FindAll(cm => cm.ModID == item.LocalMod.ID);
+                /*List<ContentMapping> relatedMappings = ContentMappings.FindAll(cm => cm.ModID == item.LocalMod.ID);
                 foreach (ContentMapping cm in relatedMappings)
                 {
                     List<Association> associations = CurrentWorkspace.Associations.FindAll(ass => ass.ContentMappingID == cm.ID);
@@ -820,7 +684,7 @@ namespace Quasar
                 ListContents = LoadContentMappings();
 
                 //Removing from Library
-                Mods.Remove(item.LocalMod);
+                //Mods.Remove(item.LocalMod);
 
                 //Refreshing Mods
                 ListMods = LoadLibraryMods();
@@ -828,12 +692,13 @@ namespace Quasar
                 //Writing changes
                 Library.WriteModListFile(Mods);
                 ContentXML.WriteContentMappingListFile(ContentMappings);
-                SaveWorkspaces();
+                SaveWorkspaces();*/
             }
         }
 
         public void Handler_AddRequested(object sender, EventArgs e)
         {
+            /*
             ModListItem item = (ModListItem)sender;
 
             //Removing from ContentMappings
@@ -853,128 +718,15 @@ namespace Quasar
                     }
                 }
             }
-            AssociationXML.WriteAssociationFile(QuasarWorkspaces);
+            WorkspaceXML.WriteWorkspaces(QuasarWorkspaces);*/
         }
 
-
-        //--------------------------------------
-        //Filtering Actions
-
-        //Refreshes the content of the mod list based on mod type
-        private void ModTypeSelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            CurrentGameApiModType = (GameModType)ManagementAPITypeSelect.SelectedItem;
-            FilterModList(CurrentGameApiModType != null ? CurrentGameApiModType.ID : -1, -1, CurrentGame.ID);
-            CollectionViewSource cvs = (CollectionViewSource)this.Resources["ModManagementFilterCollection"];
-            cvs.View.Refresh();
-        }
-
-        //Refreshes the content of the mod list based on mod type and mod category
-        private void FilterSelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            Category selectedItem = (Category)ManagementAPICategorySelect.SelectedItem;
-
-            FilterModList(CurrentGameApiModType != null ? CurrentGameApiModType.ID : -1, selectedItem != null ? selectedItem.ID : -1, CurrentGame.ID);
-
-        }
-
-        //Shows items according to filters
-        private void FilterModList(int _modType, int modCategory, int _modGame)
-        {
-
-            foreach (ModListItem mle in ListMods)
-            {
-                bool AnyModType = _modType == -1;
-                bool AnyCategory = modCategory == -1;
-                bool AnyGame = _modGame == -1;
-
-                if ((AnyGame || mle.Game.ID == _modGame) && (AnyCategory || mle.LocalMod.APICategoryID == modCategory) && (AnyModType || mle.LocalMod.TypeID == _modType))
-                {
-                    mle.Filter = false;
-                }
-                else
-                {
-                    mle.Filter = true;
-                }
-            }
-            CollectionViewSource cvs = (CollectionViewSource)this.Resources["CollectionOMods"];
-            cvs.View.Refresh();
-        }
-
-        #endregion
-
-        #region Mod Content
-        private void ContentDataGridItemSelected(object sender, SelectionChangedEventArgs e)
-        {
-            ContentListItem cle = (ContentListItem)ContentListView.SelectedItem;
-            foreach (ContentListItem cl in ContentListView.Items)
-            {
-                cl.Smol = true;
-            }
-            cle.Smol = false;
-        }
-        private void IMTTypeSelect(object sender, SelectionChangedEventArgs e)
-        {
-            ContentCurrentIMT = (InternalModType)ContentIMTSelect.SelectedItem;
-            if (ContentCurrentIMT != null)
-            {
-                IMTCurrentGDC = GameDataCategories.Single(gdc => gdc.ID == ContentCurrentIMT.Association);
-            }
-
-            FilterContentList(ContentCurrentIMT != null ? ContentCurrentIMT.ID : -1, -1, CurrentGame.ID);
-
-        }
-
-        private void IMTGDCItemSelect(object sender, SelectionChangedEventArgs e)
-        {
-            GameDataItem CurrentGDI = (GameDataItem)ContentGDCSelect.SelectedItem;
-            FilterContentList(ContentCurrentIMT != null ? ContentCurrentIMT.ID : -1, CurrentGDI != null ? CurrentGDI.ID : -1, CurrentGame.ID);
-        }
-
-        private void Reset_Click(object sender, RoutedEventArgs e)
-        {
-            ContentGDCSelect.SelectedIndex = -1;
-            ContentIMTSelect.SelectedIndex = -1;
-        }
-
-        private void FilterContentList(int _IMT, int _GDC, int _Game)
-        {
-            foreach (ContentListItem cli in ListContents)
-            {
-                bool AnyIMT = _IMT == -1;
-                bool AnyGDC = _GDC == -1;
-                bool AnyGame = _Game == -1;
-
-                if ((AnyGame || cli.LocalMod.GameID == _Game) && (AnyGDC || cli.GameData.ID == _GDC) && (AnyIMT || cli.LocalModType.ID == _IMT))
-                {
-                    cli.Filter = false;
-                }
-                else
-                {
-                    cli.Filter = true;
-                }
-
-                CollectionViewSource cvs = (CollectionViewSource)this.Resources["CollectionOContents"];
-                cvs.View.Refresh();
-            }
-        }
-
-        public void Handler_SaveRequested(object sender, EventArgs e)
-        {
-            ContentListItem item = (ContentListItem)sender;
-            ContentMapping cm = ContentMappings.ElementAt(ContentMappings.IndexOf(item.LocalMapping));
-            GameDataItem gdi = (GameDataItem)item.ContentMappingAssociation.SelectedItem;
-
-            cm.Name = item.ContentMappingName.Text;
-            cm.GameDataItemID = gdi != null ? gdi.ID : -1;
-
-            ContentXML.WriteContentMappingListFile(ContentMappings);
-        }
         #endregion
 
         #region Mod Association
         private void AssociationGameDataList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            /*
             AssociationCorrespondingIMT = new ObservableCollection<InternalModType>();
 
             GameDataCategory gdc = (GameDataCategory)AssociationGameDataList.SelectedItem;
@@ -987,7 +739,7 @@ namespace Quasar
                     AssociationCorrespondingIMT.Add(imt);
                 }
 
-            }
+            }*/
         }
         private void AssociationGameElementChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -1000,7 +752,7 @@ namespace Quasar
 
         private void FilterSlots()
         {
-            
+            /*
             AssociationContentMappings = new ObservableCollection<ContentMapping>();
             AssociationSlots = new ObservableCollection<ContentMapping>();
             GameDataItem SelectedCategory = (GameDataItem)AssociationGameElementDataList.SelectedItem;
@@ -1028,11 +780,12 @@ namespace Quasar
                         }
                     }
                 }
-            }
+            }*/
         }
 
         private void setSlot(int indexSource, int indexDestination)
         {
+            /*
             if(AssociationSlots.Count > 0)
             {
                 ContentMapping DestinationMapping = AssociationContentMappings.ElementAt(indexSource);
@@ -1053,7 +806,7 @@ namespace Quasar
                 AssociationSlots.Insert(indexDestination, DestinationMapping);
 
                 saveSlots();
-            }
+            }*/
         }
 
         private void setSlot(ContentMapping input, int indexDestination)
@@ -1092,6 +845,7 @@ namespace Quasar
 
         private void ResetSlotsButton_Click(object sender, RoutedEventArgs e)
         {
+            /*
             GameDataItem SelectedCategory = (GameDataItem)AssociationGameElementDataList.SelectedItem;
             InternalModType SelectedIMT = (InternalModType)AssociationTypeDataList.SelectedItem;
 
@@ -1116,7 +870,7 @@ namespace Quasar
                         }
                     }
                 }
-            }
+            }*/
 
 
             SaveWorkspaces();
@@ -1153,6 +907,7 @@ namespace Quasar
 
         private void ItemSlotListBox_Drop(object sender, DragEventArgs e)
         {
+            /*
             if (sender is Grid)
             {
                 var source = e.Data.GetData(typeof(ContentMapping)) as ContentMapping;
@@ -1164,7 +919,7 @@ namespace Quasar
                 int targetIndex = ItemSlotListBox.Items.IndexOf(cm);
 
                 setSlot(sourceIndex, targetIndex);
-            }
+            }*/
         }
 
         private T FindVisualParent<T>(DependencyObject child)
@@ -1186,7 +941,7 @@ namespace Quasar
         #region InternalModTypes
         //State changes
         private void InternalModTypeSelected(object sender, SelectionChangedEventArgs e)
-        {
+        {/*
             //Getting info
             GameData gameData = GameData.Find(g => g.GameID == CurrentGame.ID);
             InternalModType type = (InternalModType)InternalModTypeSelect.SelectedItem;
@@ -1205,11 +960,12 @@ namespace Quasar
 
             //Displaying info
             IMTAssotiationSelect.SelectedItem = IMTAssotiationSelect.Items[IMTAssotiationSelect.Items.IndexOf(cat)];
-            IMTSlotsText.Text = type.Slots.ToString();
+            IMTSlotsText.Text = type.Slots.ToString();*/
         }
 
         private void DataGridRowSelected(object sender, SelectionChangedEventArgs e)
         {
+            /*
             DataGrid selectedGrid = (DataGrid)sender;
             InternalModTypeFile file = (InternalModTypeFile)selectedGrid.SelectedItem;
             if (file != null)
@@ -1221,10 +977,11 @@ namespace Quasar
                 IMTFileText.IsEnabled = true;
                 IMTPathText.IsEnabled = true;
                 IMTMandatory.IsEnabled = true;
-            }
+            }*/
         }
         private void IMTAssotiationSelectChanged(object sender, SelectionChangedEventArgs e)
         {
+            /*
             GameDataCategory category = (GameDataCategory)IMTAssotiationSelect.SelectedItem;
             if (category.ID == 0)
             {
@@ -1240,12 +997,13 @@ namespace Quasar
                 InternalModType type = (InternalModType)InternalModTypeSelect.SelectedItem;
                 IMTSlotsText.Text = type.Slots.ToString();
 
-            }
+            }*/
         }
 
-        private void IMTGameBuilderSelected(object sender, SelectionChangedEventArgs e)
+        private void IMTModLoaderSelected(object sender, SelectionChangedEventArgs e)
         {
-            if (IMTGameBuilderCombo.SelectedIndex == -1)
+            /*
+            if (IMTModLoaderCombo.SelectedIndex == -1)
             {
                 IMTBuilderOutputFilePath.IsEnabled = false;
                 IMTBuilderOutputFilePath.Text = "";
@@ -1257,7 +1015,7 @@ namespace Quasar
             {
                 IMTBuilderOutputFilePath.IsEnabled = true;
                 IMTBuilderOutputFolderPath.IsEnabled = true;
-                GameBuilder GB = (GameBuilder)IMTGameBuilderCombo.SelectedItem;
+                ModLoader GB = (ModLoader)IMTModLoaderCombo.SelectedItem;
                 InternalModTypeFile file = (InternalModTypeFile)IMTDataGrid.SelectedItem;
                 if( file != null)
                 {
@@ -1267,23 +1025,25 @@ namespace Quasar
                     IMTBuilderOutputFilePath.Text = BFil.Path;
                     IMTBuilderOutputFolderPath.Text = BFol.Path;
                 }
-            }
+            }*/
 
         }
 
         //IMT Actions
         private void IMTAddFile(object sender, RoutedEventArgs e)
         {
+            /*
             InternalModType type = (InternalModType)InternalModTypeSelect.SelectedItem;
             if (type != null)
             {
                 type.Files.Add(new InternalModTypeFile());
                 IMTDataGrid.Items.Refresh();
-            }
+            }*/
         }
 
         private void IMTDeleteFile(object sender, RoutedEventArgs e)
         {
+            /*
             InternalModTypeFile file = (InternalModTypeFile)IMTDataGrid.SelectedItem;
             if (file != null)
             {
@@ -1293,12 +1053,12 @@ namespace Quasar
                     type.Files.Remove(file);
                     IMTDataGrid.Items.Refresh();
                 }
-            }
+            }*/
         }
 
         //Saves
         private void IMTInfoSave(object sender, RoutedEventArgs e)
-        {
+        {/*
             InternalModTypeFile file = (InternalModTypeFile)IMTDataGrid.SelectedItem;
             if (file != null)
             {
@@ -1307,10 +1067,10 @@ namespace Quasar
                 //file.Destination = IMTDestinationText.Text;
                 file.Mandatory = IMTMandatory.IsChecked ?? false;
             }
-            IMTDataGrid.Items.Refresh();
+            IMTDataGrid.Items.Refresh();*/
         }
         private void IMTSaveXML(object sender, RoutedEventArgs e)
-        {
+        {/*
             InternalModType type = (InternalModType)InternalModTypeSelect.SelectedItem;
             if (type != null)
             {
@@ -1325,48 +1085,26 @@ namespace Quasar
                 type.Slots = Int32.Parse(IMTSlotsText.Text);
                 XML.SaveInternalModType(type);
             }
-
+            */
 
         }
 
         private void IMTTestFile(object sender, RoutedEventArgs e)
         {
+            /*
             if(ManagementModListView.SelectedIndex != -1){
                 ModListItem lm = (ModListItem)ManagementModListView.SelectedItem;
                 ModFileManager mfm = new ModFileManager(lm.LocalMod, CurrentGame);
-                new DefinitionsWindow(mfm, IMTFileText.Text, IMTBuilderOutputFilePath.Text, IMTPathText.Text, IMTBuilderOutputFolderPath.Text, GameDataCategories.ToList(), GameIMT.ToList(), (int)IMTGameBuilderCombo.SelectedIndex).Show();
-            }
+                new DefinitionsWindow(mfm, IMTFileText.Text, IMTBuilderOutputFilePath.Text, IMTPathText.Text, IMTBuilderOutputFolderPath.Text, GameDataCategories.ToList(), GameIMT.ToList(), (int)IMTModLoaderCombo.SelectedIndex).Show();
+            }*/
         }
 
         #endregion
 
         #region Build
-        public void getSDCards()
-        {
-            DriveInfo[] CurrentDrives = DriveInfo.GetDrives();
-            USBDrives = new ObservableCollection<DriveInfo>();
-
-            foreach(DriveInfo di in CurrentDrives)
-            {
-                if(di.DriveType == DriveType.Removable && di.IsReady)
-                {
-                    USBDrives.Add(di);
-                }
-            }
-            getSDLabels();
-        }
-
-        public void getSDLabels()
-        {
-            USBDriveLabels = new ObservableCollection<string>();
-            foreach (DriveInfo di in USBDrives)
-            {
-                USBDriveLabels.Add(di.VolumeLabel + " {" + di.Name + "}");
-            }
-        }
-
         private async void Build_Button(object sender, RoutedEventArgs e)
         {
+            /*
             bool willrun = true;
             string address = BuildFTPAddress.Text;
             string port = BuildFTPPort.Text;
@@ -1437,8 +1175,8 @@ namespace Quasar
                     }
 
 
-                    GameBuilder gamubuilder = (GameBuilder)BuilderModLoaderCombo.SelectedItem;
-                    await Builder.SmashBuild(pathname, gamubuilder.ID, ftpPath, NC, BuilderWipeCreateRadio.IsChecked == true ? 1 : -1, Mods, ContentMappings, CurrentWorkspace, InternalModTypes, CurrentGame, GameData, BuilderLogs, BuilderProgress,GameBuilders.ElementAt(BuilderModLoaderCombo.SelectedIndex), QuasarTaskBar);
+                    ModLoader gamubuilder = (ModLoader)BuilderModLoaderCombo.SelectedItem;
+                    await Builder.SmashBuild(pathname, gamubuilder.ID, ftpPath, NC, BuilderWipeCreateRadio.IsChecked == true ? 1 : -1, Mods, ContentMappings, CurrentWorkspace, InternalModTypes, CurrentGame, GameData, BuilderLogs, BuilderProgress,ModLoaders.ElementAt(BuilderModLoaderCombo.SelectedIndex), QuasarTaskBar);
                     BuilderProgress.Value = 100;
                     QuasarTaskBar.ProgressValue = 100;
                     BuilderLogs.Text += "Done\r\n";
@@ -1446,377 +1184,29 @@ namespace Quasar
                     BuilderFTPTest.IsEnabled = true;
 
                     CurrentWorkspace.Built = true;
-                    AssociationXML.WriteAssociationFile(QuasarWorkspaces);
+                    WorkspaceXML.WriteWorkspaces(QuasarWorkspaces);
                 }
 
-            }
-        }
-
-        private void PrepareModLoaders(object sender, RoutedEventArgs e)
-        {
-            string source = Properties.Settings.Default.AppPath + @"\References\ModLoaders\";
-            string destination = @"I:\atmosphere\contents\01006A800016E000\romfs\skyline\plugins\libarcropolis.nro";
-            /*if (BuilderVerboseRadio.IsChecked == true)
-            {
-                Folderino.CheckCopyFile(source + "verbose_libarcropolis.nro", destination);
-                BuilderLogs.Text += "ARCRopolis set to Verbose Mode \r\n";
-            }
-            else
-            {
-                Folderino.CheckCopyFile(source + "silent_libarcropolis.nro", destination);
-                BuilderLogs.Text += "ARCRopolis set to Silent Mode \r\n";
             }*/
-
-        }
-
-        private void AutoEjectSD()
-        {
-
-        }
-
-        private void BuilderDriveRefreshButton_Click(object sender, RoutedEventArgs e)
-        {
-            getSDCards();
-        }
-
-        private async void FTP_Test(object sender, RoutedEventArgs e)
-        {
-            BuilderBuild.IsEnabled = false;
-            BuilderFTPTest.IsEnabled = false;
-            BuilderProgress.IsIndeterminate = true;
-            string address = BuildFTPAddress.Text;
-            string port = BuildFTPPort.Text;
-
-            bool ShouldConnect = true;
-            if (validateIP() && validatePort())
-            {
-                String errortext = "";
-                BuilderLogs.Text += "Please Wait... \r\n";
-                FtpClient client = new FtpClient(address);
-                if (BuildPWRadio.IsChecked == true)
-                {
-                    client.Credentials = new NetworkCredential(BuildFTPUN.Text, BuildFTPPW.Text);
-                }
-                
-
-                client.Port = Int32.Parse(port);
-                try
-                {
-                    await client.ConnectAsync();
-                }
-                catch(Exception ex)
-                {
-                    errortext = ex.Message;
-                }
-                
-
-                if (client.IsConnected)
-                {
-                    Properties.Settings.Default.FTPIP = address;
-                    Properties.Settings.Default.FTPPort = port;
-                    if (BuildPWRadio.IsChecked == true)
-                    {
-                        Properties.Settings.Default.FTPUN = BuildFTPUN.Text;
-                        Properties.Settings.Default.FTPPW = BuildFTPPW.Text;
-                    }
-                    Properties.Settings.Default.FTPValid = true;
-                    Properties.Settings.Default.Save();
-                    BuilderLogs.Text += "FTP Connection Successful \r\n";
-                }
-                else
-                {
-                    BuilderLogs.Text += "FTP Connection Unsuccessful "+errortext+" \r\n";
-                }
-            }
-            BuilderProgress.IsIndeterminate = false;
-            BuilderBuild.IsEnabled = true;
-            BuilderFTPTest.IsEnabled = true;
-
-        }
-
-        private bool validateIP()
-        {
-            string address = BuildFTPAddress.Text;
-            Regex IP = new Regex(@"\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}");
-
-            bool result = IP.IsMatch(address);
-            if (!result)
-            {
-                BuilderLogs.Text += "Please enter a valid IP\r\n";
-            }
-
-            return result;
-        }
-
-        private bool validatePort()
-        {
-            string port = BuildFTPPort.Text;
-            int val;
-
-            bool result = Int32.TryParse(port, out val);
-
-            if (result)
-            {
-                result = val > 0 && val < 70000;
-            }
-
-            if (!result)
-            {
-                BuilderLogs.Text += "Please enter a valid Port\r\n";
-            }
-            return result;
-        }
-
-        private void RadioButton_Checked(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void GetTouchmARC(bool FTP, FtpClient ftp = null)
-        {
-            if (FTP)
-            {
-
-            }
-            else
-            {
-
-            }
         }
 
         #endregion
 
         #region Settings
-        //Deletes Everything Quasar has stored cause that's the easy way out
-        private void DeleteDocumentFolderContents(object sender, RoutedEventArgs e)
-        {
-            Folderino.DeleteDocumentsFolder();
-        }
-
-        private void ActivateCustomProtocol(object sender, RoutedEventArgs e)
-        {
-
-            if (Protoman.ActivateCustomProtocol())
-            {
-                Console.WriteLine("Fix Successful");
-            }
-            else
-            {
-                Console.WriteLine("You need admin rights to do that");
-            }
-        }
-
-        private void SetInterfaceWithParams()
-        {
-            Game Selected = Games.Find(g => g.ID == Properties.Settings.Default.LastSelectedGame);
-            SelectGame(Selected);
-
-            Workspace SelectedWorkspace = QuasarWorkspaces.Find(w => w.ID == Properties.Settings.Default.LastSelectedWorkspace);
-            if(SelectedWorkspace == null)
-            {
-                Workspace Default = QuasarWorkspaces.Find(w => w.ID == 0);
-                Properties.Settings.Default.LastSelectedWorkspace = 0;
-                Properties.Settings.Default.Save();
-                SetCurrentWorkspace(Default);
-            }
-            else
-            {
-                SetCurrentWorkspace(SelectedWorkspace);
-            }
-            
-
-            SettingsList = new ObservableCollection<QuasarSetting>();
-
-            List<QuasarSettingComboData> list = new List<QuasarSettingComboData>
-            {
-                new QuasarSettingComboData() { Name = "French", Value = "FR" },
-                new QuasarSettingComboData() { Name = "English", Value = "EN" }
-            };
-
-            SettingsList.Add(new QuasarSetting(new QuasarSettingData() { SettingName = "Quasar Version :",SettingValue= Properties.Settings.Default.AppVersion, NameOnly = true }));
-            SettingsList.Add(new QuasarSetting(new QuasarSettingData() { SettingName = "Supress Mod ", SettingValue= "deletion warning", SettingCheck = Properties.Settings.Default.SupressModDeletion, Reference = "SupressModDeletion" }));
-            SettingsList.Add(new QuasarSetting(new QuasarSettingData() { SettingName = "Supress Build", SettingValue = "deletion warning", SettingCheck = Properties.Settings.Default.SupressBuildDeletion, Reference = "SupressBuildDeletion" }));
-            SettingsList.Add(new QuasarSetting(new QuasarSettingData() { SettingName = "Enable", SettingValue = "Internal Mod Types", SettingCheck = Properties.Settings.Default.EnableIMT, Reference = "EnableIMT" }));
-            SettingsList.Add(new QuasarSetting(new QuasarSettingData() { SettingName = "Enable", SettingValue = "Pastebin", SettingCheck = Properties.Settings.Default.EnablePastebin, Reference = "EnablePastebin" }));
-
-            foreach (QuasarSetting QS in SettingsList)
-            {
-                QS.SettingsChanged += SettingsChanged;
-            }
-
-            BuilderModLoaderCombo.SelectedIndex = 0;
-            if (Properties.Settings.Default.EnableIMT)
-            {
-                IMTTab.Visibility = Visibility.Visible;
-            }
-            else
-            {
-                IMTTab.Visibility = Visibility.Collapsed;
-                
-            }
-            getSDCards();
-
-            if (Properties.Settings.Default.FTPValid)
-            {
-                BuildFTPAddress.Text = Properties.Settings.Default.FTPIP;
-                BuildFTPPort.Text = Properties.Settings.Default.FTPPort;
-                BuildFTPUN.Text = Properties.Settings.Default.FTPUN;
-                BuildFTPPW.Text = Properties.Settings.Default.FTPPW;
-                if(BuildFTPUN.Text != "")
-                {
-                    BuildPWRadio.IsChecked = true;
-                }
-
-            }
-
-            if (Properties.Settings.Default.Wireless)
-            {
-                BuilderFTPRadio.IsChecked = true;
-            }
-
-            
-
-        }
-
-        public void SettingsChanged(object sender, EventArgs e)
-        {
-            QuasarSetting sen = (QuasarSetting)sender;
-            if(sen.LocalData.Reference != null)
-            {
-                if(sen.LocalData.Reference == "EnableIMT")
-                {
-                    if (Properties.Settings.Default.EnableIMT)
-                    {
-                        IMTTab.Visibility = Visibility.Visible;
-                    }
-                    else
-                    {
-                        IMTTab.Visibility = Visibility.Collapsed;
-
-                    }
-                }
-            }
-        }
-
         private void SaveWorkspaces()
         {
             Workspace item = QuasarWorkspaces.Find(w => w.ID == CurrentWorkspace.ID);
             QuasarWorkspaces[QuasarWorkspaces.IndexOf(item)] = CurrentWorkspace;
-            AssociationXML.WriteAssociationFile(QuasarWorkspaces);
+            WorkspaceXML.WriteWorkspaces(QuasarWorkspaces);
         }
 
         #endregion
 
         #region Workspaces
-        private void WorkspaceSelected(object sender, SelectionChangedEventArgs e)
-        {
-            if(WorkspaceListBox.SelectedIndex != -1)
-            {
-                SetCurrentWorkspace((Workspace)WorkspaceListBox.SelectedItem);
-            }
-            
-        }
 
         public void SetCurrentWorkspace(Workspace workspace)
         {
             CurrentWorkspace = workspace;
-            WorkspaceActiveWorkspaceName.Content = String.Format("Active Workspace : {0} ", CurrentWorkspace.Name);
-            WorkspaceNameTextBox.Text = CurrentWorkspace.Name;
-            WorkspaceAssignmentLabel.Content = String.Format("Assignments : {0} ", CurrentWorkspace.Associations.Count);
-            WorkspaceBuildLabel.Content = String.Format("Latest Build Date : {0} ", CurrentWorkspace.BuildDate);
-            BuilderWorkspaceName.Content = CurrentWorkspace.Name;
-        }
-
-        public void AddWorkspace(object sender, RoutedEventArgs e)
-        {
-            Workspace newWorkspace = new Workspace() { Name = "New Workspace", ID = IDGenerator.getNewWorkspaceID(), Associations = new List<Association>(), Built = false, BuildDate = "" };
-            QuasarWorkspaces.Add(newWorkspace);
-            AssociationXML.WriteAssociationFile(QuasarWorkspaces);
-            WorkspaceListBox.Items.Refresh();
-        }
-
-        public void DeleteWorkspace(object sender, RoutedEventArgs e)
-        {
-            if(CurrentWorkspace.ID != 0)
-            {
-                bool proceed = false;
-                MessageBoxResult result = MessageBox.Show("Are you sure you want to delete this workspace ?", "Workspace Deletion", MessageBoxButton.YesNo);
-                switch (result)
-                {
-                    case MessageBoxResult.Yes:
-                        proceed = true;
-                        break;
-                    case MessageBoxResult.No:
-                        break;
-                }
-                if (proceed)
-                {
-                    QuasarWorkspaces.Remove(CurrentWorkspace);
-                    SetCurrentWorkspace(QuasarWorkspaces[0]);
-                    AssociationXML.WriteAssociationFile(QuasarWorkspaces);
-                    WorkspaceListBox.Items.Refresh();
-                }
-            }
-        }
-
-        public void DuplicateWorkspace(object sender, RoutedEventArgs e)
-        {
-            Workspace Clone = new Workspace() { Name = String.Format("{0} - Copy", CurrentWorkspace.Name), ID = IDGenerator.getNewWorkspaceID(), Associations = CurrentWorkspace.Associations, Built = false, BuildDate = "" };
-            QuasarWorkspaces.Add(Clone);
-            AssociationXML.WriteAssociationFile(QuasarWorkspaces);
-            WorkspaceListBox.Items.Refresh();
-        }
-
-        public void ReloadWorkspace(object sender, RoutedEventArgs e)
-        {
-            bool proceed = false;
-            MessageBoxResult result = MessageBox.Show("Are you sure you want to add everything to this workspace ?", "Workspace associations", MessageBoxButton.YesNo);
-            switch (result)
-            {
-                case MessageBoxResult.Yes:
-                    proceed = true;
-                    break;
-                case MessageBoxResult.No:
-                    break;
-            }
-            if (proceed)
-            {
-                CurrentWorkspace.Associations = new List<Association>();
-                SetCurrentWorkspace(QuasarWorkspaces[0]);
-                AssociationXML.WriteAssociationFile(QuasarWorkspaces);
-                WorkspaceListBox.Items.Refresh();
-
-                ScanEverythingIntoWorkspace();
-            }
-        }
-
-        public void EmptyWorkspace(object sender, RoutedEventArgs e)
-        {
-            bool proceed = false;
-            MessageBoxResult result = MessageBox.Show("Are you sure you want to empty this workspace ?", "Workspace associations", MessageBoxButton.YesNo);
-            switch (result)
-            {
-                case MessageBoxResult.Yes:
-                    proceed = true;
-                    break;
-                case MessageBoxResult.No:
-                    break;
-            }
-            if (proceed)
-            {
-                CurrentWorkspace.Associations = new List<Association>();
-                SetCurrentWorkspace(QuasarWorkspaces[0]);
-                AssociationXML.WriteAssociationFile(QuasarWorkspaces);
-                WorkspaceListBox.Items.Refresh();
-            }
-        }
-
-        public void RenameWorkspaces(object sender, RoutedEventArgs e)
-        {
-            CurrentWorkspace.Name = WorkspaceNameTextBox.Text;
-            AssociationXML.WriteAssociationFile(QuasarWorkspaces);
-            SetCurrentWorkspace(CurrentWorkspace);
-            WorkspaceListBox.Items.Refresh();
         }
 
         public void setTouchmARCWorkspace(object sender, RoutedEventArgs e)
@@ -1936,8 +1326,6 @@ namespace Quasar
                 bool newElement = false;
                 string downloadText = "";
                 ModListItem mli = new ModListItem(true);
-                mli.TrashRequested += Handler_TrashRequested;
-                mli.AddRequested += Handler_AddRequested;
 
                 //Setting base ModFileManager
                 ModFileManager ModFileManager = new ModFileManager(_URL);
@@ -1952,7 +1340,7 @@ namespace Quasar
                 ModFileManager = new ModFileManager(_URL, game);
 
                 //Setting game UI
-                mli.setGame(game);
+                //mli.setGame(game);
 
                 //Finding existing mod
                 LibraryMod Mod = Mods.Find(mm => mm.ID == Int32.Parse(ModFileManager.ModID) && mm.TypeID == Int32.Parse(ModFileManager.ModTypeID));
@@ -1965,10 +1353,10 @@ namespace Quasar
                 if (Mod != null)
                 {
                     if (Mod.Updates < newmod.Updates)
-                    {
+                    {/*
                         var query = ListMods.Where(ml => ml.LocalMod == Mod);
                         mli = query.ElementAt(0);
-                        downloadText = "Updating mod";
+                        downloadText = "Updating mod";*/
                     }
                     else
                     {
@@ -1999,7 +1387,7 @@ namespace Quasar
                     }
 
                     //Setting download UI
-                    mli.ModStatusValue = downloadText;
+                    //mli.ModStatusValue = downloadText;
 
                     Downloader modDownloader = new Downloader(mli);
 
@@ -2007,7 +1395,7 @@ namespace Quasar
                     await modDownloader.DownloadArchiveAsync(ModFileManager);
 
                     //Setting extract UI
-                    mli.ModStatusValue = "Extracting mod";
+                    //mli.ModStatusValue = "Extracting mod";
 
                     //Preparing Extraction
                     Unarchiver un = new Unarchiver(mli);
@@ -2016,7 +1404,7 @@ namespace Quasar
                     await un.ExtractArchiveAsync(ModFileManager.DownloadDestinationFilePath, ModFileManager.ArchiveContentFolderPath, ModFileManager.ModArchiveFormat);
 
                     //Setting extract UI
-                    mli.ModStatusValue = "Moving files";
+                    //mli.ModStatusValue = "Moving files";
 
                     //Moving files
                     await ModFileManager.MoveDownload();
@@ -2029,8 +1417,8 @@ namespace Quasar
 
 
                     //Providing mod to ModListElement and showing info
-                    mli.SetMod(newmod);
-                    mli.Downloaded = true;
+                    //mli.SetMod(newmod);
+                    //mli.Downloaded = true;
 
                     CollectionViewSource cvs = (CollectionViewSource)this.Resources["CollectionOMods"];
                     cvs.View.Refresh();
@@ -2047,7 +1435,7 @@ namespace Quasar
                     }
 
                     //Refreshing  Interface
-                    mli.Operation = false;
+                    //mli.Operation = false;
 
 
                     //Saving XML
@@ -2060,23 +1448,11 @@ namespace Quasar
             }
             catch(Exception e)
             {
-                Pasterino.sendPaste(e);
                 MessageBoxResult result = MessageBox.Show("One of Quasar's downloads failed. The app will shutdown due to a potential unknown state. Sorry !", "Crash", MessageBoxButton.OK);
                 Environment.Exit(0);
             }
             
         }
-
-        public void QuasarDownloadCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            foreach (string quasari in DLS.List)
-            {
-                Dispatcher.BeginInvoke((Action)(() => { LaunchDownload(quasari); }));
-            }
-        }
-
-
-
 
 
         #endregion

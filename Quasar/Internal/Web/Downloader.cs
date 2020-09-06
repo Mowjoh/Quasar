@@ -46,13 +46,13 @@ namespace Quasar
             void DownloadProgressChangedEvent(object s, DownloadProgressChangedEventArgs e)
             {
                 //Changing ProgressBar value
-                ModListItem.Progress.Dispatcher.BeginInvoke((Action)(() => { ModListItem.ProgressBarValue = e.ProgressPercentage; }));
+                //ModListItem.Progress.Dispatcher.BeginInvoke((Action)(() => { ModListItem.ProgressBarValue = e.ProgressPercentage; }));
 
                 //Making a proper string to display
                 var downloadProgress = string.Format("{0} MB / {1} MB", (e.BytesReceived / 1024d / 1024d).ToString("0.00"), (e.TotalBytesToReceive / 1024d / 1024d).ToString("0.00"));
 
                 //Displaying value
-                ModListItem.ModStatusTextLabel.Dispatcher.BeginInvoke((Action)(() => { ModListItem.ModStatusTextValue = downloadProgress; }));
+                //ModListItem.ModStatusTextLabel.Dispatcher.BeginInvoke((Action)(() => { ModListItem.ModStatusTextValue = downloadProgress; }));
             }
 
             //File Download

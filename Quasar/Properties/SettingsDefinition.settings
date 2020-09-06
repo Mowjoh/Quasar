@@ -1,0 +1,78 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Quasar.Properties" GeneratedClassName="SettingsDefinition">
+  <Profiles />
+  <Settings>
+    <Setting Name="SupressModDeletionName" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Supress mod deletion warning</Value>
+    </Setting>
+    <Setting Name="SupressModDeletionComment" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Enable this to supress the warning when deleting a mod</Value>
+    </Setting>
+    <Setting Name="SupressModDeletionValues" Type="System.String" Scope="Application">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="SupressBuildDeletionName" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Supress build warning</Value>
+    </Setting>
+    <Setting Name="SupressBuildDeletionComment" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Enable this to supress the warning when building</Value>
+    </Setting>
+    <Setting Name="SupressBuildDeletionValues" Type="System.String" Scope="Application">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="AppVersionName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Quasar Version</Value>
+    </Setting>
+    <Setting Name="AppVersionComment" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="EnableIMTName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Enable Internal Mod Types</Value>
+    </Setting>
+    <Setting Name="EnableIMTComment" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Enables a tab to configure types, for advanced users only</Value>
+    </Setting>
+    <Setting Name="AppVersionValues" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="LanguageName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Language</Value>
+    </Setting>
+    <Setting Name="LanguageComment" Type="System.String" Scope="User">
+      <Value Profile="(Default)">You can change the app's display language here</Value>
+    </Setting>
+    <Setting Name="LanguageValues" Type="System.String" Scope="User">
+      <Value Profile="(Default)">English=EN,Français=FR</Value>
+    </Setting>
+    <Setting Name="EnableIMTValues" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="FTPAddressName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">FTP Address</Value>
+    </Setting>
+    <Setting Name="FTPAddressComment" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Please enter the address in this format : [IP Address:Port] - Here is an example : 192.168.0.100:500 </Value>
+    </Setting>
+    <Setting Name="FTPAddressValues" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="FTPUNName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">FTP Username</Value>
+    </Setting>
+    <Setting Name="FTPUNComment" Type="System.String" Scope="User">
+      <Value Profile="(Default)">If you have authentification enabled on your Switch, please enter the username here</Value>
+    </Setting>
+    <Setting Name="FTPUNValues" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="FTPPWName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">FTP Password</Value>
+    </Setting>
+    <Setting Name="FTPPWComment" Type="System.String" Scope="User">
+      <Value Profile="(Default)">If you have authentification enabled on your Switch, please enter the password here</Value>
+    </Setting>
+    <Setting Name="FTPPWValues" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+  </Settings>
+</SettingsFile>

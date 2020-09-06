@@ -23,14 +23,22 @@
 
         <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
 
-
+        <Style x:Key="ControlStyle" TargetType="{x:Type Controls:ModListItem}">
+            <Setter Property="Height" Value="30"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Smol}" Value="true">
+                    <Setter Property="Height" Value="30"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        
         <Style x:Key="QuasarButton" TargetType="{x:Type Button}">
             <Setter Property="Background" Value="{StaticResource QuasarButtonBackground}"/>
             <Setter Property="Foreground" Value="{StaticResource QuasarButtonText}"/>
         </Style>
 
         <Style x:Key="QuasarLabel" TargetType="{x:Type Label}">
-            <Setter Property="Foreground" Value="{StaticResource QuasarButtonText}"/>
+            <Setter Property="Foreground" Value="{StaticResource QuasarTextColor}"/>
             <Setter Property="FontFamily" Value="/Controls/fonts/sofiapro-light.otf"/>
         </Style>
 

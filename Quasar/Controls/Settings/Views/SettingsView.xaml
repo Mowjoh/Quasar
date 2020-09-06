@@ -1,0 +1,24 @@
+﻿<UserControl x:Class="Quasar.Controls.Settings.View.SettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Quasar.Controls.Settings.View"
+             mc:Ignorable="d" 
+             d:DesignHeight="620" d:DesignWidth="1120" DataContext="{Binding SVM}">
+
+    <Grid Background="{DynamicResource QuasarBackgroundDark}">
+        <ItemsControl ItemsSource="{Binding SettingItems}" Background="#33000000" Margin="0,60,0,0">
+
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Vertical"/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+
+        </ItemsControl>
+        <Button Content="Validate FTP Settings" HorizontalAlignment="Left" Margin="145,20,0,0" VerticalAlignment="Top" Width="130" Height="26"/>
+        <Label Content="Quick Actions :" HorizontalAlignment="Left" Margin="10,20,0,0" VerticalAlignment="Top" Style="{DynamicResource QuasarLabel}" Height="26"/>
+    </Grid>
+
+</UserControl>

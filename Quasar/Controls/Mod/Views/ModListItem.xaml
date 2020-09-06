@@ -1,0 +1,173 @@
+﻿<UserControl x:Class="Quasar.Controls.ModListItem"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Quasar.Controls"
+             mc:Ignorable="d" 
+             d:DesignHeight="160" d:DesignWidth="1200" Background="{DynamicResource QD0}" Width="Auto">
+    <UserControl.Style>
+        <Style TargetType="{x:Type UserControl}">
+            <Setter Property="Height" Value="30"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Smol}" Value="false">
+                    <Setter Property="Height" Value="160"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Style>
+    
+    <UserControl.Resources>
+        <SolidColorBrush x:Key="DefaultColor" Color="#8c8c94"/>
+        <SolidColorBrush x:Key="SkinColor" Color="#bc3991"/>
+        <SolidColorBrush x:Key="MapColor" Color="#d5c53d"/>
+        <SolidColorBrush x:Key="SoundColor" Color="#FFFFFF"/>
+        <SolidColorBrush x:Key="GamefileColor" Color="#c96e2d"/>
+        <SolidColorBrush x:Key="GUIColor" Color="#53cec1"/>
+        <SolidColorBrush x:Key="AddColor1" Color="#FF06766C"/>
+        <SolidColorBrush x:Key="AddColor2" Color="#FF06766C"/>
+        <SolidColorBrush x:Key="AddColor3" Color="#FF06766C"/>
+
+        <Style x:Key="FinishedLabel" TargetType="{x:Type Label}" BasedOn="{StaticResource QuasarLabel}"> 
+            <Setter Property="Visibility" Value="Visible"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Downloading}" Value="True">
+                    <Setter Property="Visibility" Value="Hidden"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        
+        <Style x:Key="DownloadingLabel" TargetType="{x:Type Label}" BasedOn="{StaticResource QuasarLabel}">
+            <Setter Property="Visibility" Value="Hidden"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Downloading}" Value="True">
+                    <Setter Property="Visibility" Value="Visible"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="DownloadBar" TargetType="{x:Type ProgressBar}">
+            <Setter Property="Visibility" Value="Hidden"/>
+            <Setter Property="Height" Value="10"/>
+            <Setter Property="Background" Value="#6B000000"/>
+            <Setter Property="BorderBrush" Value="{x:Null}"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Foreground" Value="#FF003A00"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Downloading}" Value="True">
+                    <Setter Property="Visibility" Value="Visible"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="ModColor" TargetType="{x:Type Path}">
+            <Setter Property="Fill" Value="{StaticResource DefaultColor}"/>
+            <Setter Property="Stroke" Value="AliceBlue"></Setter>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding LibraryMod.TypeID}" Value="1">
+                    <Setter Property="Fill" Value="{StaticResource SkinColor}"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding LibraryMod.TypeID}" Value="2">
+                    <Setter Property="Fill" Value="{StaticResource MapColor}"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding LibraryMod.TypeID}" Value="3">
+                    <Setter Property="Fill" Value="{StaticResource SoundColor}"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding LibraryMod.TypeID}" Value="4">
+                    <Setter Property="Fill" Value="{StaticResource GamefileColor}"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Path=LibraryMod.TypeID}" Value="5">
+                    <Setter Property="Fill" Value="{StaticResource GUIColor}"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+    </UserControl.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="5"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <Path x:Name="BorderColor" Stroke="Black" StrokeThickness="2" Grid.ColumnSpan="2" Grid.RowSpan="2" Style="{DynamicResource ModColor}">
+            <Path.Data>
+                <RectangleGeometry x:Name="ColoredRectangle" Rect="{Binding Rekt}" RadiusX="5" RadiusY="10">
+
+                </RectangleGeometry>
+            </Path.Data>
+        </Path>
+        <Grid x:Name="TopGrid" Background="{DynamicResource QD2}" Grid.Column="1" Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="30*" />
+                <ColumnDefinition Width="20*" />
+                <ColumnDefinition Width="20*" />
+                <ColumnDefinition Width="20*" />
+                <ColumnDefinition Width="10*" />
+            </Grid.ColumnDefinitions>
+
+
+            <Label Grid.Column="0" Content="{Binding Path=LibraryMod.Name}" Style="{StaticResource FinishedLabel}"/>
+            <Label x:Name="ModType" Grid.Column="1" Content="{Binding Path=LibraryMod.TypeLabel}" Style="{StaticResource FinishedLabel}"/>
+            <Label x:Name="ModCategory" Grid.Column="2" Content="{Binding Path=LibraryMod.APICategoryName}" Style="{StaticResource FinishedLabel}"/>
+            <Label x:Name="ModGame" Grid.Column="3" Content="{Binding Path=Game.Name}" Style="{StaticResource FinishedLabel}"/>
+
+            <Label Grid.Column="0" Content="{Binding ModStatusValue}" HorizontalAlignment="right" Style="{StaticResource DownloadingLabel}"/>
+            <Label x:Name="ModStatusTextLabel" Grid.Column="1" Grid.ColumnSpan="3" HorizontalAlignment="Center" Content="{Binding ModStatusTextValue}" Style="{StaticResource DownloadingLabel}"/>
+            <ProgressBar x:Name="Progress" Grid.Column="1" Grid.Row="0" Grid.ColumnSpan="3" Value="{Binding ProgressBarValue}" Style="{StaticResource DownloadBar}" />
+
+            <StackPanel Grid.Column="4" Orientation="Horizontal" FlowDirection="RightToLeft" Visibility="{Binding Path=ElementActive}">
+                <Button x:Name="Trash" Command="{Binding Path=DeleteModCommand}" Margin="0,0,0,0" Visibility="{Binding Path=ElementActive, Converter={StaticResource BoolToVisibilityConverter}}" >
+                    <Button.Template>
+                        <ControlTemplate TargetType="{x:Type Button}">
+                            <Path x:Name="Trash" Stroke="White" Fill="White" Data="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zm2.46-7.12l1.41-1.41L12 12.59l2.12-2.12 1.41 1.41L13.41 14l2.12 2.12-1.41 1.41L12 15.41l-2.12 2.12-1.41-1.41L10.59 14l-2.13-2.12zM15.5 4l-1-1h-5l-1 1H5v2h14V4z" Height="15" Width="15" Margin="10,0,0,0" Stretch="Uniform" ToolTip="Delete this mod" />
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+                <Button x:Name="Treeview" Command="{Binding Path=FileViewCommand}" Margin="0,0,0,0" Visibility="{Binding Path=ElementActive, Converter={StaticResource BoolToVisibilityConverter}}" >
+                    <Button.Template>
+                        <ControlTemplate TargetType="{x:Type Button}">
+                            <Path x:Name="TreeView" Stroke="White" Fill="White" Data="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z" Height="15" Width="15" Margin="10,0,0,0" Stretch="Uniform" ToolTip="Open File Tree" />
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+
+
+                <Button x:Name="AddW" Command="{Binding Path=AddModCommand}" Margin="0,0,0,0" Visibility="{Binding Path=ElementActive, Converter={StaticResource BoolToVisibilityConverter}}" >
+                    <Button.Template>
+                        <ControlTemplate TargetType="{x:Type Button}">
+                            <Path x:Name="Trash" Stroke="White" Fill="White" Data="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 9h-4v4h-2v-4H9V9h4V5h2v4h4v2z" Height="15" Width="15" Margin="10,0,0,0" Stretch="Uniform" ToolTip="Add this mod's contents to the current Workspace" />
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+                <Button x:Name="Minimize" Command="{Binding Path=MinimizeCommand}" Margin="0,0,0,0" Visibility="{Binding Path=BigIcons, Converter={StaticResource BoolToVisibilityConverter}}">
+                    <Button.Template>
+                        <ControlTemplate TargetType="{x:Type Button}">
+                            <Path x:Name="Minimize" Stroke="White" Fill="White" Data="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14zM7 9h5v1H7z" Margin="10,0,0,0" Height="15" Width="15"  Stretch="Uniform" ToolTip="Retract the panel" />
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+            </StackPanel>
+        </Grid>
+        
+        <Grid x:Name="BottomGrid" Background="{DynamicResource QD2}" Grid.Column="1" Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="225"/>
+                <ColumnDefinition Width="200"/>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="225"/>
+            </Grid.ColumnDefinitions>
+            <Border BorderBrush="White" BorderThickness="1" Grid.Column="0" Grid.Row="0" Panel.ZIndex="1000"/>
+            <Image x:Name="ModImage" Grid.Column="0" Source="{Binding ImageSource}"></Image>
+
+            <ItemsControl x:Name="AutorNameStackPanel"  Grid.Column="1" ItemsSource="{Binding Authors}" >
+                
+            </ItemsControl>
+            <ItemsControl x:Name="AutorRoleStackPanel"  Grid.Column="2" ItemsSource="{Binding Roles}" >
+
+            </ItemsControl>
+
+        </Grid>
+    </Grid>
+</UserControl>
