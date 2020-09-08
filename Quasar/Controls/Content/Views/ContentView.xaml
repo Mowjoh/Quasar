@@ -13,7 +13,7 @@
             <RowDefinition Height="656*"/>
         </Grid.RowDefinitions>
 
-        <ListView x:Name="ContentListView" ItemsSource="{Binding ContentListItems}" Background="{DynamicResource QD1}" Margin="0,0,10,0" Grid.Row="2" BorderThickness="0" >
+        <ListView x:Name="ContentListView" ItemsSource="{Binding ContentListItems}" Background="{DynamicResource QD1}" SelectedItem="{Binding SelectedContentListItem}" Margin="0,0,10,0" Grid.Row="2" BorderThickness="0" >
             <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
                     <StackPanel  />
@@ -30,6 +30,21 @@
                 </Style>
             </ListView.ItemContainerStyle>
         </ListView>
+        <Grid Grid.Row="2" Margin="0,0,10,0" Background="{DynamicResource QD1}" Panel.ZIndex="1000">
+            <Grid.Style>
+                <Style TargetType="{x:Type Grid}">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding ContentListItems.Count}" Value="0">
+                            <Setter Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Grid.Style>
+            <Label Content="No Content has been detected for this mod" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Wheat" FontSize="20">
+                
+            </Label>
+        </Grid>
         <Grid Grid.Row="1" Margin="10,0,0,0" Background="{x:Null}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="35*"/>

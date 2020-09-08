@@ -182,8 +182,8 @@ namespace Quasar.Controls
                     {
                         FileRegex = new Regex(Searchie.PrepareRegex(IMTF.SourceFile));
                         FolderRegex = new Regex(Searchie.PrepareRegex(IMTF.SourcePath));
-                        OutputFileRegex = new Regex(Searchie.PrepareRegex(IMTF.Files[GameBuilderIndex].Path));
-                        OutputFolderRegex = new Regex(Searchie.PrepareRegex(IMTF.Destinations[GameBuilderIndex].Path));
+                        OutputFileRegex = new Regex(Searchie.PrepareRegex(IMTF.Files[GameBuilderIndex].File));
+                        OutputFolderRegex = new Regex(Searchie.PrepareRegex(IMTF.Files[GameBuilderIndex].Path));
 
                         if (TestFiles != null)
                         {
@@ -221,7 +221,7 @@ namespace Quasar.Controls
                                                 if (ValidateGameData(tf.FolderGameData,IMT.Association))
                                                 {
                                                     tf.ValidFile = true;
-                                                    formOutputs(tf, IMTF.Files[GameBuilderIndex].Path, IMTF.Destinations[GameBuilderIndex].Path);
+                                                    formOutputs(tf, IMTF.Files[GameBuilderIndex].Path, IMTF.Files[GameBuilderIndex].Path);
                                                     tf.InternalModType = IMT.Name;
                                                     tf.InternalModTypeFileID = IMTF.ID;
                                                 }
@@ -232,7 +232,7 @@ namespace Quasar.Controls
                                                 if (ValidateGameData(tf.FileGameData, IMT.Association))
                                                 {
                                                     tf.ValidFile = true;
-                                                    formOutputs(tf, IMTF.Files[GameBuilderIndex].Path, IMTF.Destinations[GameBuilderIndex].Path);
+                                                    formOutputs(tf, IMTF.Files[GameBuilderIndex].Path, IMTF.Files[GameBuilderIndex].Path);
                                                     tf.InternalModType = IMT.Name;
                                                     tf.InternalModTypeFileID = IMTF.ID;
                                                 }
@@ -249,7 +249,7 @@ namespace Quasar.Controls
                                                 if (ValidateGameData(tf.FileGameData, IMT.Association))
                                                 {
                                                     tf.ValidFile = true;
-                                                    formOutputs(tf, IMTF.Files[GameBuilderIndex].Path, IMTF.Destinations[GameBuilderIndex].Path);
+                                                    formOutputs(tf, IMTF.Files[GameBuilderIndex].Path, IMTF.Files[GameBuilderIndex].Path);
                                                     tf.InternalModType = IMT.Name;
                                                     tf.InternalModTypeFileID = IMTF.ID;
                                                 }

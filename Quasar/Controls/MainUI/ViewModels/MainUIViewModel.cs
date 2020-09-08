@@ -1,4 +1,5 @@
-﻿using Quasar.Controls.Assignation.ViewModels;
+﻿using Quasar.Controls;
+using Quasar.Controls.Assignation.ViewModels;
 using Quasar.Controls.Assignation.Views;
 using Quasar.Controls.Build.ViewModels;
 using Quasar.Controls.Build.Views;
@@ -12,6 +13,8 @@ using Quasar.Controls.ModManagement.Views;
 using Quasar.Controls.Settings.View;
 using Quasar.Controls.Settings.Workspaces.View;
 using Quasar.Controls.Settings.Workspaces.ViewModels;
+using Quasar.Internal;
+using Quasar.Internal.Tools;
 using Quasar.Quasar_Sys;
 using Quasar.XMLResources;
 using System;
@@ -23,6 +26,10 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.UI;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Threading;
 
 namespace Quasar
@@ -32,6 +39,8 @@ namespace Quasar
         #region Fields
 
         #region Views
+        private ObservableCollection<TabItem> _TabItems { get; set; }
+        private TabItem _SelectedTabItem { get; set; }
         private ModsView _ModsView { get; set; }
         private ModsViewModel _MVM { get; set; }
         private ContentView _ContentView { get; set; }
@@ -45,6 +54,9 @@ namespace Quasar
         private SettingsView _SettingsView { get; set; }
         private WorkspaceView _WorkspaceView { get; set; }
         private WorkspaceViewModel _WVM { get; set; }
+
+        private bool _BeginGameChoice { get; set; }
+        private bool _StopGameChoice { get; set; }
         #endregion
 
         #region Working Data
@@ -53,6 +65,10 @@ namespace Quasar
         private ObservableCollection<Association> _Associations { get; set; }
         private ObservableCollection<Workspace> _Workspaces { get; set; }
         private Workspace _ActiveWorkspace { get; set; }
+        private ModListItem _SelectedModListItem { get; set; }
+
+        private Game _SelectedGame { get; set; }
+
         #endregion
 
         #region References
@@ -62,11 +78,39 @@ namespace Quasar
         private ObservableCollection<ModLoader> _ModLoaders { get; set; }
         #endregion
 
+        #region Commands
+        private ICommand _StartGameSelectionCommand { get; set; }
+        #endregion
+
         #endregion
 
         #region Properties
 
         #region Views
+        public ObservableCollection<TabItem> TabItems
+        {
+            get => _TabItems;
+            set
+            {
+                if (_TabItems == value)
+                    return;
+
+                _TabItems = value;
+                OnPropertyChanged("TabItems");
+            }
+        }
+        public TabItem SelectedTabItem
+        {
+            get => _SelectedTabItem;
+            set
+            {
+                if (_SelectedTabItem == value)
+                    return;
+
+                _SelectedTabItem = value;
+                OnPropertyChanged("SelectedTabItem");
+            }
+        }
         public ModsView ModsView
         {
             get => _ModsView;
@@ -229,6 +273,30 @@ namespace Quasar
                 OnPropertyChanged("WVM");
             }
         }
+        public bool BeginGameChoice
+        {
+            get => _BeginGameChoice;
+            set
+            {
+                if (_BeginGameChoice == value)
+                    return;
+
+                _BeginGameChoice = value;
+                OnPropertyChanged("BeginGameChoice");
+            }
+        }
+        public bool StopGameChoice
+        {
+            get => _StopGameChoice;
+            set
+            {
+                if (_StopGameChoice == value)
+                    return;
+
+                _StopGameChoice = value;
+                OnPropertyChanged("StopGameChoice");
+            }
+        }
         #endregion
 
         #region Working Data
@@ -307,10 +375,41 @@ namespace Quasar
                 OnPropertyChanged("ActiveWorkspace");
             }
         }
+        public ModListItem SelectedModListItem
+        {
+            get => _SelectedModListItem;
+            set
+            {
+                if (_SelectedModListItem == value)
+                    return;
+
+                _SelectedModListItem = value;
+                if(value != null)
+                {
+                    CVM = new ContentViewModel(ContentMappings, _SelectedModListItem.ModListItemViewModel.LibraryMod, InternalModTypes, GameDatas);
+                    ContentView.DataContext = CVM;
+                }
+                OnPropertyChanged("SelectedModListItem");
+            }
+        }
         /// <summary>
         /// Mutex that serves to know if a Quasar instance is already running
         /// </summary>
         public Mutex serverMutex;
+
+        public Game SelectedGame
+        {
+            get => _SelectedGame;
+            set
+            {
+                if (_SelectedGame == value)
+                    return;
+
+                _SelectedGame = value;
+                StopGameSelection();
+                OnPropertyChanged("SelectedGame");
+            }
+        }
         #endregion
 
         #region References
@@ -375,18 +474,36 @@ namespace Quasar
                 OnPropertyChanged("ModLoaders");
             }
         }
-        
+
+        #endregion
+
+        #region Commands
+        public ICommand StartGameSelectionCommand
+        {
+            get
+            {
+                if (_StartGameSelectionCommand == null)
+                {
+                    _StartGameSelectionCommand = new RelayCommand(param => StartGameSelection());
+                }
+                return _StartGameSelectionCommand;
+            }
+        }
         #endregion
 
         #endregion
 
         public MainUIViewModel()
         {
+            new Updater();
+
             SetupClientOrServer();
 
             LoadStuff();
 
             SetupViews();
+
+            EventSystem.Subscribe<ModListItem>(SetModListItem);
         }
 
         #region Actions
@@ -407,31 +524,39 @@ namespace Quasar
         }
         public void SetupViews()
         {
+            TabItems = new ObservableCollection<TabItem>();
+
             ModsView = new ModsView();
-            MVM = new ModsViewModel(Mods, Games, ContentMappings, Workspaces);
+            MVM = new ModsViewModel(Mods, Games, ContentMappings, Workspaces, InternalModTypes, GameDatas);
             ModsView.DataContext = MVM;
+            TabItems.Add(new TabItem() { Content = ModsView, Header = "Mod Management", Foreground = new SolidColorBrush() { Color = Colors.White } });
 
             ContentView = new ContentView();
-            CVM = new ContentViewModel(ContentMappings, Mods, InternalModTypes,GameDatas);
-            ContentView.DataContext = CVM;
+            TabItems.Add(new TabItem() { Content = ContentView, Header = "Content Management", Foreground = new SolidColorBrush() { Color = Colors.White } });
 
             AssociationView = new AssociationView();
             AVM = new AssociationViewModel();
             AssociationView.DataContext = AVM;
+            TabItems.Add(new TabItem() { Content = AssociationView, Header = "Associations", Foreground = new SolidColorBrush() { Color = Colors.White } });
 
             BuildView = new BuildView();
             BVM = new BuildViewModel(ModLoaders, Workspaces, ActiveWorkspace);
             BuildView.DataContext = BVM;
+            TabItems.Add(new TabItem() { Content = BuildView, Header = "Build", Foreground = new SolidColorBrush() { Color = Colors.White } });
 
             InternalModTypeView = new InternalModTypeView();
-            IMTV = new InternalModTypeViewModel();
+            IMTV = new InternalModTypeViewModel(InternalModTypes, ModLoaders, GameDatas, Games);
             InternalModTypeView.DataContext = IMTV;
+            TabItems.Add(new TabItem() { Content = InternalModTypeView, Header = "Internal Mod Types", Foreground = new SolidColorBrush() { Color = Colors.White } });
 
             SettingsView = new SettingsView();
+            TabItems.Add(new TabItem() { Content = SettingsView, Header = "Settings", Foreground = new SolidColorBrush() { Color = Colors.White } });
 
             WorkspaceView = new WorkspaceView();
             WVM = new WorkspaceViewModel(Workspaces, ActiveWorkspace);
             WorkspaceView.DataContext = WVM;
+            TabItems.Add(new TabItem() { Content = WorkspaceView, Header = "Workspaces", Foreground = new SolidColorBrush() { Color = Colors.White } });
+
         }
         public void SetupClientOrServer()
         {
@@ -523,6 +648,27 @@ namespace Quasar
             {
                 ModLoaders.Add(ml);
             }
+        }
+
+        //Events
+        public void SetModListItem(ModListItem _SelectedModListItem)
+        {
+            if(_SelectedModListItem.ModListItemViewModel.ActionRequested == "ShowContents")
+            {
+                SelectedTabItem = TabItems[1];
+                SelectedModListItem = _SelectedModListItem;
+            }
+        }
+
+        public void StartGameSelection()
+        {
+            BeginGameChoice = true;
+            StopGameChoice = false;
+        }
+        public void StopGameSelection()
+        {
+            BeginGameChoice = false;
+            StopGameChoice = true;
         }
         #endregion
 

@@ -5,7 +5,17 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Quasar.Controls.Content.Views"
              mc:Ignorable="d" 
-             d:DesignHeight="150" d:DesignWidth="1200" Background="{DynamicResource QD0}" Height="{Binding ElementHeight}" Width="Auto" Visibility="{Binding Path=Filtered}">
+             d:DesignHeight="150" d:DesignWidth="1200" Background="{DynamicResource QD0}" Width="Auto" Visibility="{Binding Path=Filtered}">
+    <UserControl.Style>
+        <Style TargetType="{x:Type UserControl}">
+            <Setter Property="Height" Value="30"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Smol}" Value="false">
+                    <Setter Property="Height" Value="160"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Style>
     <UserControl.Resources>
         <SolidColorBrush x:Key="ColorA" Color="#FF0B397C"/>
         <SolidColorBrush x:Key="ColorB" Color="#FF9E1904"/>
@@ -21,7 +31,7 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
 
-        <Path x:Name="BorderColor" Stroke="Black" StrokeThickness="2" Fill="{Binding ContentOddEven}" Grid.ColumnSpan="2" Grid.RowSpan="2">
+        <Path x:Name="BorderColor" Stroke="Black" StrokeThickness="2" Fill="red" Grid.ColumnSpan="2" Grid.RowSpan="2">
             <Path.Data>
                 <RectangleGeometry x:Name="ColoredRectangle" Rect="{Binding Rekt}" RadiusX="5" RadiusY="10"  />
             </Path.Data>
@@ -37,11 +47,11 @@
                 <ColumnDefinition Width="10*"/>
             </Grid.ColumnDefinitions>
 
-            <Label x:Name="ModName" Grid.Column="0" Content="{Binding LocalMod.Name}" Foreground="White"/>
-            <Label x:Name="ContentName" Grid.Column="1" Content="{Binding LocalMapping.Name}" Foreground="White" />
-            <Label x:Name="InternalModType" Grid.Column="2" Content="{Binding LocalModType.Name}" Foreground="White"/>
-            <Label x:Name="Association" Grid.Column="3" Content="{Binding SelectedGDI.Name}" Foreground="White"/>
-            <Label x:Name="Slot" Grid.Column="4" Content="{Binding LocalMapping.SlotName}" Foreground="White"/>
+            <Label x:Name="ModName" Grid.Column="0" Content="{Binding LibraryMod.Name}" Foreground="White"/>
+            <Label x:Name="ContentName" Grid.Column="1" Content="{Binding ContentMapping.Name}" Foreground="White" />
+            <Label x:Name="InternalModType" Grid.Column="2" Content="{Binding InternalModType.Name}" Foreground="White"/>
+            <Label x:Name="Association" Grid.Column="3" Content="{Binding GameDataItem.Name}" Foreground="White"/>
+            <Label x:Name="Slot" Grid.Column="4" Content="{Binding ContentMapping.SlotName}" Foreground="White"/>
 
             <StackPanel Grid.Column="5" Orientation="Horizontal" FlowDirection="RightToLeft">
                 <Button x:Name="Minimize" Margin="0,0,0,0" Visibility="Hidden" Click="ExpandRetract_Click">
@@ -60,12 +70,12 @@
                 <ColumnDefinition Width="173*"/>
             </Grid.ColumnDefinitions>
             <StackPanel Margin="10" Grid.Column="0">
-                <TextBox x:Name="ContentMappingName" Margin="0,5,0,0" Text="{Binding LocalMapping.Name}"/>
-                <ComboBox x:Name="ContentMappingAssociation" Margin="0,10,0,0" ItemsSource="{Binding GameData.Items}" DisplayMemberPath="Name"/>
+                <TextBox x:Name="ContentMappingName" Margin="0,5,0,0" Text="{Binding ContentMapping.Name}"/>
+                <ComboBox x:Name="ContentMappingAssociation" Margin="0,10,0,0" ItemsSource="{Binding GameDataCategory.Items}" SelectedValue="{Binding GameDataItem}" DisplayMemberPath="Name"/>
                 <Button x:Name="ContentMappingSaveButton" Margin="0,10,0,0" Content="Save" Click="SaveContentMapping"/>
             </StackPanel>
             <ScrollViewer Margin="10" Grid.Column="1">
-                <TextBlock x:Name="FilesTextBlock" Foreground="White" Width="Auto"></TextBlock>
+                <TextBlock x:Name="FilesTextBlock" Foreground="White" Width="Auto" Text="{Binding Text}"></TextBlock>
             </ScrollViewer>
         </Grid>
     </Grid>

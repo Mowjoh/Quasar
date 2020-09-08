@@ -106,6 +106,7 @@
     <Compile Include="Controls\Common\Models\ObservableObject.cs" />
     <Compile Include="Controls\Common\Models\RelayCommand.cs" />
     <Compile Include="Controls\Content\Models\ContentMapping.cs" />
+    <Compile Include="Controls\Content\ViewModels\ContentListItemViewModel.cs" />
     <Compile Include="Controls\Content\ViewModels\ContentViewModel.cs" />
     <Compile Include="Controls\Content\Views\ContentView.xaml.cs">
       <DependentUpon>ContentView.xaml</DependentUpon>
@@ -130,7 +131,7 @@
     <Compile Include="Controls\Mod\Views\ModListItem.xaml.cs">
       <DependentUpon>ModListItem.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Mod\Models\LibraryMod.cs" />
+    <Compile Include="Controls\Mod\Models\ModListItem.cs" />
     <Compile Include="Controls\Mod\ViewModels\ModsViewModel.cs" />
     <Compile Include="Controls\Mod\Views\ModsView.xaml.cs">
       <DependentUpon>ModsView.xaml</DependentUpon>
@@ -152,6 +153,7 @@
     <Compile Include="Internal\EventSystem.cs" />
     <Compile Include="Internal\FileSystem\Builder.cs" />
     <Compile Include="Internal\FileSystem\ModFileManager.cs" />
+    <Compile Include="Internal\Tools\Updater.cs" />
     <Compile Include="Internal\XML\ContentXML.cs" />
     <Compile Include="Internal\XML\WorkspaceXML.cs" />
     <Compile Include="Internal\FileSystem\Unarchiver.cs" />

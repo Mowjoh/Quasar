@@ -12,6 +12,7 @@ using System.IO;
 using Quasar.Controls;
 using Quasar.XMLResources;
 using Quasar.FileSystem;
+using Quasar.Controls.Mod.ViewModels;
 
 namespace Quasar
 {
@@ -20,16 +21,16 @@ namespace Quasar
         //Setting Default Directory Path
         readonly string DefaultDirectoryPath = Properties.Settings.Default["DefaultDir"].ToString();
 
-        ModListItem ModListItem;
+        ModListItemViewModel ModListItemView;
 
         string DownloadURL;
         public string ModTypeID;
         public string ModID;
         public string ArchiveExtension;
 
-        public Downloader(ModListItem mli)
+        public Downloader(ModListItemViewModel _MIVM)
         {
-            ModListItem = mli;
+            ModListItemView = _MIVM;
         }
 
         //The big boi, the download Task
@@ -46,12 +47,14 @@ namespace Quasar
             void DownloadProgressChangedEvent(object s, DownloadProgressChangedEventArgs e)
             {
                 //Changing ProgressBar value
+                ModListItemView.ProgressBarValue = e.ProgressPercentage;
                 //ModListItem.Progress.Dispatcher.BeginInvoke((Action)(() => { ModListItem.ProgressBarValue = e.ProgressPercentage; }));
 
                 //Making a proper string to display
                 var downloadProgress = string.Format("{0} MB / {1} MB", (e.BytesReceived / 1024d / 1024d).ToString("0.00"), (e.TotalBytesToReceive / 1024d / 1024d).ToString("0.00"));
 
                 //Displaying value
+                ModListItemView.ModStatusTextValue = downloadProgress;
                 //ModListItem.ModStatusTextLabel.Dispatcher.BeginInvoke((Action)(() => { ModListItem.ModStatusTextValue = downloadProgress; }));
             }
 

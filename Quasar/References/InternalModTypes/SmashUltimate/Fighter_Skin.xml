@@ -3,12 +3,7 @@
   <InternalModTypeFile ID="0">
     <SourcePath>{GameData}/model/{Folder}/c{S00}</SourcePath>
     <SourceFile>{AnyFile}.nutexb</SourceFile>
-    <Mandatory>true</Mandatory>
-    <BuilderFolder BuilderID="0" Path ="fighter/{GameData}/model/{Folder}/c{S00}"/>
-    <BuilderFolder BuilderID="1" Path ="arc/fighter/{GameData}/model/{Folder}/c{S00}"/>
-    <BuilderFolder BuilderID="2" Path ="atmosphere/contents/01006A800016E000/romfs/{Workspace}/arc/fighter/{GameData}/model/{Folder}/c{S00}"/>
-    <BuilderFile BuilderID="0" Path ="{AnyFile}.nutexb"/>
-    <BuilderFile BuilderID="1" Path ="{AnyFile}.nutexb"/>
-    <BuilderFile BuilderID="2" Path ="{AnyFile}.nutexb"/>
+    <BuilderFile BuilderID="0" File ="{AnyFile}.nutexb" Path ="fighter/{GameData}/model/{Folder}/c{S00}"/>
+    <BuilderFile BuilderID="1" File ="{AnyFile}.nutexb" Path ="arc/fighter/{GameData}/model/{Folder}/c{S00}"/>
   </InternalModTypeFile>
 </InternalModType>

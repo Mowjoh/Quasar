@@ -10,59 +10,50 @@
         xmlns:Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2" xmlns:view="clr-namespace:Quasar.Controls.Settings.View" xmlns:view1="clr-namespace:Quasar.Controls.Settings.Workspaces.View" xmlns:views="clr-namespace:Quasar.Controls.Build.Views" x:Name="MainWindow1" x:Class="Quasar.MainWindow"
         mc:Ignorable="d"
         Title="Quasar" MinWidth="1280" MinHeight="720" Width="1280" Height="720" Icon="Quasar.ico" DataContext="{Binding RelativeSource={RelativeSource Self}}" >
+    
+    <Window.Resources>
+        
+    </Window.Resources>
+    
     <Window.TaskbarItemInfo>
-        <TaskbarItemInfo x:Name="QuasarTaskBar">
-
-        </TaskbarItemInfo>
+        <TaskbarItemInfo x:Name="QuasarTaskBar"/>
     </Window.TaskbarItemInfo>
 
-    <Window.Resources>
-        <CollectionViewSource Source="{Binding ListMods}" x:Key="CollectionOMods" Filter="ShowOnlyNonFilteredMods" x:Name="ModsCollectionViewSource" IsLiveFilteringRequested="True">
-            <CollectionViewSource.SortDescriptions>
-                <scm:SortDescription PropertyName="Game.ID" />
-                <scm:SortDescription PropertyName="LocalMod.TypeID" />
-                <scm:SortDescription PropertyName="LocalMod.Name" />
-            </CollectionViewSource.SortDescriptions>
-        </CollectionViewSource>
-        <CollectionViewSource Source="{Binding ListContents}" x:Key="CollectionOContents" Filter="ShowOnlyNonFilteredContents" IsLiveFilteringRequested="True">
-            <CollectionViewSource.SortDescriptions>
-                <scm:SortDescription PropertyName="Game.ID" />
-                <scm:SortDescription PropertyName="LocalMod.TypeID" />
-                <scm:SortDescription PropertyName="LocalMod.Name" />
-                <scm:SortDescription PropertyName="LocalModType.Name" />
-                <scm:SortDescription PropertyName="LocalMapping.Name" />
-            </CollectionViewSource.SortDescriptions>
-        </CollectionViewSource>
-        <CollectionViewSource Source="{Binding ContentMappings}" x:Key="CollectionOContentMappings" Filter="ShowOnlyRelatedAssociation" IsLiveFilteringRequested="True">
-        </CollectionViewSource>
-        <CollectionViewSource Source="{Binding CurrentGameApiModType.Categories}" x:Key="ModManagementFilterCollection" IsLiveFilteringRequested="True">
-            <CollectionViewSource.SortDescriptions>
-                <scm:SortDescription PropertyName="Name"/>
-            </CollectionViewSource.SortDescriptions>
-        </CollectionViewSource>
-        <CollectionViewSource Source="{Binding AssociationCurrentGDC.Items}" x:Key="AssignmentElementCollection" IsLiveFilteringRequested="True">
-            <CollectionViewSource.SortDescriptions>
-                <scm:SortDescription PropertyName="Name"/>
-            </CollectionViewSource.SortDescriptions>
-        </CollectionViewSource>
-        <CollectionViewSource Source="{Binding AssociationCorrespondingIMT}" x:Key="AssignmentTypesCollection" IsLiveFilteringRequested="True">
-            <CollectionViewSource.SortDescriptions>
-                <scm:SortDescription PropertyName="Name"/>
-            </CollectionViewSource.SortDescriptions>
-        </CollectionViewSource>
-        <CollectionViewSource Source="{Binding IMTCurrentGDC.Items}" x:Key="ContentCollection" IsLiveFilteringRequested="True">
-            <CollectionViewSource.SortDescriptions>
-                <scm:SortDescription PropertyName="Name"/>
-            </CollectionViewSource.SortDescriptions>
-        </CollectionViewSource>
-    </Window.Resources>
     <Grid x:Name="QuasarGrid">
-        <Grid x:Name="OverlayGrid" Panel.ZIndex="1000" Opacity="100" Background="#FF2D2D2D" d:IsHidden="True">
+        <Grid x:Name="OverlayGrid" Margin="40,0,0,0" Panel.ZIndex="1000" Opacity="100" Background="#FF2D2D2D" d:IsHidden="True">
+            
             <Grid.RenderTransform>
                 <ScaleTransform ScaleX="0" ScaleY="1"/>
             </Grid.RenderTransform>
+            
+            <Grid.Style>
+                <Style>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding BeginGameChoice}" Value="True">
+                            <DataTrigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation From="0" To="1" Duration="0:0:0.200" Storyboard.TargetProperty="(RenderTransform).(ScaleTransform.ScaleX)">
+                                        </DoubleAnimation>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </DataTrigger.EnterActions>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding BeginGameChoice}" Value="False">
+                            <DataTrigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation From="1" To="0" Duration="0:0:0.200" Storyboard.TargetProperty="(RenderTransform).(ScaleTransform.ScaleX)">
+                                        </DoubleAnimation>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </DataTrigger.EnterActions>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Grid.Style>
 
-            <ListBox x:Name="GamesListView" ItemsSource="{Binding Path=Games}" Height="240" Padding="0" BorderThickness="0" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center" ScrollViewer.CanContentScroll="False" Background="#FF2D2D2D"  VerticalAlignment="Center" SelectionChanged="GamesListView_SelectionChanged">
+            <ListBox x:Name="GamesListView" ItemsSource="{Binding Path=Games}" SelectedItem="{Binding SelectedGame}" Height="240" Padding="0" BorderThickness="0" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center" ScrollViewer.CanContentScroll="False" Background="#FF2D2D2D"  VerticalAlignment="Center">
                 <ListBox.ItemsPanel>
                     <ItemsPanelTemplate>
                         <VirtualizingStackPanel IsItemsHost="True" Orientation="Horizontal"/>
@@ -77,13 +68,22 @@
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
+            
         </Grid>
         <Grid x:Name="AppGrid">
+            
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="40"/>
                 <ColumnDefinition Width="1*"/>
             </Grid.ColumnDefinitions>
-            <TabControl x:Name="NewTabControl" Grid.Column="1" BorderThickness="0" Background="{DynamicResource QD1}" >
+            
+            <Grid Background="#FF2D2D2D">
+                <Button x:Name="HomeButton" Height="35" Width="35" BorderThickness="0" BorderBrush="#FF2D2D2D" Background="{x:Null}" Command="{Binding Path=StartGameSelectionCommand}" >
+                    <Image HorizontalAlignment="Center" Height="35" Width="35" VerticalAlignment="Center" Source="References/images/home.png"/>
+                </Button>
+            </Grid>
+            
+            <TabControl x:Name="NewTabControl" Grid.Column="1" BorderThickness="0" Background="{DynamicResource QD1}" ItemsSource="{Binding TabItems}" SelectedItem="{Binding SelectedTabItem}" >
                 <TabControl.Resources>
                     <Style TargetType="{x:Type TabItem}">
                         <Setter Property="Template">
@@ -104,6 +104,24 @@
                                             <Setter TargetName="Border" Property="Background" Value="Transparent" />
                                             <Setter TargetName="Border" Property="BorderThickness" Value="0" />
                                         </Trigger>
+                                        <MultiTrigger>
+                                            <MultiTrigger.Conditions>
+                                                <Condition Property="Header" Value="Content Management"/>
+                                                <Condition Property="IsSelected" Value="True"/>
+                                            </MultiTrigger.Conditions>
+                                            <MultiTrigger.Setters>
+                                                <Setter Property="Visibility" Value="Visible"/>
+                                            </MultiTrigger.Setters>
+                                        </MultiTrigger>
+                                        <MultiTrigger>
+                                            <MultiTrigger.Conditions>
+                                                <Condition Property="Header" Value="Content Management"/>
+                                                <Condition Property="IsSelected" Value="False"/>
+                                            </MultiTrigger.Conditions>
+                                            <MultiTrigger.Setters>
+                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                            </MultiTrigger.Setters>
+                                        </MultiTrigger>
                                     </ControlTemplate.Triggers>
                                 </ControlTemplate>
                             </Setter.Value>
@@ -113,32 +131,8 @@
                         <Setter Property="Background" Value="{DynamicResource QD0}"/>
                     </Style>
                 </TabControl.Resources>
-                <TabItem Header="Mod Management" Foreground="{DynamicResource QuasarTextColor}" Content="{Binding ModsView}" />
-                <TabItem Header="Content Management" Foreground="{DynamicResource QuasarTextColor}" Content="{Binding ContentView}" />
-                <TabItem Header="Associations" Foreground="{DynamicResource QuasarTextColor}" Content="{Binding AssociationView}" />
-                <TabItem Header="Build" Foreground="{DynamicResource QuasarTextColor}" Content="{Binding BuildView}" />
-                <TabItem Header="Internal Mod Types" Foreground="{DynamicResource QuasarTextColor}" Content="{Binding InternalModTypeView}" />
-                <TabItem Header="{x:Static p:Resources.SettingsTabHeader}" Foreground="{DynamicResource QuasarTextColor}" Content="{Binding SettingsView}"/>
-                <TabItem Header="Workspaces" Foreground="{DynamicResource QuasarTextColor}" Visibility="Visible" Content="{Binding WorkspaceView}"/>
             </TabControl>
-            <Grid Background="#FF2D2D2D">
-                <Button x:Name="HomeButton" Height="35" Width="35" BorderThickness="0" BorderBrush="#FF2D2D2D" Background="{x:Null}" Click="HomeButton_Click" >
-                    <Button.Triggers>
-                        <EventTrigger RoutedEvent="ButtonBase.Click">
-                            <BeginStoryboard>
-                                <Storyboard>
-                                    <DoubleAnimation 
-                                         Storyboard.TargetName="OverlayGrid"
-                                         Storyboard.TargetProperty="(RenderTransform).(ScaleTransform.ScaleX)" 
-                                         From="0" To="1" 
-                                         Duration="0:0:0.2" />
-                                </Storyboard>
-                            </BeginStoryboard>
-                        </EventTrigger>
-                    </Button.Triggers>
-                    <Image HorizontalAlignment="Center" Height="35" Width="35" VerticalAlignment="Center" Source="References/images/home.png"/>
-                </Button>
-            </Grid>
+            
         </Grid>
     </Grid>
 </Window>

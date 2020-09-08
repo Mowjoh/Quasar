@@ -3,6 +3,7 @@ using Quasar.FileSystem;
 using Quasar.XMLResources;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
@@ -67,15 +68,15 @@ namespace Quasar.Controls
             InitializeComponent();
         }
 
-        public ModListItem(Boolean _OperationActive = false, LibraryMod _LibraryMod = null, Game _Game = null)
+        public ModListItem( LibraryMod _LibraryMod = null, Game _Game = null, bool Downloading = false)
         {
-            ModListItemViewModel = new ModListItemViewModel(_LibraryMod,_Game);
+            ModListItemViewModel = new ModListItemViewModel(_LibraryMod,_Game, Downloading);
             InitializeComponent();
             DataContext = ModListItemViewModel;
         }
-        public ModListItem(string QuasarURL)
+        public ModListItem(string QuasarURL, ObservableCollection<Game> Games, ObservableCollection<LibraryMod> Mods)
         {
-            ModListItemViewModel = new ModListItemViewModel(QuasarURL);
+            ModListItemViewModel = new ModListItemViewModel(QuasarURL, Games, Mods);
             InitializeComponent();
             DataContext = ModListItemViewModel;
         }

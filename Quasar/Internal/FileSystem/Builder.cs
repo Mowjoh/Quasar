@@ -242,9 +242,8 @@ namespace Quasar.Internal.FileSystem
                                     InternalModTypeFile imtf = imt.Files.Find(f => f.ID == cmf.InternalModTypeFileID);
 
                                     BuilderFile bfi = imtf.Files[ModLoader];
-                                    BuilderFolder bfo = imtf.Destinations[ModLoader];
 
-                                    string[] output = FormatOutput(bfi.Path, bfo.Path, GDI.Attributes[0].Value, cmf, cm);
+                                    string[] output = FormatOutput(bfi.File, bfi.Path, GDI.Attributes[0].Value, cmf, cm);
                                     string FinalDestination = basedestination + output[0] + "/" + output[1];
                                     FinalDestination = FinalDestination.Replace(@"{Workspace}", BuilderWorkspace.Name);
                                     FinalDestination = FinalDestination.Replace(@"/", @"\");

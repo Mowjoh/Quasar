@@ -1,4 +1,5 @@
 ﻿using Quasar.Controls.Common.Models;
+using Quasar.Internal;
 using Quasar.XMLResources;
 using System;
 using System.Collections.Generic;
@@ -15,12 +16,14 @@ namespace Quasar.Controls.Content.ViewModels
         #region Fields
         //Working Data
         private ObservableCollection<ContentMapping> _ContentMappings { get; set; }
-        private ObservableCollection<LibraryMod> _Mods { get; set; }
+        private LibraryMod _LibraryMod { get; set; }
         private ObservableCollection<ContentListItem> _ContentListItems { get; set; }
 
         //References
         private ObservableCollection<InternalModType> _InternalModTypes { get; set; }
         private ObservableCollection<GameData> _GameDatas { get; set; }
+
+        private ContentListItem _SelectedContentListItem { get; set; }
         #endregion
 
         #region Properties
@@ -33,19 +36,20 @@ namespace Quasar.Controls.Content.ViewModels
                     return;
 
                 _ContentMappings = value;
+                GetContentListItems();
                 OnPropertyChanged("ContentMappings");
             }
         }
-        public ObservableCollection<LibraryMod> Mods
+        public LibraryMod LibraryMod
         {
-            get => _Mods;
+            get => _LibraryMod;
             set
             {
-                if (_Mods == value)
+                if (_LibraryMod == value)
                     return;
 
-                _Mods = value;
-                OnPropertyChanged("Mods");
+                _LibraryMod = value;
+                OnPropertyChanged("LibraryMod");
             }
         }
         public ObservableCollection<ContentListItem> ContentListItems
@@ -57,6 +61,7 @@ namespace Quasar.Controls.Content.ViewModels
                     return;
 
                 _ContentListItems = value;
+                
                 OnPropertyChanged("ContentListItems");
             }
         }
@@ -84,16 +89,42 @@ namespace Quasar.Controls.Content.ViewModels
                 OnPropertyChanged("GameDatas");
             }
         }
+
+        public ContentListItem SelectedContentListItem
+        {
+            get => _SelectedContentListItem;
+            set
+            {
+                if (_SelectedContentListItem == value)
+                    return;
+
+                if (_SelectedContentListItem != null)
+                {
+                    _SelectedContentListItem.CLIVM.Smol = true;
+                }
+
+                _SelectedContentListItem = value;
+                if (_SelectedContentListItem != null)
+                {
+                    _SelectedContentListItem.CLIVM.Smol = false;
+                }
+
+                _SelectedContentListItem = value;
+                OnPropertyChanged("SelectedContentListItem");
+            }
+        }
         #endregion
 
-        public ContentViewModel(ObservableCollection<ContentMapping> _ContentMappings, ObservableCollection<LibraryMod> _Mods, ObservableCollection<InternalModType> _InternalModTypes, ObservableCollection<GameData> _GameDatas)
+        public ContentViewModel(ObservableCollection<ContentMapping> _ContentMappings, LibraryMod _LibraryMod, ObservableCollection<InternalModType> _InternalModTypes, ObservableCollection<GameData> _GameDatas)
         {
-            ContentMappings = _ContentMappings;
-            Mods = _Mods;
+            LibraryMod = _LibraryMod;
             InternalModTypes = _InternalModTypes;
             GameDatas = _GameDatas;
+            ContentMappings = _ContentMappings;
 
-            GetContentListItems();
+            EventSystem.Subscribe<string>(GetRefreshed);
+            
+
         }
 
         #region Actions
@@ -102,19 +133,29 @@ namespace Quasar.Controls.Content.ViewModels
             ContentListItems = new ObservableCollection<ContentListItem>();
             int modID = 0;
             int colorID = 0;
-
+            
             foreach (ContentMapping cm in ContentMappings)
             {
-                LibraryMod lm = Mods.Single(l => l.ID == cm.ModID);
-                InternalModType imt = InternalModTypes.Single(i => i.ID == cm.InternalModType);
+                if(cm.ModID == LibraryMod.ID)
+                {
+                    InternalModType imt = InternalModTypes.Single(i => i.ID == cm.InternalModType);
 
-                colorID = modID != lm.ID ? colorID == 0 ? 1 : 0 : colorID;
-                modID = modID != lm.ID ? lm.ID : modID;
+                    colorID = modID != LibraryMod.ID ? colorID == 0 ? 1 : 0 : colorID;
+                    modID = modID != LibraryMod.ID ? LibraryMod.ID : modID;
 
-                List<GameDataCategory> gdc = GameDatas.Single(gd => gd.GameID == lm.GameID).Categories;
-                ContentListItem cli = new ContentListItem(cm, lm, imt, gdc, colorID);
+                    List<GameDataCategory> gdc = GameDatas.Single(gd => gd.GameID == LibraryMod.GameID).Categories;
+                    ContentListItem cli = new ContentListItem(cm, LibraryMod, imt, gdc, colorID);
 
-                ContentListItems.Add(cli);
+                    ContentListItems.Add(cli);
+                }
+            }
+        }
+
+        public void GetRefreshed(string Action)
+        {
+            if(Action == "RefreshContents")
+            {
+                GetContentListItems();
             }
         }
         #endregion

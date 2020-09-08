@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Quasar.Controls.Common.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,71 +9,259 @@ using System.Xml.Serialization;
 namespace Quasar
 {
     [XmlRoot("InternalModType")]
-    public class InternalModType
+    public class InternalModType : ObservableObject
     {
+
+        #region Fields
+        private string _Name { get; set; }
+        private string _Filename { get; set; }
+        private int _ID { get; set; }
+        private int _GameID { get; set; }
+        private int _Association { get; set; }
+        private int _Slots { get; set; }
+        private bool _IgnoreableGameDataAssociation { get; set; }
+        private List<InternalModTypeFile> _Files { get; set; }
+        #endregion
+
+        #region Properties
         [XmlAttribute("Name")]
-        public string Name { get; set; }
+        public string Name
+        {
+            get => _Name;
+            set
+            {
+                if (_Name == value)
+                    return;
+
+                _Name = value;
+                OnPropertyChanged("Name");
+            }
+        }
 
         [XmlAttribute("Filename")]
-        public string Filename { get; set; }
+        public string Filename
+        {
+            get => _Filename;
+            set
+            {
+                if (_Filename == value)
+                    return;
+
+                _Filename = value;
+                OnPropertyChanged("Filename");
+            }
+        }
 
         [XmlAttribute("ID")]
-        public int ID { get; set; }
+        public int ID
+        {
+            get => _ID;
+            set
+            {
+                if (_ID == value)
+                    return;
+
+                _ID = value;
+                OnPropertyChanged("ID");
+            }
+        }
 
         [XmlAttribute("GameID")]
-        public int GameID { get; set; }
+        public int GameID
+        {
+            get => _GameID;
+            set
+            {
+                if (_GameID == value)
+                    return;
+
+                _GameID = value;
+                OnPropertyChanged("GameID");
+            }
+        }
 
         [XmlAttribute("Association")]
-        public int Association { get; set; }
+        public int Association
+        {
+            get => _Association;
+            set
+            {
+                if (_Association == value)
+                    return;
+
+                _Association = value;
+                OnPropertyChanged("Association");
+            }
+        }
 
         [XmlAttribute("Slots")]
-        public int Slots { get; set; }
+        public int Slots
+        {
+            get => _Slots;
+            set
+            {
+                if (_Slots == value)
+                    return;
 
+                _Slots = value;
+                OnPropertyChanged("Slots");
+            }
+        }
+        [XmlAttribute("IgnoreableGameDataAssociation")]
+        public bool IgnoreableGameDataAssociation
+        {
+            get => _IgnoreableGameDataAssociation;
+            set
+            {
+                if (_IgnoreableGameDataAssociation == value)
+                    return;
+
+                _IgnoreableGameDataAssociation = value;
+                OnPropertyChanged("IgnoreableGameDataAssociation");
+            }
+        }
         [XmlElement("InternalModTypeFile")]
-        public List<InternalModTypeFile> Files { get; set; }
+        public List<InternalModTypeFile> Files
+        {
+            get => _Files;
+            set
+            {
+                if (_Files == value)
+                    return;
+
+                _Files = value;
+                OnPropertyChanged("Files");
+            }
+        }
+        #endregion
+
     }
 
-    public class InternalModTypeFile
+    public class InternalModTypeFile : ObservableObject
     {
+        #region Fields
+        private int _ID { get; set; }
+        private string _SourcePath { get; set; }
+        private string _SourceFile { get; set; }
+        private List<BuilderFile> _Files { get; set; }
+        #endregion
+
+        #region Properties
+
         [XmlAttribute("ID")]
-        public int ID { get; set; }
+        public int ID
+        {
+            get => _ID;
+            set
+            {
+                if (_ID == value)
+                    return;
+
+                _ID = value;
+                OnPropertyChanged("ID");
+            }
+        }
 
         [XmlElement("SourcePath")]
-        public string SourcePath { get; set; }
+        public string SourcePath
+        {
+            get => _SourcePath;
+            set
+            {
+                if (_SourcePath == value)
+                    return;
+
+                _SourcePath = value;
+                OnPropertyChanged("SourcePath");
+            }
+        }
 
         [XmlElement("SourceFile")]
-        public string SourceFile { get; set; }
+        public string SourceFile
+        {
+            get => _SourceFile;
+            set
+            {
+                if (_SourceFile == value)
+                    return;
 
-        [XmlElement("BuilderFolder")]
-        public List<BuilderFolder> Destinations { get; set; }
+                _SourceFile = value;
+                OnPropertyChanged("SourceFile");
+            }
+        }
 
         [XmlElement("BuilderFile")]
-        public List<BuilderFile> Files { get; set; }
-
-        [XmlElement("Mandatory")]
-        public bool Mandatory { get; set; }
-
-        public InternalModTypeFile()
+        public List<BuilderFile> Files
         {
+            get => _Files;
+            set
+            {
+                if (_Files == value)
+                    return;
 
+                _Files = value;
+                OnPropertyChanged("Files");
+            }
         }
+
+        #endregion
+
     }
 
-    public class BuilderFile
+    public class BuilderFile : ObservableObject
     {
+
+        #region Fields
+        private int _BuilderID { get; set; }
+        private string _Path { get; set; }
+        private string _File { get; set; }
+        #endregion
+
+        #region Properties
+
         [XmlAttribute("BuilderID")]
-        public int BuilderID { get; set; }
+        public int BuilderID
+        {
+            get => _BuilderID;
+            set
+            {
+                if (_BuilderID == value)
+                    return;
+
+                _BuilderID = value;
+                OnPropertyChanged("BuilderID");
+            }
+        }
 
         [XmlAttribute("Path")]
-        public string Path { get; set; }
-    }
+        public string Path
+        {
+            get => _Path;
+            set
+            {
+                if (_Path == value)
+                    return;
 
-    public class BuilderFolder
-    {
-        [XmlAttribute("BuilderID")]
-        public int BuilderID { get; set; }
+                _Path = value;
+                OnPropertyChanged("Path");
+            }
+        }
 
-        [XmlAttribute("Path")]
-        public string Path { get; set; }
+        [XmlAttribute("File")]
+        public string File
+        {
+            get => _File;
+            set
+            {
+                if (_File == value)
+                    return;
+
+                _File = value;
+                OnPropertyChanged("File");
+            }
+        }
+
+        #endregion
+
     }
 }

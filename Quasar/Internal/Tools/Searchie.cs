@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using Quasar.FileSystem;
 using Quasar.Internal.Tools;
@@ -14,13 +16,13 @@ namespace Quasar.Quasar_Sys
         public enum MatchTypes : int { FullMatch = 0, FileMatch = 1, ParentMatch = 2 } 
 
         //Launches Detection process for a specific Mod
-        public static List<ContentMapping> AutoDetectinator(LibraryMod mod,List<InternalModType> types, Game _Game, List<GameData> gamedata)
+        public static ObservableCollection<ContentMapping> AutoDetectinator(LibraryMod LibraryMod,ObservableCollection<InternalModType> InternalModTypes, Game Game, ObservableCollection<GameData> GameDatas)
         {
-            if(mod != null)
+            if(LibraryMod != null)
             {
-                
-                List<ContentMapping> mappings = new List<ContentMapping>();
-                ModFileManager modFileManager = new ModFileManager(mod, _Game);
+
+                ObservableCollection<ContentMapping> mappings = new ObservableCollection<ContentMapping>();
+                ModFileManager modFileManager = new ModFileManager(LibraryMod, Game);
                 //Getting mod files
                 IEnumerable<string> LibraryModFiles = Directory.EnumerateFiles(modFileManager.LibraryContentFolderPath, "*.*", SearchOption.AllDirectories);
                 List<QuasarFileManager> QFMList = new List<QuasarFileManager>();
@@ -29,10 +31,10 @@ namespace Quasar.Quasar_Sys
                     QFMList.Add(new QuasarFileManager() { Path = s.Replace("\\", "/") });
                 }
 
-                foreach (InternalModType type in types)
+                foreach (InternalModType type in InternalModTypes)
                 {
                     //Getting data corresponding to current type
-                    GameData SpecificGameData = gamedata.Find(g => g.GameID == mod.GameID);
+                    GameData SpecificGameData = GameDatas.SingleOrDefault(g => g.GameID == LibraryMod.GameID);
                     GameDataCategory SpecificCategory = SpecificGameData.Categories.Find(gdc => gdc.ID == type.Association);
 
                     //Searching for matches for each of the files included in the Internal Mod Type
@@ -48,14 +50,14 @@ namespace Quasar.Quasar_Sys
                         {
                             ContentMapping cm = null;
 
-                            InternalModType IMT = types.Find(t => t.ID == qfm.InternalModTypeID);
+                            InternalModType IMT = InternalModTypes.SingleOrDefault(t => t.ID == qfm.InternalModTypeID);
                             SpecificCategory = SpecificGameData.Categories.Find(gdc => gdc.ID == IMT.Association);
                             if(SpecificCategory != null)
                             {
                                 int GameDataItemID = SpecificCategory.Items.Find(i => i.Attributes[0].Value == qfm.GameData).ID;
                                 if (mappings.Count != 0)
                                 {
-                                    cm = mappings.Find(existingMapping => existingMapping.SlotName == qfm.Slot && existingMapping.InternalModType == qfm.InternalModTypeID && existingMapping.GameDataItemID == GameDataItemID);
+                                    cm = mappings.SingleOrDefault(existingMapping => existingMapping.SlotName == qfm.Slot && existingMapping.InternalModType == qfm.InternalModTypeID && existingMapping.GameDataItemID == GameDataItemID);
                                 }
                                 if (cm == null)
                                 {
@@ -65,10 +67,10 @@ namespace Quasar.Quasar_Sys
                                         ID = IDGenerator.getNewContentID(),
                                         SlotName = qfm.Slot == null ? "00" : qfm.Slot,
                                         Slot = qfm.Slot == null ? 0 : int.Parse(qfm.Slot),
-                                        ModID = mod.ID,
+                                        ModID = LibraryMod.ID,
                                         InternalModType = qfm.InternalModTypeID,
                                         GameDataItemID = GameDataItemID,
-                                        Name = String.Format("{0} - Slot {1}", mod.Name, qfm.Slot),
+                                        Name = String.Format("{0} - Slot {1}", LibraryMod.Name, qfm.Slot),
 
                                     };
                                     List<ContentMappingFile> Files = new List<ContentMappingFile>();

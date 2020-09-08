@@ -125,10 +125,11 @@
                         </ControlTemplate>
                     </Button.Template>
                 </Button>
+                
                 <Button x:Name="Treeview" Command="{Binding Path=FileViewCommand}" Margin="0,0,0,0" Visibility="{Binding Path=ElementActive, Converter={StaticResource BoolToVisibilityConverter}}" >
                     <Button.Template>
                         <ControlTemplate TargetType="{x:Type Button}">
-                            <Path x:Name="TreeView" Stroke="White" Fill="White" Data="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z" Height="15" Width="15" Margin="10,0,0,0" Stretch="Uniform" ToolTip="Open File Tree" />
+                            <Path x:Name="TreeView" Stroke="White" Fill="White" Data="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z" Height="15" Width="15" Margin="10,0,0,0" Stretch="Uniform" ToolTip="Open File Tree" />
                         </ControlTemplate>
                     </Button.Template>
                 </Button>
@@ -167,6 +168,17 @@
             <ItemsControl x:Name="AutorRoleStackPanel"  Grid.Column="2" ItemsSource="{Binding Roles}" >
 
             </ItemsControl>
+
+            <Button Command="{Binding Path=ShowContentsCommand}" Grid.Column="3" Width="200" Height="50"  Visibility="{Binding Path=ElementActive, Converter={StaticResource BoolToVisibilityConverter}}" >
+                <Button.Template>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Grid Background="{DynamicResource QD1}" Width="150" Height="25">
+                            <Path x:Name="TreeView" VerticalAlignment="Top" HorizontalAlignment="Left"  Height="20" Width="20" Stretch="Uniform" ToolTip="Show Mod Contents" Margin="10,7,20,0" Stroke="White" Fill="White" Data="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z" />
+                            <Label Content="Show Mod Contents" Style="{DynamicResource QuasarLabel}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="30,2,0,0"></Label>
+                        </Grid>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
 
         </Grid>
     </Grid>

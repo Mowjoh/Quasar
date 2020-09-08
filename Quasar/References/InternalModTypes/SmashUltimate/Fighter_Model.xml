@@ -3,56 +3,31 @@
   <InternalModTypeFile ID="0">
     <SourcePath>{GameData}/model/{Folder}/c{S00}</SourcePath>
     <SourceFile>model.numshb</SourceFile>
-    <Mandatory>true</Mandatory>
-    <BuilderFolder BuilderID="0" Path ="fighter/{GameData}/model/{Folder}/c{S00}"/>
-    <BuilderFolder BuilderID="1" Path ="arc/fighter/{GameData}/model/{Folder}/c{S00}"/>
-    <BuilderFolder BuilderID="2" Path ="atmosphere/contents/01006A800016E000/romfs/{Workspace}/arc/fighter/{GameData}/model/{Folder}/c{S00}"/>
-    <BuilderFile BuilderID="0" Path ="model.numshb"/>
-    <BuilderFile BuilderID="1" Path ="model.numshb"/>
-    <BuilderFile BuilderID="2" Path ="model.numshb"/>
+    <BuilderFile BuilderID="0" File ="model.numshb" Path ="fighter/{GameData}/model/{Folder}/c{S00}"/>
+    <BuilderFile BuilderID="1" File ="model.numshb" Path ="arc/fighter/{GameData}/model/{Folder}/c{S00}"/>
   </InternalModTypeFile>
   <InternalModTypeFile ID="1">
     <SourcePath>{GameData}/model/{Folder}/c{S00}</SourcePath>
     <SourceFile>model.numatb</SourceFile>
-    <Mandatory>false</Mandatory>
-    <BuilderFolder BuilderID="0" Path ="fighter/{GameData}/model/{Folder}/c{S00}"/>
-    <BuilderFolder BuilderID="1" Path ="arc/fighter/{GameData}/model/{Folder}/c{S00}"/>
-    <BuilderFolder BuilderID="2" Path ="atmosphere/contents/01006A800016E000/romfs/{Workspace}/arc/fighter/{GameData}/model/{Folder}/c{S00}"/>
-    <BuilderFile BuilderID="0" Path ="model.numatb"/>
-    <BuilderFile BuilderID="1" Path ="model.numatb"/>
-    <BuilderFile BuilderID="2" Path ="model.numatb"/>
+    <BuilderFile BuilderID="0" File ="model.numatb" Path ="fighter/{GameData}/model/{Folder}/c{S00}"/>
+    <BuilderFile BuilderID="1" File ="model.numatb" Path ="arc/fighter/{GameData}/model/{Folder}/c{S00}"/>
   </InternalModTypeFile>
   <InternalModTypeFile ID="2">
     <SourcePath>{GameData}/model/{Folder}/c{S00}</SourcePath>
     <SourceFile>model.numdlb</SourceFile>
-    <Mandatory>false</Mandatory>
-    <BuilderFolder BuilderID="0" Path ="fighter/{GameData}/model/{Folder}/c{S00}"/>
-    <BuilderFolder BuilderID="1" Path ="arc/fighter/{GameData}/model/{Folder}/c{S00}"/>
-    <BuilderFolder BuilderID="2" Path ="atmosphere/contents/01006A800016E000/romfs/{Workspace}/arc/fighter/{GameData}/model/{Folder}/c{S00}"/>
-    <BuilderFile BuilderID="0" Path ="model.numdlb"/>
-    <BuilderFile BuilderID="1" Path ="model.numdlb"/>
-    <BuilderFile BuilderID="2" Path ="model.numdlb"/>
+    <BuilderFile BuilderID="0" File ="model.numdlb" Path ="fighter/{GameData}/model/{Folder}/c{S00}"/>
+    <BuilderFile BuilderID="1" File ="model.numdlb" Path ="arc/fighter/{GameData}/model/{Folder}/c{S00}"/>
   </InternalModTypeFile>
   <InternalModTypeFile ID="3">
     <SourcePath>{GameData}/model/{Folder}/c{S00}</SourcePath>
     <SourceFile>model.xmb</SourceFile>
-    <Mandatory>false</Mandatory>
-    <BuilderFolder BuilderID="0" Path ="fighter/{GameData}/model/{Folder}/c{S00}"/>
-    <BuilderFolder BuilderID="1" Path ="arc/fighter/{GameData}/model/{Folder}/c{S00}"/>
-    <BuilderFolder BuilderID="2" Path ="atmosphere/contents/01006A800016E000/romfs/{Workspace}/arc/fighter/{GameData}/model/{Folder}/c{S00}"/>
-    <BuilderFile BuilderID="0" Path ="model.xmb"/>
-    <BuilderFile BuilderID="1" Path ="model.xmb"/>
-    <BuilderFile BuilderID="2" Path ="model.xmb"/>
+    <BuilderFile BuilderID="0" File ="model.xmb" Path ="fighter/{GameData}/model/{Folder}/c{S00}"/>
+    <BuilderFile BuilderID="1" File ="model.xmb" Path ="arc/fighter/{GameData}/model/{Folder}/c{S00}"/>
   </InternalModTypeFile>
   <InternalModTypeFile ID="4">
     <SourcePath>{GameData}/model/{Folder}/c{S00}</SourcePath>
     <SourceFile>model.nusrcmdlb</SourceFile>
-    <Mandatory>false</Mandatory>
-    <BuilderFolder BuilderID="0" Path ="fighter/{GameData}/model/{Folder}/c{S00}"/>
-    <BuilderFolder BuilderID="1" Path ="arc/fighter/{GameData}/model/{Folder}/c{S00}"/>
-    <BuilderFolder BuilderID="2" Path ="atmosphere/contents/01006A800016E000/romfs/{Workspace}/arc/fighter/{GameData}/model/{Folder}/c{S00}"/>
-    <BuilderFile BuilderID="0" Path ="model.nusrcmdlb"/>
-    <BuilderFile BuilderID="1" Path ="model.nusrcmdlb"/>
-    <BuilderFile BuilderID="2" Path ="model.nusrcmdlb"/>
+    <BuilderFile BuilderID="0" File ="model.nusrcmdlb" Path ="fighter/{GameData}/model/{Folder}/c{S00}"/>
+    <BuilderFile BuilderID="1" File ="model.nusrcmdlb" Path ="arc/fighter/{GameData}/model/{Folder}/c{S00}"/>
   </InternalModTypeFile>
 </InternalModType>

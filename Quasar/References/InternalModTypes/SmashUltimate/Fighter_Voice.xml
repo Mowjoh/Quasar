@@ -3,56 +3,31 @@
   <InternalModTypeFile ID="0">
     <SourcePath>fighter_voice</SourcePath>
     <SourceFile>vc_{GameData}.nus3audio</SourceFile>
-    <Mandatory>true</Mandatory>
-    <BuilderFolder BuilderID="0" Path ="sound/bank/fighter_voice"/>
-    <BuilderFolder BuilderID="1" Path ="arc/sound/bank/fighter_voice"/>
-    <BuilderFolder BuilderID="2" Path ="atmosphere/contents/01006A800016E000/romfs/{Workspace}/arc/sound/bank/fighter_voice"/>
-    <BuilderFile BuilderID="0" Path ="vc_{GameData}.nus3audio"/>
-    <BuilderFile BuilderID="1" Path ="arc/vc_{GameData}.nus3audio"/>
-    <BuilderFile BuilderID="2" Path ="vc_{GameData}.nus3audio"/>
+    <BuilderFile BuilderID="0" File ="vc_{GameData}.nus3audio" Path ="sound/bank/fighter_voice"/>
+    <BuilderFile BuilderID="1" File ="arc/vc_{GameData}.nus3audio" Path ="arc/sound/bank/fighter_voice"/>
   </InternalModTypeFile>
   <InternalModTypeFile ID="1">
     <SourcePath>fighter_voice</SourcePath>
     <SourceFile>vc_{GameData}_c{S00}.nus3audio</SourceFile>
-    <Mandatory>false</Mandatory>
-    <BuilderFolder BuilderID="0" Path ="sound/bank/fighter_voice"/>
-    <BuilderFolder BuilderID="1" Path ="arc/sound/bank/fighter_voice"/>
-    <BuilderFolder BuilderID="2" Path ="atmosphere/contents/01006A800016E000/romfs/{Workspace}arc/sound/bank/fighter_voice"/>
-    <BuilderFile BuilderID="0" Path ="vc_{GameData}_c{S00}.nus3audio"/>
-    <BuilderFile BuilderID="1" Path ="vc_{GameData}_c{S00}.nus3audio"/>
-    <BuilderFile BuilderID="2" Path ="vc_{GameData}_c{S00}.nus3audio"/>
+    <BuilderFile BuilderID="0" File ="vc_{GameData}_c{S00}.nus3audio" Path ="sound/bank/fighter_voice"/>
+    <BuilderFile BuilderID="1" File ="vc_{GameData}_c{S00}.nus3audio" Path ="arc/sound/bank/fighter_voice"/>
   </InternalModTypeFile>
   <InternalModTypeFile ID="2">
     <SourcePath>fighter_voice</SourcePath>
     <SourceFile>vc_{GameData}+{Part}.nus3audio</SourceFile>
-    <Mandatory>true</Mandatory>
-    <BuilderFolder BuilderID="0" Path ="sound/bank/fighter_voice/"/>
-    <BuilderFolder BuilderID="1" Path ="arc/sound/bank/fighter_voice"/>
-    <BuilderFolder BuilderID="2" Path ="atmosphere/contents/01006A800016E000/romfs/{Workspace}arc/sound/bank/fighter_voice"/>
-    <BuilderFile BuilderID="0" Path ="vc_{GameData}+{Part}.nus3audio"/>
-    <BuilderFile BuilderID="1" Path ="vc_{GameData}+{Part}.nus3audio"/>
-    <BuilderFile BuilderID="2" Path ="vc_{GameData}+{Part}.nus3audio"/>
+    <BuilderFile BuilderID="0" File ="vc_{GameData}+{Part}.nus3audio" Path ="sound/bank/fighter_voice/"/>
+    <BuilderFile BuilderID="1" File ="vc_{GameData}+{Part}.nus3audio" Path ="arc/sound/bank/fighter_voice"/>
   </InternalModTypeFile>
   <InternalModTypeFile ID="3">
     <SourcePath>fighter_voice</SourcePath>
     <SourceFile>vc_{GameData}_c{S00}+{Part}.nus3audio</SourceFile>
-    <Mandatory>false</Mandatory>
-    <BuilderFolder BuilderID="0" Path ="sound/bank/fighter_voice"/>
-    <BuilderFolder BuilderID="1" Path ="arc/sound/bank/fighter_voice"/>
-    <BuilderFolder BuilderID="2" Path ="atmosphere/contents/01006A800016E000/romfs/{Workspace}/arc/sound/bank/fighter_voice"/>
-    <BuilderFile BuilderID="0" Path ="vc_{GameData}_c{S00}+{Part}.nus3audio"/>
-    <BuilderFile BuilderID="1" Path ="vc_{GameData}_c{S00}+{Part}.nus3audio"/>
-    <BuilderFile BuilderID="2" Path ="vc_{GameData}_c{S00}+{Part}.nus3audio"/>
+    <BuilderFile BuilderID="0" File ="vc_{GameData}_c{S00}+{Part}.nus3audio" Path ="sound/bank/fighter_voice"/>
+    <BuilderFile BuilderID="1" File ="vc_{GameData}_c{S00}+{Part}.nus3audio" Path ="arc/sound/bank/fighter_voice"/>
   </InternalModTypeFile>
   <InternalModTypeFile ID="4">
     <SourcePath></SourcePath>
     <SourceFile>vc_{GameData}_c{S00}.nus3audio</SourceFile>
-    <Mandatory>false</Mandatory>
-    <BuilderFolder BuilderID="0" Path ="sound/bank/fighter_voice"/>
-    <BuilderFolder BuilderID="1" Path ="arc/sound/bank/fighter_voice"/>
-    <BuilderFolder BuilderID="2" Path ="atmosphere/contents/01006A800016E000/romfs/{Workspace}/arc/sound/bank/fighter_voice"/>
-    <BuilderFile BuilderID="0" Path ="vc_{GameData}_c{S00}.nus3audio"/>
-    <BuilderFile BuilderID="1" Path ="vc_{GameData}_c{S00}.nus3audio"/>
-    <BuilderFile BuilderID="2" Path ="vc_{GameData}_c{S00}.nus3audio"/>
+    <BuilderFile BuilderID="0" File ="vc_{GameData}_c{S00}.nus3audio" Path ="sound/bank/fighter_voice"/>
+    <BuilderFile BuilderID="1" File ="vc_{GameData}_c{S00}.nus3audio" Path ="arc/sound/bank/fighter_voice"/>
   </InternalModTypeFile>
 </InternalModType>

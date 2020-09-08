@@ -22,8 +22,11 @@ namespace Quasar.Controls.Mod.ViewModels
         #region Fields
 
         #region Data
+        private ObservableCollection<Game> _Games { get; set; }
         private Game _Game { get; set; }
         private LibraryMod _LibraryMod { get; set; }
+        private ObservableCollection<LibraryMod> _Mods { get; set; }
+        
         private ObservableCollection<Object> _Authors { get; set; }
         private ObservableCollection<Object> _Roles { get; set; }
 
@@ -46,6 +49,7 @@ namespace Quasar.Controls.Mod.ViewModels
         private ICommand _FileViewCommand { get; set; }
         private ICommand _DeleteModCommand { get; set; }
         private ICommand _AddModCommand { get; set; }
+        private ICommand _ShowContentsCommand { get; set; }
         #endregion
 
         #endregion
@@ -53,6 +57,18 @@ namespace Quasar.Controls.Mod.ViewModels
         #region Properties
 
         #region Data
+        public ObservableCollection<Game> Games
+        {
+            get => _Games;
+            set
+            {
+                if (_Games == value)
+                    return;
+
+                _Games = value;
+                OnPropertyChanged("Games");
+            }
+        }
         public Game Game
         {
             get
@@ -83,6 +99,20 @@ namespace Quasar.Controls.Mod.ViewModels
                 OnPropertyChanged("LibraryMod");
             }
         }
+        public ObservableCollection<LibraryMod> Mods
+        {
+            get => _Mods;
+            set
+            {
+                if (_Mods == value)
+                    return;
+
+                _Mods = value;
+                OnPropertyChanged("Mods");
+            }
+        }
+        
+
 
         public ObservableCollection<Object> Authors
         {
@@ -199,6 +229,7 @@ namespace Quasar.Controls.Mod.ViewModels
                 _Smol = value;
 
                 Rekt = value ? new Rect(0, 0, 50, 30) : new Rect(0, 0, 50, 160);
+                LoadImage(_Smol);
                 OnPropertyChanged("Smol");
             }
         }
@@ -226,6 +257,7 @@ namespace Quasar.Controls.Mod.ViewModels
                 OnPropertyChanged("ImageSource");
             }
         }
+
         #endregion
 
         #region Commands
@@ -274,55 +306,76 @@ namespace Quasar.Controls.Mod.ViewModels
                 return _AddModCommand;
             }
         }
-        #endregion
-
-        #endregion
-
-        public ModListItemViewModel(LibraryMod Mod, Game Gamu)
+        public ICommand ShowContentsCommand
         {
-            Game = Gamu;
-            LibraryMod = Mod;
-            Downloading = false;
-            Smol = true;
-            LoadImage();
-            GetAuthors();
+            get
+            {
+                if (_ShowContentsCommand == null)
+                {
+                    _ShowContentsCommand = new RelayCommand(param => ShowContents());
+                }
+                return _ShowContentsCommand;
+            }
         }
+        #endregion
 
-        public ModListItemViewModel(string QuasarURL)
+        #endregion
+
+        public ModListItemViewModel()
         {
             Downloading = true;
             Smol = true;
         }
 
+        public ModListItemViewModel(LibraryMod Mod, Game Gamu, bool _Downloading = false)
+        {
+            Game = Gamu;
+            LibraryMod = Mod;
+            Downloading = _Downloading;
+            Smol = true;
+            
+            GetAuthors();
+        }
+
+        public ModListItemViewModel(string QuasarURL, ObservableCollection<Game> _Games, ObservableCollection<LibraryMod> _Mods)
+        {
+            Downloading = true;
+            Smol = true;
+            Games = _Games;
+            Mods = _Mods;
+
+        }
+
         #region Actions
-        public void GetAPIInfo()
-        {
-
-        }
-        public void Download()
-        {
-
-        }
+        
 
         public void Extract()
         {
 
         }
 
-        public void LoadImage()
+        public void LoadImage(bool _Smol)
         {
-            string imageSource = Properties.Settings.Default.DefaultDir + @"\Library\Screenshots\";
-            string imagename = LibraryMod.GameID + "_" + LibraryMod.TypeID + "_" + LibraryMod.ID;
-            string[] files = System.IO.Directory.GetFiles(imageSource, imagename + ".*");
-
-            if (files.Length > 0)
+            if (!_Smol)
             {
-                ImageSource = new Uri(files[0], UriKind.RelativeOrAbsolute);
+                string imageSource = Properties.Settings.Default.DefaultDir + @"\Library\Screenshots\";
+                string imagename = LibraryMod.GameID + "_" + LibraryMod.TypeID + "_" + LibraryMod.ID;
+                string[] files = System.IO.Directory.GetFiles(imageSource, imagename + ".*");
+
+                if (files.Length > 0)
+                {
+                    ImageSource = new Uri(files[0], UriKind.RelativeOrAbsolute);
+                }
+                else
+                {
+                    ImageSource = null;
+                }
             }
             else
             {
                 ImageSource = null;
             }
+            
         }
 
         public void GetAuthors()
@@ -382,6 +435,12 @@ namespace Quasar.Controls.Mod.ViewModels
         public void AddMod()
         {
             ActionRequested = "Add";
+            EventSystem.Publish<ModListItemViewModel>(this);
+        }
+
+        public void ShowContents()
+        {
+            ActionRequested = "ShowContents";
             EventSystem.Publish<ModListItemViewModel>(this);
         }
 
