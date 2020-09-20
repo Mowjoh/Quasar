@@ -39,6 +39,8 @@ namespace Quasar.Controls.Mod.ViewModels
         private String _ModStatusTextValue { get; set; }
         private int _ProgressBarValue { get; set; }
         private bool _Downloading { get; set; }
+        private bool _CreatorMode { get; set; }
+        private bool _AdvancedMode { get; set; }
         private bool _Smol { get; set; }
         private Rect _Rekt { get; set; }
         private Uri _ImageSource { get; set; }
@@ -215,6 +217,36 @@ namespace Quasar.Controls.Mod.ViewModels
                 OnPropertyChanged("Downloading");
             }
         }
+        public bool CreatorMode
+        {
+            get
+            {
+                return _CreatorMode;
+            }
+            set
+            {
+                if (_CreatorMode == value)
+                    return;
+
+                _CreatorMode = value;
+                OnPropertyChanged("CreatorMode");
+            }
+        }
+        public bool AdvancedMode
+        {
+            get
+            {
+                return _AdvancedMode;
+            }
+            set
+            {
+                if (_AdvancedMode == value)
+                    return;
+
+                _AdvancedMode = value;
+                OnPropertyChanged("AdvancedMode");
+            }
+        }
         public bool Smol
         {
             get
@@ -333,6 +365,8 @@ namespace Quasar.Controls.Mod.ViewModels
             LibraryMod = Mod;
             Downloading = _Downloading;
             Smol = true;
+
+            CreatorMode = Properties.Settings.Default.EnableCreator;
             
             GetAuthors();
         }
@@ -368,12 +402,12 @@ namespace Quasar.Controls.Mod.ViewModels
                 }
                 else
                 {
-                    ImageSource = null;
+                    ImageSource = new Uri(Properties.Settings.Default.DefaultDir + @"\References\images\NoScreenshot.png");
                 }
             }
             else
             {
-                ImageSource = null;
+                ImageSource = new Uri(Properties.Settings.Default.DefaultDir + @"\References\images\NoScreenshot.png");
             }
             
         }

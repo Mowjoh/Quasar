@@ -12,6 +12,7 @@ namespace Quasar.Controls.Build.ViewModels
     class BuildViewModel : ObservableObject
     {
         #region Fields
+        private string _Logs { get; set; }
         private ObservableCollection<ModLoader> _ModLoaders { get; set; }
         private ObservableCollection<Workspace> _Workspaces { get; set; }
         private Workspace _ActiveWorkspace { get; set; }
@@ -55,6 +56,15 @@ namespace Quasar.Controls.Build.ViewModels
         #endregion
 
         #region Properties
+        public string Logs
+        {
+            get => _Logs;
+            set
+            {
+                _Logs = value;
+                OnPropertyChanged("Logs");
+            }
+        }
         public ObservableCollection<ModLoader> ModLoaders
         {
             get => _ModLoaders;
@@ -141,7 +151,11 @@ namespace Quasar.Controls.Build.ViewModels
                     return;
 
                 _WirelessSelected = value;
+                Properties.Settings.Default.Wireless = value;
+                Properties.Settings.Default.Save();
+
                 OnPropertyChanged("WirelessSelected");
+                
             }
         }
 
@@ -226,6 +240,33 @@ namespace Quasar.Controls.Build.ViewModels
             {
                 ComparativeSelected = true;
             }
+
+            Logs += "Hello, you're in the right place if you want those mods on your Switch.\r\n";
+            Logs += "\r\n";
+            Logs += "\r\n";
+            Logs += "\r\n";
+            Logs += "- FTP is a wireless means of File Transfer, select this if you want to use FTP.\r\n";
+            Logs += "   !Please note that you have to setup the FTP in the settings first!\r\n";
+            Logs += "- Local Transfer is for transfers using an SD reader.If you don't see the SD on the list, click the refresh button. \r\n";
+            Logs += "\r\n";
+            Logs += "\r\n";
+            Logs += "- Mod Loader:\r\n";
+            Logs += "There are two options, ARCropolis and UMM. If you haven't modded before I recommend ARCropolis which is the easiest option. UMM Will require you to have data.arc already dumped.\r\n";
+            Logs += "\r\n";
+            Logs += "\r\n";
+            Logs += "\r\n";
+            Logs += "- Comparative Mode: This will only change the necessary files.\r\n";
+            Logs += "- Wipe and Recreate : This will completely empty the workspace folder and copy everything.\r\n";
+            Logs += "\r\n";
+            Logs += "\r\n";
+            Logs += "-This button will start the process of transferring the files to your Switch according to the options you've selected above\r\n";
+            Logs += "\r\n";
+            Logs += "\r\n";
+            Logs += "\r\n";
+            Logs += "\r\n";
+            Logs += "- Here is some nice info on how it's going !\r\n";
+            Logs += "\r\n";
+
         }
         public void getSDCards()
         {
@@ -243,7 +284,19 @@ namespace Quasar.Controls.Build.ViewModels
 
         public void Build()
         {
-            ActiveWorkspace.Name = "tada";
+            Logs = "Transfer Process Start :\r\n\r\n";
+            FileWriter FW;
+            if (WirelessSelected)
+            {
+                FW = new FTPWriter();
+            }
+            else
+            {
+                FW = new SDWriter();
+            }
+            SmashBuilder SB = new SmashBuilder(FW, WipeSelected ? (int)BuildModes.WipeRecreate : (int)BuildModes.Comparative);
+            SB.StartBuild();
+            Logs += "Transfer Process End";
         }
         private void Build_Button()
         {

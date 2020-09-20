@@ -13,7 +13,7 @@ namespace Quasar.XMLResources
 
             XmlSerializer serializer = new XmlSerializer(typeof(GameList));
 
-            using (FileStream fileStream = new FileStream(Properties.Settings.Default.DefaultDir + @"\References\API\Games.xml", FileMode.Open))
+            using (FileStream fileStream = new FileStream(Properties.Settings.Default.DefaultDir + @"\References\Sources\Games.xml", FileMode.Open))
             {
                 GameList result = (GameList)serializer.Deserialize(fileStream);
                 Games = result.Games;
@@ -50,7 +50,7 @@ namespace Quasar.XMLResources
 
             XmlSerializer serializer = new XmlSerializer(typeof(GamesData));
 
-            using (FileStream fileStream = new FileStream(Properties.Settings.Default.DefaultDir + @"\References\GameData\GameData.xml", FileMode.Open))
+            using (FileStream fileStream = new FileStream(Properties.Settings.Default.DefaultDir + @"\References\Sources\GameData.xml", FileMode.Open))
             {
                 GamesData result = (GamesData)serializer.Deserialize(fileStream);
                 categories = result.Games;
@@ -65,7 +65,7 @@ namespace Quasar.XMLResources
 
             XmlSerializer serializer = new XmlSerializer(typeof(ModLoaders));
 
-            using (FileStream fileStream = new FileStream(Properties.Settings.Default.DefaultDir + @"\References\Builder\Builders.xml", FileMode.Open))
+            using (FileStream fileStream = new FileStream(Properties.Settings.Default.DefaultDir + @"\References\Sources\ModLoaders.xml", FileMode.Open))
             {
                 ModLoaders result = (ModLoaders)serializer.Deserialize(fileStream);
                 ModLoaders = result.ModLoaderList;
@@ -183,6 +183,9 @@ namespace Quasar.XMLResources
     {
         [XmlAttribute("ID")]
         public int ID;
+
+        [XmlAttribute("image")]
+        public string image;
 
         [XmlElement("Name")]
         public string Name { get; set; }

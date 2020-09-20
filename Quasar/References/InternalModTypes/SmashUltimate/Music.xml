@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<InternalModType xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="Music" Filename="SmashUltimate/Music" ID="8" GameID="1" Association="3" Slots="1">
+<InternalModType xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="Music" Filename="SmashUltimate/Music" ID="8" GameID="1" Association="3" Slots="1" TypeGroup="Music">
   <InternalModTypeFile ID="0">
     <SourcePath></SourcePath>
     <SourceFile>{Music}.nus3audio</SourceFile>

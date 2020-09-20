@@ -1,12 +1,13 @@
 ﻿using Quasar.Controls.Common.Models;
 using Quasar.Controls.Settings.Model;
+using Quasar.Internal;
 using System;
 using System.Linq;
 using System.Windows.Input;
 
 namespace Quasar.Controls.Settings.ViewModels
 {
-    class SettingItemViewModel : ObservableObject
+    public class SettingItemViewModel : ObservableObject
     {
         #region Fields
         
@@ -19,6 +20,8 @@ namespace Quasar.Controls.Settings.ViewModels
         private bool _EnableCheckBox { get; set; }
 
         private bool _EnableComboBox { get; set; }
+
+        private bool _EnableTextBox { get; set; }
 
         #endregion
 
@@ -49,10 +52,13 @@ namespace Quasar.Controls.Settings.ViewModels
                     return;
                 
                 _IsChecked = value;
+                SettingItem.IsChecked = value;
                 OnPropertyChanged("IsChecked");
 
-                if (SettingItem.SettingName == null)
-                    return;
+                if (SettingItem.SettingName != null)
+                {
+                    NotifySettingChanged();
+                }
 
                 if ((bool)Properties.Settings.Default[SettingItem.SettingName] == value)
                     return;
@@ -110,6 +116,21 @@ namespace Quasar.Controls.Settings.ViewModels
                 OnPropertyChanged("EnableComboBox");
             }
         }
+        /// <summary>
+        /// Enables the TextBox
+        /// </summary>
+        public bool EnableTextBox
+        {
+            get => _EnableTextBox;
+            set
+            {
+                if (_EnableTextBox == value)
+                    return;
+
+                _EnableTextBox = value;
+                OnPropertyChanged("EnableTextBox");
+            }
+        }
 
         #endregion
 
@@ -150,8 +171,16 @@ namespace Quasar.Controls.Settings.ViewModels
                         SettingItem.Values = Values.Split(',')
                          .Select(x => x.Split('='))
                          .ToDictionary(x => x[0], x => x[1]);
-
-                        EnableComboBox = true;
+                        if (SettingItem.Values.ContainsKey("USER"))
+                        {
+                            SettingItem.DisplayValue = Property.ToString();
+                            EnableTextBox = true;
+                        }
+                        else
+                        {
+                            EnableComboBox = true;
+                        }
+                        
                     }
                     else
                     {
@@ -169,8 +198,13 @@ namespace Quasar.Controls.Settings.ViewModels
                     EnableComboBox = true;
                     break;
             }
+            NotifySettingChanged();
         }
 
+        public void NotifySettingChanged()
+        {
+            EventSystem.Publish<SettingItem>(SettingItem);
+        }
         
 
         

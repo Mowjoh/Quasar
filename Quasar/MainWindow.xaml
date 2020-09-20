@@ -9,10 +9,9 @@
         xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
         xmlns:Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2" xmlns:view="clr-namespace:Quasar.Controls.Settings.View" xmlns:view1="clr-namespace:Quasar.Controls.Settings.Workspaces.View" xmlns:views="clr-namespace:Quasar.Controls.Build.Views" x:Name="MainWindow1" x:Class="Quasar.MainWindow"
         mc:Ignorable="d"
-        Title="Quasar" MinWidth="1280" MinHeight="720" Width="1280" Height="720" Icon="Quasar.ico" DataContext="{Binding RelativeSource={RelativeSource Self}}" >
-    
+        Title="Quasar" MinWidth="1280" MinHeight="720" Width="1280" Height="720" Icon="Quasar.ico" DataContext="{Binding RelativeSource={RelativeSource Self}}" WindowStartupLocation="CenterScreen">
+
     <Window.Resources>
-        
     </Window.Resources>
     
     <Window.TaskbarItemInfo>
@@ -34,16 +33,6 @@
                                 <BeginStoryboard>
                                     <Storyboard>
                                         <DoubleAnimation From="0" To="1" Duration="0:0:0.200" Storyboard.TargetProperty="(RenderTransform).(ScaleTransform.ScaleX)">
-                                        </DoubleAnimation>
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </DataTrigger.EnterActions>
-                        </DataTrigger>
-                        <DataTrigger Binding="{Binding BeginGameChoice}" Value="False">
-                            <DataTrigger.EnterActions>
-                                <BeginStoryboard>
-                                    <Storyboard>
-                                        <DoubleAnimation From="1" To="0" Duration="0:0:0.200" Storyboard.TargetProperty="(RenderTransform).(ScaleTransform.ScaleX)">
                                         </DoubleAnimation>
                                     </Storyboard>
                                 </BeginStoryboard>
@@ -71,17 +60,8 @@
             
         </Grid>
         <Grid x:Name="AppGrid">
-            
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="40"/>
-                <ColumnDefinition Width="1*"/>
-            </Grid.ColumnDefinitions>
-            
-            <Grid Background="#FF2D2D2D">
-                <Button x:Name="HomeButton" Height="35" Width="35" BorderThickness="0" BorderBrush="#FF2D2D2D" Background="{x:Null}" Command="{Binding Path=StartGameSelectionCommand}" >
-                    <Image HorizontalAlignment="Center" Height="35" Width="35" VerticalAlignment="Center" Source="References/images/home.png"/>
-                </Button>
-            </Grid>
+         
+
             
             <TabControl x:Name="NewTabControl" Grid.Column="1" BorderThickness="0" Background="{DynamicResource QD1}" ItemsSource="{Binding TabItems}" SelectedItem="{Binding SelectedTabItem}" >
                 <TabControl.Resources>
@@ -106,7 +86,7 @@
                                         </Trigger>
                                         <MultiTrigger>
                                             <MultiTrigger.Conditions>
-                                                <Condition Property="Header" Value="Content Management"/>
+                                                <Condition Property="Header" Value="Contents"/>
                                                 <Condition Property="IsSelected" Value="True"/>
                                             </MultiTrigger.Conditions>
                                             <MultiTrigger.Setters>
@@ -115,7 +95,7 @@
                                         </MultiTrigger>
                                         <MultiTrigger>
                                             <MultiTrigger.Conditions>
-                                                <Condition Property="Header" Value="Content Management"/>
+                                                <Condition Property="Header" Value="Contents"/>
                                                 <Condition Property="IsSelected" Value="False"/>
                                             </MultiTrigger.Conditions>
                                             <MultiTrigger.Setters>

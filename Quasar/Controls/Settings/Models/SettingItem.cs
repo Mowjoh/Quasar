@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Quasar.Controls.Settings.Model
 {
-    class SettingItem : ObservableObject
+    public class SettingItem : ObservableObject
     {
         #region Fields
         private string _SettingName { get; set; }
@@ -19,7 +19,7 @@ namespace Quasar.Controls.Settings.Model
 
         private string _DisplayValue { get; set; }
 
-
+        private bool _IsChecked { get; set; }
 
         private Dictionary<string, string> _Values { get; set; }
         #endregion
@@ -87,6 +87,21 @@ namespace Quasar.Controls.Settings.Model
 
                 _DisplayValue = value;
                 OnPropertyChanged("DisplayValue");
+            }
+        }
+        /// <summary>
+        /// Value of the boolean setting
+        /// </summary>
+        public bool IsChecked
+        {
+            get => _IsChecked;
+            set
+            {
+                if (_IsChecked == value)
+                    return;
+
+                _IsChecked = value;
+                OnPropertyChanged("IsChecked");
             }
         }
 

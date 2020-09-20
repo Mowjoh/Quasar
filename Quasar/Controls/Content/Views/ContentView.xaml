@@ -62,5 +62,10 @@
             <Label FontStyle="Italic" Content="Actions" Foreground="{DynamicResource QuasarTextColor}" Grid.Column="5"  HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Style="{DynamicResource QuasarLabel}"/>
 
         </Grid>
+        <TextBox HorizontalAlignment="Left" Height="23" Margin="85,10,0,0" TextWrapping="Wrap" Text="DSX8 Remastered" VerticalAlignment="Top" Width="205"/>
+        <Label Content="Mod Name" HorizontalAlignment="Left" Margin="10,7,0,0" VerticalAlignment="Top" Width="85" Foreground="White"/>
+        <Button Content="Test Mod" HorizontalAlignment="Left" Margin="780,10,0,0" VerticalAlignment="Top" Width="100" Height="24"/>
+        <CheckBox Content="Enable slot renaming" HorizontalAlignment="Left" Margin="969,14,0,0" VerticalAlignment="Top" Foreground="White"/>
+        <Button Content="Select Folder" HorizontalAlignment="Left" Margin="380,12,0,0" VerticalAlignment="Top" Width="105"/>
     </Grid>
 </UserControl>

@@ -1,4 +1,5 @@
-﻿using NamedPipeWrapper;
+﻿using log4net;
+using NamedPipeWrapper;
 using Quasar.Controls.Mod.Models;
 using Quasar.Internal;
 using System;
@@ -16,7 +17,7 @@ namespace Quasar.Singleton
     {
         
 
-        public PipeServer(string pipeName,string Args)
+        public PipeServer(string pipeName,string Args, ILog log)
         {
             
             Mutex ClientReady = new Mutex();
@@ -27,7 +28,7 @@ namespace Quasar.Singleton
             server.ClientConnected += delegate (NamedPipeConnection<string, string> connection)
             {
                 connection.PushMessage("Wolcom");
-                
+                log.Debug("Client Connected, sent Wolcom");
             };
 
             server.ClientDisconnected += delegate (NamedPipeConnection<string, string> connection)
@@ -38,6 +39,7 @@ namespace Quasar.Singleton
             {
                 EventSystem.Publish<QuasarDownload>(new QuasarDownload() { QuasarURL = message });
                 connection.PushMessage("Oukay");
+                log.Debug(String.Format("Client message received :'{0}', sent Oukay", message));
             };
 
             server.Error += delegate (Exception exception)
@@ -49,7 +51,7 @@ namespace Quasar.Singleton
             {
                 EventSystem.Publish<QuasarDownload>(new QuasarDownload() { QuasarURL = Args });
             }
-
+            log.Debug("Server Started");
             Console.WriteLine("Server Started");
         }
     }

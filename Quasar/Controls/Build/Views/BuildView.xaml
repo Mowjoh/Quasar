@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:Quasar.Controls.Build.Views"
              mc:Ignorable="d" 
              d:DesignHeight="620" d:DesignWidth="1120">
-    <Grid Background="{DynamicResource QuasarBackgroundDark}">
+    <Grid Background="{DynamicResource QD1}">
         <Grid.RowDefinitions>
             <RowDefinition Height="69*"/>
             <RowDefinition Height="55*"/>
@@ -15,7 +15,7 @@
             <ColumnDefinition/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <Label Content="Build Settings :" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Style="{DynamicResource QuasarLabel}"/>
+        <Label Content="Transfer Settings" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Style="{DynamicResource QuasarLabel}"/>
         <GroupBox Header="Transfer Options" HorizontalAlignment="Stretch" Height="250" Margin="10,50,10,0" VerticalAlignment="Top"  Foreground="{DynamicResource QuasarTextColor}">
             <Grid>
                 <RadioButton Content="Local Transfer (SD)" IsChecked="{Binding LocalSelected}" GroupName="TransferOption" HorizontalAlignment="Left" Margin="209,13,0,0" VerticalAlignment="Top" Foreground="{DynamicResource QuasarTextColor}"/>
@@ -36,13 +36,13 @@
             </Grid>
         </GroupBox>
         <ScrollViewer Grid.Column="1" Grid.RowSpan="2" Background="#87000000">
-            <TextBlock TextWrapping="Wrap" Foreground="{DynamicResource QuasarTextColor}"><Run Text="This build task will transfer the workspace &quot;Mowjoh's Workspace&quot;"/><LineBreak/><Run Text="Build Configuration : FTP / ARCropolis / Comparative"/><LineBreak/><Run/><LineBreak/><Run Text="Distant Folder Found !"/><LineBreak/><Run/><LineBreak/><Run Text="Listing Files..."/><LineBreak/><Run Text="     - Done !"/><LineBreak/><Run Text="Deleting differences..."/><LineBreak/><Run Text="     - Done !"/><LineBreak/><Run Text="Copying new files..."/><LineBreak/><Run Text="     - Done !"/><LineBreak/><Run/><LineBreak/><Run Text="Finished Build task successfully !"/></TextBlock>
+            <TextBlock TextWrapping="Wrap" Text="{Binding Logs}" Foreground="{DynamicResource QuasarTextColor}"/>
         </ScrollViewer>
         <Button Content="Send my mods to my Switch" HorizontalAlignment="Center" VerticalAlignment="Top" Width="184" Margin="188,310,188,0" Command="{Binding Path=BuildCommand}"/>
-        <Label Content="Build Status :" HorizontalAlignment="Center" Margin="0,10,0,0" VerticalAlignment="Top" Style="{DynamicResource QuasarLabel}" Grid.Row="1"/>
+        <Label Content="Transfer Status :" HorizontalAlignment="Center" Margin="0,10,0,0" VerticalAlignment="Top" Style="{DynamicResource QuasarLabel}" Grid.Row="1"/>
         <ProgressBar  Value="20" Height="10" Margin="10,115,10,0" Grid.Row="1" VerticalAlignment="Top"/>
-        <Label Content="Step : Copying Files " HorizontalAlignment="Left" Margin="10,46,0,0" VerticalAlignment="Top" Style="{DynamicResource QuasarLabel}" Grid.Row="1" Width="420"/>
-        <Label Content="Sub-Step : Copying Sweet Sweet Packun - Fighter UI into slot 05 " HorizontalAlignment="Left" Margin="10,75,0,0" VerticalAlignment="Top" Style="{DynamicResource QuasarLabel}" Grid.Row="1" Width="420"/>
+        <Label Content="Step" HorizontalAlignment="Left" Margin="10,46,0,0" VerticalAlignment="Top" Style="{DynamicResource QuasarLabel}" Grid.Row="1" Width="420"/>
+        <Label Content="Sub-Step" HorizontalAlignment="Left" Margin="10,75,0,0" VerticalAlignment="Top" Style="{DynamicResource QuasarLabel}" Grid.Row="1" Width="420"/>
         <Label Content="20/100" HorizontalAlignment="Center" Margin="253,140,260,0" VerticalAlignment="Top" Style="{DynamicResource QuasarLabel}" Grid.Row="1"/>
         <Label Content="5,3 MB/s" HorizontalAlignment="Center" HorizontalContentAlignment="Right" Margin="435,46,5,0" VerticalAlignment="Top" Style="{DynamicResource QuasarLabel}" Grid.Row="1" Width="120"/>
         <Label Content="15 MB / 37,4 MB" HorizontalAlignment="Center" HorizontalContentAlignment="Right" Margin="435,75,5,0" VerticalAlignment="Top" Style="{DynamicResource QuasarLabel}" Grid.Row="1" Width="120"/>

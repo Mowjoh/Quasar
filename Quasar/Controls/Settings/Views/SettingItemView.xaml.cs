@@ -39,7 +39,7 @@ namespace Quasar.Controls.Settings.View
 
         private SettingItemViewModel _ViewModel { get; set; }
 
-        SettingItemViewModel ViewModel
+        public SettingItemViewModel ViewModel
         {
             get => _ViewModel;
             set

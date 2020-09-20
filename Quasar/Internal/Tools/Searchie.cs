@@ -70,7 +70,7 @@ namespace Quasar.Quasar_Sys
                                         ModID = LibraryMod.ID,
                                         InternalModType = qfm.InternalModTypeID,
                                         GameDataItemID = GameDataItemID,
-                                        Name = String.Format("{0} - Slot {1}", LibraryMod.Name, qfm.Slot),
+                                        Name = String.Format("{0} - Slot {1}", LibraryMod.Name, (int.Parse(qfm.Slot) + 1).ToString()),
 
                                     };
                                     List<ContentMappingFile> Files = new List<ContentMappingFile>();

@@ -1,4 +1,6 @@
-﻿using Quasar.Controls;
+﻿using log4net;
+using log4net.Appender;
+using Quasar.Controls;
 using Quasar.Controls.Assignation.ViewModels;
 using Quasar.Controls.Assignation.Views;
 using Quasar.Controls.Build.ViewModels;
@@ -10,6 +12,7 @@ using Quasar.Controls.InternalModTypes.ViewModels;
 using Quasar.Controls.InternalModTypes.Views;
 using Quasar.Controls.ModManagement.ViewModels;
 using Quasar.Controls.ModManagement.Views;
+using Quasar.Controls.Settings.Model;
 using Quasar.Controls.Settings.View;
 using Quasar.Controls.Settings.Workspaces.View;
 using Quasar.Controls.Settings.Workspaces.ViewModels;
@@ -20,6 +23,7 @@ using Quasar.XMLResources;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
@@ -57,6 +61,9 @@ namespace Quasar
 
         private bool _BeginGameChoice { get; set; }
         private bool _StopGameChoice { get; set; }
+
+        private bool _CreatorMode { get; set; }
+        private bool _AdvancedMode { get; set; }
         #endregion
 
         #region Working Data
@@ -235,6 +242,7 @@ namespace Quasar
                 OnPropertyChanged("IMTV");
             }
         }
+
         public SettingsView SettingsView
         {
             get => _SettingsView;
@@ -295,6 +303,31 @@ namespace Quasar
 
                 _StopGameChoice = value;
                 OnPropertyChanged("StopGameChoice");
+            }
+        }
+
+        public bool CreatorMode
+
+        {
+            get => _CreatorMode;
+            set
+            {
+                if (_CreatorMode == value)
+                    return;
+
+                
+                _CreatorMode = value;
+                OnPropertyChanged("CreatorMode");
+            }
+        }
+        public bool AdvancedMode
+
+        {
+            get => _AdvancedMode;
+            set
+            {
+                _AdvancedMode = value;
+                OnPropertyChanged("AdvancedMode");
             }
         }
         #endregion
@@ -396,6 +429,7 @@ namespace Quasar
         /// Mutex that serves to know if a Quasar instance is already running
         /// </summary>
         public Mutex serverMutex;
+        public ILog log { get; set; }
 
         public Game SelectedGame
         {
@@ -406,7 +440,6 @@ namespace Quasar
                     return;
 
                 _SelectedGame = value;
-                StopGameSelection();
                 OnPropertyChanged("SelectedGame");
             }
         }
@@ -495,19 +528,73 @@ namespace Quasar
 
         public MainUIViewModel()
         {
-            new Updater();
+            
+            SetupLogger();
 
-            SetupClientOrServer();
+            try
+            {
+                log.Info("Update Process Started");
+                SetupClientOrServer();
 
-            LoadStuff();
+                log.Info("Update Process Started");
+                new Updater();
 
-            SetupViews();
+                log.Info("Loading References");
+                LoadStuff();
 
-            EventSystem.Subscribe<ModListItem>(SetModListItem);
+                log.Info("Loading Views");
+                SetupViews();
+
+                AdvancedMode = false;
+                CreatorMode = false;
+
+                EventSystem.Subscribe<ModListItem>(SetModListItem);
+            }
+            catch(Exception e)
+            {
+                log.Info(e.Message);
+                log.Info(e.StackTrace);
+            }
         }
 
         #region Actions
         //Startup Actions
+        public void SetupLogger()
+        {
+            log = LogManager.GetLogger("QuasarAppender");
+            FileAppender appender = (FileAppender)log.Logger.Repository.GetAppenders()[0];
+            appender.File = Properties.Settings.Default.DefaultDir + "\\Quasar.log";
+            if (Properties.Settings.Default.EnableAdvanced)
+            {
+                appender.Threshold = log4net.Core.Level.Debug;
+            }
+            else
+            {
+                appender.Threshold = log4net.Core.Level.Info;
+            }
+            
+            appender.ActivateOptions();
+
+            log.Info("------------------------------");
+            log.Warn("Quasar Start");
+            log.Info("------------------------------");
+        }
+
+        public void ChangeLogger(bool debug)
+        {
+            FileAppender appender = (FileAppender)log.Logger.Repository.GetAppenders()[0];
+            appender.Threshold = log4net.Core.Level.Debug;
+            if (debug)
+            {
+                appender.Threshold = log4net.Core.Level.Debug;
+            }
+            else
+            {
+                appender.Threshold = log4net.Core.Level.Info;
+            }
+            
+        }
+
         public void LoadStuff()
         {
             //Working Data
@@ -524,30 +611,33 @@ namespace Quasar
         }
         public void SetupViews()
         {
+            EventSystem.Subscribe<SettingItem>(SettingChanged);
+
             TabItems = new ObservableCollection<TabItem>();
 
             ModsView = new ModsView();
-            MVM = new ModsViewModel(Mods, Games, ContentMappings, Workspaces, InternalModTypes, GameDatas);
+            MVM = new ModsViewModel(Mods, Games, ContentMappings, Workspaces,ActiveWorkspace, InternalModTypes, GameDatas, log);
             ModsView.DataContext = MVM;
-            TabItems.Add(new TabItem() { Content = ModsView, Header = "Mod Management", Foreground = new SolidColorBrush() { Color = Colors.White } });
+            TabItems.Add(new TabItem() { Content = ModsView, Header = "Overview", Foreground = new SolidColorBrush() { Color = Colors.White } });
 
             ContentView = new ContentView();
-            TabItems.Add(new TabItem() { Content = ContentView, Header = "Content Management", Foreground = new SolidColorBrush() { Color = Colors.White } });
+            TabItems.Add(new TabItem() { Content = ContentView, Header = "Contents", Foreground = new SolidColorBrush() { Color = Colors.White } });
 
-            AssociationView = new AssociationView();
-            AVM = new AssociationViewModel();
+            
+            AVM = new AssociationViewModel(GameDatas, InternalModTypes, Workspaces,ActiveWorkspace, ContentMappings);
+            AssociationView = new AssociationView() { AssociationViewModel = AVM };
             AssociationView.DataContext = AVM;
-            TabItems.Add(new TabItem() { Content = AssociationView, Header = "Associations", Foreground = new SolidColorBrush() { Color = Colors.White } });
+            TabItems.Add(new TabItem() { Content = AssociationView, Header = "Management", Foreground = new SolidColorBrush() { Color = Colors.White } });
 
             BuildView = new BuildView();
             BVM = new BuildViewModel(ModLoaders, Workspaces, ActiveWorkspace);
             BuildView.DataContext = BVM;
-            TabItems.Add(new TabItem() { Content = BuildView, Header = "Build", Foreground = new SolidColorBrush() { Color = Colors.White } });
+            TabItems.Add(new TabItem() { Content = BuildView, Header = "File Transfer", Foreground = new SolidColorBrush() { Color = Colors.White } });
 
             InternalModTypeView = new InternalModTypeView();
             IMTV = new InternalModTypeViewModel(InternalModTypes, ModLoaders, GameDatas, Games);
             InternalModTypeView.DataContext = IMTV;
-            TabItems.Add(new TabItem() { Content = InternalModTypeView, Header = "Internal Mod Types", Foreground = new SolidColorBrush() { Color = Colors.White } });
+            TabItems.Add(new TabItem() { Content = InternalModTypeView, Header = "Types", Foreground = new SolidColorBrush() { Color = Colors.White }, Visibility = Properties.Settings.Default.EnableAdvanced? Visibility.Visible : Visibility.Collapsed });
 
             SettingsView = new SettingsView();
             TabItems.Add(new TabItem() { Content = SettingsView, Header = "Settings", Foreground = new SolidColorBrush() { Color = Colors.White } });
@@ -555,15 +645,19 @@ namespace Quasar
             WorkspaceView = new WorkspaceView();
             WVM = new WorkspaceViewModel(Workspaces, ActiveWorkspace);
             WorkspaceView.DataContext = WVM;
-            TabItems.Add(new TabItem() { Content = WorkspaceView, Header = "Workspaces", Foreground = new SolidColorBrush() { Color = Colors.White } });
+            TabItems.Add(new TabItem() { Content = WorkspaceView, Header = "Workspaces", Foreground = new SolidColorBrush() { Color = Colors.White }, Visibility = Properties.Settings.Default.EnableWorkspaces ? Visibility.Visible : Visibility.Collapsed });
 
+            SettingsView.start();
         }
         public void SetupClientOrServer()
         {
-            serverMutex = Checker.Instances(serverMutex);
+            serverMutex = Checker.Instances(serverMutex, log);
         }
 
         //Data Parsing
+        /// <summary>
+        /// Retreives the list of all mods in the library
+        /// </summary>
         public void GetMods()
         {
             Mods = new ObservableCollection<LibraryMod>();
@@ -665,13 +759,27 @@ namespace Quasar
             BeginGameChoice = true;
             StopGameChoice = false;
         }
-        public void StopGameSelection()
+
+        public void SettingChanged(SettingItem Setting)
         {
-            BeginGameChoice = false;
-            StopGameChoice = true;
+            if(Setting.SettingName == "EnableCreator")
+            {
+                CreatorMode = Setting.IsChecked;
+            }
+            if (Setting.SettingName == "EnableAdvanced")
+            {
+                AdvancedMode = Setting.IsChecked;
+                ChangeLogger(Setting.IsChecked);
+                TabItems[4].Visibility = Setting.IsChecked ? Visibility.Visible : Visibility.Collapsed;
+            }
+            if (Setting.SettingName == "EnableWorkspaces")
+            {
+                TabItems[6].Visibility = Setting.IsChecked ? Visibility.Visible : Visibility.Collapsed;
+            }
         }
+
         #endregion
 
-        
+
     }
 }

@@ -14,6 +14,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using Quasar.Quasar_Sys;
+using log4net;
+using System.Windows.Data;
+using Quasar.Controls.Settings.Model;
 
 namespace Quasar.Controls.ModManagement.ViewModels
 {
@@ -25,11 +28,18 @@ namespace Quasar.Controls.ModManagement.ViewModels
         private ObservableCollection<LibraryMod> _WorkingModList { get; set; }
         private ObservableCollection<ContentMapping> _ContentMappings { get; set; }
         private ObservableCollection<Workspace> _Workspaces { get; set; }
+        private Workspace _ActiveWorkspace { get; set; }
         private ObservableCollection<InternalModType> _InternalModTypes { get; set; }
         private ObservableCollection<GameData> _GameDatas { get; set; }
         private ObservableCollection<Game> _Games { get; set; }
+        private Game _SelectedGame { get; set; }
+        private GameModType _SelectedGameModType { get; set; }
         private ModListItem _SelectedModListItem { get; set; }
-        public ObservableCollection<string> _QuasarDownloads { get; set; }
+        private ObservableCollection<string> _QuasarDownloads { get; set; }
+        private CollectionViewSource _CollectionViewSource { get; set; }
+
+        private string _SearchText { get; set; }
+        private bool _CreatorMode { get; set; }
         #endregion
 
         #region Properties
@@ -94,6 +104,21 @@ namespace Quasar.Controls.ModManagement.ViewModels
             }
         }
         /// <summary>
+        /// Represents the Active Workspace
+        /// </summary>
+        public Workspace ActiveWorkspace
+        {
+            get => _ActiveWorkspace;
+            set
+            {
+                if (_ActiveWorkspace == value)
+                    return;
+
+                _ActiveWorkspace = value;
+                OnPropertyChanged("ActiveWorkspace");
+            }
+        }
+        /// <summary>
         /// List of all Internal Mod Types
         /// </summary>
         public ObservableCollection<InternalModType> InternalModTypes
@@ -135,6 +160,31 @@ namespace Quasar.Controls.ModManagement.ViewModels
                 OnPropertyChanged("Games");
             }
         }
+        public Game SelectedGame
+        {
+            get => _SelectedGame;
+            set
+            {
+                if (_SelectedGame == value)
+                    return;
+
+                _SelectedGame = value;
+                OnPropertyChanged("SelectedGame");
+            }
+        }
+        public GameModType SelectedGameModType
+        {
+            get => _SelectedGameModType;
+            set
+            {
+                if (_SelectedGameModType == value)
+                    return;
+
+                _SelectedGameModType = value;
+                CollectionViewSource.View.Refresh();
+                OnPropertyChanged("SelectedGameModType");
+            }
+        }
         public ModListItem SelectedModListItem
         {
             get => _SelectedModListItem;
@@ -159,23 +209,75 @@ namespace Quasar.Controls.ModManagement.ViewModels
                 OnPropertyChanged("SelectedModListItem");
             }
         }
+        public CollectionViewSource CollectionViewSource
+        {
+            get => _CollectionViewSource;
+            set
+            {
+                if (_CollectionViewSource == value)
+                    return;
+
+                _CollectionViewSource = value;
+                OnPropertyChanged("CollectionViewSource");
+            }
+        }
+        public string SearchText
+        {
+            get => _SearchText;
+            set
+            {
+                if (_SearchText == value)
+                    return;
+
+                _SearchText = value;
+                OnPropertyChanged("SearchText");
+            }
+        }
+
+        public bool CreatorMode
+
+        {
+            get => _CreatorMode;
+            set
+            {
+                if (_CreatorMode == value)
+                    return;
+
+
+                _CreatorMode = value;
+                ChangeCreatorVisibility(_CreatorMode);
+                OnPropertyChanged("CreatorMode");
+            }
+        }
+
+        public ILog log { get; set; }
         #endregion
 
-        public ModsViewModel(ObservableCollection<LibraryMod> _Mods, ObservableCollection<Game> _Games, ObservableCollection<ContentMapping> _ContentMappings, ObservableCollection<Workspace> _Workspaces, ObservableCollection<InternalModType> _InternalModTypes, ObservableCollection<GameData> _GameDatas)
+        public ModsViewModel(ObservableCollection<LibraryMod> _Mods, ObservableCollection<Game> _Games, ObservableCollection<ContentMapping> _ContentMappings, ObservableCollection<Workspace> _Workspaces, Workspace _ActiveWorkspace, ObservableCollection<InternalModType> _InternalModTypes, ObservableCollection<GameData> _GameDatas, ILog _log)
         {
             Mods = _Mods;
             Games = _Games;
+            SelectedGame = _Games[1];
             ContentMappings = _ContentMappings;
             Workspaces = _Workspaces;
+            ActiveWorkspace = _ActiveWorkspace;
             InternalModTypes = _InternalModTypes;
             GameDatas = _GameDatas;
+            log = _log;
 
-
+            log.Debug("Parsing Mod List Items");
             ParseModListItems();
+
+            CollectionViewSource = new CollectionViewSource();
+            CollectionViewSource.Source = ModListItems;
+            CollectionViewSource.SortDescriptions.Add(new System.ComponentModel.SortDescription() { PropertyName="ModListItemViewModel.LibraryMod.Name",Direction= System.ComponentModel.ListSortDirection.Ascending });
+            CollectionViewSource.Filter += ModTypeFilter;
 
             EventSystem.Subscribe<ModListItemViewModel>(GetModListElementTrigger);
             EventSystem.Subscribe<QuasarDownload>(Download);
             WorkingModList = new ObservableCollection<LibraryMod>();
+
+            EventSystem.Subscribe<SettingItem>(SettingChanged);
         }
 
         #region Actions
@@ -209,6 +311,42 @@ namespace Quasar.Controls.ModManagement.ViewModels
                     break;
                 default:
                     break;
+            }
+        }
+        public void ModTypeFilter(object sender, FilterEventArgs e)
+        {
+            ModListItem mli = e.Item as ModListItem;
+            if(SelectedGameModType != null)
+            {
+                if (mli.ModListItemViewModel.LibraryMod.TypeID == SelectedGameModType.ID || SelectedGameModType.ID == -1)
+                {
+                    e.Accepted = true;
+                }
+                else
+                {
+                    e.Accepted = false;
+                }
+            }
+            else
+            {
+                e.Accepted = true;
+            }
+            
+        }
+
+        public void SettingChanged(SettingItem Setting)
+        {
+            if (Setting.SettingName == "EnableCreator")
+            {
+                CreatorMode = Setting.IsChecked;
+            }
+        }
+
+        public void ChangeCreatorVisibility(bool val)
+        {
+            foreach(ModListItem mli in ModListItems)
+            {
+                mli.ModListItemViewModel.CreatorMode = val;
             }
         }
 
@@ -313,6 +451,9 @@ namespace Quasar.Controls.ModManagement.ViewModels
         }
         public void ShowModContents(ModListItem MLI)
         {
+            if (SelectedModListItem == null)
+                return;
+
             SelectedModListItem.ModListItemViewModel.ActionRequested = "ShowContents";
             EventSystem.Publish<ModListItem>(SelectedModListItem);
         }
@@ -329,6 +470,8 @@ namespace Quasar.Controls.ModManagement.ViewModels
         {
             ModListItemViewModel MIVM = new ModListItemViewModel();
             ModListItem MLI = null;
+
+            log.Info("Download Started");
 
             //Setting base info
             ModFileManager ModFileManager = new ModFileManager(QuasarURL);
@@ -359,9 +502,11 @@ namespace Quasar.Controls.ModManagement.ViewModels
                         var query = ListMods.Where(ml => ml.LocalMod == Mod);
                         mli = query.ElementAt(0);*/
                     downloadText = "Updating mod";
+                    log.Debug("Existing Mod");
                 }
                 else
                 {
+                    log.Debug("New Mod");
                     needupdate = false;
                 }
             }
@@ -373,8 +518,10 @@ namespace Quasar.Controls.ModManagement.ViewModels
             }
             if (!WorkingModList.Contains(Mod) && needupdate)
             {
-                WorkingModList.Add(Mod);
+                bool ContinueOperation = true;
 
+                WorkingModList.Add(Mod);
+                log.Debug("Mod wasn't in the working list");
                 //Setting up new ModList
                 if (newElement)
                 {
@@ -400,29 +547,61 @@ namespace Quasar.Controls.ModManagement.ViewModels
                     Mods[Mods.IndexOf(Mod)] = newmod;
                     MLI = ModListItems.Single(m => m.ModListItemViewModel.LibraryMod == newmod);
                 }
-
+                log.Debug("Setting UI");
                 //Setting download UI
                 MLI.ModListItemViewModel.ModStatusValue = downloadText;
-
+                log.Debug("Launching Download");
                 Downloader modDownloader = new Downloader(MLI.ModListItemViewModel);
 
-                //Wait for download completion
-                await modDownloader.DownloadArchiveAsync(ModFileManager);
-
+                try
+                {
+                    //Wait for download completion
+                    await modDownloader.DownloadArchiveAsync(ModFileManager);
+                }
+                catch(Exception e)
+                {
+                    log.Error(String.Format("Download failed : {0}",e.Message));
+                    log.Error(String.Format("Trace : {0}", e.StackTrace));
+                    return false;
+                }
+                log.Debug("Download Finished");
+                log.Debug("Launching Extraction");
                 //Setting extract UI
                 MLI.ModListItemViewModel.ModStatusValue = "Extracting mod";
 
                 //Preparing Extraction
                 Unarchiver un = new Unarchiver(MLI.ModListItemViewModel);
 
-                //Wait for Archive extraction
-                await un.ExtractArchiveAsync(ModFileManager.DownloadDestinationFilePath, ModFileManager.ArchiveContentFolderPath, ModFileManager.ModArchiveFormat);
+                try
+                {
+                    //Wait for Archive extraction
+                    await un.ExtractArchiveAsync(ModFileManager.DownloadDestinationFilePath, ModFileManager.ArchiveContentFolderPath, ModFileManager.ModArchiveFormat);
+                }
+                catch (Exception e)
+                {
+                    log.Error(String.Format("Extraction failed : {0}", e.Message));
+                    log.Error(String.Format("Trace : {0}", e.StackTrace));
+                    return false;
+                }
+                log.Debug("Extraction Finished");
 
                 //Setting extract UI
                 MLI.ModListItemViewModel.ModStatusValue = "Moving files";
+                
 
-                //Moving files
-                await ModFileManager.MoveDownload();
+                try
+                {
+                    //Moving files
+                    await ModFileManager.MoveDownload();
+                }
+                catch (Exception e)
+                {
+                    log.Error(String.Format("Extraction failed : {0}", e.Message));
+                    log.Error(String.Format("Trace : {0}", e.StackTrace));
+                    return false;
+                }
+
+                log.Debug("Move Finished");
 
                 //Cleanup
                 ModFileManager.ClearDownloadContents();
@@ -430,12 +609,17 @@ namespace Quasar.Controls.ModManagement.ViewModels
                 //Getting Screenshot from Gamebanana
                 await APIRequest.GetScreenshot(ModFileManager.APIType, ModFileManager.ModID, game.ID.ToString(), Mod.TypeID.ToString(), Mod.ID.ToString());
 
+                log.Debug("Screenshot Finished");
+
                 //Scanning Files
                 FirstScanLibraryMod(newmod, game, InternalModTypes, GameDatas);
+
+                log.Debug("Scan Finished");
 
                 //Refreshing  Interface
                 MLI.ModListItemViewModel.Downloading = false;
 
+                log.Debug("Writing Changes");
 
                 //Saving XML
                 Library.WriteModListFile(Mods.ToList()); ;
@@ -446,7 +630,7 @@ namespace Quasar.Controls.ModManagement.ViewModels
             }
             else
             {
-
+                log.Debug("Mod Already is in the working list");
             }
 
             return false;
@@ -475,23 +659,23 @@ namespace Quasar.Controls.ModManagement.ViewModels
             return processed;
         }
         private void AutoSlotDetectedItems(ObservableCollection<ContentMapping> elements)
-        {/*
+        {
             foreach (ContentMapping cm in elements)
             {
                 if (cm.GameDataItemID != -1)
                 {
-                    Association associations = CurrentWorkspace.Associations.Find(ass => ass.GameDataItemID == cm.GameDataItemID && ass.InternalModTypeID == cm.InternalModType && ass.Slot == cm.Slot);
+                    Association associations = ActiveWorkspace.Associations.Find(ass => ass.GameDataItemID == cm.GameDataItemID && ass.InternalModTypeID == cm.InternalModType && ass.Slot == cm.Slot);
                     if (associations != null)
                     {
-                        CurrentWorkspace.Associations[CurrentWorkspace.Associations.IndexOf(associations)] = new Association() { ContentMappingID = cm.ID, GameDataItemID = cm.GameDataItemID, InternalModTypeID = cm.InternalModType, Slot = cm.Slot };
+                        ActiveWorkspace.Associations[ActiveWorkspace.Associations.IndexOf(associations)] = new Association() { ContentMappingID = cm.ID, GameDataItemID = cm.GameDataItemID, InternalModTypeID = cm.InternalModType, Slot = cm.Slot };
                     }
                     else
                     {
-                        CurrentWorkspace.Associations.Add(new Association() { ContentMappingID = cm.ID, GameDataItemID = cm.GameDataItemID, InternalModTypeID = cm.InternalModType, Slot = cm.Slot });
+                        ActiveWorkspace.Associations.Add(new Association() { ContentMappingID = cm.ID, GameDataItemID = cm.GameDataItemID, InternalModTypeID = cm.InternalModType, Slot = cm.Slot });
                     }
                 }
             }
-            SaveWorkspaces();*/
+            WorkspaceXML.WriteWorkspaces(Workspaces.ToList());
         }
         #endregion
     }

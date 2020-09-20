@@ -212,7 +212,7 @@ namespace Quasar.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.DefaultSettingValueAttribute("USER=US")]
         public string FTPAddressValues {
             get {
                 return ((string)(this["FTPAddressValues"]));
@@ -249,7 +249,7 @@ namespace Quasar.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.DefaultSettingValueAttribute("USER=US")]
         public string FTPUNValues {
             get {
                 return ((string)(this["FTPUNValues"]));
@@ -286,13 +286,122 @@ namespace Quasar.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.DefaultSettingValueAttribute("USER=US")]
         public string FTPPWValues {
             get {
                 return ((string)(this["FTPPWValues"]));
             }
             set {
                 this["FTPPWValues"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Enable Creator mode")]
+        public string EnableCreatorName {
+            get {
+                return ((string)(this["EnableCreatorName"]));
+            }
+            set {
+                this["EnableCreatorName"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Enable this mode if you want to access options dedicated to mod creators")]
+        public string EnableCreatorComment {
+            get {
+                return ((string)(this["EnableCreatorComment"]));
+            }
+            set {
+                this["EnableCreatorComment"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string EnableCreatorValues {
+            get {
+                return ((string)(this["EnableCreatorValues"]));
+            }
+            set {
+                this["EnableCreatorValues"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Enable Advanced mode")]
+        public string EnableAdvancedName {
+            get {
+                return ((string)(this["EnableAdvancedName"]));
+            }
+            set {
+                this["EnableAdvancedName"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Enable this mode if you want full access to Quasar\'s features. This will also ena" +
+            "ble debug logs")]
+        public string EnableAdvancedComment {
+            get {
+                return ((string)(this["EnableAdvancedComment"]));
+            }
+            set {
+                this["EnableAdvancedComment"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string EnableAdvancedValues {
+            get {
+                return ((string)(this["EnableAdvancedValues"]));
+            }
+            set {
+                this["EnableAdvancedValues"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Enable Workspace Tab")]
+        public string EnableWorkspacesName {
+            get {
+                return ((string)(this["EnableWorkspacesName"]));
+            }
+            set {
+                this["EnableWorkspacesName"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string EnableWorkspacesValues {
+            get {
+                return ((string)(this["EnableWorkspacesValues"]));
+            }
+            set {
+                this["EnableWorkspacesValues"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("This enables the Workspace tab if you want to add more workspaces")]
+        public string EnableWorkspacesComment {
+            get {
+                return ((string)(this["EnableWorkspacesComment"]));
+            }
+            set {
+                this["EnableWorkspacesComment"] = value;
             }
         }
     }

@@ -16,36 +16,39 @@ using static Quasar.XMLResources.WorkspaceXML;
 using Quasar.Internal.Tools;
 using Quasar.XMLResources;
 using Quasar.Properties;
+using log4net;
 
 namespace Quasar.Quasar_Sys
 {
     static class Checker
     {
-        public static Mutex Instances(Mutex _serverMutex)
+        public static Mutex Instances(Mutex _serverMutex, ILog log)
         {
             string[] Args = Environment.GetCommandLineArgs();
             //Checking if Quasar is running alright
             if (Mutex.TryOpenExisting("Quasarite", out Mutex mt))
             {
+                log.Info("Started as a client");
                 //Client
                 if (Args.Length == 2)
                 {
-                    PipeClient.StartPipeClient("Quasarite", Args[1]);
+                    PipeClient.StartPipeClient("Quasarite", Args[1], log);
                 }
                 mt.Close();
                 Environment.Exit(0);
             }
             else
             {
+                log.Info("Started as a server");
                 //Server
                 _serverMutex = new Mutex(true, "Quasarite");
                 if (Args.Length == 2)
                 {
-                    new PipeServer("Quasarite", Args[1]);
+                    new PipeServer("Quasarite", Args[1],log);
                 }
                 else
                 {
-                    new PipeServer("Quasarite", "");
+                    new PipeServer("Quasarite", "", log);
                 }
 
             }
@@ -75,7 +78,7 @@ namespace Quasar.Quasar_Sys
             String AssociationsPath = Properties.Settings.Default.DefaultDir + @"\Library\Associations.xml";
             if (!File.Exists(AssociationsPath))
             {
-                Workspace defaultWorkspace = new Workspace() { Name = "Default Workspace", ID = IDGenerator.getNewWorkspaceID(), Associations = new List<Association>(), Built = false, BuildDate = "" };
+                Workspace defaultWorkspace = new Workspace() { Name = "Quasar's Workspace", ID = IDGenerator.getNewWorkspaceID(), Associations = new List<Association>(), Built = false, BuildDate = "" };
                 List<Workspace> DefaultFile = new List<Workspace>() { defaultWorkspace };
                 WorkspaceXML.WriteWorkspaces(DefaultFile);
 

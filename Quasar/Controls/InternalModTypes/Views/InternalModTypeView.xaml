@@ -17,8 +17,8 @@
         <Label Content="Associated to :" HorizontalAlignment="Left" Margin="230,7,0,0" VerticalAlignment="Top" Width="105" Background="{x:Null}" Foreground="White"/>
         <ComboBox ItemsSource="{Binding CurrentGameData.Categories}" SelectedItem="{Binding SelectedGameDataCategory}" DisplayMemberPath="Name" Grid.Column="0" Margin="325,10,0,0"  Width="200" Height="23" VerticalAlignment="Top" HorizontalAlignment="Left"/>
 
-        <Label Content="Slot Count :" HorizontalAlignment="Left" Margin="540,10,0,0" VerticalAlignment="Top" Width="105" Background="{x:Null}" Foreground="White" Grid.ColumnSpan="2"/>
-        <TextBox Grid.Column="1" Text="{Binding SlotString}" Margin="0,10,460,0"  Width="35" Height="23" VerticalAlignment="Top" HorizontalAlignment="Right"/>
+        <Label Content="Slot Count :" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="70" Background="{x:Null}" Foreground="White" Grid.Column="1"/>
+        <TextBox Grid.Column="1" Text="{Binding SlotString}" Margin="85,13,0,0" Height="23" VerticalAlignment="Top" HorizontalAlignment="Left" Width="35"/>
 
         <Button x:Name="Trash" Command="{Binding Path=TestInternalModTypeCommand}" Margin="515,7,10,581" Grid.Column="1" Background="#FF0A0F7A" >
             <Button.Template>

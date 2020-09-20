@@ -6,13 +6,26 @@
              xmlns:local="clr-namespace:Quasar.Controls.ModManagement.Views"
              mc:Ignorable="d" 
              d:DesignHeight="620" d:DesignWidth="1120">
-    <Grid x:Name="ManagementGrid" Background="{DynamicResource QuasarBackgroundDark}">
+    <Grid x:Name="ManagementGrid" Background="{DynamicResource QD1}">
         <Grid.RowDefinitions>
             <RowDefinition Height="50"/>
             <RowDefinition Height="35"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <ListView x:Name="ManagementModListView" ItemsSource="{Binding ModListItems}" SelectedItem="{Binding SelectedModListItem}" Background="Transparent" Margin="0,0,0,0" Grid.Row="2" BorderThickness="0">
+        <Grid Grid.Row="2">
+            <Grid.Style>
+                <Style TargetType="{x:Type Grid}">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Mods.Count}" Value="0">
+                            <Setter Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Grid.Style>
+            <Label Content="Please download some mods from Gamebanana using the Quasar Download Button" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Wheat" FontSize="20"/>
+        </Grid>
+        <ListView x:Name="ManagementModListView" ItemsSource="{Binding CollectionViewSource.View}" SelectedItem="{Binding SelectedModListItem}" Background="Transparent" Margin="0,0,0,0" Grid.Row="2" BorderThickness="0">
             <ListView.Resources>
 
             </ListView.Resources>
@@ -44,5 +57,6 @@
             <Label FontStyle="Italic" Content="Actions" Foreground="{DynamicResource QuasarTextColor}" Grid.Column="4"  HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Style="{DynamicResource QuasarLabel}"/>
 
         </Grid>
+        <ComboBox HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="225" Height="23" ItemsSource="{Binding Path=SelectedGame.GameModTypes}" SelectedItem="{Binding SelectedGameModType}" DisplayMemberPath="Name"/>
     </Grid>
 </UserControl>

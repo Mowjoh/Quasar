@@ -118,37 +118,77 @@
             <ProgressBar x:Name="Progress" Grid.Column="1" Grid.Row="0" Grid.ColumnSpan="3" Value="{Binding ProgressBarValue}" Style="{StaticResource DownloadBar}" />
 
             <StackPanel Grid.Column="4" Orientation="Horizontal" FlowDirection="RightToLeft" Visibility="{Binding Path=ElementActive}">
-                <Button x:Name="Trash" Command="{Binding Path=DeleteModCommand}" Margin="0,0,0,0" Visibility="{Binding Path=ElementActive, Converter={StaticResource BoolToVisibilityConverter}}" >
+                
+                <Button x:Name="Trash" Command="{Binding Path=DeleteModCommand}" Height="15" Width="15" Margin="10,0,0,0">
                     <Button.Template>
                         <ControlTemplate TargetType="{x:Type Button}">
-                            <Path x:Name="Trash" Stroke="White" Fill="White" Data="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zm2.46-7.12l1.41-1.41L12 12.59l2.12-2.12 1.41 1.41L13.41 14l2.12 2.12-1.41 1.41L12 15.41l-2.12 2.12-1.41-1.41L10.59 14l-2.13-2.12zM15.5 4l-1-1h-5l-1 1H5v2h14V4z" Height="15" Width="15" Margin="10,0,0,0" Stretch="Uniform" ToolTip="Delete this mod" />
+                            <Path x:Name="Trash" Stroke="White" Fill="White" Data="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zm2.46-7.12l1.41-1.41L12 12.59l2.12-2.12 1.41 1.41L13.41 14l2.12 2.12-1.41 1.41L12 15.41l-2.12 2.12-1.41-1.41L10.59 14l-2.13-2.12zM15.5 4l-1-1h-5l-1 1H5v2h14V4z" Stretch="Uniform" ToolTip="Delete this mod" />
                         </ControlTemplate>
                     </Button.Template>
+                </Button>
+
+                <Button Command="{Binding Path=ShowContentsCommand}" Height="15" Width="15" Margin="10,0,0,0">
+                    <Button.Template>
+                        <ControlTemplate TargetType="{x:Type Button}">
+                            <Path x:Name="TreeView" Stretch="Uniform" ToolTip="Show Mod Contents"  Stroke="White" Fill="White" Data="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z" />
+                        </ControlTemplate>
+                    </Button.Template>
+                    <Button.Style>
+                        <Style TargetType="{x:Type Button}">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding CreatorMode}" Value="True">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+
+                <Button x:Name="Treeview" Command="{Binding Path=FileViewCommand}" Height="15" Width="15" Margin="10,0,0,0" >
+                    <Button.Template>
+                        <ControlTemplate TargetType="{x:Type Button}">
+                            <Path x:Name="TreeView" Stroke="White" Fill="White" Data="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"  Stretch="Uniform" ToolTip="Open File Tree" />
+                        </ControlTemplate>
+                    </Button.Template>
+                    <Button.Style>
+                        <Style TargetType="{x:Type Button}">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding AdvancedMode}" Value="True">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+
+                <Button x:Name="AddW" Command="{Binding Path=AddModCommand}" Height="15" Width="15" Margin="10,0,0,0" >
+                    <Button.Template>
+                        <ControlTemplate TargetType="{x:Type Button}">
+                            <Path x:Name="Trash" Stroke="White" Fill="White" Data="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 9h-4v4h-2v-4H9V9h4V5h2v4h4v2z" Stretch="Uniform" ToolTip="Add this mod's contents to the current Workspace" />
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+
+                <Button x:Name="Minimize" Command="{Binding Path=MinimizeCommand}" Height="15" Width="15" Margin="10,0,0,0">
+                    <Button.Template>
+                        <ControlTemplate TargetType="{x:Type Button}">
+                            <Path x:Name="Minimize" Stroke="White" Fill="White" Data="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14zM7 9h5v1H7z" Stretch="Uniform" ToolTip="Retract the panel" />
+                        </ControlTemplate>
+                    </Button.Template>
+                    <Button.Style>
+                        <Style TargetType="{x:Type Button}">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Smol}" Value="False">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
                 </Button>
                 
-                <Button x:Name="Treeview" Command="{Binding Path=FileViewCommand}" Margin="0,0,0,0" Visibility="{Binding Path=ElementActive, Converter={StaticResource BoolToVisibilityConverter}}" >
-                    <Button.Template>
-                        <ControlTemplate TargetType="{x:Type Button}">
-                            <Path x:Name="TreeView" Stroke="White" Fill="White" Data="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z" Height="15" Width="15" Margin="10,0,0,0" Stretch="Uniform" ToolTip="Open File Tree" />
-                        </ControlTemplate>
-                    </Button.Template>
-                </Button>
-
-
-                <Button x:Name="AddW" Command="{Binding Path=AddModCommand}" Margin="0,0,0,0" Visibility="{Binding Path=ElementActive, Converter={StaticResource BoolToVisibilityConverter}}" >
-                    <Button.Template>
-                        <ControlTemplate TargetType="{x:Type Button}">
-                            <Path x:Name="Trash" Stroke="White" Fill="White" Data="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 9h-4v4h-2v-4H9V9h4V5h2v4h4v2z" Height="15" Width="15" Margin="10,0,0,0" Stretch="Uniform" ToolTip="Add this mod's contents to the current Workspace" />
-                        </ControlTemplate>
-                    </Button.Template>
-                </Button>
-                <Button x:Name="Minimize" Command="{Binding Path=MinimizeCommand}" Margin="0,0,0,0" Visibility="{Binding Path=BigIcons, Converter={StaticResource BoolToVisibilityConverter}}">
-                    <Button.Template>
-                        <ControlTemplate TargetType="{x:Type Button}">
-                            <Path x:Name="Minimize" Stroke="White" Fill="White" Data="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14zM7 9h5v1H7z" Margin="10,0,0,0" Height="15" Width="15"  Stretch="Uniform" ToolTip="Retract the panel" />
-                        </ControlTemplate>
-                    </Button.Template>
-                </Button>
             </StackPanel>
         </Grid>
         
@@ -169,16 +209,7 @@
 
             </ItemsControl>
 
-            <Button Command="{Binding Path=ShowContentsCommand}" Grid.Column="3" Width="200" Height="50"  Visibility="{Binding Path=ElementActive, Converter={StaticResource BoolToVisibilityConverter}}" >
-                <Button.Template>
-                    <ControlTemplate TargetType="{x:Type Button}">
-                        <Grid Background="{DynamicResource QD1}" Width="150" Height="25">
-                            <Path x:Name="TreeView" VerticalAlignment="Top" HorizontalAlignment="Left"  Height="20" Width="20" Stretch="Uniform" ToolTip="Show Mod Contents" Margin="10,7,20,0" Stroke="White" Fill="White" Data="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z" />
-                            <Label Content="Show Mod Contents" Style="{DynamicResource QuasarLabel}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="30,2,0,0"></Label>
-                        </Grid>
-                    </ControlTemplate>
-                </Button.Template>
-            </Button>
+            
 
         </Grid>
     </Grid>

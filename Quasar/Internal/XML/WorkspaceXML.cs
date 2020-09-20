@@ -17,7 +17,7 @@ namespace Quasar.XMLResources
         public static List<Workspace> GetWorkspaces()
         {
             List<Workspace> Workspaces = new List<Workspace>();
-            string AssociationLibraryPath = Properties.Settings.Default.DefaultDir + @"\Library\Associations.xml";
+            string AssociationLibraryPath = Properties.Settings.Default.DefaultDir + @"\Library\Workspaces.xml";
             XmlSerializer serializer = new XmlSerializer(typeof(Workspaces));
 
             if (File.Exists(AssociationLibraryPath))
@@ -37,7 +37,7 @@ namespace Quasar.XMLResources
 
         public static void WriteWorkspaces(List<Workspace> Workspaces)
         {
-            string AssociationLibraryPath = Properties.Settings.Default["DefaultDir"].ToString() + "\\Library\\Associations.xml";
+            string AssociationLibraryPath = Properties.Settings.Default["DefaultDir"].ToString() + "\\Library\\Workspaces.xml";
 
             Workspaces al = new Workspaces(Workspaces);
 

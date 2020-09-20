@@ -24,8 +24,12 @@ namespace Quasar.Controls.Settings.View
 
         public SettingsView()
         {
-            SVM = new SettingsViewModel();
+           
             InitializeComponent();
+        }
+        public void start()
+        {
+            SVM = new SettingsViewModel();
             DataContext = SVM;
         }
     }

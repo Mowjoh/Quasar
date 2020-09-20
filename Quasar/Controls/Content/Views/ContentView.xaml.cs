@@ -24,5 +24,6 @@ namespace Quasar.Controls.Content.Views
         {
             InitializeComponent();
         }
+
     }
 }

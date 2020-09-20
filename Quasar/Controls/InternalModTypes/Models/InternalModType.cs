@@ -15,6 +15,7 @@ namespace Quasar
         #region Fields
         private string _Name { get; set; }
         private string _Filename { get; set; }
+        private string _TypeGroup { get; set; }
         private int _ID { get; set; }
         private int _GameID { get; set; }
         private int _Association { get; set; }
@@ -51,7 +52,21 @@ namespace Quasar
                 OnPropertyChanged("Filename");
             }
         }
+ 
+        [XmlAttribute("TypeGroup")]
+        public string TypeGroup
+        {
+            get => _TypeGroup;
+            set
+            {
+                if (_TypeGroup == value)
+                    return;
 
+                _TypeGroup = value;
+                OnPropertyChanged("TypeGroup");
+            }
+        }
+    
         [XmlAttribute("ID")]
         public int ID
         {

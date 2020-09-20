@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<InternalModType xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="Items" Filename="SmashUltimate/Items" ID="9" GameID="1" Association="4" Slots="1">
+<InternalModType xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="Items" Filename="SmashUltimate/Items" ID="9" GameID="1" Association="4" Slots="1" TypeGroup="Items">
   <InternalModTypeFile ID="0">
     <SourcePath>{GameData}/model/{Folder}/c{S00}</SourcePath>
     <SourceFile>{AnyFile}.nutexb</SourceFile>

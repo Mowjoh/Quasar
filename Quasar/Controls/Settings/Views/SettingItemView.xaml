@@ -48,6 +48,14 @@
                 </DataTrigger>
             </Style.Triggers>
         </Style>
+        <Style TargetType="{x:Type TextBox}" x:Key="SettingsTextBox">
+            <Setter Property="Visibility" Value="Hidden"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding EnableTextBox}" Value="True">
+                    <Setter Property="Visibility" Value="Visible"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
     </UserControl.Resources>
 
     <Grid Height="40" Background="{DynamicResource QD2}" HorizontalAlignment="Stretch">
@@ -61,6 +69,7 @@
         <Label Content="{Binding SettingItem.DisplayName}" HorizontalContentAlignment="Stretch" VerticalAlignment="Center" Grid.Column="0" Style="{DynamicResource QuasarLabel}" />
 
         <Label Content="{Binding SettingItem.DisplayValue}" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource ValueLabel}" Grid.Column="1" />
+        <TextBox Text="{Binding SettingItem.DisplayValue}" HorizontalAlignment="Stretch" VerticalAlignment="Center" HorizontalContentAlignment="Stretch" Style="{StaticResource SettingsTextBox}" Grid.Column="1" />
 
         <Label HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource SettingsLabel}" Grid.Column="1"/>
         <CheckBox x:Name="SettingCheckBox" IsChecked="{Binding IsChecked}" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource SettingsCheckBox}" Grid.Column="1" Margin="100,0,0,0" />

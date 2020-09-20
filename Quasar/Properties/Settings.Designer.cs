@@ -340,5 +340,53 @@ namespace Quasar.Properties {
                 this["Wipe"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool EnableCreator {
+            get {
+                return ((bool)(this["EnableCreator"]));
+            }
+            set {
+                this["EnableCreator"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool EnableAdvanced {
+            get {
+                return ((bool)(this["EnableAdvanced"]));
+            }
+            set {
+                this["EnableAdvanced"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool GroupInternalModTypes {
+            get {
+                return ((bool)(this["GroupInternalModTypes"]));
+            }
+            set {
+                this["GroupInternalModTypes"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool EnableWorkspaces {
+            get {
+                return ((bool)(this["EnableWorkspaces"]));
+            }
+            set {
+                this["EnableWorkspaces"] = value;
+            }
+        }
     }
 }

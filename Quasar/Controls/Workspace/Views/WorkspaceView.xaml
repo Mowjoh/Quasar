@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:Quasar.Controls.Settings.Workspaces.View"
              mc:Ignorable="d" 
              d:DesignHeight="620" d:DesignWidth="1120">
-    <Grid x:Name="WorkspaceGrid" Background="{StaticResource QuasarBackgroundDark}">
+    <Grid x:Name="WorkspaceGrid" Background="{StaticResource QD1}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="500"/>
             <ColumnDefinition Width="250"/>
