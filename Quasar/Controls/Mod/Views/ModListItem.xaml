@@ -122,7 +122,20 @@
                 <Button x:Name="Trash" Command="{Binding Path=DeleteModCommand}" Height="15" Width="15" Margin="10,0,0,0">
                     <Button.Template>
                         <ControlTemplate TargetType="{x:Type Button}">
-                            <Path x:Name="Trash" Stroke="White" Fill="White" Data="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zm2.46-7.12l1.41-1.41L12 12.59l2.12-2.12 1.41 1.41L13.41 14l2.12 2.12-1.41 1.41L12 15.41l-2.12 2.12-1.41-1.41L10.59 14l-2.13-2.12zM15.5 4l-1-1h-5l-1 1H5v2h14V4z" Stretch="Uniform" ToolTip="Delete this mod" />
+                            <Path x:Name="Trash" Data="M6,19a2.006,2.006,0,0,0,2,2h8a2.006,2.006,0,0,0,2-2V9a2.006,2.006,0,0,0-2-2H8A2.006,2.006,0,0,0,6,9ZM18,4H15.5l-.71-.71a1.009,1.009,0,0,0-.7-.29H9.91a1.009,1.009,0,0,0-.7.29L8.5,4H6A1,1,0,0,0,6,6H18a1,1,0,0,0,0-2Z" Stretch="Uniform" ToolTip="Delete this mod">
+                                <Path.Style>
+                                    <Style TargetType="Path">
+                                        <Setter Property="Fill" Value="#A0A0A0"/>
+                                        <Setter Property="Stroke" Value="#A0A0A0"/>
+                                        <Style.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Fill" Value="#cf6679"/>
+                                                <Setter Property="Stroke" Value="#cf6679"/>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Path.Style>
+                            </Path>
                         </ControlTemplate>
                     </Button.Template>
                 </Button>
@@ -130,7 +143,20 @@
                 <Button Command="{Binding Path=ShowContentsCommand}" Height="15" Width="15" Margin="10,0,0,0">
                     <Button.Template>
                         <ControlTemplate TargetType="{x:Type Button}">
-                            <Path x:Name="TreeView" Stretch="Uniform" ToolTip="Show Mod Contents"  Stroke="White" Fill="White" Data="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z" />
+                            <Path x:Name="TreeView" Stretch="Uniform" ToolTip="Show Mod Contents" Data="M10.59,4.59A2.006,2.006,0,0,0,9.17,4H4A2,2,0,0,0,2.01,6L2,18a2.006,2.006,0,0,0,2,2H20a2.006,2.006,0,0,0,2-2V8a2.006,2.006,0,0,0-2-2H12Z">
+                                <Path.Style>
+                                    <Style TargetType="Path">
+                                        <Setter Property="Fill" Value="#A0A0A0"/>
+                                        <Setter Property="Stroke" Value="#A0A0A0"/>
+                                        <Style.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Fill" Value="purple"/>
+                                                <Setter Property="Stroke" Value="purple"/>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Path.Style>
+                            </Path>
                         </ControlTemplate>
                     </Button.Template>
                     <Button.Style>
@@ -148,7 +174,7 @@
                 <Button x:Name="Treeview" Command="{Binding Path=FileViewCommand}" Height="15" Width="15" Margin="10,0,0,0" >
                     <Button.Template>
                         <ControlTemplate TargetType="{x:Type Button}">
-                            <Path x:Name="TreeView" Stroke="White" Fill="White" Data="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"  Stretch="Uniform" ToolTip="Open File Tree" />
+                            <Path x:Name="TreeView" Stroke="#A0A0A0" Fill="#A0A0A0" Data="M10.59,4.59A2.006,2.006,0,0,0,9.17,4H4A2,2,0,0,0,2.01,6L2,18a2.006,2.006,0,0,0,2,2H20a2.006,2.006,0,0,0,2-2V8a2.006,2.006,0,0,0-2-2H12Z"  Stretch="Uniform" ToolTip="Open File Tree" />
                         </ControlTemplate>
                     </Button.Template>
                     <Button.Style>
@@ -166,7 +192,20 @@
                 <Button x:Name="AddW" Command="{Binding Path=AddModCommand}" Height="15" Width="15" Margin="10,0,0,0" >
                     <Button.Template>
                         <ControlTemplate TargetType="{x:Type Button}">
-                            <Path x:Name="Trash" Stroke="White" Fill="White" Data="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 9h-4v4h-2v-4H9V9h4V5h2v4h4v2z" Stretch="Uniform" ToolTip="Add this mod's contents to the current Workspace" />
+                            <Path x:Name="Trash" Stroke="#A0A0A0" Fill="#A0A0A0" Data="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" Stretch="Uniform" ToolTip="Add this mod's contents to the current Workspace" >
+                                <Path.Style>
+                                    <Style TargetType="Path">
+                                        <Setter Property="Fill" Value="#A0A0A0"/>
+                                        <Setter Property="Stroke" Value="#A0A0A0"/>
+                                        <Style.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Fill" Value="purple"/>
+                                                <Setter Property="Stroke" Value="purple"/>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Path.Style>
+                            </Path>
                         </ControlTemplate>
                     </Button.Template>
                 </Button>
@@ -174,7 +213,20 @@
                 <Button x:Name="Minimize" Command="{Binding Path=MinimizeCommand}" Height="15" Width="15" Margin="10,0,0,0">
                     <Button.Template>
                         <ControlTemplate TargetType="{x:Type Button}">
-                            <Path x:Name="Minimize" Stroke="White" Fill="White" Data="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14zM7 9h5v1H7z" Stretch="Uniform" ToolTip="Retract the panel" />
+                            <Path x:Name="Minimize" Stroke="#A0A0A0" Fill="#A0A0A0" Data="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14zM7 9h5v1H7z" Stretch="Uniform" ToolTip="Retract the panel" >
+                                <Path.Style>
+                                    <Style TargetType="Path">
+                                        <Setter Property="Fill" Value="#A0A0A0"/>
+                                        <Setter Property="Stroke" Value="#A0A0A0"/>
+                                        <Style.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Fill" Value="purple"/>
+                                                <Setter Property="Stroke" Value="purple"/>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Path.Style>
+                            </Path>
                         </ControlTemplate>
                     </Button.Template>
                     <Button.Style>

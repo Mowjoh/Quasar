@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Quasar.Controls.Build.Models
 {
-    class USBDrive : ObservableObject
+    public class USBDrive : ObservableObject
     {
         #region Fields
         private DriveInfo _Info { get; set; }

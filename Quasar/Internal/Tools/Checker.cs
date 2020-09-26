@@ -75,7 +75,7 @@ namespace Quasar.Quasar_Sys
 
         public static void BaseWorkspace()
         {
-            String AssociationsPath = Properties.Settings.Default.DefaultDir + @"\Library\Associations.xml";
+            String AssociationsPath = Properties.Settings.Default.DefaultDir + @"\Library\Workspaces.xml";
             if (!File.Exists(AssociationsPath))
             {
                 Workspace defaultWorkspace = new Workspace() { Name = "Quasar's Workspace", ID = IDGenerator.getNewWorkspaceID(), Associations = new List<Association>(), Built = false, BuildDate = "" };

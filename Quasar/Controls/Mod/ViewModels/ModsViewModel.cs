@@ -675,6 +675,7 @@ namespace Quasar.Controls.ModManagement.ViewModels
                     }
                 }
             }
+
             WorkspaceXML.WriteWorkspaces(Workspaces.ToList());
         }
         #endregion

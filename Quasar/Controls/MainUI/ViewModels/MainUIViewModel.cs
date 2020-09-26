@@ -630,7 +630,7 @@ namespace Quasar
             TabItems.Add(new TabItem() { Content = AssociationView, Header = "Management", Foreground = new SolidColorBrush() { Color = Colors.White } });
 
             BuildView = new BuildView();
-            BVM = new BuildViewModel(ModLoaders, Workspaces, ActiveWorkspace);
+            BVM = new BuildViewModel(ModLoaders, Workspaces, ActiveWorkspace,Mods,ContentMappings,InternalModTypes,GameDatas,Games);
             BuildView.DataContext = BVM;
             TabItems.Add(new TabItem() { Content = BuildView, Header = "File Transfer", Foreground = new SolidColorBrush() { Color = Colors.White } });
 
@@ -778,6 +778,10 @@ namespace Quasar
             }
         }
 
+        public void LogBuilderMessage()
+        {
+
+        }
         #endregion
 
 

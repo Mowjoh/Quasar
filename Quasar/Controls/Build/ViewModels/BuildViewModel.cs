@@ -5,16 +5,24 @@ using Quasar.XMLResources;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace Quasar.Controls.Build.ViewModels
 {
-    class BuildViewModel : ObservableObject
+    public class BuildViewModel : ObservableObject
     {
         #region Fields
         private string _Logs { get; set; }
+        private int _BuilderProgress { get; set; }
+        private string _Steps { get; set; }
+        private ObservableCollection<LibraryMod> _Mods { get; set; }
+        private ObservableCollection<ContentMapping> _ContentMappings { get; set; }
         private ObservableCollection<ModLoader> _ModLoaders { get; set; }
         private ObservableCollection<Workspace> _Workspaces { get; set; }
+        private ObservableCollection<InternalModType> _InternalModTypes { get; set; }
+        private ObservableCollection<GameData> _GameDatas { get; set; }
+        private ObservableCollection<Game> _Games { get; set; }
         private Workspace _ActiveWorkspace { get; set; }
         private ObservableCollection<USBDrive> _Drives { get; set; }
         private ModLoader _SelectedModLoader { get; set; }
@@ -65,6 +73,55 @@ namespace Quasar.Controls.Build.ViewModels
                 OnPropertyChanged("Logs");
             }
         }
+        public int BuildProgress
+        {
+            get => _BuilderProgress;
+            set
+            {
+                _BuilderProgress = value;
+                OnPropertyChanged("BuildProgress");
+            }
+        }
+        public string Steps
+        {
+            get => _Steps;
+            set
+            {
+                _Steps = value;
+                OnPropertyChanged("Steps");
+            }
+        }
+
+        /// <summary>
+        /// List of all Library Mods
+        /// </summary>
+        public ObservableCollection<LibraryMod> Mods
+        {
+            get => _Mods;
+            set
+            {
+                if (_Mods == value)
+                    return;
+
+                _Mods = value;
+                OnPropertyChanged("Mods");
+            }
+        }
+        /// <summary>
+        /// List of all content mappings
+        /// </summary>
+        public ObservableCollection<ContentMapping> ContentMappings
+        {
+            get => _ContentMappings;
+            set
+            {
+                if (_ContentMappings == value)
+                    return;
+
+                _ContentMappings = value;
+                OnPropertyChanged("ContentMappings");
+            }
+        }
         public ObservableCollection<ModLoader> ModLoaders
         {
             get => _ModLoaders;
@@ -100,6 +157,51 @@ namespace Quasar.Controls.Build.ViewModels
 
                 _ActiveWorkspace = value;
                 OnPropertyChanged("ActiveWorkspace");
+            }
+        }
+        /// <summary>
+        /// List of all Internal Mod Types
+        /// </summary>
+        public ObservableCollection<InternalModType> InternalModTypes
+        {
+            get => _InternalModTypes;
+            set
+            {
+                if (_InternalModTypes == value)
+                    return;
+
+                _InternalModTypes = value;
+                OnPropertyChanged("InternalModTypes");
+            }
+        }
+        /// <summary>
+        /// List of all Game Data
+        /// </summary>
+        public ObservableCollection<GameData> GameDatas
+        {
+            get => _GameDatas;
+            set
+            {
+                if (_GameDatas == value)
+                    return;
+
+                _GameDatas = value;
+                OnPropertyChanged("GameDatas");
+            }
+        }
+        /// <summary>
+        /// List of all Games and their API Categories
+        /// </summary>
+        public ObservableCollection<Game> Games
+        {
+            get => _Games;
+            set
+            {
+                if (_Games == value)
+                    return;
+
+                _Games = value;
+                OnPropertyChanged("Games");
             }
         }
 
@@ -199,11 +301,16 @@ namespace Quasar.Controls.Build.ViewModels
         }
         #endregion
 
-        public BuildViewModel(ObservableCollection<ModLoader> _ModLoaders,ObservableCollection<Workspace> _Workspaces, Workspace _Workspace)
+        public BuildViewModel(ObservableCollection<ModLoader> _ModLoaders,ObservableCollection<Workspace> _Workspaces, Workspace _Workspace, ObservableCollection<LibraryMod> _Mods, ObservableCollection<ContentMapping> _ContentMappings, ObservableCollection<InternalModType> _InternalModTypes, ObservableCollection<GameData> _GameDatas, ObservableCollection<Game> _Games)
         {
             ModLoaders = _ModLoaders;
             ActiveWorkspace = _Workspace;
             Workspaces = _Workspaces;
+            Mods = _Mods;
+            ContentMappings = _ContentMappings;
+            InternalModTypes = _InternalModTypes;
+            GameDatas = _GameDatas;
+            Games = _Games;
 
             getSDCards();
 
@@ -285,6 +392,8 @@ namespace Quasar.Controls.Build.ViewModels
         public void Build()
         {
             Logs = "Transfer Process Start :\r\n\r\n";
+
+
             FileWriter FW;
             if (WirelessSelected)
             {
@@ -294,9 +403,15 @@ namespace Quasar.Controls.Build.ViewModels
             {
                 FW = new SDWriter();
             }
-            SmashBuilder SB = new SmashBuilder(FW, WipeSelected ? (int)BuildModes.WipeRecreate : (int)BuildModes.Comparative);
+            SmashBuilder SB = new SmashBuilder(FW, WipeSelected ? (int)BuildModes.WipeRecreate : (int)BuildModes.Comparative, ModLoaders[0].ID, Logs);
+            SB.SetData(this);
             SB.StartBuild();
             Logs += "Transfer Process End";
+        }
+
+        public async Task<int> TransferStuff()
+        {
+            return 0;
         }
         private void Build_Button()
         {

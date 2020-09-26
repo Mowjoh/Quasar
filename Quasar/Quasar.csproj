@@ -110,6 +110,7 @@
       <DependentUpon>BuildView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Common\Models\FTPValidator.cs" />
+    <Compile Include="Controls\Common\Models\NotifyTaskCompletion.cs" />
     <Compile Include="Controls\Common\Models\ObservableObject.cs" />
     <Compile Include="Controls\Common\Models\RelayCommand.cs" />
     <Compile Include="Controls\Content\Models\ContentMapping.cs" />
