@@ -1,4 +1,5 @@
-﻿using Quasar.Controls.Associations.Models;
+﻿using log4net;
+using Quasar.Controls.Associations.Models;
 using Quasar.Controls.Associations.ViewModels;
 using Quasar.Controls.Associations.Views;
 using Quasar.Controls.Common.Models;
@@ -25,6 +26,7 @@ namespace Quasar.Controls.Assignation.ViewModels
         private ObservableCollection<GameDataUXItem> _GameDataUXs { get; set; }
         private GameDataItem _SelectedGameDataItem { get; set; }
         private ObservableCollection<SlotItem> _SlotItems { get; set; }
+        private SlotItem _SelectedSlotItem { get; set; }
         private ObservableCollection<SlotItem> _AvailableSlots { get; set; }
         private CollectionViewSource _ItemsCollectionViewSource { get; set; }
         private bool _SelectionVisible { get; set; }
@@ -93,6 +95,19 @@ namespace Quasar.Controls.Assignation.ViewModels
 
                 _SlotItems = value;
                 OnPropertyChanged("SlotItems");
+            }
+        }
+        public SlotItem SelectedSlotItem
+
+        {
+            get => _SelectedSlotItem;
+            set
+            {
+                if (_SelectedSlotItem == value)
+                    return;
+
+                _SelectedSlotItem = value;
+                OnPropertyChanged("SelectedSlotItem");
             }
         }
         public ObservableCollection<SlotItem> AvailableSlots
@@ -386,6 +401,7 @@ namespace Quasar.Controls.Assignation.ViewModels
         }
         #endregion
 
+        public ILog Log { get; set; }
         #endregion
 
         public AssociationViewModel(ObservableCollection<GameData> _GameDatas, ObservableCollection<InternalModType> _InternalModTypes, ObservableCollection<Workspace> _Workspaces, Workspace _ActiveWorkspace, ObservableCollection<ContentMapping> _ContentMappings)
@@ -436,10 +452,69 @@ namespace Quasar.Controls.Assignation.ViewModels
                     EmptySlot = false,
                     SlotNumber = SlotItemViewModel.SlotNumber,
                     SlotNumberName = SlotItemViewModel.SlotNumberName,
-                    Index = SlotItemViewModel.Index
+                    Index = SlotItemViewModel.Index,
+                    ContentMappings = SourceItem.SlotItemViewModel.ContentMappings
                 }
             });
+            if (Save)
+            {
+                SetSlotAssociations(AvailableSlots[AvailableSlotIndex]);
+            }
+            
         }
+
+        public void SetSlotAssociations(SlotItem item)
+        {
+            try
+            {
+                if(item.SlotItemViewModel.ContentMappings.Count == 1)
+                {
+                    //Single Type addition
+                    ContentMapping cm = item.SlotItemViewModel.ContentMappings[0];
+                    Association a = ActiveWorkspace.Associations.SingleOrDefault(az => az.InternalModTypeID == cm.InternalModType && az.Slot == item.SlotItemViewModel.Index && az.GameDataItemID == cm.GameDataItemID);
+                    if(a != null)
+                    {
+                        a.ContentMappingID = cm.ID;
+                    }
+                    else
+                    {
+                        ActiveWorkspace.Associations.Add(new Association()
+                        {
+                            ContentMappingID = cm.ID,
+                            GameDataItemID = cm.GameDataItemID,
+                            InternalModTypeID = cm.InternalModType,
+                            Slot = item.SlotItemViewModel.Index
+                        });
+                    }
+                }
+                else
+                {
+                    //Grouped Types Addition
+                    List<Association> La = ActiveWorkspace.Associations.FindAll(az => az.Slot == item.SlotItemViewModel.Index && az.GameDataItemID == item.SlotItemViewModel.ContentMappings[0].GameDataItemID);
+                    foreach(Association a in La)
+                    {
+                        ActiveWorkspace.Associations.Remove(a);
+                    }
+                    foreach(ContentMapping cm in item.SlotItemViewModel.ContentMappings)
+                    {
+                        ActiveWorkspace.Associations.Add(new Association()
+                        {
+                            ContentMappingID = cm.ID,
+                            GameDataItemID = cm.GameDataItemID,
+                            InternalModTypeID = cm.InternalModType,
+                            Slot = item.SlotItemViewModel.Index
+                        });
+                    }
+                }
+                WorkspaceXML.WriteWorkspaces(Workspaces.ToList());
+            }
+            catch(Exception e)
+            {
+                Log.Error(e.Message);
+            }
+        }
+
+
         public void FilterItems(object sender, FilterEventArgs e)
         {
             GameDataItem gdi = e.Item as GameDataItem;
@@ -532,7 +607,11 @@ namespace Quasar.Controls.Assignation.ViewModels
                             ContentName = cm.Name,
                             SlotNumber = cm.Slot + 1,
                             SlotNumberName = cm.Slot > 10 ? (cm.Slot + 1 % 10).ToString() : (cm.Slot + 1).ToString(),
-                            EmptySlot = false
+                            EmptySlot = false,
+                            ContentMappings = new List<ContentMapping>()
+                            {
+                                cm
+                            }
                         }
                     });
                 }
@@ -550,7 +629,11 @@ namespace Quasar.Controls.Assignation.ViewModels
                             ContentName = cm.Name,
                             SlotNumber = ass.Slot + 1,
                             SlotNumberName = ass.Slot > 10 ? (ass.Slot + 1 % 10).ToString() : (ass.Slot + 1).ToString(),
-                            EmptySlot = false
+                            EmptySlot = false,
+                            ContentMappings = new List<ContentMapping>()
+                            {
+                                cm
+                            }
                         }
                     };
                     SetSlot(SI, AvailableSlots[ass.Slot]);
@@ -578,9 +661,18 @@ namespace Quasar.Controls.Assignation.ViewModels
                                 ContentName = cm.Name,
                                 SlotNumber = cm.Slot + 1,
                                 SlotNumberName = cm.Slot > 10 ? (cm.Slot + 1 % 10).ToString() : (cm.Slot + 1).ToString(),
-                                EmptySlot = false
+                                EmptySlot = false,
+                                ContentMappings = new List<ContentMapping>()
+                                {
+                                    cm
+                                }
                             }
                         });
+                    }
+                    else
+                    {
+                        SlotItem item = SlotItems.Single(i => i.SlotItemViewModel.SlotNumber == (cm.Slot + 1));
+                        item.SlotItemViewModel.ContentMappings.Add(cm);
                     }
                 }
 
@@ -590,11 +682,13 @@ namespace Quasar.Controls.Assignation.ViewModels
                     List<Association> Associations = ActiveWorkspace.Associations.Where(a => a.InternalModTypeID == IMT.ID && a.GameDataItemID == SelectedGameDataItem.ID).ToList();
                     foreach (Association ass in Associations)
                     {
+                        ContentMapping cm = contentMapping.Single(c => c.ID == ass.ContentMappingID);
+
                         if (!ProcessedSlots.Contains(ass.Slot))
                         {
                             ProcessedSlots.Add(ass.Slot);
 
-                            ContentMapping cm = contentMapping.Single(c => c.ID == ass.ContentMappingID);
+                            
                             SlotItem SI = new SlotItem()
                             {
                                 SlotItemViewModel = new SlotItemViewModel()
@@ -602,10 +696,18 @@ namespace Quasar.Controls.Assignation.ViewModels
                                     ContentName = cm.Name,
                                     SlotNumber = ass.Slot + 1,
                                     SlotNumberName = ass.Slot > 10 ? (ass.Slot + 1 % 10).ToString() : (ass.Slot + 1).ToString(),
-                                    EmptySlot = false
+                                    EmptySlot = false,
+                                    ContentMappings = new List<ContentMapping>()
+                                    {
+                                        cm
+                                    }
                                 }
                             };
                             SetSlot(SI, AvailableSlots[ass.Slot]);
+                        }
+                        else
+                        {
+                            AvailableSlots[ass.Slot].SlotItemViewModel.ContentMappings.Add(cm);
                         }
                     }
                 }
@@ -616,7 +718,36 @@ namespace Quasar.Controls.Assignation.ViewModels
             }
 
         }
+        public void DeleteSlotItem()
+        {
+            List<Association> Associations = new List<Association>();
+            foreach(ContentMapping cm in SelectedSlotItem.SlotItemViewModel.ContentMappings)
+            {
+                Association a = ActiveWorkspace.Associations.SingleOrDefault(az => az.InternalModTypeID == cm.InternalModType && az.Slot == SelectedSlotItem.SlotItemViewModel.Index && az.GameDataItemID == cm.GameDataItemID);
+                if(a != null)
+                {
+                    ActiveWorkspace.Associations.Remove(a);
+                }
+            }
 
+            int index = AvailableSlots.IndexOf(SelectedSlotItem);
+            SlotItem EmptyItem = new SlotItem()
+            {
+                SlotItemViewModel = new SlotItemViewModel()
+                {
+                    ContentName = "Empty",
+                    SlotNumber = AvailableSlots[index].SlotItemViewModel.SlotNumber,
+                    Index = AvailableSlots[index].SlotItemViewModel.Index,
+                    SlotNumberName = AvailableSlots[index].SlotItemViewModel.SlotNumberName,
+                    EmptySlot = true
+                }
+            };
+
+            AvailableSlots.RemoveAt(index);
+            AvailableSlots.Insert(index, EmptyItem);
+
+            WorkspaceXML.WriteWorkspaces(Workspaces.ToList());
+        }
         public void SetActiveWorkspace(Workspace w)
         {
             ActiveWorkspace = w;

@@ -88,7 +88,7 @@ namespace Quasar.Controls.Assignation.Views
             {
                 var source = e.Data.GetData(typeof(SlotItem)) as SlotItem;
                 var target = (SlotItem)sender;
-                AssociationViewModel.SetSlot(source, target);
+                AssociationViewModel.SetSlot(source, target, true);
             }
         }
 
@@ -104,6 +104,10 @@ namespace Quasar.Controls.Assignation.Views
             return FindVisualParent<T>(parentObject);
         }
 
-        
+        private void SlotItem_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            SlotItem item = (SlotItem)sender;
+            AssociationViewModel.DeleteSlotItem();
+        }
     }
 }

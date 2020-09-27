@@ -625,6 +625,7 @@ namespace Quasar
 
             
             AVM = new AssociationViewModel(GameDatas, InternalModTypes, Workspaces,ActiveWorkspace, ContentMappings);
+            AVM.Log = log;
             AssociationView = new AssociationView() { AssociationViewModel = AVM };
             AssociationView.DataContext = AVM;
             TabItems.Add(new TabItem() { Content = AssociationView, Header = "Management", Foreground = new SolidColorBrush() { Color = Colors.White } });

@@ -161,7 +161,7 @@
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>
-                <ListBox Grid.Column="1"  ItemsSource="{Binding AvailableSlots}" AllowDrop="True" >
+                <ListBox x:Name="AvailableSlotList" Grid.Column="1"  ItemsSource="{Binding AvailableSlots}" SelectedItem="{Binding SelectedSlotItem}" AllowDrop="True" >
                     <ListBox.Style>
                         <Style BasedOn="{StaticResource QuasarListBox}" TargetType="{x:Type ListBox}">
                             <Setter Property="BorderBrush" Value="Transparent"/>
@@ -170,7 +170,7 @@
                     </ListBox.Style>
                     <ListBox.ItemTemplate>
                         <DataTemplate>
-                            <views:SlotItem Drop="ListBox_Drop"/>
+                            <views:SlotItem Drop="ListBox_Drop" MouseRightButtonUp="SlotItem_MouseRightButtonUp"/>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>

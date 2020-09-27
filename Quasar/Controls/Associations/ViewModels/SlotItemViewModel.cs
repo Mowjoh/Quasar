@@ -16,6 +16,7 @@ namespace Quasar.Controls.Associations.ViewModels
         private string _SlotNumberName { get; set; }
         private bool _EmptySlot { get; set; }
         private Association _Association { get; set; }
+        private List<ContentMapping> _ContentMappings { get; set; }
         #endregion
 
         #region Properties
@@ -89,6 +90,18 @@ namespace Quasar.Controls.Associations.ViewModels
 
                 _Association = value;
                 OnPropertyChanged("Association");
+            }
+        }
+        public List<ContentMapping> ContentMappings
+        {
+            get => _ContentMappings;
+            set
+            {
+                if (_ContentMappings == value)
+                    return;
+
+                _ContentMappings = value;
+                OnPropertyChanged("ContentMappings");
             }
         }
         #endregion
