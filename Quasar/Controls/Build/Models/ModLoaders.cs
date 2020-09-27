@@ -17,24 +17,24 @@ namespace Quasar
     public class ModLoader : ObservableObject
     {
         #region Fields
-        private int _ID { get; set; }
+        private int _ModLoaderID { get; set; }
         private int _GameID { get; set; }
         private string _Name { get; set; }
         private string _BasePath { get; set; }
         private string _InstallPath { get; set; }
         #endregion
 
-        [XmlAttribute("ID")]
-        public int ID
+        [XmlAttribute("ModLoaderID")]
+        public int ModLoaderID
         {
-            get => _ID;
+            get => _ModLoaderID;
             set
             {
-                if (_ID == value)
+                if (_ModLoaderID == value)
                     return;
 
-                _ID = value;
-                OnPropertyChanged("ID");
+                _ModLoaderID = value;
+                OnPropertyChanged("ModLoaderID");
                 
             }
         }
@@ -45,11 +45,11 @@ namespace Quasar
             get => _GameID;
             set
             {
-                if (_ID == value)
+                if (_GameID == value)
                     return;
 
-                _ID = value;
-                OnPropertyChanged("ID");
+                _GameID = value;
+                OnPropertyChanged("GameID");
             }
         }
 

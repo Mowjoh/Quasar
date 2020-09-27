@@ -38,7 +38,7 @@ namespace Quasar.Controls.ModManagement.ViewModels
         private ObservableCollection<string> _QuasarDownloads { get; set; }
         private CollectionViewSource _CollectionViewSource { get; set; }
 
-        private string _SearchText { get; set; }
+        private string _SearchText { get; set; } = "";
         private bool _CreatorMode { get; set; }
         #endregion
 
@@ -231,6 +231,7 @@ namespace Quasar.Controls.ModManagement.ViewModels
 
                 _SearchText = value;
                 OnPropertyChanged("SearchText");
+                CollectionViewSource.View.Refresh();
             }
         }
 
@@ -320,7 +321,21 @@ namespace Quasar.Controls.ModManagement.ViewModels
             {
                 if (mli.ModListItemViewModel.LibraryMod.TypeID == SelectedGameModType.ID || SelectedGameModType.ID == -1)
                 {
-                    e.Accepted = true;
+                    if (SearchText != "")
+                    {
+                        if (mli.ModListItemViewModel.LibraryMod.APICategoryName.ToLower().Contains(SearchText.ToLower()))
+                        {
+                            e.Accepted = true;
+                        }
+                        else
+                        {
+                            e.Accepted = false;
+                        }
+                    }
+                    else
+                    {
+                        e.Accepted = true;
+                    }
                 }
                 else
                 {
@@ -329,7 +344,21 @@ namespace Quasar.Controls.ModManagement.ViewModels
             }
             else
             {
-                e.Accepted = true;
+                if (SearchText != "")
+                {
+                    if (mli.ModListItemViewModel.LibraryMod.APICategoryName.ToLower().Contains(SearchText.ToLower()))
+                    {
+                        e.Accepted = true;
+                    }
+                    else
+                    {
+                        e.Accepted = false;
+                    }
+                }
+                else
+                {
+                    e.Accepted = true;
+                }
             }
             
         }

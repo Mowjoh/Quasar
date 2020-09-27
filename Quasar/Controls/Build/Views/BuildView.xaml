@@ -17,10 +17,19 @@
         </Grid.ColumnDefinitions>
         <Label Content="Transfer Settings" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Style="{DynamicResource QuasarLabel}"/>
         <GroupBox Header="Transfer Options" HorizontalAlignment="Stretch" Height="250" Margin="10,50,10,0" VerticalAlignment="Top"  Foreground="{DynamicResource QuasarTextColor}">
+            <GroupBox.Style>
+                <Style TargetType="GroupBox">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Building}" Value="True">
+                            <Setter Property="IsEnabled" Value="False"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </GroupBox.Style>
             <Grid>
                 <RadioButton Content="Local Transfer (SD)" IsChecked="{Binding LocalSelected}" GroupName="TransferOption" HorizontalAlignment="Left" Margin="209,13,0,0" VerticalAlignment="Top" Foreground="{DynamicResource QuasarTextColor}"/>
                 <RadioButton Content="Wireless Transfer (FTP)" IsChecked="{Binding WirelessSelected}" GroupName="TransferOption" HorizontalAlignment="Left" Margin="10,13,0,0" VerticalAlignment="Top" Foreground="{DynamicResource QuasarTextColor}"/>
-                <ComboBox Margin="330,10,34,0" VerticalAlignment="Top" ItemsSource="{Binding Drives}" SelectedItem="{Binding SelectedDrive}" DisplayMemberPath="Name"/>
+                <ComboBox Margin="330,10,34,0" VerticalAlignment="Top" ItemsSource="{Binding Drives}" SelectedItem="{Binding SelectedDrive}" DisplayMemberPath="Info.Name"/>
                 <Button x:Name="Minimize" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,13,10,0">
                     <Button.Template>
                         <ControlTemplate TargetType="{x:Type Button}">
@@ -30,27 +39,38 @@
                 </Button>
                 <Label Content="Mod Loader :" HorizontalAlignment="Left" Margin="10,93,0,0" VerticalAlignment="Top" Style="{DynamicResource QuasarLabel}" Width="89"/>
                 <ComboBox HorizontalAlignment="Left" Margin="104,93,0,0" VerticalAlignment="Top" Width="235" ItemsSource="{Binding ModLoaders}" DisplayMemberPath="Name" SelectedItem="{Binding SelectedModLoader}"/>
-                <RadioButton Content="Wipe and Recreate" IsChecked="{Binding WipeSelected}" GroupName="TransferMode" HorizontalAlignment="Left" Margin="233,198,0,0" VerticalAlignment="Top" Foreground="{DynamicResource QuasarTextColor}"/>
-                <RadioButton Content="Comparative Mode" IsChecked="{Binding ComparativeSelected}" GroupName="TransferMode" HorizontalAlignment="Left" Margin="10,198,0,0" VerticalAlignment="Top" Foreground="{DynamicResource QuasarTextColor}"/>
                 <Label Content="How do you want Quasar to handle the file transfer ?" HorizontalAlignment="Left" Margin="10,169,0,0" VerticalAlignment="Top" Style="{DynamicResource QuasarLabel}" Width="329"/>
+                <RadioButton Content="Clean and Transfer" IsChecked="{Binding CleanSelected}" GroupName="TransferMode" HorizontalAlignment="Left" Margin="10,0,0,10" VerticalAlignment="Bottom" Foreground="{DynamicResource QuasarTextColor}"/>
+                <RadioButton Content="Synchronize Files" IsChecked="{Binding SynchronizeSelected}" GroupName="TransferMode" HorizontalAlignment="Center" Margin="0,0,0,10" VerticalAlignment="Bottom" Foreground="{DynamicResource QuasarTextColor}" RenderTransformOrigin="1.083,0.733"/>
+                <RadioButton Content="Overwrite Different Files" IsChecked="{Binding OverwriteSelected}" GroupName="TransferMode" HorizontalAlignment="Right" Margin="0,0,10,10" VerticalAlignment="Bottom" Foreground="{DynamicResource QuasarTextColor}" RenderTransformOrigin="1.083,0.733"/>
             </Grid>
         </GroupBox>
         <ScrollViewer Grid.Column="1" Grid.RowSpan="2" Background="#87000000">
             <TextBlock TextWrapping="Wrap" Text="{Binding Logs}" Foreground="{DynamicResource QuasarTextColor}"/>
         </ScrollViewer>
-        <Button Content="Send my mods to my Switch" HorizontalAlignment="Center" VerticalAlignment="Top" Width="184" Margin="188,310,188,0" Command="{Binding Path=BuildCommand}"/>
+        <Button Content="Send my mods to my Switch" HorizontalAlignment="Center" VerticalAlignment="Top" Width="184" Margin="188,310,188,0" Command="{Binding Path=BuildCommand}">
+            <Button.Style>
+                <Style TargetType="Button">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Building}" Value="True">
+                            <Setter Property="IsEnabled" Value="False"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+        </Button>
         <Label Content="Transfer Status :" HorizontalAlignment="Center" Margin="0,10,0,0" VerticalAlignment="Top" Style="{DynamicResource QuasarLabel}" Grid.Row="1"/>
-        <ProgressBar  Value="20" Height="10" Margin="10,115,10,0" Grid.Row="1" VerticalAlignment="Top"/>
-        <Label Content="Step" HorizontalAlignment="Left" Margin="10,46,0,0" VerticalAlignment="Top" Style="{DynamicResource QuasarLabel}" Grid.Row="1" Width="420"/>
-        <Label Content="Sub-Step" HorizontalAlignment="Left" Margin="10,75,0,0" VerticalAlignment="Top" Style="{DynamicResource QuasarLabel}" Grid.Row="1" Width="420"/>
-        <Label Content="20/100" HorizontalAlignment="Center" Margin="253,140,260,0" VerticalAlignment="Top" Style="{DynamicResource QuasarLabel}" Grid.Row="1"/>
-        <Label Content="5,3 MB/s" HorizontalAlignment="Center" HorizontalContentAlignment="Right" Margin="435,46,5,0" VerticalAlignment="Top" Style="{DynamicResource QuasarLabel}" Grid.Row="1" Width="120"/>
-        <Label Content="15 MB / 37,4 MB" HorizontalAlignment="Center" HorizontalContentAlignment="Right" Margin="435,75,5,0" VerticalAlignment="Top" Style="{DynamicResource QuasarLabel}" Grid.Row="1" Width="120"/>
+        <ProgressBar  Value="{Binding BuildProgress}"  IsIndeterminate="{Binding ProgressBarStyle}" Height="10" Margin="10,115,10,0" Grid.Row="1" VerticalAlignment="Top"/>
+        <Label Content="{Binding Steps}" HorizontalAlignment="Left" Margin="10,46,0,0" VerticalAlignment="Top" Style="{DynamicResource QuasarLabel}" Grid.Row="1" Width="420"/>
+        <Label Content="{Binding Size}" HorizontalContentAlignment="Right" HorizontalAlignment="Right" Margin="10,46,0,0" VerticalAlignment="Top" Style="{DynamicResource QuasarLabel}" Grid.Row="1" Width="420"/>
+        <Label Content="{Binding SubStep}" HorizontalAlignment="Left" Margin="10,75,0,0" VerticalAlignment="Top" Style="{DynamicResource QuasarLabel}" Grid.Row="1" Width="420"/>
+        <Label Content="{Binding Speed}" HorizontalContentAlignment="Right" HorizontalAlignment="Right" Margin="10,75,0,0" VerticalAlignment="Top" Style="{DynamicResource QuasarLabel}" Grid.Row="1" Width="420"/>
+        <Label Content="{Binding Total}" HorizontalAlignment="Center" Margin="253,140,260,0" VerticalAlignment="Top" Style="{DynamicResource QuasarLabel}" Grid.Row="1"/>
         <StackPanel Orientation="Horizontal" Margin="0,10,10,0" VerticalAlignment="Top" HorizontalAlignment="Right">
             <Label Content="Active Workspace :"  Style="{DynamicResource QuasarLabel}"/>
             <Label Content="{Binding ActiveWorkspace.Name}"  Style="{DynamicResource QuasarLabel}"/>
         </StackPanel>
-        
+
 
     </Grid>
 </UserControl>

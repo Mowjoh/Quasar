@@ -1,10 +1,13 @@
 ﻿using FluentFTP;
 using MediaDevices;
+using Quasar.Controls.Build.ViewModels;
+using Quasar.FileSystem;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -15,23 +18,37 @@ namespace Quasar.Controls.Build.Models
         public abstract bool VerifyOK();
         public abstract bool CheckFolderExists(string FolderPath);
         public abstract bool CheckFileExists(string FilePath);
-        public abstract bool SendFile(string SourceFilePath, string FilePath);
+        public abstract bool SendFile(string SourceFilePath, string FilePath, bool OverrideHash = false);
         public abstract bool DeleteFile(string FilePath);
         public abstract bool DeleteFolder(string FolderPath);
+        public abstract void GetFile(string Remote, string DestinationFilePath);
+        public abstract List<FileReference> GetRemoteFiles(string FolderPath);
+        public abstract void SetHashes(List<Hash> _Hashes);
+        public abstract List<Hash> GetHashes();
     }
 
     public class FTPWriter : FileWriter
     {
+        #region Properties
         public FtpClient Client { get; set; }
         public string Adress { get; set; }
         public string Port { get; set; }
         public string Username { get; set; }
         public string Password { get; set; }
+        public Action<FtpProgress> Progress { get; set; }
+        BuildViewModel BVM { get; set; }
 
-        public FTPWriter()
+        public List<Hash> Hashes { get; set; }
+
+        List<FileReference> list { get; set; }
+
+        #endregion
+        public FTPWriter(BuildViewModel _BVM)
         {
             if (Properties.Settings.Default.FTPValid)
             {
+                BVM = _BVM;
+
                 Adress = Properties.Settings.Default.FTPAddress.Split(':')[0];
                 Port = Properties.Settings.Default.FTPAddress.Split(':')[1];
                 Username = Properties.Settings.Default.FTPUN;
@@ -43,7 +60,18 @@ namespace Quasar.Controls.Build.Models
                 {
                     Client.Credentials = new System.Net.NetworkCredential(Username, Password);
                 }
+
+                Client.RecursiveList = true;
+
                 Client.Connect();
+
+                Progress = delegate (FtpProgress p) {
+                    if (p.Progress != 100)
+                    {
+                        BVM.SetSpeed(String.Format("{0}/s, {1}%", WriterOperations.BytesToString(p.TransferSpeed), p.Progress.ToString().Substring(0, 2)));
+                    }
+                };
+
             }
         }
 
@@ -61,10 +89,36 @@ namespace Quasar.Controls.Build.Models
         {
             return Client.FileExists(FilePath);
         }
-        public override bool SendFile(string SourceFilePath, string FilePath)
+        public override bool SendFile(string SourceFilePath, string FilePath, bool OverrideHash = false)
         {
-            FtpStatus Status = Client.UploadFile(SourceFilePath, FilePath, FtpRemoteExists.Overwrite, true);
-            return Status.IsSuccess();
+            if (!OverrideHash)
+            {
+                Hash distantHash = Hashes.SingleOrDefault(H => H.FilePath == FilePath);
+                string localHash = WriterOperations.GetHash(SourceFilePath);
+                if (distantHash != null)
+                {
+                    if (distantHash.HashString != localHash)
+                    {
+                        BVM.SetSize(String.Format("Current File Size : {0}", WriterOperations.BytesToString(new FileInfo(SourceFilePath).Length)));
+                        FtpStatus Status = Client.UploadFile(SourceFilePath, FilePath, FtpRemoteExists.Overwrite, true, FtpVerify.None, Progress);
+                        distantHash.HashString = localHash;
+                        return Status.IsSuccess();
+                    }
+                }
+                else
+                {
+                    BVM.SetSize(String.Format("Current File Size : {0}", WriterOperations.BytesToString(new FileInfo(SourceFilePath).Length)));
+                    FtpStatus Status = Client.UploadFile(SourceFilePath, FilePath, FtpRemoteExists.Overwrite, true, FtpVerify.None, Progress);
+                    Hashes.Add(new Hash() { HashString = localHash, FilePath = FilePath });
+                    return Status.IsSuccess();
+
+                }
+            }
+            else
+            {
+                FtpStatus Status = Client.UploadFile(SourceFilePath, FilePath, FtpRemoteExists.Overwrite, true, FtpVerify.None, Progress);
+            }
+            return true;
         }
         public override bool DeleteFile(string FilePath)
         {
@@ -89,11 +143,75 @@ namespace Quasar.Controls.Build.Models
                 return false;
             }
         }
+        public override List<FileReference> GetRemoteFiles(string FolderPath)
+        {
+            list = new List<FileReference>();
 
+            try
+            {
+                FtpListItem[] files = Client.GetListing(FolderPath);
+                ListFiles(files);
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine(e);
+            }
+            
+
+            return list;
+        }
+        public override void GetFile(string Remote, string DestinationFilePath)
+        {
+            Client.DownloadFile(DestinationFilePath, Remote);
+        }
+        public override void SetHashes(List<Hash> _Hashes)
+        {
+            Hashes = _Hashes;
+        }
+        public override List<Hash> GetHashes()
+        {
+            return Hashes;
+        }
+
+
+        public void ListFiles(FtpListItem[] Files)
+        {
+            try
+            {
+                foreach (FtpListItem item in Files)
+                {
+                    if (item.Type == FtpFileSystemObjectType.File)
+                    {
+                        list.Add(new FileReference()
+                        {
+                            OutputFilePath = item.FullName
+                        });
+                    }
+                    if (item.Type == FtpFileSystemObjectType.Directory)
+                    {
+                        FtpListItem[] folderFiles = Client.GetListing(item.FullName);
+                        ListFiles(folderFiles);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+
+        }
     }
     public class SDWriter : FileWriter
     {
         public string LetterPath { get; set; }
+        BuildViewModel BVM { get; set; }
+        public List<Hash> Hashes { get; set; }
+
+        public SDWriter(BuildViewModel _BVM)
+        {
+            BVM = _BVM;
+        }
+
         public override bool VerifyOK()
         {
             return true;
@@ -106,11 +224,38 @@ namespace Quasar.Controls.Build.Models
         {
             return File.Exists(FilePath);
         }
-        public override bool SendFile(string SourceFilePath, string FilePath)
+        public override bool SendFile(string SourceFilePath, string FilePath, bool OverrideHash = false)
         {
             try
             {
-                File.Copy(SourceFilePath, FilePath, true);
+                if (!OverrideHash)
+                {
+                    Hash distantHash = Hashes.SingleOrDefault(H => H.FilePath == FilePath);
+                    string localHash = WriterOperations.GetHash(SourceFilePath);
+                    if (distantHash != null)
+                    {
+                        if (distantHash.HashString != localHash)
+                        {
+                            BVM.SetSize(String.Format("Current File Size : {0}", WriterOperations.BytesToString(new FileInfo(SourceFilePath).Length)));
+                            Folderino.CheckCopyFile(SourceFilePath, FilePath);
+                            distantHash.HashString = localHash;
+                            return true;
+                        }
+                    }
+                    else
+                    {
+                        BVM.SetSize(String.Format("Current File Size : {0}", WriterOperations.BytesToString(new FileInfo(SourceFilePath).Length)));
+                        Folderino.CheckCopyFile(SourceFilePath, FilePath);
+                        Hashes.Add(new Hash() { HashString = localHash, FilePath = FilePath });
+                        return true;
+
+                    }
+                }
+                else
+                {
+                    Folderino.CheckCopyFile(SourceFilePath, FilePath);
+                }
+
             }
             catch(Exception e)
             {
@@ -142,6 +287,33 @@ namespace Quasar.Controls.Build.Models
             }
             return true;
         }
+        public override void GetFile(string Remote, string DestinationFilePath)
+        {
+            File.Copy(Remote, DestinationFilePath, true);
+        }
+        public override List<FileReference> GetRemoteFiles(string FolderPath)
+        {
+            List<FileReference> list = new List<FileReference>();
+            if (Directory.Exists(FolderPath))
+            {
+                foreach (string file in Directory.GetFiles(FolderPath, "*", SearchOption.AllDirectories))
+                {
+                    list.Add(new FileReference()
+                    {
+                        OutputFilePath = file
+                    });
+                }
+            }
+            return list;
+        }
+        public override void SetHashes(List<Hash> _Hashes)
+        {
+            Hashes = _Hashes;
+        }
+        public override List<Hash> GetHashes()
+        {
+            return Hashes;
+        }
     }
     public class MTPWriter : FileWriter
     {
@@ -161,7 +333,7 @@ namespace Quasar.Controls.Build.Models
         {
             return MediaD.FileExists(FilePath);
         }
-        public override bool SendFile(string SourceFilePath, string FilePath)
+        public override bool SendFile(string SourceFilePath, string FilePath, bool OverrideHash = false)
         {
 
             return false;
@@ -173,6 +345,67 @@ namespace Quasar.Controls.Build.Models
         public override bool DeleteFolder(string FolderPath)
         {
             return false;
+        }
+        public override void GetFile(string Remote, string DestinationFilePath)
+        {
+        }
+        public override List<FileReference> GetRemoteFiles(string FolderPath)
+        {
+            return null;
+        }
+
+        public override void SetHashes(List<Hash> _Hashes)
+        {
+
+        }
+        public override List<Hash> GetHashes()
+        {
+            return null;
+        }
+    }
+
+    public static class WriterOperations
+    {
+        public static String BytesToString(long len)
+        {
+            string[] sizes = { "B", "KB", "MB", "GB", "TB" };
+            int order = 0;
+            while (len >= 1024 && order < sizes.Length - 1)
+            {
+                order++;
+                len = len / 1024;
+            }
+
+            // Adjust the format string to your preferences. For example "{0:0.#}{1}" would
+            // show a single decimal place, and no space.
+            string result = String.Format("{0:0.##} {1}", len, sizes[order]);
+            return result;
+        }
+        public static String BytesToString(double len)
+        {
+            string[] sizes = { "B", "KB", "MB", "GB", "TB" };
+            int order = 0;
+            while (len >= 1024 && order < sizes.Length - 1)
+            {
+                order++;
+                len = len / 1024;
+            }
+
+            // Adjust the format string to your preferences. For example "{0:0.#}{1}" would
+            // show a single decimal place, and no space.
+            string result = String.Format("{0:0.##} {1}", len, sizes[order]);
+            return result;
+        }
+
+        public static string GetHash(string SourceFilePath)
+        {
+            using (var md5 = MD5.Create())
+            {
+                using (var stream = File.OpenRead(SourceFilePath))
+                {
+                    return BitConverter.ToString(md5.ComputeHash(stream)).Replace("-", "");
+                }
+            }
         }
     }
 }

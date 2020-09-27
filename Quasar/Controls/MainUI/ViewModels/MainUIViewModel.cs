@@ -631,6 +631,7 @@ namespace Quasar
 
             BuildView = new BuildView();
             BVM = new BuildViewModel(ModLoaders, Workspaces, ActiveWorkspace,Mods,ContentMappings,InternalModTypes,GameDatas,Games);
+            BVM.Log = log;
             BuildView.DataContext = BVM;
             TabItems.Add(new TabItem() { Content = BuildView, Header = "File Transfer", Foreground = new SolidColorBrush() { Color = Colors.White } });
 

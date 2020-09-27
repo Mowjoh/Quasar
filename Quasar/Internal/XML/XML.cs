@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Quasar.Controls.Build.Models;
+using System.Collections.Generic;
 using System.IO;
 using System.Xml.Serialization;
 
@@ -84,6 +85,32 @@ namespace Quasar.XMLResources
             using (StreamWriter wr = new StreamWriter(destination))
             {
                 xmlSerializer.Serialize(wr, type);
+            }
+        }
+
+        public static List<Hash> GetHashes(string FilePath)
+        {
+            List<Hash> Hashes = null;
+
+            XmlSerializer serializer = new XmlSerializer(typeof(Hashes));
+
+            using (FileStream fileStream = new FileStream(FilePath, FileMode.Open))
+            {
+                Hashes result = (Hashes)serializer.Deserialize(fileStream);
+                Hashes = result.HashList;
+            }
+
+            return Hashes;
+        }
+
+        public static void SaveHashes(string FilePath, List<Hash> Hashes)
+        {
+
+            XmlSerializer xmlSerializer = new XmlSerializer(typeof(Hashes));
+
+            using (StreamWriter wr = new StreamWriter(FilePath))
+            {
+                xmlSerializer.Serialize(wr, new Hashes() { HashList = Hashes });
             }
         }
 

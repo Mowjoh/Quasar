@@ -20,29 +20,165 @@ namespace Quasar.Controls.Assignation.ViewModels
     public class AssociationViewModel : ObservableObject
     {
         #region Fields
+
+        #region View
+        private ObservableCollection<GameDataUXItem> _GameDataUXs { get; set; }
+        private GameDataItem _SelectedGameDataItem { get; set; }
+        private ObservableCollection<SlotItem> _SlotItems { get; set; }
+        private ObservableCollection<SlotItem> _AvailableSlots { get; set; }
+        private CollectionViewSource _ItemsCollectionViewSource { get; set; }
+        private bool _SelectionVisible { get; set; }
+        private bool _TypesGrouped { get; set; }
+        private string _FilterText { get; set; }
+        #endregion
+
+        #region Data
         private ObservableCollection<Workspace> _Workspaces { get; set; }
         private Workspace _ActiveWorkspace { get; set; }
         private ObservableCollection<ContentMapping> _ContentMappings { get; set; }
         private ObservableCollection<GameData> _GameDatas { get; set; }
-        private ObservableCollection<GameDataUXItem> _GameDataUXs { get; set; }
-        private GameDataItem _SelectedGameDataItem { get; set; }
-        private GameData _SelectedGameData { get; set; }
-        private GameDataUXItem _SelectedGameDataCategory { get; set; }
-        private CollectionViewSource _ItemsCollectionViewSource { get; set; }
-        private ObservableCollection<SlotItem> _SlotItems { get; set; }
-        private ObservableCollection<SlotItem> _AvailableSlots { get; set; }
         private ObservableCollection<InternalModType> _InternalModTypes { get; set; }
         private ObservableCollection<InternalModType> _SelectedInternalModTypes { get; set; }
         private InternalModType _SelectedInternalModType { get; set; }
         private ObservableCollection<InternalModTypeGroup> _SelectedInternalModTypeGroups { get; set; }
         private InternalModTypeGroup _SelectedInternalModTypeGroup { get; set; }
-        private bool _SelectionVisible { get; set; }
-        private bool _TypesGrouped { get; set; }
-        private string _FilterText { get; set; }
+        private GameData _SelectedGameData { get; set; }
+        private GameDataUXItem _SelectedGameDataCategory { get; set; }
+        #endregion
+
+        #region Commands
         private ICommand _SelectItemCommand { get; set; }
+        #endregion
+        
         #endregion
 
         #region Properties
+
+        #region View
+        public ObservableCollection<GameDataUXItem> GameDataUXs
+        {
+            get => _GameDataUXs;
+            set
+            {
+                if (_GameDataUXs == value)
+                    return;
+
+                _GameDataUXs = value;
+                OnPropertyChanged("GameDataUXs");
+            }
+        }
+        public GameDataItem SelectedGameDataItem
+        {
+            get => _SelectedGameDataItem;
+            set
+            {
+                if (_SelectedGameDataItem == value)
+                    return;
+
+                _SelectedGameDataItem = value;
+                OnPropertyChanged("SelectedGameDataItem");
+                if (TypesGrouped && SelectedInternalModTypeGroup != null || !TypesGrouped && SelectedInternalModType != null)
+                {
+                    ShowSlots();
+                }
+            }
+        }
+        public ObservableCollection<SlotItem> SlotItems
+        {
+            get => _SlotItems;
+            set
+            {
+                if (_SlotItems == value)
+                    return;
+
+                _SlotItems = value;
+                OnPropertyChanged("SlotItems");
+            }
+        }
+        public ObservableCollection<SlotItem> AvailableSlots
+        {
+            get => _AvailableSlots;
+            set
+            {
+                if (_AvailableSlots == value)
+                    return;
+
+                _AvailableSlots = value;
+                OnPropertyChanged("AvailableSlots");
+            }
+        }
+        public CollectionViewSource ItemsCollectionViewSource
+
+        {
+            get => _ItemsCollectionViewSource;
+            set
+            {
+                if (_ItemsCollectionViewSource == value)
+                    return;
+
+                _ItemsCollectionViewSource = value;
+                OnPropertyChanged("ItemsCollectionViewSource");
+            }
+        }
+        public bool SelectionVisible
+        {
+            get => _SelectionVisible;
+            set
+            {
+                if (_SelectionVisible == value)
+                    return;
+
+                _SelectionVisible = value;
+                OnPropertyChanged("SelectionVisible");
+            }
+        }
+        public bool TypesGrouped
+        {
+            get => _TypesGrouped;
+            set
+            {
+                Properties.Settings.Default.GroupInternalModTypes = value;
+                Properties.Settings.Default.Save();
+
+                if (_TypesGrouped == value)
+                    return;
+
+                _TypesGrouped = value;
+                OnPropertyChanged("TypesGrouped");
+
+                if (value)
+                {
+                    if(SelectedInternalModTypeGroups != null)
+                        SelectedInternalModTypeGroup = SelectedInternalModTypeGroups[0];
+                }
+                else
+                {
+                    if (SelectedInternalModTypes != null)
+                        SelectedInternalModType = SelectedInternalModTypes[0];
+                }
+                ShowSlots();
+            }
+        }
+        public string FilterText
+        {
+            get => _FilterText;
+            set
+            {
+                if (_FilterText == value)
+                    return;
+
+                _FilterText = value;
+                if (ItemsCollectionViewSource != null)
+                {
+                    ItemsCollectionViewSource.View.Refresh();
+                }
+
+                OnPropertyChanged("FilterText");
+            }
+        }
+        #endregion
+
+        #region Data
         /// <summary>
         /// List of workspaces
         /// </summary>
@@ -101,58 +237,6 @@ namespace Quasar.Controls.Assignation.ViewModels
 
                 _GameDatas = value;
                 OnPropertyChanged("GameDatas");
-            }
-        }
-        public ObservableCollection<GameDataUXItem> GameDataUXs
-        {
-            get => _GameDataUXs;
-            set
-            {
-                if (_GameDataUXs == value)
-                    return;
-
-                _GameDataUXs = value;
-                OnPropertyChanged("GameDataUXs");
-            }
-        }
-        public GameDataItem SelectedGameDataItem
-        {
-            get => _SelectedGameDataItem;
-            set
-            {
-                if (_SelectedGameDataItem == value)
-                    return;
-
-                _SelectedGameDataItem = value;
-                OnPropertyChanged("SelectedGameDataItem");
-                if(TypesGrouped && SelectedInternalModTypeGroup != null || !TypesGrouped && SelectedInternalModType != null)
-                {
-                    ShowSlots();
-                }
-            }
-        }
-        public ObservableCollection<SlotItem> SlotItems
-        {
-            get => _SlotItems;
-            set
-            {
-                if (_SlotItems == value)
-                    return;
-
-                _SlotItems = value;
-                OnPropertyChanged("SlotItems");
-            }
-        }
-        public ObservableCollection<SlotItem> AvailableSlots
-        {
-            get => _AvailableSlots;
-            set
-            {
-                if (_AvailableSlots == value)
-                    return;
-
-                _AvailableSlots = value;
-                OnPropertyChanged("AvailableSlots");
             }
         }
         public ObservableCollection<InternalModType> InternalModTypes
@@ -247,21 +331,23 @@ namespace Quasar.Controls.Assignation.ViewModels
                 if (_SelectedGameDataCategory == value)
                     return;
 
-                if(value != null)
+                if (value != null)
                 {
                     ItemsCollectionViewSource.Source = value.GameDataCategory.Items;
+                    ItemsCollectionViewSource.View.MoveCurrentToFirst();    
+
                     SelectedInternalModTypes = new ObservableCollection<InternalModType>(InternalModTypes.Where(i => i.Association == value.GameDataCategory.ID));
                     SelectedInternalModTypeGroups = new ObservableCollection<InternalModTypeGroup>();
-                    foreach(InternalModType imt in SelectedInternalModTypes)
+                    foreach (InternalModType imt in SelectedInternalModTypes)
                     {
-                        if(SelectedInternalModTypeGroups.Count == 0)
+                        if (SelectedInternalModTypeGroups.Count == 0)
                         {
                             InternalModTypeGroup group = new InternalModTypeGroup() { InternalModTypes = new ObservableCollection<InternalModType>() { imt }, Name = imt.TypeGroup };
                             SelectedInternalModTypeGroups.Add(group);
                         }
                         else
                         {
-                            if(SelectedInternalModTypeGroups.Any(g => g.Name == imt.TypeGroup))
+                            if (SelectedInternalModTypeGroups.Any(g => g.Name == imt.TypeGroup))
                             {
                                 InternalModTypeGroup group = SelectedInternalModTypeGroups.First(g => g.Name == imt.TypeGroup);
                                 group.InternalModTypes.Add(imt);
@@ -273,71 +359,20 @@ namespace Quasar.Controls.Assignation.ViewModels
                             }
                         }
                     }
+
+                SelectedInternalModType = SelectedInternalModTypes[0];
+                SelectedInternalModTypeGroup = SelectedInternalModTypeGroups[0];
+
                 }
 
                 _SelectedGameDataCategory = value;
                 OnPropertyChanged("SelectedGameDataCategory");
             }
         }
-        public CollectionViewSource ItemsCollectionViewSource
 
-        {
-            get => _ItemsCollectionViewSource;
-            set
-            {
-                if (_ItemsCollectionViewSource == value)
-                    return;
+        #endregion
 
-                _ItemsCollectionViewSource = value;
-                OnPropertyChanged("ItemsCollectionViewSource");
-            }
-        }
-        public bool SelectionVisible
-        {
-            get => _SelectionVisible;
-            set
-            {
-                if (_SelectionVisible == value)
-                    return;
-
-                _SelectionVisible = value;
-                OnPropertyChanged("SelectionVisible");
-            }
-        }
-        public bool TypesGrouped
-        {
-            get => _TypesGrouped;
-            set
-            {
-                Properties.Settings.Default.GroupInternalModTypes = value;
-                Properties.Settings.Default.Save();
-
-                if (_TypesGrouped == value)
-                    return;
-
-                _TypesGrouped = value;
-                SelectedInternalModType = null;
-                ShowSlots();
-                OnPropertyChanged("TypesGrouped");
-            }
-        }
-        public string FilterText
-        {
-            get => _FilterText;
-            set
-            {
-                if (_FilterText == value)
-                    return;
-
-                _FilterText = value;
-                if(ItemsCollectionViewSource != null)
-                {
-                    ItemsCollectionViewSource.View.Refresh();
-                }
-                
-                OnPropertyChanged("FilterText");
-            }
-        }
+        #region Commands
         public ICommand SelectItemCommand
         {
             get
@@ -349,6 +384,7 @@ namespace Quasar.Controls.Assignation.ViewModels
                 return _SelectItemCommand;
             }
         }
+        #endregion
 
         #endregion
 

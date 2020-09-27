@@ -103,6 +103,7 @@
     </Compile>
     <Compile Include="Controls\Build\Models\Build.cs" />
     <Compile Include="Controls\Build\Models\FileWriter.cs" />
+    <Compile Include="Controls\Build\Models\Hash.cs" />
     <Compile Include="Controls\Build\Models\ModLoaders.cs" />
     <Compile Include="Controls\Build\Models\USBDrive.cs" />
     <Compile Include="Controls\Build\ViewModels\BuildViewModel.cs" />
