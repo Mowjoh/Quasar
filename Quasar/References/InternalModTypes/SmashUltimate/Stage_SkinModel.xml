@@ -1,9 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<InternalModType xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="Stage" Filename="SmashUltimate/Stage_SkinModel" ID="6" GameID="1" Association="2" Slots="1" TypeGroup="Stage">
+<InternalModType xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="Stage" Filename="SmashUltimate/Stage_SkinModel" TypeGroup="Stage" ID="6" GameID="1" Association="2" Slots="1" IgnoreableGameDataAssociation="false">
   <InternalModTypeFile ID="0">
     <SourcePath>stage/{GameData}/{Folder}/model/{Folder}</SourcePath>
     <SourceFile>{AnyFile}.nutexb</SourceFile>
-    <BuilderFile BuilderID="0" File ="{AnyFile}.nutexb" Path ="stage/{GameData}/{Folder}/model/{Folder}"/>
-    <BuilderFile BuilderID="1" File ="{AnyFile}.nutexb" Path ="arc/stage/{GameData}/{Folder}/model/{Folder}"/>
+    <BuilderFile BuilderID="1" Path="arc/stage/{GameData}/{Folder}/model/{Folder}" File="{AnyFile}.nutexb" />
+    <BuilderFile BuilderID="2" Path="stage/{GameData}/{Folder}/model/{Folder}" File="{AnyFile}.nutexb" />
+  </InternalModTypeFile>
+  <InternalModTypeFile ID="1">
+    <SourcePath>stage/{GameData}/{Folder}/lut</SourcePath>
+    <SourceFile>{AnyFile}.nutexb</SourceFile>
+    <BuilderFile BuilderID="1" Path="arc/stage/{GameData}/{Folder}/lut" File="{AnyFile}.nutexb" />
+    <BuilderFile BuilderID="2" Path="stage/{GameData}/{Folder}/lut" File="{AnyFile}.nutexb" />
+  </InternalModTypeFile>
+  <InternalModTypeFile ID="2">
+    <SourcePath>stage/{GameData}/{Folder}/model/{Folder}</SourcePath>
+    <SourceFile>model.numatb</SourceFile>
+    <BuilderFile BuilderID="1" Path="arc/stage/{GameData}/{Folder}/model/{Folder}" File="model.numatb" />
+    <BuilderFile BuilderID="2" Path="stage/{GameData}/{Folder}/model/{Folder}" File="model.numatb" />
+  </InternalModTypeFile>
+  <InternalModTypeFile ID="3">
+    <SourcePath>stage/{GameData}/{Folder}/model/{Folder}</SourcePath>
+    <SourceFile>model.numdlb</SourceFile>
+    <BuilderFile BuilderID="1" Path="arc/stage/{GameData}/{Folder}/model/{Folder}" File="model.numdlb" />
+    <BuilderFile BuilderID="2" Path="stage/{GameData}/{Folder}/model/{Folder}" File="model.numdlb" />
+  </InternalModTypeFile>
+  <InternalModTypeFile ID="4">
+    <SourcePath>stage/{GameData}/{Folder}/model/{Folder}</SourcePath>
+    <SourceFile>model.numdlb</SourceFile>
+    <BuilderFile BuilderID="1" Path="arc/stage/{GameData}/{Folder}/model/{Folder}" File="model.numdlb" />
+    <BuilderFile BuilderID="2" Path="stage/{GameData}/{Folder}/model/{Folder}" File="model.numdlb" />
   </InternalModTypeFile>
 </InternalModType>

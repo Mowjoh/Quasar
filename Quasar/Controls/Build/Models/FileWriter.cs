@@ -1,4 +1,5 @@
 ﻿using FluentFTP;
+using log4net;
 using MediaDevices;
 using Quasar.Controls.Build.ViewModels;
 using Quasar.FileSystem;
@@ -41,7 +42,7 @@ namespace Quasar.Controls.Build.Models
         public List<Hash> Hashes { get; set; }
 
         List<FileReference> list { get; set; }
-
+        public ILog Log { get; set; }
         #endregion
         public FTPWriter(BuildViewModel _BVM)
         {
@@ -100,6 +101,7 @@ namespace Quasar.Controls.Build.Models
                     if (distantHash.HashString != localHash)
                     {
                         BVM.SetSize(String.Format("Current File Size : {0}", WriterOperations.BytesToString(new FileInfo(SourceFilePath).Length)));
+                        Log.Debug(String.Format("Updating File {0} - {1}", SourceFilePath, FilePath));
                         FtpStatus Status = Client.UploadFile(SourceFilePath, FilePath, FtpRemoteExists.Overwrite, true, FtpVerify.None, Progress);
                         distantHash.HashString = localHash;
                         return Status.IsSuccess();
@@ -110,6 +112,7 @@ namespace Quasar.Controls.Build.Models
                     BVM.SetSize(String.Format("Current File Size : {0}", WriterOperations.BytesToString(new FileInfo(SourceFilePath).Length)));
                     FtpStatus Status = Client.UploadFile(SourceFilePath, FilePath, FtpRemoteExists.Overwrite, true, FtpVerify.None, Progress);
                     Hashes.Add(new Hash() { HashString = localHash, FilePath = FilePath });
+                    Log.Debug(String.Format("Adding File {0} - {1}", SourceFilePath, FilePath));
                     return Status.IsSuccess();
 
                 }
@@ -117,6 +120,7 @@ namespace Quasar.Controls.Build.Models
             else
             {
                 FtpStatus Status = Client.UploadFile(SourceFilePath, FilePath, FtpRemoteExists.Overwrite, true, FtpVerify.None, Progress);
+                Log.Debug(String.Format("Adding File disregarding Hash {0} - {1}", SourceFilePath, FilePath));
             }
             return true;
         }
@@ -124,7 +128,12 @@ namespace Quasar.Controls.Build.Models
         {
             try
             {
+                Hash x = Hashes.SingleOrDefault(h => h.FilePath == FilePath);
+                if (x != null)
+                    Hashes.Remove(x);
+                Log.Debug(String.Format("Deleting File {0}", FilePath));
                 Client.DeleteFile(FilePath);
+
                 return true;
             }catch(Exception e)
             {
@@ -206,6 +215,7 @@ namespace Quasar.Controls.Build.Models
         public string LetterPath { get; set; }
         BuildViewModel BVM { get; set; }
         public List<Hash> Hashes { get; set; }
+        public ILog Log { get; set; }
 
         public SDWriter(BuildViewModel _BVM)
         {
@@ -239,6 +249,7 @@ namespace Quasar.Controls.Build.Models
                             BVM.SetSize(String.Format("Current File Size : {0}", WriterOperations.BytesToString(new FileInfo(SourceFilePath).Length)));
                             Folderino.CheckCopyFile(SourceFilePath, FilePath);
                             distantHash.HashString = localHash;
+                            Log.Debug(String.Format("Updating File {0} - {1}",SourceFilePath, FilePath));
                             return true;
                         }
                     }
@@ -247,6 +258,7 @@ namespace Quasar.Controls.Build.Models
                         BVM.SetSize(String.Format("Current File Size : {0}", WriterOperations.BytesToString(new FileInfo(SourceFilePath).Length)));
                         Folderino.CheckCopyFile(SourceFilePath, FilePath);
                         Hashes.Add(new Hash() { HashString = localHash, FilePath = FilePath });
+                        Log.Debug(String.Format("Adding File {0} - {1}", SourceFilePath, FilePath));
                         return true;
 
                     }
@@ -267,7 +279,12 @@ namespace Quasar.Controls.Build.Models
         {
             try
             {
+                Hash x = Hashes.SingleOrDefault(h => h.FilePath == FilePath);
+                if (x != null)
+                    Hashes.Remove(x);
+
                 File.Delete(FilePath);
+                Log.Debug(String.Format("Deleting File {0}", FilePath));
             }
             catch (Exception e)
             {
@@ -320,6 +337,7 @@ namespace Quasar.Controls.Build.Models
         public string MediaDevice { get; set; }
 
         public MediaDevice MediaD { get; set; }
+        public ILog Log { get; set; }
 
         public override bool VerifyOK()
         {

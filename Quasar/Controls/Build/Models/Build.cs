@@ -1,4 +1,5 @@
 ﻿using FluentFTP.Rules;
+using log4net;
 using Quasar.Controls.Build.ViewModels;
 using Quasar.Controls.Common.Models;
 using Quasar.FileSystem;
@@ -68,6 +69,8 @@ namespace Quasar.Controls.Build.Models
 
         List<FileReference> FilesToBuild { get; set; }
         List<FileReference> DistantFiles { get; set; }
+
+        
 
         #endregion
 
@@ -200,7 +203,6 @@ namespace Quasar.Controls.Build.Models
                             if (reference.OutputFilePath.Split('/')[reference.OutputFilePath.Split('/').Length - 1] != "Hashes.xml")
                             {
                                 Writer.DeleteFile(reference.OutputFilePath);
-                                ViewModel.Log.Debug(String.Format("Deleted File : {0}", reference.OutputFilePath));
                             }
                         }
                     }
@@ -228,7 +230,6 @@ namespace Quasar.Controls.Build.Models
                     foreach (FileReference Ferb in AssociatedReferences)
                     {
                         SetProgression((TotalFiles - FilesToBuild.Count), TotalFiles);
-                        ViewModel.Log.Debug(String.Format("Copying File {0} to {1}",Ferb.SourceFilePath,Ferb.OutputFilePath));
                         Writer.SendFile(Ferb.SourceFilePath, Ferb.OutputFilePath);
                         FilesToBuild.Remove(Ferb);
                     }
@@ -282,9 +283,9 @@ namespace Quasar.Controls.Build.Models
 
                 InternalModTypeFile imtf = imt.Files.Find(f => f.ID == file.InternalModTypeFileID);
 
-                BuilderFile bfi = imtf.Files[ModLoader];
+                BuilderFile bfi = imtf.Files.Single(f => f.BuilderID == ModLoader);
 
-                string[] output = BuilderActions.FormatOutput(bfi.File, bfi.Path, GDI.Attributes[0].Value, file, cm);
+                string[] output = BuilderActions.FormatOutput(bfi.File, bfi.Path, GDI.Attributes[0].Value, file, cm,ass);
                 string FinalDestination = WorkspacePath + output[0] + "/" + output[1];
                 FinalDestination = FinalDestination.Replace(@"{Workspace}", ViewModel.ActiveWorkspace.Name);
                 FinalDestination = FinalDestination.Replace(@"/", @"\");
@@ -302,7 +303,7 @@ namespace Quasar.Controls.Build.Models
 
     static class BuilderActions
     {
-        public static string[] FormatOutput(string file, string path, string GameDataItem, ContentMappingFile cmf, ContentMapping cm)
+        public static string[] FormatOutput(string file, string path, string GameDataItem, ContentMappingFile cmf, ContentMapping cm,Association ass)
         {
             string OutputFile = file;
             string OutputPath = path;
@@ -332,9 +333,9 @@ namespace Quasar.Controls.Build.Models
 
             OutputFile = GameDataReplacinator.Replace(OutputFile, GameDataItem, 1);
 
-            OutputFile = SlotReplacinatorSingle.Replace(OutputFile, cm.Slot.ToString("0"), 1);
-            OutputFile = SlotReplacinatorDouble.Replace(OutputFile, cm.Slot.ToString("00"), 1);
-            OutputFile = SlotReplacinatorTriple.Replace(OutputFile, cm.Slot.ToString("000"), 1);
+            OutputFile = SlotReplacinatorSingle.Replace(OutputFile, ass.Slot.ToString("0"), 1);
+            OutputFile = SlotReplacinatorDouble.Replace(OutputFile, ass.Slot.ToString("00"), 1);
+            OutputFile = SlotReplacinatorTriple.Replace(OutputFile, ass.Slot.ToString("000"), 1);
 
             if (cmf.AnyFile != null)
             {
@@ -360,9 +361,9 @@ namespace Quasar.Controls.Build.Models
 
             OutputPath = GameDataReplacinator.Replace(OutputPath, GameDataItem, 1);
 
-            OutputPath = SlotReplacinatorSingle.Replace(OutputPath, cm.Slot.ToString("0"), 1);
-            OutputPath = SlotReplacinatorDouble.Replace(OutputPath, cm.Slot.ToString("00"), 1);
-            OutputPath = SlotReplacinatorTriple.Replace(OutputPath, cm.Slot.ToString("000"), 1);
+            OutputPath = SlotReplacinatorSingle.Replace(OutputPath, ass.Slot.ToString("0"), 1);
+            OutputPath = SlotReplacinatorDouble.Replace(OutputPath, ass.Slot.ToString("00"), 1);
+            OutputPath = SlotReplacinatorTriple.Replace(OutputPath, ass.Slot.ToString("000"), 1);
 
             return new string[2] { OutputPath, OutputFile };
         }

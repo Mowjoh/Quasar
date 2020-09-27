@@ -57,7 +57,7 @@ namespace Quasar.Quasar_Sys
                                 int GameDataItemID = SpecificCategory.Items.Find(i => i.Attributes[0].Value == qfm.GameData).ID;
                                 if (mappings.Count != 0)
                                 {
-                                    cm = mappings.SingleOrDefault(existingMapping => existingMapping.SlotName == qfm.Slot && existingMapping.InternalModType == qfm.InternalModTypeID && existingMapping.GameDataItemID == GameDataItemID);
+                                    cm = mappings.SingleOrDefault(existingMapping => existingMapping.Slot == qfm.SlotInt && existingMapping.InternalModType == qfm.InternalModTypeID && existingMapping.GameDataItemID == GameDataItemID);
                                 }
                                 if (cm == null)
                                 {
@@ -70,7 +70,7 @@ namespace Quasar.Quasar_Sys
                                         ModID = LibraryMod.ID,
                                         InternalModType = qfm.InternalModTypeID,
                                         GameDataItemID = GameDataItemID,
-                                        Name = String.Format("{0} - Slot {1}", LibraryMod.Name, (int.Parse(qfm.Slot) + 1).ToString()),
+                                        Name = String.Format("{0} - Slot {1}", LibraryMod.Name, (qfm.Slot == null ? 1 : int.Parse(qfm.Slot) +1).ToString()),
 
                                     };
                                     List<ContentMappingFile> Files = new List<ContentMappingFile>();
@@ -199,93 +199,128 @@ namespace Quasar.Quasar_Sys
         }
         public static void getMatchValues(QuasarFileManager qfm, GroupCollection Groups, bool file)
         {
-            if (file)
+            try
             {
-                qfm.FileGameData = null;
-                qfm.FileMatch = null;
-                qfm.FileParts = new List<string>();
-                qfm.FileFolders = new List<string>();
-            }
-            else
-            {
-                qfm.FolderGameData = null;
-                qfm.FolderMatch = null;
-                qfm.FolderParts = new List<string>();
-                qfm.FolderFolders = new List<string>();
-            }
-            foreach (Group g in Groups)
-            {
-                switch (g.Name)
+                
+                if (file)
                 {
-                    default:
-                        break;
-                    case "Slot":
-                        qfm.Slot = g.Value;
-                        break;
-                    case "GameData":
-                        if (file)
-                        {
-                            qfm.FileGameData = g.Value;
-                        }
-                        else
-                        {
-                            qfm.FolderGameData = g.Value;
-                        }
-
-                        break;
-                    case "AnyFile":
-                        if (file)
-                        {
-                            qfm.AnyFile = g.Value;
-                        }
-                        else
-                        {
-                            qfm.AnyFile = g.Value;
-                        }
-
-                        break;
-                    case "Folder":
-                        if (file)
-                        {
-                            foreach (Capture c in g.Captures)
-                            {
-                                qfm.FileFolders.Add(c.Value);
-                            }
-
-                        }
-                        else
-                        {
-                            foreach (Capture c in g.Captures)
-                            {
-                                qfm.FolderFolders.Add(c.Value);
-                            }
-
-                        }
-                        break;
-                    case "Part":
-                        if (file)
-                        {
-                            foreach (Capture c in g.Captures)
-                            {
-                                qfm.FileParts.Add(c.Value);
-                            }
-
-                        }
-                        else
-                        {
-                            foreach (Capture c in g.Captures)
-                            {
-                                qfm.FolderParts.Add(c.Value);
-                            }
-
-                        }
-                        break;
+                    qfm.FileGameData = null;
+                    qfm.FileMatch = null;
+                    qfm.FileParts = new List<string>();
+                    qfm.FileFolders = new List<string>();
                 }
+                else
+                {
+                    qfm.FolderGameData = null;
+                    qfm.FolderMatch = null;
+                    qfm.FolderParts = new List<string>();
+                    qfm.FolderFolders = new List<string>();
+                }
+                foreach (Group g in Groups)
+                {
+                    switch (g.Name)
+                    {
+                        default:
+                            break;
+                        case "Slot":
+                            qfm.Slot = g.Value;
+                            break;
+                        case "GameData":
+                            if (file)
+                            {
+                                qfm.FileGameData = g.Value;
+                            }
+                            else
+                            {
+                                qfm.FolderGameData = g.Value;
+                            }
+
+                            break;
+                        case "AnyFile":
+                            if (file)
+                            {
+                                qfm.AnyFile = g.Value;
+                            }
+                            else
+                            {
+                                qfm.AnyFile = g.Value;
+                            }
+
+                            break;
+                        case "Folder":
+                            if (file)
+                            {
+                                if (qfm.FileFolders.Count == 0)
+                                {
+                                    foreach (Capture c in g.Captures)
+                                    {
+                                        qfm.FileFolders.Add(c.Value);
+                                    }
+                                }
+
+
+                            }
+                            else
+                            {
+                                if (qfm.FolderFolders.Count == 0)
+                                {
+                                    foreach (Capture c in g.Captures)
+                                    {
+                                        qfm.FolderFolders.Add(c.Value);
+                                    }
+                                }
+                            }
+                            break;
+                        case "Part":
+                            if (file)
+                            {
+                                if (qfm.FileParts.Count == 0)
+                                {
+                                    foreach (Capture c in g.Captures)
+                                    {
+                                        qfm.FileParts.Add(c.Value);
+                                    }
+                                }
+
+
+                            }
+                            else
+                            {
+                                if (qfm.FolderParts.Count == 0)
+                                {
+                                    foreach (Capture c in g.Captures)
+                                    {
+                                        qfm.FolderParts.Add(c.Value);
+                                    }
+                                }
+                            }
+                            break;
+                    }
+                }
+                if (qfm.Slot == null)
+                {
+                    qfm.Slot = "0";
+                }
+
             }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+            
         }
         public static bool ValidateGameData(string Gamedatavalues, GameDataCategory gdc)
         {
-            GameDataItem item = gdc.Items.Find(i => i.Attributes[0].Value == Gamedatavalues);
+            GameDataItem item = null;
+            try
+            {
+                item = gdc.Items.Find(i => i.Attributes[0].Value == Gamedatavalues);
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+            
 
             return item != null;
         }
@@ -343,7 +378,17 @@ namespace Quasar.Quasar_Sys
             public string FolderGameData { get; set; }
 
             public string GameData { get; set; }
-            public string Slot { get; set; }
+            private string _Slot { get; set; }
+            public string Slot 
+            {
+                get => _Slot; 
+                set 
+                {
+                    _Slot = value;
+                    SlotInt = int.Parse(value);
+                } 
+            }
+            public int SlotInt { get; set; }
 
             public string AnyFile { get; set; }
 

@@ -490,11 +490,11 @@ namespace Quasar.Controls.Build.ViewModels
             FileWriter FW;
             if (WirelessSelected)
             {
-                FW = new FTPWriter(this);
+                FW = new FTPWriter(this) { Log = Log };
             }
             else
             {
-                FW = new SDWriter(this) { LetterPath = SelectedDrive.Info.Name };
+                FW = new SDWriter(this) { LetterPath = SelectedDrive.Info.Name, Log = Log };
             }
 
             SmashBuilder SB = new SmashBuilder(FW, CleanSelected ? (int)BuildModes.Clean : SynchronizeSelected ? (int)BuildModes.Synchronize : (int)BuildModes.Overwrite, ModLoaders[0].ModLoaderID, this);
