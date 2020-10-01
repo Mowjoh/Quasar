@@ -195,6 +195,7 @@ namespace Quasar.Controls.Build.Models
                         {
                             OutputFilePath = item.FullName
                         });
+                        Log.Debug(String.Format("Adding File to distant list {0}", item.FullName));
                     }
                     if (item.Type == FtpFileSystemObjectType.Directory)
                     {

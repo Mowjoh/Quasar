@@ -16,7 +16,7 @@
             </Style.Triggers>
         </Style>
     </UserControl.Style>
-    
+
     <UserControl.Resources>
         <SolidColorBrush x:Key="DefaultColor" Color="#8c8c94"/>
         <SolidColorBrush x:Key="SkinColor" Color="#bc3991"/>
@@ -28,7 +28,7 @@
         <SolidColorBrush x:Key="AddColor2" Color="#FF06766C"/>
         <SolidColorBrush x:Key="AddColor3" Color="#FF06766C"/>
 
-        <Style x:Key="FinishedLabel" TargetType="{x:Type Label}" BasedOn="{StaticResource QuasarLabel}"> 
+        <Style x:Key="FinishedLabel" TargetType="{x:Type Label}" BasedOn="{StaticResource QuasarLabel}">
             <Setter Property="Visibility" Value="Visible"/>
             <Style.Triggers>
                 <DataTrigger Binding="{Binding Downloading}" Value="True">
@@ -36,7 +36,7 @@
                 </DataTrigger>
             </Style.Triggers>
         </Style>
-        
+
         <Style x:Key="DownloadingLabel" TargetType="{x:Type Label}" BasedOn="{StaticResource QuasarLabel}">
             <Setter Property="Visibility" Value="Hidden"/>
             <Style.Triggers>
@@ -55,6 +55,21 @@
             <Style.Triggers>
                 <DataTrigger Binding="{Binding Downloading}" Value="True">
                     <Setter Property="Visibility" Value="Visible"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="StateColor" TargetType="{x:Type Path}">
+            <Setter Property="Fill" Value="{StaticResource DefaultColor}"/>
+            <Setter Property="Stroke" Value="AliceBlue"></Setter>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding ContentStatValue}" Value="0">
+                    <Setter Property="Fill" Value="red"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding ContentStatValue}" Value="1">
+                    <Setter Property="Fill" Value="orange"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding ContentStatValue}" Value="2">
+                    <Setter Property="Fill" Value="green"/>
                 </DataTrigger>
             </Style.Triggers>
         </Style>
@@ -85,6 +100,7 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="5"/>
             <ColumnDefinition/>
+            <ColumnDefinition Width="5"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
@@ -94,6 +110,13 @@
         <Path x:Name="BorderColor" Stroke="Black" StrokeThickness="2" Grid.ColumnSpan="2" Grid.RowSpan="2" Style="{DynamicResource ModColor}">
             <Path.Data>
                 <RectangleGeometry x:Name="ColoredRectangle" Rect="{Binding Rekt}" RadiusX="5" RadiusY="10">
+
+                </RectangleGeometry>
+            </Path.Data>
+        </Path>
+        <Path x:Name="SateColorPath" Stroke="Black" StrokeThickness="2" Grid.RowSpan="2" Grid.Column="3" Style="{DynamicResource StateColor}" Margin="-45,0,0,0">
+            <Path.Data>
+                <RectangleGeometry  Rect="{Binding Rekta}" RadiusX="5" RadiusY="10">
 
                 </RectangleGeometry>
             </Path.Data>
@@ -118,7 +141,7 @@
             <ProgressBar x:Name="Progress" Grid.Column="1" Grid.Row="0" Grid.ColumnSpan="3" Value="{Binding ProgressBarValue}" Style="{StaticResource DownloadBar}" />
 
             <StackPanel Grid.Column="4" Orientation="Horizontal" FlowDirection="RightToLeft" Visibility="{Binding Path=ElementActive}">
-                
+
                 <Button x:Name="Trash" Command="{Binding Path=DeleteModCommand}" Height="15" Width="15" Margin="10,0,0,0">
                     <Button.Template>
                         <ControlTemplate TargetType="{x:Type Button}">
@@ -192,15 +215,41 @@
                 <Button x:Name="AddW" Command="{Binding Path=AddModCommand}" Height="15" Width="15" Margin="10,0,0,0" >
                     <Button.Template>
                         <ControlTemplate TargetType="{x:Type Button}">
-                            <Path x:Name="Trash" Stroke="#A0A0A0" Fill="#A0A0A0" Data="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" Stretch="Uniform" ToolTip="Add this mod's contents to the current Workspace" >
+                            <Path x:Name="Trash" Stretch="Uniform">
+                                <Path.Style>
+                                    <Style TargetType="Path">
+                                        <Setter Property="Data" Value="M18.3 5.71c-.39-.39-1.02-.39-1.41 0L12 10.59 7.11 5.7c-.39-.39-1.02-.39-1.41 0-.39.39-.39 1.02 0 1.41L10.59 12 5.7 16.89c-.39.39-.39 1.02 0 1.41.39.39 1.02.39 1.41 0L12 13.41l4.89 4.89c.39.39 1.02.39 1.41 0 .39-.39.39-1.02 0-1.41L13.41 12l4.89-4.89c.38-.38.38-1.02 0-1.4z"/>
+                                        <Setter Property="Fill" Value="#A0A0A0"/>
+                                        <Setter Property="Stroke" Value="#A0A0A0"/>
+                                        <Setter Property="ToolTip" Value="Remove this mod from the Workspace"/>
+                                        <Style.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Fill" Value="Purple"/>
+                                                <Setter Property="Stroke" Value="Purple"/>
+                                            </Trigger>
+                                            <DataTrigger Binding="{Binding ContentStatValue}" Value="0">
+                                                <Setter Property="Data" Value="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                                                <Setter Property="ToolTip" Value="Add this mod to the Workspace"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Path.Style>
+                            </Path>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+                <Button  Command="{Binding Path=MinimizeCommand}" Height="15" Width="15" Margin="10,0,0,0">
+                    <Button.Template>
+                        <ControlTemplate TargetType="{x:Type Button}">
+                            <Path  Data="M12,2C6.48,2,2,6.48,2,12c0,5.52,4.48,10,10,10s10-4.48,10-10 C22,6.48,17.52,2,12,2z M16.54,15.85l-0.69,0.69c-0.39,0.39-1.02,0.39-1.41,0l-3.05-3.05c-1.22,0.43-2.64,0.17-3.62-0.81 c-1.11-1.11-1.3-2.79-0.59-4.1l2.35,2.35l1.41-1.41L8.58,7.17c1.32-0.71,2.99-0.52,4.1,0.59c0.98,0.98,1.24,2.4,0.81,3.62 l3.05,3.05C16.93,14.82,16.93,15.46,16.54,15.85z" Stretch="Uniform" ToolTip="Test this mod">
                                 <Path.Style>
                                     <Style TargetType="Path">
                                         <Setter Property="Fill" Value="#A0A0A0"/>
                                         <Setter Property="Stroke" Value="#A0A0A0"/>
                                         <Style.Triggers>
                                             <Trigger Property="IsMouseOver" Value="True">
-                                                <Setter Property="Fill" Value="purple"/>
-                                                <Setter Property="Stroke" Value="purple"/>
+                                                <Setter Property="Fill" Value="#cf6679"/>
+                                                <Setter Property="Stroke" Value="#cf6679"/>
                                             </Trigger>
                                         </Style.Triggers>
                                     </Style>
@@ -210,58 +259,32 @@
                     </Button.Template>
                 </Button>
 
-                <Button x:Name="Minimize" Command="{Binding Path=MinimizeCommand}" Height="15" Width="15" Margin="10,0,0,0">
-                    <Button.Template>
-                        <ControlTemplate TargetType="{x:Type Button}">
-                            <Path x:Name="Minimize" Stroke="#A0A0A0" Fill="#A0A0A0" Data="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14zM7 9h5v1H7z" Stretch="Uniform" ToolTip="Retract the panel" >
-                                <Path.Style>
-                                    <Style TargetType="Path">
-                                        <Setter Property="Fill" Value="#A0A0A0"/>
-                                        <Setter Property="Stroke" Value="#A0A0A0"/>
-                                        <Style.Triggers>
-                                            <Trigger Property="IsMouseOver" Value="True">
-                                                <Setter Property="Fill" Value="purple"/>
-                                                <Setter Property="Stroke" Value="purple"/>
-                                            </Trigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </Path.Style>
-                            </Path>
-                        </ControlTemplate>
-                    </Button.Template>
-                    <Button.Style>
-                        <Style TargetType="{x:Type Button}">
-                            <Setter Property="Visibility" Value="Collapsed"/>
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding Smol}" Value="False">
-                                    <Setter Property="Visibility" Value="Visible"/>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </Button.Style>
-                </Button>
-                
             </StackPanel>
         </Grid>
-        
+
         <Grid x:Name="BottomGrid" Background="{DynamicResource QD2}" Grid.Column="1" Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="225"/>
-                <ColumnDefinition Width="200"/>
-                <ColumnDefinition/>
-                <ColumnDefinition Width="225"/>
+                <ColumnDefinition Width="4*"/>
+                <ColumnDefinition Width="250"/>
+                <ColumnDefinition Width="4*"/>
             </Grid.ColumnDefinitions>
             <Border BorderBrush="White" BorderThickness="1" Grid.Column="0" Grid.Row="0" Panel.ZIndex="1000"/>
             <Image x:Name="ModImage" Grid.Column="0" Source="{Binding ImageSource}"></Image>
+            <Label Style="{StaticResource QuasarLabel}" Content="Version Control :" Grid.Column="1" VerticalAlignment="top" HorizontalAlignment="Center" />
+            <Label Style="{StaticResource QuasarLabel}" Content="Waiting for API to change to implement this" Margin="0,50,0,0" Grid.Column="1" VerticalAlignment="top" HorizontalAlignment="Center" />
 
-            <ItemsControl x:Name="AutorNameStackPanel"  Grid.Column="1" ItemsSource="{Binding Authors}" >
-                
+
+            <Grid  Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Right" Background="Gray" Width="1" Height="100" />
+            <Label Style="{StaticResource QuasarLabel}" Content="Creators :" Grid.Column="2" Grid.ColumnSpan="2" VerticalAlignment="top" HorizontalAlignment="Center" />
+            <ItemsControl x:Name="AutorNameStackPanel" Margin="0,30,0,0"  Grid.Column="2" ItemsSource="{Binding Authors}" >
+
             </ItemsControl>
-            <ItemsControl x:Name="AutorRoleStackPanel"  Grid.Column="2" ItemsSource="{Binding Roles}" >
+            <ItemsControl x:Name="AutorRoleStackPanel" Margin="0,30,0,0"  Grid.Column="3" ItemsSource="{Binding Roles}" >
 
             </ItemsControl>
 
-            
+
 
         </Grid>
     </Grid>

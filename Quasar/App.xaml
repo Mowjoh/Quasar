@@ -13,8 +13,8 @@
 
         <System:String x:Key="HeaderTabContent">qsd</System:String>
 
-        <SolidColorBrush x:Key="QuasarButtonBackground" Color="#92DEC3"/>
-        <SolidColorBrush x:Key="QuasarButtonText" Color="#000000"/>
+        <SolidColorBrush x:Key="QuasarButtonBackground" Color="White"/>
+        <SolidColorBrush x:Key="QuasarButtonText" Color="PaleVioletRed"/>
 
         <SolidColorBrush x:Key="QuasarBackgroundDark" Color="#262833"/>
         <SolidColorBrush x:Key="QuasarBackgroundLight" Color="#262833"/>
@@ -71,16 +71,16 @@
         </Style>
 
 
-        <ControlTemplate TargetType="Button" x:Key="NewButton">
+        <ControlTemplate TargetType="Button" x:Key="QuasarButtonTemplate">
             <Grid Height="Auto" Width="Auto">
                 <Border Height="Auto" Width="Auto">
                     <Path Stroke="Black" StrokeThickness="1" Fill="{StaticResource QuasarButtonBackground}">
                         <Path.Data>
-                            <RectangleGeometry Rect="0,0,200,50" RadiusX="10" RadiusY="10" />
+                            <RectangleGeometry Rect="0,0,250,50" RadiusX="30" RadiusY="30" />
                         </Path.Data>
                     </Path>
                 </Border>
-                <Label VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{StaticResource QuasarButtonText}" FontSize="14">Content</Label>
+                <Label VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{StaticResource QuasarButtonText}" FontSize="18">CONTINUE</Label>
                 
             </Grid>
         </ControlTemplate>

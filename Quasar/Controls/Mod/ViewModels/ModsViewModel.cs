@@ -20,7 +20,7 @@ using Quasar.Controls.Settings.Model;
 
 namespace Quasar.Controls.ModManagement.ViewModels
 {
-    class ModsViewModel : ObservableObject
+    public class ModsViewModel : ObservableObject
     {
         #region Fields
         private ObservableCollection<ModListItem> _ModListItems { get; set; }
@@ -39,6 +39,10 @@ namespace Quasar.Controls.ModManagement.ViewModels
         private CollectionViewSource _CollectionViewSource { get; set; }
 
         private string _SearchText { get; set; } = "";
+        private bool _BlackChecked { get; set; } = true;
+        private bool _RedChecked { get; set; } = true;
+        private bool _OrangeChecked { get; set; } = true;
+        private bool _GreenChecked { get; set; } = true;
         private bool _CreatorMode { get; set; }
         #endregion
 
@@ -234,7 +238,67 @@ namespace Quasar.Controls.ModManagement.ViewModels
                 CollectionViewSource.View.Refresh();
             }
         }
+        public bool BlackChecked
 
+        {
+            get => _BlackChecked;
+            set
+            {
+                if (value == false)
+                    return;
+
+                _BlackChecked = true;
+                _RedChecked = false;
+                _OrangeChecked = false;
+                _GreenChecked = false;
+                OnPropertyChanged("BlackChecked");
+                OnPropertyChanged("RedChecked");
+                OnPropertyChanged("OrangeChecked");
+                OnPropertyChanged("GreenChecked");
+                CollectionViewSource.View.Refresh();
+            }
+        }
+        public bool RedChecked
+
+        {
+            get => _RedChecked;
+            set
+            {
+                if (_RedChecked == value)
+                    return;
+
+                _RedChecked = value;
+                OnPropertyChanged("RedChecked");
+                CollectionViewSource.View.Refresh();
+            }
+        }
+        public bool OrangeChecked
+        {
+            get => _OrangeChecked;
+            set
+            {
+                if (_OrangeChecked == value)
+                    return;
+
+                _OrangeChecked = value;
+                OnPropertyChanged("OrangeChecked");
+                CollectionViewSource.View.Refresh();
+
+            }
+        }
+        public bool GreenChecked
+        {
+            get => _GreenChecked;
+            set
+            {
+                if (_GreenChecked == value)
+                    return;
+
+                _GreenChecked = value;
+                OnPropertyChanged("GreenChecked");
+                CollectionViewSource.View.Refresh();
+            }
+        }
         public bool CreatorMode
 
         {
@@ -291,8 +355,8 @@ namespace Quasar.Controls.ModManagement.ViewModels
             {
                 Game gamu = Games.Single(g => g.ID == lm.GameID);
 
-                ModListItem mli = new ModListItem(_LibraryMod: lm, _Game: gamu);
-
+                ModListItem mli = new ModListItem(this,_LibraryMod: lm, _Game: gamu);
+                mli.ModListItemViewModel.LoadStats();
                 ModListItems.Add(mli);
             }
         }
@@ -307,6 +371,9 @@ namespace Quasar.Controls.ModManagement.ViewModels
                 case "Add":
                     AddMod(MLI);
                     break;
+                case "Remove":
+                    RemoveMod(MLI);
+                    break;
                 case "ShowContents":
                     ShowModContents(MLI);
                     break;
@@ -320,6 +387,39 @@ namespace Quasar.Controls.ModManagement.ViewModels
             if(SelectedGameModType != null)
             {
                 if (mli.ModListItemViewModel.LibraryMod.TypeID == SelectedGameModType.ID || SelectedGameModType.ID == -1)
+                {
+                    if ((RedChecked && mli.ModListItemViewModel.ContentStatValue == 0) || (OrangeChecked && mli.ModListItemViewModel.ContentStatValue == 1) || (GreenChecked && mli.ModListItemViewModel.ContentStatValue == 2))
+                    {
+                        if (SearchText != "")
+                        {
+                            if (mli.ModListItemViewModel.LibraryMod.APICategoryName.ToLower().Contains(SearchText.ToLower()))
+                            {
+                                e.Accepted = true;
+                            }
+                            else
+                            {
+                                e.Accepted = false;
+                            }
+                        }
+                        else
+                        {
+                            e.Accepted = true;
+                        }
+
+                    }
+                    else
+                    {
+                        e.Accepted = false;
+                    }
+                }
+                else
+                {
+                    e.Accepted = false;
+                }
+            }
+            else
+            {
+                if ((RedChecked && mli.ModListItemViewModel.ContentStatValue == 0) || (OrangeChecked && mli.ModListItemViewModel.ContentStatValue == 1) || (GreenChecked && mli.ModListItemViewModel.ContentStatValue == 2))
                 {
                     if (SearchText != "")
                     {
@@ -336,29 +436,13 @@ namespace Quasar.Controls.ModManagement.ViewModels
                     {
                         e.Accepted = true;
                     }
+                    
                 }
                 else
                 {
                     e.Accepted = false;
                 }
-            }
-            else
-            {
-                if (SearchText != "")
-                {
-                    if (mli.ModListItemViewModel.LibraryMod.APICategoryName.ToLower().Contains(SearchText.ToLower()))
-                    {
-                        e.Accepted = true;
-                    }
-                    else
-                    {
-                        e.Accepted = false;
-                    }
-                }
-                else
-                {
-                    e.Accepted = true;
-                }
+                
             }
             
         }
@@ -432,27 +516,53 @@ namespace Quasar.Controls.ModManagement.ViewModels
         }
         public void AddMod(ModListItem MLI)
         {
-            /*
-           ModListItem item = (ModListItem)sender;
+            
 
            //Removing from ContentMappings
-           List<ContentMapping> relatedMappings = ContentMappings.FindAll(cm => cm.ModID == item.LocalMod.ID);
+           List<ContentMapping> relatedMappings = ContentMappings.Where(cm => cm.ModID == MLI.ModListItemViewModel.LibraryMod.ID).ToList();
            foreach (ContentMapping cm in relatedMappings)
            {
                if (cm.GameDataItemID != -1)
                {
-                   Association associations = CurrentWorkspace.Associations.Find(ass => ass.GameDataItemID == cm.GameDataItemID && ass.InternalModTypeID == cm.InternalModType && ass.Slot == cm.Slot);
+                   Association associations = ActiveWorkspace.Associations.Find(ass => ass.GameDataItemID == cm.GameDataItemID && ass.InternalModTypeID == cm.InternalModType && ass.Slot == cm.Slot);
                    if (associations != null)
                    {
-                       CurrentWorkspace.Associations[CurrentWorkspace.Associations.IndexOf(associations)] = new Association() { ContentMappingID = cm.ID, GameDataItemID = cm.GameDataItemID, InternalModTypeID = cm.InternalModType, Slot = cm.Slot };
-                   }
-                   else
-                   {
-                       CurrentWorkspace.Associations.Add(new Association() { ContentMappingID = cm.ID, GameDataItemID = cm.GameDataItemID, InternalModTypeID = cm.InternalModType, Slot = cm.Slot });
-                   }
-               }
+                        log.Debug(String.Format("Association exists for ContentMapping ID '{0}', slot '{1}', IMT '{2}', GDIID '{3}', removing it", associations.ContentMappingID, associations.Slot, associations.InternalModTypeID, associations.GameDataItemID));
+                        ActiveWorkspace.Associations.Remove(associations);
+                    }
+ 
+                    log.Debug(String.Format("Association created for ContentMapping '{0}' ID '{1}', slot '{2}', IMT '{3}', GDIID '{4}'", cm.Name, cm.ID, cm.Slot, cm.InternalModType, cm.GameDataItemID));
+                    ActiveWorkspace.Associations.Add(new Association() { ContentMappingID = cm.ID, GameDataItemID = cm.GameDataItemID, InternalModTypeID = cm.InternalModType, Slot = cm.Slot });
+                }
            }
-           WorkspaceXML.WriteWorkspaces(QuasarWorkspaces);*/
+           WorkspaceXML.WriteWorkspaces(Workspaces.ToList());
+            log.Debug("Written changes to Workspaces");
+            ReloadAllStats();
+        }
+        public void RemoveMod(ModListItem MLI)
+        {
+            //Removing from ContentMappings
+            List<ContentMapping> relatedMappings = ContentMappings.Where(cm => cm.ModID == MLI.ModListItemViewModel.LibraryMod.ID).ToList();
+            foreach (ContentMapping cm in relatedMappings)
+            {
+                if (cm.GameDataItemID != -1)
+                {
+                    List<Association> associations = ActiveWorkspace.Associations.Where(ass => ass.GameDataItemID == cm.GameDataItemID && ass.InternalModTypeID == cm.InternalModType && ass.Slot == cm.Slot && ass.ContentMappingID == cm.ID).ToList();
+                    if (associations != null)
+                    {
+                        foreach(Association ass in associations)
+                        {
+                            log.Debug(String.Format("Association found for ContentMapping ID '{0}', slot '{1}', IMT '{2}', GDIID '{3}', removing it it", ass.ContentMappingID, ass.Slot, ass.InternalModTypeID, ass.GameDataItemID));
+                            ActiveWorkspace.Associations.Remove(ass);
+                        }
+                        
+                    }
+                }
+            }
+            WorkspaceXML.WriteWorkspaces(Workspaces.ToList());
+            log.Debug("Written changes to Workspaces");
+            MLI.ModListItemViewModel.LoadStats();
+
         }
         public void UpdateMod()
         {
@@ -559,7 +669,7 @@ namespace Quasar.Controls.ModManagement.ViewModels
                     try
                     {
                         Application.Current.Dispatcher.Invoke((Action)delegate {
-                            MLI = new ModListItem(newmod, game, true);
+                            MLI = new ModListItem(this,newmod, game, true);
                             ModListItems.Add(MLI);
                         });
                         
@@ -656,6 +766,7 @@ namespace Quasar.Controls.ModManagement.ViewModels
                 //Removing mod from Working List
                 WorkingModList.Remove(Mod);
                 //QuasarTaskBar.ProgressState = System.Windows.Shell.TaskbarItemProgressState.None;
+                ReloadAllStats();
             }
             else
             {
@@ -706,6 +817,13 @@ namespace Quasar.Controls.ModManagement.ViewModels
             }
 
             WorkspaceXML.WriteWorkspaces(Workspaces.ToList());
+        }
+        public void ReloadAllStats()
+        {
+            foreach(ModListItem i in ModListItems)
+            {
+                i.ModListItemViewModel.LoadStats();
+            }
         }
         #endregion
     }

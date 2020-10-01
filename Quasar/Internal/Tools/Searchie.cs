@@ -149,7 +149,10 @@ namespace Quasar.Quasar_Sys
                         if (folderMatch.Success)
                         {
                             getMatchValues(qfm, fileMatch.Groups, true);
-
+                            if(qfm.FileGameData == "ryu")
+                            {
+                                Console.Write("s");
+                            }
                             //If there is a detected Folder Gamedata but not for the file
                             if ((qfm.FileGameData == "" || qfm.FileGameData == null) && qfm.FolderGameData != null)
                             {

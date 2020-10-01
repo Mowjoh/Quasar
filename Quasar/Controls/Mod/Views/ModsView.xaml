@@ -35,8 +35,19 @@
                 </ItemsPanelTemplate>
             </ListView.ItemsPanel>
             <ListView.ItemContainerStyle>
-                <Style TargetType="ListViewItem">
-                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                <Style TargetType="{x:Type ListViewItem}">
+                    <Setter Property="Background" Value="Transparent" />
+                    <Setter Property="BorderBrush" Value="Transparent"/>
+                    <Setter Property="VerticalContentAlignment" Value="Center"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type ListViewItem}">
+                                <Border Name="Border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}">
+                                    <ContentPresenter Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" Margin="{TemplateBinding Padding}" />
+                                </Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
                 </Style>
             </ListView.ItemContainerStyle>
         </ListView>
@@ -82,5 +93,8 @@
                 </Style>
             </TextBox.Style>
         </TextBox>
+        <CheckBox IsChecked="{Binding RedChecked}" Margin="0,26,50,0" VerticalAlignment="Top" BorderBrush="red" HorizontalAlignment="Right" Width="15" />
+        <CheckBox IsChecked="{Binding OrangeChecked}" Margin="0,26,30,0" VerticalAlignment="Top" BorderBrush="orange" HorizontalAlignment="Right" Width="15" />
+        <CheckBox IsChecked="{Binding GreenChecked}" Margin="0,26,10,0" VerticalAlignment="Top" BorderBrush="green" HorizontalAlignment="Right" Width="15"  />
     </Grid>
 </UserControl>

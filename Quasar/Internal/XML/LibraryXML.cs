@@ -37,6 +37,8 @@ namespace Quasar.XMLResources
         {
             string LibraryFilePath = Properties.Settings.Default["DefaultDir"].ToString() + "\\Library\\Library.xml";
 
+            LibraryMods = LibraryMods.OrderBy(a => a.GameID).ThenBy(a => a.TypeID).ThenBy(a => a.ID).ToList();
+
             LibraryModList LibraryModList = new LibraryModList(LibraryMods);
 
             XmlSerializer LibrarySerializer = new XmlSerializer(typeof(LibraryModList));

@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Quasar.Controls"
         xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
         mc:Ignorable="d"
-        Title="DefinitionsWindow" Height="450" Width="800"
+        Title="DefinitionsWindow" Height="1080" Width="1920"
         DataContext="{Binding RelativeSource={RelativeSource Self}}">
     <Window.Resources>
         <CollectionViewSource x:Key="CSV" Source="{Binding TestFiles}">

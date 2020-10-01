@@ -88,13 +88,14 @@ namespace Quasar.Controls.Build.Models
             if (Writer.VerifyOK())
             {
                 ViewModel.Building = true;
-
+                ViewModel.Log.Debug("Building set to true");
                 await CopyModLoader();
-
+                ViewModel.Log.Debug("Fake Copy ModLoader Finished");
                 //Base Operations
                 await StartCheck();
+                ViewModel.Log.Debug("Start Check Finished");
                 await GetLocalFileList();
-
+                ViewModel.Log.Debug("Got Local File List");
                 //File Operations
                 await DeleteDifferences();
                 await StartTransfer();
@@ -149,6 +150,7 @@ namespace Quasar.Controls.Build.Models
 
             foreach (Association ass in ViewModel.ActiveWorkspace.Associations)
             {
+                ViewModel.Log.Debug("getting files for association CMID"+ass.ContentMappingID +" - GDIID "+ass.GameDataItemID + " - Slot "+ass.Slot);
                 ListAssociationFiles(ass,GD);
             }
         }
@@ -156,6 +158,8 @@ namespace Quasar.Controls.Build.Models
         {
             try
             {
+                ViewModel.Log.Debug("Starting to list distant files");
+
                 ViewModel.SetStep("Listing Distant Files");
                 ViewModel.SetProgressionStyle(true);
 
@@ -173,10 +177,12 @@ namespace Quasar.Controls.Build.Models
 
                 if (File.Exists(localHashFilePath))
                 {
+                    ViewModel.Log.Debug("File Exists, Loading Hashes");
                     Hashes = XML.GetHashes(localHashFilePath);
                 }
                 else
                 {
+                    ViewModel.Log.Debug("No Remote Hash File");
                     ViewModel.Log.Debug("Hash List Created");
                     Hashes = new List<Hash>();
                 }
@@ -202,6 +208,7 @@ namespace Quasar.Controls.Build.Models
                         {
                             if (reference.OutputFilePath.Split('/')[reference.OutputFilePath.Split('/').Length - 1] != "Hashes.xml")
                             {
+                                ViewModel.Log.Debug("Deleting " + reference.OutputFilePath);
                                 Writer.DeleteFile(reference.OutputFilePath);
                             }
                         }
@@ -266,32 +273,40 @@ namespace Quasar.Controls.Build.Models
 
         public void ListAssociationFiles(Association ass, GameData GD)
         {
-            //References
-            ContentMapping cm = ViewModel.ContentMappings.Single(l => l.ID == ass.ContentMappingID);
-            InternalModType imt = ViewModel.InternalModTypes.Single(t => t.ID == cm.InternalModType);
-            GameDataCategory GDC = GD.Categories.Find(c => c.ID == imt.Association);
-            GameDataItem GDI = GDC.Items.Find(i => i.ID == cm.GameDataItemID);
-
-            //Mod
-            LibraryMod lm = ViewModel.Mods.Single(m => m.ID == cm.ModID);
-            ModFileManager mfm = new ModFileManager(lm, ViewModel.Games[1]);
-
-            foreach (ContentMappingFile file in cm.Files)
+            try
             {
-                //Looping through recognized files
-                string source = file.SourcePath;
+                //References
+                ContentMapping cm = ViewModel.ContentMappings.Single(l => l.ID == ass.ContentMappingID);
+                InternalModType imt = ViewModel.InternalModTypes.Single(t => t.ID == cm.InternalModType);
+                GameDataCategory GDC = GD.Categories.Find(c => c.ID == imt.Association);
+                GameDataItem GDI = GDC.Items.Find(i => i.ID == cm.GameDataItemID);
 
-                InternalModTypeFile imtf = imt.Files.Find(f => f.ID == file.InternalModTypeFileID);
+                //Mod
+                LibraryMod lm = ViewModel.Mods.Single(m => m.ID == cm.ModID);
+                ModFileManager mfm = new ModFileManager(lm, ViewModel.Games[1]);
 
-                BuilderFile bfi = imtf.Files.Single(f => f.BuilderID == ModLoader);
+                foreach (ContentMappingFile file in cm.Files)
+                {
+                    //Looping through recognized files
+                    string source = file.SourcePath;
 
-                string[] output = BuilderActions.FormatOutput(bfi.File, bfi.Path, GDI.Attributes[0].Value, file, cm,ass);
-                string FinalDestination = WorkspacePath + output[0] + "/" + output[1];
-                FinalDestination = FinalDestination.Replace(@"{Workspace}", ViewModel.ActiveWorkspace.Name);
-                FinalDestination = FinalDestination.Replace(@"/", @"\");
-                FilesToBuild.Add(new FileReference() { LibraryMod = lm, SourceFilePath = source, OutputFilePath = FinalDestination });
+                    InternalModTypeFile imtf = imt.Files.Find(f => f.ID == file.InternalModTypeFileID);
 
+                    BuilderFile bfi = imtf.Files.Single(f => f.BuilderID == ModLoader);
+
+                    string[] output = BuilderActions.FormatOutput(bfi.File, bfi.Path, GDI.Attributes[0].Value, file, cm, ass, GDI.Attributes[1].Value);
+                    string FinalDestination = WorkspacePath + output[0] + "/" + output[1];
+                    FinalDestination = FinalDestination.Replace(@"{Workspace}", ViewModel.ActiveWorkspace.Name);
+                    FinalDestination = FinalDestination.Replace(@"/", @"\");
+                    FilesToBuild.Add(new FileReference() { LibraryMod = lm, SourceFilePath = source, OutputFilePath = FinalDestination });
+
+                }
             }
+            catch(Exception e)
+            {
+                ViewModel.Log.Error(e.Message);
+            }
+            
         }
         public void SetProgression(int cnt, int tot)
         {
@@ -303,7 +318,7 @@ namespace Quasar.Controls.Build.Models
 
     static class BuilderActions
     {
-        public static string[] FormatOutput(string file, string path, string GameDataItem, ContentMappingFile cmf, ContentMapping cm,Association ass)
+        public static string[] FormatOutput(string file, string path, string GameDataItem, ContentMappingFile cmf, ContentMapping cm,Association ass, string DLC)
         {
             string OutputFile = file;
             string OutputPath = path;
@@ -364,6 +379,8 @@ namespace Quasar.Controls.Build.Models
             OutputPath = SlotReplacinatorSingle.Replace(OutputPath, ass.Slot.ToString("0"), 1);
             OutputPath = SlotReplacinatorDouble.Replace(OutputPath, ass.Slot.ToString("00"), 1);
             OutputPath = SlotReplacinatorTriple.Replace(OutputPath, ass.Slot.ToString("000"), 1);
+
+            OutputPath = OutputPath.Replace("{DLC}", DLC == "True" ? "_patch" : "");
 
             return new string[2] { OutputPath, OutputFile };
         }

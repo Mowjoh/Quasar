@@ -1,4 +1,5 @@
 ﻿using Quasar.Controls.Common.Models;
+using Quasar.Controls.ModManagement.ViewModels;
 using Quasar.FileSystem;
 using Quasar.Internal;
 using Quasar.XMLResources;
@@ -37,12 +38,15 @@ namespace Quasar.Controls.Mod.ViewModels
         #region Working References
         private String _ModStatusValue { get; set; }
         private String _ModStatusTextValue { get; set; }
+        private string _ContentStatText { get; set; }
         private int _ProgressBarValue { get; set; }
+        private int _ContentStatValue { get; set; }
         private bool _Downloading { get; set; }
         private bool _CreatorMode { get; set; }
         private bool _AdvancedMode { get; set; }
         private bool _Smol { get; set; }
         private Rect _Rekt { get; set; }
+        private Rect _Rekta { get; set; }
         private Uri _ImageSource { get; set; }
         #endregion
 
@@ -187,6 +191,36 @@ namespace Quasar.Controls.Mod.ViewModels
                 OnPropertyChanged("ModStatusTextValue");
             }
         }
+        public string ContentStatText
+        {
+            get
+            {
+                return _ContentStatText;
+            }
+            set
+            {
+                if (_ContentStatText == value)
+                    return;
+
+                _ContentStatText = value;
+                OnPropertyChanged("ContentStatText");
+            }
+        }
+        public int ContentStatValue
+        {
+            get
+            {
+                return _ContentStatValue;
+            }
+            set
+            {
+                if (_ContentStatValue == value)
+                    return;
+
+                _ContentStatValue = value;
+                OnPropertyChanged("ContentStatValue");
+            }
+        }
         public int ProgressBarValue
         {
             get
@@ -261,6 +295,8 @@ namespace Quasar.Controls.Mod.ViewModels
                 _Smol = value;
 
                 Rekt = value ? new Rect(0, 0, 50, 30) : new Rect(0, 0, 50, 160);
+                Rekta = value ? new Rect(0, 0, 50, 30) : new Rect(0, 0, 50, 160);
+
                 LoadImage(_Smol);
                 OnPropertyChanged("Smol");
             }
@@ -277,6 +313,18 @@ namespace Quasar.Controls.Mod.ViewModels
                 OnPropertyChanged("Rekt");
             }
         }
+        public Rect Rekta
+        {
+            get => _Rekta;
+            set
+            {
+                if (_Rekta == value)
+                    return;
+
+                _Rekta = value;
+                OnPropertyChanged("Rekta");
+            }
+        }
         public Uri ImageSource
         {
             get => _ImageSource;
@@ -290,6 +338,8 @@ namespace Quasar.Controls.Mod.ViewModels
             }
         }
 
+
+
         #endregion
 
         #region Commands
@@ -299,7 +349,7 @@ namespace Quasar.Controls.Mod.ViewModels
             {
                 if (_MinimizeCommand == null)
                 {
-                    _MinimizeCommand = new RelayCommand(param => Minimize());
+                    _MinimizeCommand = new RelayCommand(param => Test());
                 }
                 return _MinimizeCommand;
             }
@@ -353,31 +403,34 @@ namespace Quasar.Controls.Mod.ViewModels
 
         #endregion
 
+        public ModsViewModel MVM { get; set; }
+
         public ModListItemViewModel()
         {
             Downloading = true;
             Smol = true;
         }
 
-        public ModListItemViewModel(LibraryMod Mod, Game Gamu, bool _Downloading = false)
+        public ModListItemViewModel(LibraryMod Mod, Game Gamu, ModsViewModel model, bool _Downloading = false)
         {
             Game = Gamu;
             LibraryMod = Mod;
             Downloading = _Downloading;
             Smol = true;
+            MVM = model;
 
             CreatorMode = Properties.Settings.Default.EnableCreator;
             
             GetAuthors();
         }
 
-        public ModListItemViewModel(string QuasarURL, ObservableCollection<Game> _Games, ObservableCollection<LibraryMod> _Mods)
+        public ModListItemViewModel(string QuasarURL, ObservableCollection<Game> _Games, ObservableCollection<LibraryMod> _Mods, ModsViewModel model)
         {
             Downloading = true;
             Smol = true;
             Games = _Games;
             Mods = _Mods;
-
+            MVM = model;
         }
 
         #region Actions
@@ -411,6 +464,28 @@ namespace Quasar.Controls.Mod.ViewModels
             }
             
         }
+        public void LoadStats()
+        {
+            if(MVM != null)
+            {
+                List<ContentMapping> CM = MVM.ContentMappings.Where(cm => cm.ModID == LibraryMod.ID).ToList();
+                bool allFound = true;
+                bool noneFound = true;
+                foreach (ContentMapping mapping in CM)
+                {
+                    if (!MVM.ActiveWorkspace.Associations.Any(a => a.ContentMappingID == mapping.ID))
+                    {
+                        allFound = false;
+                    }
+                    else
+                    {
+                        noneFound = false;
+                    }
+                }
+                ContentStatValue = noneFound ? 0 : allFound ? 2 : 1;
+            }
+            
+        }
 
         public void GetAuthors()
         {
@@ -439,7 +514,7 @@ namespace Quasar.Controls.Mod.ViewModels
                     Authors.Add(textBlock);
                 }
 
-                Roles.Add(new Label() { Content = _LibraryMod.Authors[i][1], Foreground = (SolidColorBrush)App.Current.Resources["QuasarTextColor"], Height = 28 });
+                Roles.Add(new Label() { Content = _LibraryMod.Authors[i][1] != ""? _LibraryMod.Authors[i][1] : "No role provided" , Foreground = (SolidColorBrush)App.Current.Resources["QuasarTextColor"], Height = 28 });
             }
         }
 
@@ -455,9 +530,10 @@ namespace Quasar.Controls.Mod.ViewModels
             new FileView(new ModFileManager(LibraryMod, Game).LibraryContentFolderPath, LibraryMod.Name).Show();
         }
 
-        public void Minimize()
+        public void Test()
         {
-            Smol = true;
+            ModFileManager mfm = new ModFileManager(LibraryMod, MVM.Games[1]);
+            new DefinitionsWindow(mfm, "", "", "", "", MVM.GameDatas[0].Categories.ToList(), MVM.InternalModTypes.ToList(), 0).Show();
         }
 
         public void DeleteMod()
@@ -468,7 +544,15 @@ namespace Quasar.Controls.Mod.ViewModels
 
         public void AddMod()
         {
-            ActionRequested = "Add";
+            if(ContentStatValue == 0)
+            {
+                ActionRequested = "Add";
+            }
+            else
+            {
+                ActionRequested = "Remove";
+            }
+            
             EventSystem.Publish<ModListItemViewModel>(this);
         }
 

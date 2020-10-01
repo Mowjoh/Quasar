@@ -42,6 +42,8 @@ namespace Quasar.XMLResources
         {
             string ContentMappingFilePath = Properties.Settings.Default["DefaultDir"].ToString() + "\\Library\\ContentMapping.xml";
 
+            contentMappings = contentMappings.OrderBy(a => a.GameDataItemID).ThenBy(a => a.InternalModType).ThenBy(a => a.Slot).ToList();
+
             ContentMappingList cml = new ContentMappingList(contentMappings);
 
             XmlSerializer LibrarySerializer = new XmlSerializer(typeof(ContentMappingList));

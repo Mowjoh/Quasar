@@ -308,6 +308,12 @@
     <Content Include="References\images\NoScreenshot.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="References\InternalModTypes\SmashUltimate\Fighter_Animation.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="References\InternalModTypes\SmashUltimate\Fighter_Sounds.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="References\Sources\ModLoaders.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -315,12 +321,12 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>SettingsDefinition.Designer.cs</LastGenOutput>
     </None>
-    <Resource Include="References\InternalModTypes\SmashUltimate\Fighter_Effect.xml">
+    <Content Include="References\InternalModTypes\SmashUltimate\Fighter_Effect.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="References\InternalModTypes\SmashUltimate\Items.xml">
+    </Content>
+    <Content Include="References\InternalModTypes\SmashUltimate\Items.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
+    </Content>
     <Resource Include="Controls\Common\Fonts\sofiapro-light.otf" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

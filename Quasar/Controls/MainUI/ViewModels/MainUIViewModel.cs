@@ -114,6 +114,14 @@ namespace Quasar
                 if (_SelectedTabItem == value)
                     return;
 
+                if ((string)value.Header == "Overview")
+                {
+                    MVM.ReloadAllStats();
+                }
+                if ((string)value.Header == "Management")
+                {
+                    AVM.ShowSlots();
+                }
                 _SelectedTabItem = value;
                 OnPropertyChanged("SelectedTabItem");
             }
@@ -522,6 +530,8 @@ namespace Quasar
                 return _StartGameSelectionCommand;
             }
         }
+
+
         #endregion
 
         #endregion
@@ -549,8 +559,28 @@ namespace Quasar
                 CreatorMode = false;
 
                 EventSystem.Subscribe<ModListItem>(SetModListItem);
+
+
+
+                //To Delete all mappings and associations then rescan mappings : UNCOMMENT
+                /* 
+                
+                ActiveWorkspace.Associations = new List<Association>();
+                ContentMappings = new ObservableCollection<ContentMapping>();
+                ObservableCollection<ContentMapping> WorkingList = ContentMappings;
+                foreach (LibraryMod lm in Mods)
+                {
+                    ObservableCollection<ContentMapping> SearchList = Searchie.AutoDetectinator(lm, InternalModTypes, Games[1], GameDatas);
+                    foreach (ContentMapping cm in SearchList)
+                    {
+                        WorkingList.Add(cm);
+                    }
+                }
+                ContentMappings = WorkingList;
+                WorkspaceXML.WriteWorkspaces(Workspaces.ToList());
+                ContentXML.WriteContentMappingListFile(ContentMappings.ToList());*/
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 log.Info(e.Message);
                 log.Info(e.StackTrace);
@@ -608,6 +638,7 @@ namespace Quasar
             GetGameData();
             GetGames();
             GetModLoaders();
+
         }
         public void SetupViews()
         {
