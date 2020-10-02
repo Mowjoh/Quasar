@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<InternalModType xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="Music" Filename="SmashUltimate/Music" ID="8" GameID="1" Association="3" Slots="1" TypeGroup="Music">
+<InternalModType xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="Music" Filename="SmashUltimate/Music" TypeGroup="Music" ID="8" GameID="1" Association="3" Slots="1" IgnoreableGameDataAssociation="true">
   <InternalModTypeFile ID="0">
-    <SourcePath></SourcePath>
-    <SourceFile>{Music}.nus3audio</SourceFile>
-    <BuilderFile BuilderID="0" File ="{Music}.nus3audio" Path ="stream;/sound/bgm/"/>
-    <BuilderFile BuilderID="1" File ="{Music}.nus3audio" Path ="stream/sound/bgm/"/>
+    <SourcePath />
+    <SourceFile>{GameData}.nus3audio</SourceFile>
+    <BuilderFile BuilderID="1" Path="arc/stream;/sound/bgm" File="{GameData}.nus3audio" />
+    <BuilderFile BuilderID="2" Path="stream;/sound/bgm" File="{GameData}.nus3audio" />
   </InternalModTypeFile>
 </InternalModType>

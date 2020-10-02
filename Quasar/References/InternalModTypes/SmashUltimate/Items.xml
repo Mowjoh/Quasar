@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<InternalModType xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="Items" Filename="SmashUltimate/Items" ID="9" GameID="1" Association="4" Slots="1" TypeGroup="Items">
+<InternalModType xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="Items" Filename="SmashUltimate/Items" TypeGroup="Items" ID="9" GameID="1" Association="4" Slots="1" IgnoreableGameDataAssociation="false">
   <InternalModTypeFile ID="0">
     <SourcePath>{GameData}/model/{Folder}/c{S00}</SourcePath>
     <SourceFile>{AnyFile}.nutexb</SourceFile>
-    <BuilderFile BuilderID="0" File ="{AnyFile}.nutexb" Path ="item/{GameData}/model/{Folder}/c{S00}"/>
-    <BuilderFile BuilderID="1" File ="{AnyFile}.nutexb" Path ="arc/item/{GameData}/model/{Folder}/c{S00}"/>
+    <BuilderFile BuilderID="1" Path="arc/item/{GameData}/model/{Folder}/c{S00}" File="{AnyFile}.nutexb" />
+    <BuilderFile BuilderID="2" Path="item/{GameData}/model/{Folder}/c{S00}" File="{AnyFile}.nutexb" />
   </InternalModTypeFile>
 </InternalModType>

@@ -2210,6 +2210,18 @@
           <Value>False</Value>
         </ItemAttribute>
       </Item>
+      <Item ID="114">
+        <Name>Result SCreen</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>resultstage_set</Value>
+        </ItemAttribute>
+        <ItemAttribute>
+          <Key>IsDLC</Key>
+          <Value>False</Value>
+        </ItemAttribute>
+      </Item>
+      
     </Category>
     <Category ID="3" image="SmashUltimate/music.png">
       <Name>Music</Name>

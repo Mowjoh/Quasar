@@ -315,6 +315,7 @@ namespace Quasar.Controls.ModManagement.ViewModels
             }
         }
 
+
         public ILog log { get; set; }
         #endregion
 
@@ -538,6 +539,7 @@ namespace Quasar.Controls.ModManagement.ViewModels
            WorkspaceXML.WriteWorkspaces(Workspaces.ToList());
             log.Debug("Written changes to Workspaces");
             ReloadAllStats();
+            CollectionViewSource.View.Refresh();
         }
         public void RemoveMod(ModListItem MLI)
         {
@@ -562,6 +564,7 @@ namespace Quasar.Controls.ModManagement.ViewModels
             WorkspaceXML.WriteWorkspaces(Workspaces.ToList());
             log.Debug("Written changes to Workspaces");
             MLI.ModListItemViewModel.LoadStats();
+            CollectionViewSource.View.Refresh();
 
         }
         public void UpdateMod()
@@ -605,6 +608,16 @@ namespace Quasar.Controls.ModManagement.ViewModels
             });
 
         }
+
+        public async void LaunchDL(string QuasarURL)
+        {
+            Task<bool> dl = Download(QuasarURL);
+            if (!dl.Result)
+            {
+                
+            }
+        }
+
         public async Task<bool> Download(string QuasarURL)
         {
             ModListItemViewModel MIVM = new ModListItemViewModel();
@@ -614,17 +627,36 @@ namespace Quasar.Controls.ModManagement.ViewModels
 
             //Setting base info
             ModFileManager ModFileManager = new ModFileManager(QuasarURL);
+            if (ModFileManager.Failed)
+            {
+                AbortDownload(MLI);
+                return false;
+            }
+
             bool newElement = false;
             string downloadText = null;
 
             //Getting info from the API
             APIMod newAPIMod = await APIRequest.GetAPIMod(ModFileManager.APIType, ModFileManager.ModID);
 
+            if (newAPIMod == null)
+            {
+                AbortDownload(MLI);
+                return false;
+            }
+
+                
+
             //Getting corresponding game
             Game game = Games.Single(g => g.GameName == newAPIMod.GameName);
 
             //Updating ModFileManager
             ModFileManager = new ModFileManager(QuasarURL, game);
+            if (ModFileManager.Failed)
+            {
+                AbortDownload(MLI);
+                return false;
+            }
 
             //Finding existing mod
             LibraryMod Mod = Mods.SingleOrDefault(mm => mm.ID == Int32.Parse(ModFileManager.ModID) && mm.TypeID == Int32.Parse(ModFileManager.ModTypeID));
@@ -701,6 +733,7 @@ namespace Quasar.Controls.ModManagement.ViewModels
                 {
                     log.Error(String.Format("Download failed : {0}",e.Message));
                     log.Error(String.Format("Trace : {0}", e.StackTrace));
+                    AbortDownload(MLI);
                     return false;
                 }
                 log.Debug("Download Finished");
@@ -720,6 +753,7 @@ namespace Quasar.Controls.ModManagement.ViewModels
                 {
                     log.Error(String.Format("Extraction failed : {0}", e.Message));
                     log.Error(String.Format("Trace : {0}", e.StackTrace));
+                    AbortDownload(MLI);
                     return false;
                 }
                 log.Debug("Extraction Finished");
@@ -735,8 +769,9 @@ namespace Quasar.Controls.ModManagement.ViewModels
                 }
                 catch (Exception e)
                 {
-                    log.Error(String.Format("Extraction failed : {0}", e.Message));
+                    log.Error(String.Format("Move Failed: {0}", e.Message));
                     log.Error(String.Format("Trace : {0}", e.StackTrace));
+                    AbortDownload(MLI);
                     return false;
                 }
 
@@ -744,15 +779,32 @@ namespace Quasar.Controls.ModManagement.ViewModels
 
                 //Cleanup
                 ModFileManager.ClearDownloadContents();
-
-                //Getting Screenshot from Gamebanana
-                await APIRequest.GetScreenshot(ModFileManager.APIType, ModFileManager.ModID, game.ID.ToString(), Mod.TypeID.ToString(), Mod.ID.ToString());
+                try
+                {
+                    //Getting Screenshot from Gamebanana
+                    await APIRequest.GetScreenshot(ModFileManager.APIType, ModFileManager.ModID, game.ID.ToString(), Mod.TypeID.ToString(), Mod.ID.ToString());
+                }
+                catch(Exception e)
+                {
+                    log.Error("Could not get Screenshot");
+                    log.Error(e.Message);
+                }
+                
 
                 log.Debug("Screenshot Finished");
 
-                //Scanning Files
-                FirstScanLibraryMod(newmod, game, InternalModTypes, GameDatas);
-
+                try
+                {
+                    //Scanning Files
+                    FirstScanLibraryMod(newmod, game, InternalModTypes, GameDatas);
+                }
+                catch (Exception e)
+                {
+                    log.Error("Could not scan files");
+                    log.Error(e.Message);
+                    AbortDownload(MLI);
+                    return false;
+                }
                 log.Debug("Scan Finished");
 
                 //Refreshing  Interface
@@ -773,7 +825,7 @@ namespace Quasar.Controls.ModManagement.ViewModels
                 log.Debug("Mod Already is in the working list");
             }
 
-            return false;
+            return true;
         }
 
         //Mod List Item Scanning
@@ -823,6 +875,22 @@ namespace Quasar.Controls.ModManagement.ViewModels
             foreach(ModListItem i in ModListItems)
             {
                 i.ModListItemViewModel.LoadStats();
+            }
+        }
+
+        public void AbortDownload(ModListItem MLI)
+        {
+            if(MLI != null)
+            {
+                if (MLI.ModListItemViewModel == null)
+                {
+                    MLI.ModListItemViewModel = new ModListItemViewModel()
+                    {
+                        DownloadFailed = true
+                    };
+                }
+                MLI.ModListItemViewModel.Downloading = false;
+                MLI.ModListItemViewModel.DownloadFailed = true;
             }
         }
         #endregion

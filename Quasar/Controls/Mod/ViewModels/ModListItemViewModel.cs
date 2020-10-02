@@ -42,6 +42,7 @@ namespace Quasar.Controls.Mod.ViewModels
         private int _ProgressBarValue { get; set; }
         private int _ContentStatValue { get; set; }
         private bool _Downloading { get; set; }
+        private bool _DownloadFailed { get; set; } = false;
         private bool _CreatorMode { get; set; }
         private bool _AdvancedMode { get; set; }
         private bool _Smol { get; set; }
@@ -56,6 +57,7 @@ namespace Quasar.Controls.Mod.ViewModels
         private ICommand _DeleteModCommand { get; set; }
         private ICommand _AddModCommand { get; set; }
         private ICommand _ShowContentsCommand { get; set; }
+        private ICommand _RetryDownloadCommand { get; set; }
         #endregion
 
         #endregion
@@ -118,8 +120,6 @@ namespace Quasar.Controls.Mod.ViewModels
             }
         }
         
-
-
         public ObservableCollection<Object> Authors
         {
             get => _Authors;
@@ -249,6 +249,21 @@ namespace Quasar.Controls.Mod.ViewModels
 
                 _Downloading = value;
                 OnPropertyChanged("Downloading");
+            }
+        }
+        public bool DownloadFailed
+        {
+            get
+            {
+                return _DownloadFailed;
+            }
+            set
+            {
+                if (_DownloadFailed == value)
+                    return;
+
+                _DownloadFailed = value;
+                OnPropertyChanged("DownloadFailed");
             }
         }
         public bool CreatorMode
@@ -397,6 +412,17 @@ namespace Quasar.Controls.Mod.ViewModels
                     _ShowContentsCommand = new RelayCommand(param => ShowContents());
                 }
                 return _ShowContentsCommand;
+            }
+        }
+        public ICommand RetryDownloadCommand
+        {
+            get
+            {
+                if (_RetryDownloadCommand == null)
+                {
+                    _RetryDownloadCommand = new RelayCommand(param => RetryDownload());
+                }
+                return _RetryDownloadCommand;
             }
         }
         #endregion
@@ -553,6 +579,12 @@ namespace Quasar.Controls.Mod.ViewModels
                 ActionRequested = "Remove";
             }
             
+            EventSystem.Publish<ModListItemViewModel>(this);
+        }
+
+        public void RetryDownload()
+        {
+            ActionRequested = "RetryDownload";
             EventSystem.Publish<ModListItemViewModel>(this);
         }
 

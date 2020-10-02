@@ -563,8 +563,8 @@ namespace Quasar
 
 
                 //To Delete all mappings and associations then rescan mappings : UNCOMMENT
-                /* 
                 
+                /*
                 ActiveWorkspace.Associations = new List<Association>();
                 ContentMappings = new ObservableCollection<ContentMapping>();
                 ObservableCollection<ContentMapping> WorkingList = ContentMappings;
@@ -578,7 +578,25 @@ namespace Quasar
                 }
                 ContentMappings = WorkingList;
                 WorkspaceXML.WriteWorkspaces(Workspaces.ToList());
-                ContentXML.WriteContentMappingListFile(ContentMappings.ToList());*/
+                ContentXML.WriteContentMappingListFile(ContentMappings.ToList());
+
+                foreach (ContentMapping cm in ContentMappings)
+                {
+                    if (cm.GameDataItemID != -1)
+                    {
+                        Association associations = ActiveWorkspace.Associations.Find(ass => ass.GameDataItemID == cm.GameDataItemID && ass.InternalModTypeID == cm.InternalModType && ass.Slot == cm.Slot);
+                        if (associations != null)
+                        {
+                            ActiveWorkspace.Associations[ActiveWorkspace.Associations.IndexOf(associations)] = new Association() { ContentMappingID = cm.ID, GameDataItemID = cm.GameDataItemID, InternalModTypeID = cm.InternalModType, Slot = cm.Slot };
+                        }
+                        else
+                        {
+                            ActiveWorkspace.Associations.Add(new Association() { ContentMappingID = cm.ID, GameDataItemID = cm.GameDataItemID, InternalModTypeID = cm.InternalModType, Slot = cm.Slot });
+                        }
+                    }
+                }
+
+                WorkspaceXML.WriteWorkspaces(Workspaces.ToList());*/
             }
             catch (Exception e)
             {

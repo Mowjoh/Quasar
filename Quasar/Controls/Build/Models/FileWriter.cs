@@ -24,7 +24,7 @@ namespace Quasar.Controls.Build.Models
         public abstract bool DeleteFolder(string FolderPath);
         public abstract void GetFile(string Remote, string DestinationFilePath);
         public abstract List<FileReference> GetRemoteFiles(string FolderPath);
-        public abstract void SetHashes(List<Hash> _Hashes);
+        public abstract void SetHashes(List<Hash> _DistantHashes, List<Hash> _LocalHashes);
         public abstract List<Hash> GetHashes();
     }
 
@@ -39,7 +39,8 @@ namespace Quasar.Controls.Build.Models
         public Action<FtpProgress> Progress { get; set; }
         BuildViewModel BVM { get; set; }
 
-        public List<Hash> Hashes { get; set; }
+        public List<Hash> DistantHashes { get; set; }
+        public List<Hash> LocalHashes { get; set; }
 
         List<FileReference> list { get; set; }
         public ILog Log { get; set; }
@@ -94,7 +95,7 @@ namespace Quasar.Controls.Build.Models
         {
             if (!OverrideHash)
             {
-                Hash distantHash = Hashes.SingleOrDefault(H => H.FilePath == FilePath);
+                Hash distantHash = DistantHashes.SingleOrDefault(H => H.FilePath == FilePath);
                 string localHash = WriterOperations.GetHash(SourceFilePath);
                 if (distantHash != null)
                 {
@@ -104,14 +105,20 @@ namespace Quasar.Controls.Build.Models
                         Log.Debug(String.Format("Updating File {0} - {1}", SourceFilePath, FilePath));
                         FtpStatus Status = Client.UploadFile(SourceFilePath, FilePath, FtpRemoteExists.Overwrite, true, FtpVerify.None, Progress);
                         distantHash.HashString = localHash;
+                        LocalHashes.Add(distantHash);
                         return Status.IsSuccess();
+                    }
+                    else
+                    {
+                        LocalHashes.Add(distantHash);
                     }
                 }
                 else
                 {
                     BVM.SetSize(String.Format("Current File Size : {0}", WriterOperations.BytesToString(new FileInfo(SourceFilePath).Length)));
                     FtpStatus Status = Client.UploadFile(SourceFilePath, FilePath, FtpRemoteExists.Overwrite, true, FtpVerify.None, Progress);
-                    Hashes.Add(new Hash() { HashString = localHash, FilePath = FilePath });
+                    DistantHashes.Add(new Hash() { HashString = localHash, FilePath = FilePath });
+                    LocalHashes.Add(new Hash() { HashString = localHash, FilePath = FilePath });
                     Log.Debug(String.Format("Adding File {0} - {1}", SourceFilePath, FilePath));
                     return Status.IsSuccess();
 
@@ -128,9 +135,9 @@ namespace Quasar.Controls.Build.Models
         {
             try
             {
-                Hash x = Hashes.SingleOrDefault(h => h.FilePath == FilePath);
+                Hash x = DistantHashes.SingleOrDefault(h => h.FilePath == FilePath);
                 if (x != null)
-                    Hashes.Remove(x);
+                    DistantHashes.Remove(x);
                 Log.Debug(String.Format("Deleting File {0}", FilePath));
                 Client.DeleteFile(FilePath);
 
@@ -173,13 +180,22 @@ namespace Quasar.Controls.Build.Models
         {
             Client.DownloadFile(DestinationFilePath, Remote);
         }
-        public override void SetHashes(List<Hash> _Hashes)
+        public override void SetHashes(List<Hash> _DistantHashes, List<Hash> _LocalHashes)
         {
-            Hashes = _Hashes;
-        }
+            DistantHashes = _DistantHashes;
+            LocalHashes = _LocalHashes;
+    }
         public override List<Hash> GetHashes()
         {
-            return Hashes;
+            List<Hash> NewDistantHashes = new List<Hash>();
+            foreach (Hash h in DistantHashes)
+            {
+                if (LocalHashes.Any(sh => sh.FilePath == h.FilePath))
+                {
+                    NewDistantHashes.Add(h);
+                }
+            }
+            return NewDistantHashes;
         }
 
 
@@ -215,7 +231,8 @@ namespace Quasar.Controls.Build.Models
     {
         public string LetterPath { get; set; }
         BuildViewModel BVM { get; set; }
-        public List<Hash> Hashes { get; set; }
+        public List<Hash> DistantHashes { get; set; }
+        public List<Hash> LocalHashes { get; set; }
         public ILog Log { get; set; }
 
         public SDWriter(BuildViewModel _BVM)
@@ -241,7 +258,7 @@ namespace Quasar.Controls.Build.Models
             {
                 if (!OverrideHash)
                 {
-                    Hash distantHash = Hashes.SingleOrDefault(H => H.FilePath == FilePath);
+                    Hash distantHash = DistantHashes.SingleOrDefault(H => H.FilePath == FilePath);
                     string localHash = WriterOperations.GetHash(SourceFilePath);
                     if (distantHash != null)
                     {
@@ -250,6 +267,7 @@ namespace Quasar.Controls.Build.Models
                             BVM.SetSize(String.Format("Current File Size : {0}", WriterOperations.BytesToString(new FileInfo(SourceFilePath).Length)));
                             Folderino.CheckCopyFile(SourceFilePath, FilePath);
                             distantHash.HashString = localHash;
+                            LocalHashes.Add(distantHash);
                             Log.Debug(String.Format("Updating File {0} - {1}",SourceFilePath, FilePath));
                             return true;
                         }
@@ -258,7 +276,8 @@ namespace Quasar.Controls.Build.Models
                     {
                         BVM.SetSize(String.Format("Current File Size : {0}", WriterOperations.BytesToString(new FileInfo(SourceFilePath).Length)));
                         Folderino.CheckCopyFile(SourceFilePath, FilePath);
-                        Hashes.Add(new Hash() { HashString = localHash, FilePath = FilePath });
+                        DistantHashes.Add(new Hash() { HashString = localHash, FilePath = FilePath });
+                        LocalHashes.Add(new Hash() { HashString = localHash, FilePath = FilePath });
                         Log.Debug(String.Format("Adding File {0} - {1}", SourceFilePath, FilePath));
                         return true;
 
@@ -280,9 +299,9 @@ namespace Quasar.Controls.Build.Models
         {
             try
             {
-                Hash x = Hashes.SingleOrDefault(h => h.FilePath == FilePath);
+                Hash x = DistantHashes.SingleOrDefault(h => h.FilePath == FilePath);
                 if (x != null)
-                    Hashes.Remove(x);
+                    DistantHashes.Remove(x);
 
                 File.Delete(FilePath);
                 Log.Debug(String.Format("Deleting File {0}", FilePath));
@@ -324,13 +343,22 @@ namespace Quasar.Controls.Build.Models
             }
             return list;
         }
-        public override void SetHashes(List<Hash> _Hashes)
+        public override void SetHashes(List<Hash> _DistantHashes, List<Hash> _LocalHashes)
         {
-            Hashes = _Hashes;
-        }
+            DistantHashes = _DistantHashes;
+            LocalHashes = _LocalHashes;
+    }
         public override List<Hash> GetHashes()
         {
-            return Hashes;
+            List<Hash> NewDistantHashes = new List<Hash>();
+            foreach(Hash h in DistantHashes)
+            {
+                if (LocalHashes.Contains(h))
+                {
+                    NewDistantHashes.Add(h);
+                }
+            }
+            return NewDistantHashes;
         }
     }
     public class MTPWriter : FileWriter
@@ -373,7 +401,7 @@ namespace Quasar.Controls.Build.Models
             return null;
         }
 
-        public override void SetHashes(List<Hash> _Hashes)
+        public override void SetHashes(List<Hash> _DistantHashes, List<Hash> _LocalHashes)
         {
 
         }

@@ -1,33 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<InternalModType xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="Fighter Voice" Filename="SmashUltimate/Fighter_Voice" ID="5" GameID="1" Association="1" Slots="8" TypeGroup="Fighter">
+<InternalModType xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="Fighter Voice" Filename="SmashUltimate/Fighter_Voice" TypeGroup="Fighter" ID="5" GameID="1" Association="1" Slots="8" IgnoreableGameDataAssociation="false">
   <InternalModTypeFile ID="0">
     <SourcePath>fighter_voice</SourcePath>
     <SourceFile>vc_{GameData}.nus3audio</SourceFile>
-    <BuilderFile BuilderID="0" File ="vc_{GameData}.nus3audio" Path ="sound/bank/fighter_voice"/>
-    <BuilderFile BuilderID="1" File ="arc/vc_{GameData}.nus3audio" Path ="arc/sound/bank/fighter_voice"/>
+    <BuilderFile BuilderID="1" Path="arc/sound/bank/fighter_voice" File="arc/vc_{GameData}.nus3audio" />
+    <BuilderFile BuilderID="2" Path="sound/bank/fighter_voice" File="vc_{GameData}.nus3audio" />
   </InternalModTypeFile>
   <InternalModTypeFile ID="1">
     <SourcePath>fighter_voice</SourcePath>
     <SourceFile>vc_{GameData}_c{S00}.nus3audio</SourceFile>
-    <BuilderFile BuilderID="0" File ="vc_{GameData}_c{S00}.nus3audio" Path ="sound/bank/fighter_voice"/>
-    <BuilderFile BuilderID="1" File ="vc_{GameData}_c{S00}.nus3audio" Path ="arc/sound/bank/fighter_voice"/>
+    <BuilderFile BuilderID="1" Path="arc/sound/bank/fighter_voice" File="vc_{GameData}_c{S00}.nus3audio" />
+    <BuilderFile BuilderID="2" Path="sound/bank/fighter_voice" File="vc_{GameData}_c{S00}.nus3audio" />
   </InternalModTypeFile>
   <InternalModTypeFile ID="2">
     <SourcePath>fighter_voice</SourcePath>
     <SourceFile>vc_{GameData}+{Part}.nus3audio</SourceFile>
-    <BuilderFile BuilderID="0" File ="vc_{GameData}+{Part}.nus3audio" Path ="sound/bank/fighter_voice/"/>
-    <BuilderFile BuilderID="1" File ="vc_{GameData}+{Part}.nus3audio" Path ="arc/sound/bank/fighter_voice"/>
+    <BuilderFile BuilderID="1" Path="arc/sound/bank/fighter_voice" File="vc_{GameData}+{Part}.nus3audio" />
+    <BuilderFile BuilderID="2" Path="sound/bank/fighter_voice/" File="vc_{GameData}+{Part}.nus3audio" />
   </InternalModTypeFile>
   <InternalModTypeFile ID="3">
     <SourcePath>fighter_voice</SourcePath>
     <SourceFile>vc_{GameData}_c{S00}+{Part}.nus3audio</SourceFile>
-    <BuilderFile BuilderID="0" File ="vc_{GameData}_c{S00}+{Part}.nus3audio" Path ="sound/bank/fighter_voice"/>
-    <BuilderFile BuilderID="1" File ="vc_{GameData}_c{S00}+{Part}.nus3audio" Path ="arc/sound/bank/fighter_voice"/>
+    <BuilderFile BuilderID="1" Path="arc/sound/bank/fighter_voice" File="vc_{GameData}_c{S00}+{Part}.nus3audio" />
+    <BuilderFile BuilderID="2" Path="sound/bank/fighter_voice" File="vc_{GameData}_c{S00}+{Part}.nus3audio" />
   </InternalModTypeFile>
   <InternalModTypeFile ID="4">
-    <SourcePath></SourcePath>
+    <SourcePath />
     <SourceFile>vc_{GameData}_c{S00}.nus3audio</SourceFile>
-    <BuilderFile BuilderID="0" File ="vc_{GameData}_c{S00}.nus3audio" Path ="sound/bank/fighter_voice"/>
-    <BuilderFile BuilderID="1" File ="vc_{GameData}_c{S00}.nus3audio" Path ="arc/sound/bank/fighter_voice"/>
+    <BuilderFile BuilderID="1" Path="arc/sound/bank/fighter_voice" File="vc_{GameData}_c{S00}.nus3audio" />
+    <BuilderFile BuilderID="2" Path="sound/bank/fighter_voice" File="vc_{GameData}_c{S00}.nus3audio" />
   </InternalModTypeFile>
 </InternalModType>

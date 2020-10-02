@@ -207,6 +207,7 @@
                     </ListBox.ItemContainerStyle>
                 </ListBox>
             </Grid>
+            <CheckBox Content="Show items with stuff" IsChecked="{Binding ItemsWithStuff}" Grid.Column="1" HorizontalAlignment="Left" Margin="20,30,0,0" VerticalAlignment="Top" Width="220" Foreground="White" Grid.ColumnSpan="2"/>
         </Grid>
     </Grid>
 </UserControl>

@@ -63,8 +63,8 @@ namespace Quasar.Controls.Build.Models
         FileWriter Writer { get; set; }
         int BuildMode { get; set; }
         int ModLoader { get; set; }
-        List<Hash> Hashes { get; set; }
-
+        List<Hash> DistantHashes { get; set; }
+        List<Hash> LocalHashes { get; set; }
         string WorkspacePath { get; set; }
 
         List<FileReference> FilesToBuild { get; set; }
@@ -160,7 +160,7 @@ namespace Quasar.Controls.Build.Models
             {
                 ViewModel.Log.Debug("Starting to list distant files");
 
-                ViewModel.SetStep("Listing Distant Files");
+                ViewModel.SetStep("Listing Distant Files, please wait as it might take a while");
                 ViewModel.SetProgressionStyle(true);
 
                 string DistantWorkspacePath = WorkspacePath.Replace("{Workspace}", ViewModel.ActiveWorkspace.Name);
@@ -178,15 +178,16 @@ namespace Quasar.Controls.Build.Models
                 if (File.Exists(localHashFilePath))
                 {
                     ViewModel.Log.Debug("File Exists, Loading Hashes");
-                    Hashes = XML.GetHashes(localHashFilePath);
+                    DistantHashes = XML.GetHashes(localHashFilePath);
                 }
                 else
                 {
                     ViewModel.Log.Debug("No Remote Hash File");
                     ViewModel.Log.Debug("Hash List Created");
-                    Hashes = new List<Hash>();
+                    DistantHashes = new List<Hash>();
                 }
-                Writer.SetHashes(Hashes);
+                LocalHashes = new List<Hash>();
+                Writer.SetHashes(DistantHashes, LocalHashes);
             }
             catch(Exception e)
             {
@@ -279,7 +280,7 @@ namespace Quasar.Controls.Build.Models
                 ContentMapping cm = ViewModel.ContentMappings.Single(l => l.ID == ass.ContentMappingID);
                 InternalModType imt = ViewModel.InternalModTypes.Single(t => t.ID == cm.InternalModType);
                 GameDataCategory GDC = GD.Categories.Find(c => c.ID == imt.Association);
-                GameDataItem GDI = GDC.Items.Find(i => i.ID == cm.GameDataItemID);
+                GameDataItem GDI = GDC.Items.Find(i => i.ID == ass.GameDataItemID);
 
                 //Mod
                 LibraryMod lm = ViewModel.Mods.Single(m => m.ID == cm.ModID);

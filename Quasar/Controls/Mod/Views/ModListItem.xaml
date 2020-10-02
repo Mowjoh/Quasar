@@ -107,6 +107,7 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
 
+        
         <Path x:Name="BorderColor" Stroke="Black" StrokeThickness="2" Grid.ColumnSpan="2" Grid.RowSpan="2" Style="{DynamicResource ModColor}">
             <Path.Data>
                 <RectangleGeometry x:Name="ColoredRectangle" Rect="{Binding Rekt}" RadiusX="5" RadiusY="10">
@@ -121,6 +122,64 @@
                 </RectangleGeometry>
             </Path.Data>
         </Path>
+        <Grid Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" Background="{StaticResource QD2}" Panel.ZIndex="100">
+            <Grid.Style>
+                <Style TargetType="Grid">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding DownloadFailed}" Value="True">
+                            <Setter Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Grid.Style>
+            <Label Content="Download Failed" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White"/>
+            <StackPanel  Orientation="Horizontal" FlowDirection="RightToLeft">
+
+                <Button Command="{Binding Path=DeleteModCommand}" Height="15" Width="15" Margin="10,0,0,0">
+                    <Button.Template>
+                        <ControlTemplate TargetType="{x:Type Button}">
+                            <Path x:Name="Trash" Data="M6,19a2.006,2.006,0,0,0,2,2h8a2.006,2.006,0,0,0,2-2V9a2.006,2.006,0,0,0-2-2H8A2.006,2.006,0,0,0,6,9ZM18,4H15.5l-.71-.71a1.009,1.009,0,0,0-.7-.29H9.91a1.009,1.009,0,0,0-.7.29L8.5,4H6A1,1,0,0,0,6,6H18a1,1,0,0,0,0-2Z" Stretch="Uniform" ToolTip="Delete this mod">
+                                <Path.Style>
+                                    <Style TargetType="Path">
+                                        <Setter Property="Fill" Value="#A0A0A0"/>
+                                        <Setter Property="Stroke" Value="#A0A0A0"/>
+                                        <Style.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Fill" Value="#cf6679"/>
+                                                <Setter Property="Stroke" Value="#cf6679"/>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Path.Style>
+                            </Path>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+
+                <Button Command="{Binding Path=RetryDownloadCommand}" Height="15" Width="15" Margin="10,0,0,0">
+                    <Button.Template>
+                        <ControlTemplate TargetType="{x:Type Button}">
+                            <Path x:Name="TreeView" Stretch="Uniform" ToolTip="Retry Download" Data="M18.65 8.35l-2.79 2.79c-.32.32-.1.86.35.86H18c0 3.31-2.69 6-6 6-.79 0-1.56-.15-2.25-.44-.36-.15-.77-.04-1.04.23-.51.51-.33 1.37.34 1.64.91.37 1.91.57 2.95.57 4.42 0 8-3.58 8-8h1.79c.45 0 .67-.54.35-.85l-2.79-2.79c-.19-.2-.51-.2-.7-.01zM6 12c0-3.31 2.69-6 6-6 .79 0 1.56.15 2.25.44.36.15.77.04 1.04-.23.51-.51.33-1.37-.34-1.64C14.04 4.2 13.04 4 12 4c-4.42 0-8 3.58-8 8H2.21c-.45 0-.67.54-.35.85l2.79 2.79c.2.2.51.2.71 0l2.79-2.79c.31-.31.09-.85-.36-.85H6z">
+                                <Path.Style>
+                                    <Style TargetType="Path">
+                                        <Setter Property="Fill" Value="#A0A0A0"/>
+                                        <Setter Property="Stroke" Value="#A0A0A0"/>
+                                        <Style.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Fill" Value="Green"/>
+                                                <Setter Property="Stroke" Value="Green"/>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Path.Style>
+                            </Path>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+
+            </StackPanel>
+        </Grid>
         <Grid x:Name="TopGrid" Background="{DynamicResource QD2}" Grid.Column="1" Grid.Row="0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="30*" />
@@ -140,7 +199,7 @@
             <Label x:Name="ModStatusTextLabel" Grid.Column="1" Grid.ColumnSpan="3" HorizontalAlignment="Center" Content="{Binding ModStatusTextValue}" Style="{StaticResource DownloadingLabel}"/>
             <ProgressBar x:Name="Progress" Grid.Column="1" Grid.Row="0" Grid.ColumnSpan="3" Value="{Binding ProgressBarValue}" Style="{StaticResource DownloadBar}" />
 
-            <StackPanel Grid.Column="4" Orientation="Horizontal" FlowDirection="RightToLeft" Visibility="{Binding Path=ElementActive}">
+            <StackPanel Grid.Column="4" Orientation="Horizontal" FlowDirection="RightToLeft">
 
                 <Button x:Name="Trash" Command="{Binding Path=DeleteModCommand}" Height="15" Width="15" Margin="10,0,0,0">
                     <Button.Template>
@@ -238,6 +297,7 @@
                         </ControlTemplate>
                     </Button.Template>
                 </Button>
+                
                 <Button  Command="{Binding Path=MinimizeCommand}" Height="15" Width="15" Margin="10,0,0,0">
                     <Button.Template>
                         <ControlTemplate TargetType="{x:Type Button}">

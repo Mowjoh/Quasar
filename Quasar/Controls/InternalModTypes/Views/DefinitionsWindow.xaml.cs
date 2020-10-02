@@ -376,11 +376,11 @@ namespace Quasar.Controls
                     case "GameData":
                         if (file)
                         {
-                            TF.FileGameData = g.Value;
+                            TF.FileGameData = g.Value.ToLower();
                         }
                         else
                         {
-                            TF.FolderGameData = g.Value;
+                            TF.FolderGameData = g.Value.ToLower();
                         }
                         
                         break;

@@ -54,7 +54,7 @@ namespace Quasar.Quasar_Sys
                             SpecificCategory = SpecificGameData.Categories.Find(gdc => gdc.ID == IMT.Association);
                             if(SpecificCategory != null)
                             {
-                                int GameDataItemID = SpecificCategory.Items.Find(i => i.Attributes[0].Value == qfm.GameData).ID;
+                                int GameDataItemID = SpecificCategory.Items.Find(i => i.Attributes[0].Value.ToLower() == qfm.GameData).ID;
                                 if (mappings.Count != 0)
                                 {
                                     cm = mappings.SingleOrDefault(existingMapping => existingMapping.Slot == qfm.SlotInt && existingMapping.InternalModType == qfm.InternalModTypeID && existingMapping.GameDataItemID == GameDataItemID);
@@ -123,6 +123,10 @@ namespace Quasar.Quasar_Sys
             Regex FileRegex = new Regex(Searchie.PrepareRegex(IMTF.SourceFile));
             Regex FolderRegex = new Regex(Searchie.PrepareRegex(IMTF.SourcePath));
 
+            if(IMT.Name == "Music")
+            {
+                Console.WriteLine("Musica");
+            }
             foreach(QuasarFileManager qfm in QFMList)
             {
                 if (!qfm.ValidFile)
@@ -149,17 +153,13 @@ namespace Quasar.Quasar_Sys
                         if (folderMatch.Success)
                         {
                             getMatchValues(qfm, fileMatch.Groups, true);
-                            if(qfm.FileGameData == "ryu")
-                            {
-                                Console.Write("s");
-                            }
                             //If there is a detected Folder Gamedata but not for the file
                             if ((qfm.FileGameData == "" || qfm.FileGameData == null) && qfm.FolderGameData != null)
                             {
                                 if (ValidateGameData(qfm.FolderGameData, gdc))
                                 {
                                     qfm.ValidFile = true;
-                                    qfm.GameData = qfm.FolderGameData;
+                                    qfm.GameData = qfm.FolderGameData.ToLower();
                                     qfm.InternalModType = IMT.Name;
                                     qfm.InternalModTypeID = IMT.ID;
                                     qfm.InternalModTypeFileID = IMTF.ID;
@@ -171,7 +171,7 @@ namespace Quasar.Quasar_Sys
                                 if (ValidateGameData(qfm.FileGameData, gdc))
                                 {
                                     qfm.ValidFile = true;
-                                    qfm.GameData = qfm.FileGameData;
+                                    qfm.GameData = qfm.FileGameData.ToLower();
                                     qfm.InternalModType = IMT.Name;
                                     qfm.InternalModTypeID = IMT.ID;
                                     qfm.InternalModTypeFileID = IMTF.ID;
@@ -231,11 +231,11 @@ namespace Quasar.Quasar_Sys
                         case "GameData":
                             if (file)
                             {
-                                qfm.FileGameData = g.Value;
+                                qfm.FileGameData = g.Value.ToLower();
                             }
                             else
                             {
-                                qfm.FolderGameData = g.Value;
+                                qfm.FolderGameData = g.Value.ToLower();
                             }
 
                             break;
@@ -317,7 +317,7 @@ namespace Quasar.Quasar_Sys
             GameDataItem item = null;
             try
             {
-                item = gdc.Items.Find(i => i.Attributes[0].Value == Gamedatavalues);
+                item = gdc.Items.Find(i => i.Attributes[0].Value.ToLower() == Gamedatavalues);
             }
             catch(Exception e)
             {
@@ -351,6 +351,7 @@ namespace Quasar.Quasar_Sys
 
             //Replacing points for regex interpretation
             output = output.Replace(@".", "\\.");
+            output = output.Replace(@"+", "\\+");
 
             //Replacing Slot digits
             output = output.Replace(@"{S000}", @"(?'Slot'\d{3})");

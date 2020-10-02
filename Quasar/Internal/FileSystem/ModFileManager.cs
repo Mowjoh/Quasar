@@ -1,4 +1,6 @@
-﻿using Quasar.XMLResources;
+﻿using log4net;
+using log4net.Appender;
+using Quasar.XMLResources;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -23,23 +25,61 @@ namespace Quasar.FileSystem
         public string ArchiveContentFolderPath { get; set; }
         public string LibraryContentFolderPath { get; set; }
 
+        public ILog Log { get; set; }
+
+        public bool Failed { get; set; } = false;
+
         //Sets up default paths from the Quasar URL
         public ModFileManager(string _QuasarURL,Game _Game)
         {
+            SetupLogger();
             string parameters = _QuasarURL.Substring(7);
             DownloadURL = parameters.Split(',')[0];
             ModID = parameters.Split(',')[2];
             ModArchiveFormat = parameters.Split(',')[3];
             APIType = parameters.Split(',')[1];
 
-            
-            GameModType mt = _Game.GameModTypes.Find(m => m.APIName == parameters.Split(',')[1]);
-            ModTypeID = mt.ID.ToString();
-            ModTypeFolderName = mt.LibraryFolder;
+            try
+            {
+                GameModType mt = _Game.GameModTypes.Find(m => m.APIName == parameters.Split(',')[1]);
+                if( mt != null)
+                {
+                    ModTypeID = mt.ID.ToString();
+                    ModTypeFolderName = mt.LibraryFolder;
 
-            DownloadDestinationFilePath = Properties.Settings.Default.DefaultDir + "\\Library\\Downloads\\" + ModID + "." + ModArchiveFormat;
-            ArchiveContentFolderPath = Properties.Settings.Default.DefaultDir + "\\Library\\Downloads\\" + ModID + "\\";
-            LibraryContentFolderPath = Properties.Settings.Default.DefaultDir + "\\Library\\Mods\\" + ModTypeFolderName + "\\" + ModID + "\\";
+                    DownloadDestinationFilePath = Properties.Settings.Default.DefaultDir + "\\Library\\Downloads\\" + ModID + "." + ModArchiveFormat;
+                    ArchiveContentFolderPath = Properties.Settings.Default.DefaultDir + "\\Library\\Downloads\\" + ModID + "\\";
+                    LibraryContentFolderPath = Properties.Settings.Default.DefaultDir + "\\Library\\Mods\\" + ModTypeFolderName + "\\" + ModID + "\\";
+                }
+                else
+                {
+                    Log.Error("No ModType Found");
+                    Failed = true;
+                }
+                
+            }
+            catch(Exception e)
+            {
+                Log.Error(e.Message);
+                Failed = true;
+            }
+            
+        }
+
+        public void SetupLogger()
+        {
+            Log = LogManager.GetLogger("QuasarAppender");
+            FileAppender appender = (FileAppender)Log.Logger.Repository.GetAppenders()[0];
+            appender.File = Properties.Settings.Default.DefaultDir + "\\Quasar.log";
+            if (Properties.Settings.Default.EnableAdvanced)
+            {
+                appender.Threshold = log4net.Core.Level.Debug;
+            }
+            else
+            {
+                appender.Threshold = log4net.Core.Level.Info;
+            }
+            appender.ActivateOptions();
         }
 
         public ModFileManager(string _QuasarURL)
