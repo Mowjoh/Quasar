@@ -161,7 +161,6 @@
       <DependentUpon>WorkspaceView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Internal\EventSystem.cs" />
-    <Compile Include="Internal\FileSystem\Builder.cs" />
     <Compile Include="Internal\FileSystem\ModFileManager.cs" />
     <Compile Include="Internal\Tools\Updater.cs" />
     <Compile Include="Internal\XML\ContentXML.cs" />
@@ -281,7 +280,13 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <Content Include="References\images\Games\SmashUltimate\others.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="References\images\Games\SmashUltimate\characters.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="References\images\Games\SmashUltimate\others_selected.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="References\images\Games\SmashUltimate\characters_selected.png">
@@ -308,10 +313,22 @@
     <Content Include="References\images\NoScreenshot.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="References\InternalModTypes\SmashUltimate\Common_Effect.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="References\InternalModTypes\SmashUltimate\Fighter_Parameter.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="References\InternalModTypes\SmashUltimate\Fighter_Animation.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="References\InternalModTypes\SmashUltimate\Fighter_Sounds.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="References\InternalModTypes\SmashUltimate\Common_Parameter.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="References\InternalModTypes\SmashUltimate\nro.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="References\Sources\ModLoaders.xml">
@@ -325,6 +342,21 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="References\InternalModTypes\SmashUltimate\Items.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="References\ModLoaders\UMM\Switch\Ultimate_Mod_Manager.nro">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="References\ModLoaders\ARCropolis\atmosphere\contents\01006A800016E000\exefs\main.npdm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="References\ModLoaders\ARCropolis\atmosphere\contents\01006A800016E000\exefs\subsdk9">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="References\ModLoaders\ARCropolis\arcropolis.toml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="References\ModLoaders\ARCropolis\atmosphere\contents\01006A800016E000\romfs\skyline\plugins\libarcropolis.nro">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Resource Include="Controls\Common\Fonts\sofiapro-light.otf" />

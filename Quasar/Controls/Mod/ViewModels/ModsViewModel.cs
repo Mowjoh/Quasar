@@ -483,6 +483,10 @@ namespace Quasar.Controls.ModManagement.ViewModels
 
             if (proceed || Properties.Settings.Default.SupressModDeletion)
             {
+                //Removing Files
+                ModFileManager mfm = new ModFileManager(item.ModListItemViewModel.LibraryMod, Games[1]);
+                mfm.DeleteFiles();
+
                 //Removing from ContentMappings
                 List<ContentMapping> relatedMappings = ContentMappings.Where(cm => cm.ModID == item.ModListItemViewModel.LibraryMod.ID).ToList();
                 foreach (ContentMapping cm in relatedMappings)

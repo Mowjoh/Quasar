@@ -1,9 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <InternalModType xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="Fighter Sound Effects" Filename="SmashUltimate/Fighter_Sounds" TypeGroup="Fighter" ID="11" GameID="1" Association="1" Slots="8" IgnoreableGameDataAssociation="false">
+  <NoGameData>false</NoGameData>
+  <OutsideFolder>false</OutsideFolder>
+  <OutsideFolderPath />
   <InternalModTypeFile ID="0">
-    <SourcePath>fighter_voice</SourcePath>
-    <SourceFile>ses_{GameData}.nus3audio</SourceFile>
+    <SourcePath>fighter</SourcePath>
+    <SourceFile>se_{GameData}.nus3audio</SourceFile>
     <BuilderFile BuilderID="1" Path="arc/sound/bank/fighter" File="se_{GameData}.nus3audio" />
     <BuilderFile BuilderID="2" Path="sound/bank/fighter" File="se_{GameData}.nus3audio" />
+  </InternalModTypeFile>
+  <InternalModTypeFile ID="1">
+    <SourcePath>fighter</SourcePath>
+    <SourceFile>se_{GameData}_{Part}.nus3audio</SourceFile>
+    <BuilderFile BuilderID="1" Path="arc/sound/bank/fighter" File="se_{GameData}_{Part}.nus3audio" />
+    <BuilderFile BuilderID="2" Path="sound/bank/fighter" File="se_{GameData}_{Part}.nus3audio" />
   </InternalModTypeFile>
 </InternalModType>

@@ -14,7 +14,7 @@ using System.Windows.Input;
 
 namespace Quasar.Controls.InternalModTypes.ViewModels
 {
-    class InternalModTypeViewModel : ObservableObject
+    public class InternalModTypeViewModel : ObservableObject
     {
         #region Fields
         private ObservableCollection<InternalModType> _InternalModTypes { get; set; }

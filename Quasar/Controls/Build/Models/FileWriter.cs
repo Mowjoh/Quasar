@@ -76,6 +76,28 @@ namespace Quasar.Controls.Build.Models
 
             }
         }
+        public FTPWriter()
+        {
+            if (Properties.Settings.Default.FTPValid)
+            {
+                Adress = Properties.Settings.Default.FTPAddress.Split(':')[0];
+                Port = Properties.Settings.Default.FTPAddress.Split(':')[1];
+                Username = Properties.Settings.Default.FTPUN;
+                Password = Properties.Settings.Default.FTPPW;
+
+                Client = new FtpClient(Adress);
+                Client.Port = int.Parse(Port);
+                if (Username != "")
+                {
+                    Client.Credentials = new System.Net.NetworkCredential(Username, Password);
+                }
+
+                Client.RecursiveList = true;
+
+                Client.Connect();
+
+            }
+        }
 
         public override bool VerifyOK()
         {
@@ -126,8 +148,18 @@ namespace Quasar.Controls.Build.Models
             }
             else
             {
-                FtpStatus Status = Client.UploadFile(SourceFilePath, FilePath, FtpRemoteExists.Overwrite, true, FtpVerify.None, Progress);
-                Log.Debug(String.Format("Adding File disregarding Hash {0} - {1}", SourceFilePath, FilePath));
+                if(Progress == null)
+                {
+                    FtpStatus Status = Client.UploadFile(SourceFilePath, FilePath, FtpRemoteExists.Overwrite, true, FtpVerify.None);
+                    Log.Debug(String.Format("Adding File disregarding Hash {0} - {1}", SourceFilePath, FilePath));
+                }
+                else
+                {
+                    FtpStatus Status = Client.UploadFile(SourceFilePath, FilePath, FtpRemoteExists.Overwrite, true, FtpVerify.None, Progress);
+                    Log.Debug(String.Format("Adding File disregarding Hash {0} - {1}", SourceFilePath, FilePath));
+                }
+                
+                
             }
             return true;
         }

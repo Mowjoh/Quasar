@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<InternalModType xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="Fighter Effect" Filename="SmashUltimate/Fighter_Effect" TypeGroup="Fighter" ID="4" GameID="1" Association="1" Slots="8" IgnoreableGameDataAssociation="false">
+<InternalModType xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="Fighter Effect" Filename="SmashUltimate/Fighter_Effect" TypeGroup="Fighter" ID="4" GameID="1" Association="1" Slots="1" IgnoreableGameDataAssociation="false">
+  <NoGameData>false</NoGameData>
+  <OutsideFolder>false</OutsideFolder>
+  <OutsideFolderPath></OutsideFolderPath>
   <InternalModTypeFile ID="0">
     <SourcePath>effect/fighter/{GameData}</SourcePath>
     <SourceFile>{AnyFile}.eff</SourceFile>

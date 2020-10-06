@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <InternalModType xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="Stage" Filename="SmashUltimate/Stage_SkinModel" TypeGroup="Stage" ID="6" GameID="1" Association="2" Slots="1" IgnoreableGameDataAssociation="false">
+  <NoGameData>false</NoGameData>
+  <OutsideFolder>false</OutsideFolder>
+  <OutsideFolderPath></OutsideFolderPath>
   <InternalModTypeFile ID="0">
     <SourcePath>stage/{GameData}/{Folder}/model/{Folder}</SourcePath>
     <SourceFile>{AnyFile}.nutexb</SourceFile>

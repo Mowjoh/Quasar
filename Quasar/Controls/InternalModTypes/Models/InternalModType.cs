@@ -21,6 +21,9 @@ namespace Quasar
         private int _Association { get; set; }
         private int _Slots { get; set; }
         private bool _IgnoreableGameDataAssociation { get; set; }
+        private bool _NoGameData { get; set; }
+        private bool _OutsideFolder { get; set; }
+        private string _OutsideFolderPath { get; set; }
         private List<InternalModTypeFile> _Files { get; set; }
         #endregion
 
@@ -133,6 +136,45 @@ namespace Quasar
 
                 _IgnoreableGameDataAssociation = value;
                 OnPropertyChanged("IgnoreableGameDataAssociation");
+            }
+        }
+        [XmlElement("NoGameData")]
+        public bool NoGameData
+        {
+            get => _NoGameData;
+            set
+            {
+                if (_NoGameData == value)
+                    return;
+
+                _NoGameData = value;
+                OnPropertyChanged("NoGameData");
+            }
+        }
+        [XmlElement("OutsideFolder")]
+        public bool OutsideFolder
+        {
+            get => _OutsideFolder;
+            set
+            {
+                if (_OutsideFolder == value)
+                    return;
+
+                _OutsideFolder = value;
+                OnPropertyChanged("OutsideFolder");
+            }
+        }
+        [XmlElement("OutsideFolderPath")]
+        public string OutsideFolderPath
+        {
+            get => _OutsideFolderPath;
+            set
+            {
+                if (_OutsideFolderPath == value)
+                    return;
+
+                _OutsideFolderPath = value;
+                OnPropertyChanged("OutsideFolderPath");
             }
         }
         [XmlElement("InternalModTypeFile")]

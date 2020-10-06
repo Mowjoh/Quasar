@@ -817,6 +817,11 @@ namespace Quasar.Controls.Assignation.ViewModels
                         }
                         else
                         {
+                            if(cm.ModID != AvailableSlots[ass.Slot].SlotItemViewModel.ContentMappings[0].ModID)
+                            {
+                                AvailableSlots[ass.Slot].SlotItemViewModel.ContentName = "Mixed Contents";
+                            }
+
                             AvailableSlots[ass.Slot].SlotItemViewModel.ContentMappings.Add(cm);
                         }
                     }

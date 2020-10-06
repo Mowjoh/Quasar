@@ -17,7 +17,7 @@
             </ItemsControl.ItemsPanel>
 
         </ItemsControl>
-        <Button Content="Validate FTP Settings" Command="{Binding Path=ValidateFTPCommand}" HorizontalAlignment="Left" Margin="145,20,0,0" VerticalAlignment="Top" Width="130" Height="26"/>
+        <Button Content="Validate FTP and Save Connection info" Command="{Binding Path=ValidateFTPCommand}" HorizontalAlignment="Left" Margin="145,20,0,0" VerticalAlignment="Top" Width="225" Height="26"/>
         <Label Content="Quick Actions :" HorizontalAlignment="Left" Margin="10,20,0,0" VerticalAlignment="Top" Style="{DynamicResource QuasarLabel}" Height="26"/>
     </Grid>
 

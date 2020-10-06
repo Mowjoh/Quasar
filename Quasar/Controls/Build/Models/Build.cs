@@ -3,6 +3,7 @@ using log4net;
 using Quasar.Controls.Build.ViewModels;
 using Quasar.Controls.Common.Models;
 using Quasar.FileSystem;
+using Quasar.Internal.Tools;
 using Quasar.XMLResources;
 using System;
 using System.Collections.Generic;
@@ -90,7 +91,7 @@ namespace Quasar.Controls.Build.Models
                 ViewModel.Building = true;
                 ViewModel.Log.Debug("Building set to true");
                 await CopyModLoader();
-                ViewModel.Log.Debug("Fake Copy ModLoader Finished");
+                ViewModel.Log.Debug("Copy ModLoader Finished");
                 //Base Operations
                 await StartCheck();
                 ViewModel.Log.Debug("Start Check Finished");
@@ -111,7 +112,7 @@ namespace Quasar.Controls.Build.Models
 
         public override async Task CopyModLoader()
         {
-            Console.Write("");
+            TouchmARC.CheckTouchmARC(Writer, ViewModel.ActiveWorkspace.Name);
         }
         public override async Task StartCheck()
         {

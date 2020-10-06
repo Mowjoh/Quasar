@@ -106,6 +106,23 @@ namespace Quasar.FileSystem
             LibraryContentFolderPath = Properties.Settings.Default.DefaultDir + "\\Library\\Mods\\" + ModTypeFolderName + "\\" + ModID + "\\";
         }
 
+        public void CheckOldFolderPath()
+        {
+            string OldContentPath = Properties.Settings.Default.DefaultDir + "\\Library\\Mods\\SmashUltimate\\" + ModID + "\\";
+            if (Directory.Exists(OldContentPath))
+            {
+                if (Directory.Exists(LibraryContentFolderPath))
+                {
+                    Directory.Delete(LibraryContentFolderPath);
+                }
+                Directory.Move(OldContentPath, LibraryContentFolderPath);
+            }
+            if (ModID == "211594" || ModID == "168099")
+            {
+                Console.WriteLine("");
+            }
+        }
+
         //Moves the files to the Library Content path
         public async Task<int> MoveDownload()
         {
@@ -127,7 +144,14 @@ namespace Quasar.FileSystem
             }
         }
 
-
+        //Deletes Mod Files
+        public void DeleteFiles()
+        {
+            if (Directory.Exists(LibraryContentFolderPath))
+            {
+                Directory.Delete(LibraryContentFolderPath, true);
+            }
+        }
 
 
     }

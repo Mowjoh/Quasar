@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<InternalModType xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="NRO" Filename="SmashUltimate/nro" TypeGroup="NRO" ID="12" GameID="1" Association="5" Slots="100" IgnoreableGameDataAssociation="false">
+  <NoGameData>true</NoGameData>
+  <OutsideFolder>true</OutsideFolder>
+  <OutsideFolderPath>atmosphere/contents/01006A800016E000/romfs/skyline/plugins</OutsideFolderPath>
+  <InternalModTypeFile ID="0">
+    <SourcePath></SourcePath>
+    <SourceFile>{AnyFile}.nro</SourceFile>
+    <BuilderFile BuilderID="1" Path="" File="{AnyFile}.nro" />
+    <BuilderFile BuilderID="2" Path="" File="stage_{Part}_{GameData}.bntx" />
+  </InternalModTypeFile>
+</InternalModType>

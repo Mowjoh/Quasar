@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <InternalModType xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="Fighter UI" Filename="SmashUltimate/Fighter_UI" TypeGroup="Fighter" ID="3" GameID="1" Association="1" Slots="8" IgnoreableGameDataAssociation="false">
+  <NoGameData>false</NoGameData>
+  <OutsideFolder>false</OutsideFolder>
+  <OutsideFolderPath></OutsideFolderPath>
   <InternalModTypeFile ID="0">
     <SourcePath>chara/{Folder}</SourcePath>
     <SourceFile>chara_{Part}_{GameData}_{S00}.bntx</SourceFile>

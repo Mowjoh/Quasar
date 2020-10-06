@@ -12,16 +12,18 @@ namespace Quasar.Internal.Tools
 {
     public class Updater
     {
+        public bool Updated { get; set; }
+        public bool NeedsCleaning { get; set; }
         public Updater()
         {
-            bool Update = Checker.CheckQuasarUpdated();
+            Updated = Checker.CheckQuasarUpdated();
             Folderino.CheckBaseFolders();
             Folderino.CompareReferences();
             Folderino.UpdateBaseFiles();
 
             int version = int.Parse(Properties.Settings.Default.AppVersion);
             int previous = int.Parse(Properties.Settings.Default.PreviousVersion);
-            if (Update && version >= 1140 && previous < 1140)
+            if (Updated && version >= 1140 && previous < 1140)
             {
                 String AssociationsPath = Properties.Settings.Default.DefaultDir + @"\Library\Associations.xml";
                 String ContentPath = Properties.Settings.Default.DefaultDir + @"\Library\ContentMapping.xml";
@@ -36,11 +38,17 @@ namespace Quasar.Internal.Tools
                 }
 
             }
+            
+            if (Updated && version >= 1500 && previous < 1500)
+            {
+                NeedsCleaning = true;
+            }
 
             Checker.BaseWorkspace();
 
             //Setting language
             Thread.CurrentThread.CurrentUICulture = new System.Globalization.CultureInfo(Properties.Settings.Default.Language);
         }
+        
     }
 }

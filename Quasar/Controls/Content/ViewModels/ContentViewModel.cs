@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace Quasar.Controls.Content.ViewModels
 {
 
-    class ContentViewModel : ObservableObject
+    public class ContentViewModel : ObservableObject
     {
         #region Fields
         //Working Data

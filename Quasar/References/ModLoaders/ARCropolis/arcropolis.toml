@@ -1,0 +1,9 @@
+[infos]
+version = "0.9.0"
+
+[paths]
+arc = "sd:/Quasar/Quasar's Workspace/arc"
+umm = "sd:/ultimate/mods"
+
+[misc]
+debug = false

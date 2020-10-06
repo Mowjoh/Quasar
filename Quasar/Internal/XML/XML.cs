@@ -1,4 +1,5 @@
 ﻿using Quasar.Controls.Build.Models;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml.Serialization;
@@ -32,15 +33,23 @@ namespace Quasar.XMLResources
             string typesFolderPath = Properties.Settings.Default.DefaultDir + @"\References\InternalModTypes\";
             XmlSerializer serializer = new XmlSerializer(typeof(InternalModType));
 
-            foreach (string file in Directory.GetFiles(typesFolderPath,"*",SearchOption.AllDirectories))
+            try
             {
-                using (FileStream fileStream = new FileStream(file, FileMode.Open))
+                foreach (string file in Directory.GetFiles(typesFolderPath, "*", SearchOption.AllDirectories))
                 {
+                    using (FileStream fileStream = new FileStream(file, FileMode.Open))
+                    {
 
-                    InternalModType result = (InternalModType)serializer.Deserialize(fileStream);
-                    InteralModTypes.Add(result);
+                        InternalModType result = (InternalModType)serializer.Deserialize(fileStream);
+                        InteralModTypes.Add(result);
+                    }
                 }
             }
+            catch(Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+            
 
             return InteralModTypes;
         }

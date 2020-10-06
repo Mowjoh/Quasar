@@ -593,7 +593,7 @@
         <Name>Mii Fighter</Name>
         <ItemAttribute>
           <Key>foldername</Key>
-          <Value>Value</Value>
+          <Value>miifighter</Value>
         </ItemAttribute>
         <ItemAttribute>
           <Key>IsDLC</Key>
@@ -604,7 +604,7 @@
         <Name>Mii Gunner</Name>
         <ItemAttribute>
           <Key>foldername</Key>
-          <Value>Value</Value>
+          <Value>miigunner</Value>
         </ItemAttribute>
         <ItemAttribute>
           <Key>IsDLC</Key>
@@ -615,7 +615,7 @@
         <Name>Mii Swordfighter</Name>
         <ItemAttribute>
           <Key>foldername</Key>
-          <Value>Value</Value>
+          <Value>miiswordsman</Value>
         </ItemAttribute>
         <ItemAttribute>
           <Key>IsDLC</Key>
@@ -15224,6 +15224,20 @@
         <ItemAttribute>
           <Key>foldername</Key>
           <Value>bananagun</Value>
+        </ItemAttribute>
+        <ItemAttribute>
+          <Key>IsDLC</Key>
+          <Value>False</Value>
+        </ItemAttribute>
+      </Item>
+    </Category>
+    <Category ID="5" image="SmashUltimate/others.png">
+      <Name>Others</Name>
+      <Item ID="1">
+        <Name>Misc. Items</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value></Value>
         </ItemAttribute>
         <ItemAttribute>
           <Key>IsDLC</Key>
