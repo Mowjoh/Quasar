@@ -31,6 +31,7 @@ namespace Quasar.Controls.Assignation.ViewModels
         private CollectionViewSource _ItemsCollectionViewSource { get; set; }
         private bool _SelectionVisible { get; set; }
         private bool _TypesGrouped { get; set; }
+        private bool _ItemsWithStuff { get; set; }
         private string _FilterText { get; set; }
         #endregion
 
@@ -174,6 +175,24 @@ namespace Quasar.Controls.Assignation.ViewModels
                 ShowSlots();
             }
         }
+        public bool ItemsWithStuff
+        {
+            get => _ItemsWithStuff;
+            set
+            {
+                if (_ItemsWithStuff == value)
+                    return;
+
+                _ItemsWithStuff = value;
+
+                if (ItemsCollectionViewSource != null)
+                {
+                    ItemsCollectionViewSource.View.Refresh();
+                }
+                OnPropertyChanged("ItemsWithStuff");
+                
+            }
+        }
         public string FilterText
         {
             get => _FilterText;
@@ -191,6 +210,9 @@ namespace Quasar.Controls.Assignation.ViewModels
                 OnPropertyChanged("FilterText");
             }
         }
+
+        public string dragimage { get; set; } = Properties.Settings.Default.DefaultDir + @"\References\images\drag.png";
+        public string deleteimage { get; set; } = Properties.Settings.Default.DefaultDir + @"\References\images\Delete.png";
         #endregion
 
         #region Data
@@ -348,6 +370,16 @@ namespace Quasar.Controls.Assignation.ViewModels
 
                 if (value != null)
                 {
+                    if(value.GameDataCategory.Name == "Others")
+                    {
+                        TypesGrouped = false;
+                    }
+                    else
+                    {
+                        TypesGrouped = true;
+                    }
+                    
+
                     ItemsCollectionViewSource.Source = value.GameDataCategory.Items;
                     ItemsCollectionViewSource.View.MoveCurrentToFirst();    
 
@@ -471,21 +503,25 @@ namespace Quasar.Controls.Assignation.ViewModels
                 {
                     //Single Type addition
                     ContentMapping cm = item.SlotItemViewModel.ContentMappings[0];
+                    InternalModType IMT = InternalModTypes.Single(i => i.ID == cm.InternalModType);
                     Association a = ActiveWorkspace.Associations.SingleOrDefault(az => az.InternalModTypeID == cm.InternalModType && az.Slot == item.SlotItemViewModel.Index && az.GameDataItemID == cm.GameDataItemID);
+                    
                     if(a != null)
                     {
                         a.ContentMappingID = cm.ID;
+                        ActiveWorkspace.Associations.Remove(a);
+                        Log.Debug(String.Format("Association exists for ContentMapping ID '{0}', slot '{1}', IMT '{2}', GDIID '{3}', removing it", a.ContentMappingID, a.Slot, a.InternalModTypeID, a.GameDataItemID));
                     }
-                    else
+                    
+                    ActiveWorkspace.Associations.Add(new Association()
                     {
-                        ActiveWorkspace.Associations.Add(new Association()
-                        {
-                            ContentMappingID = cm.ID,
-                            GameDataItemID = cm.GameDataItemID,
-                            InternalModTypeID = cm.InternalModType,
-                            Slot = item.SlotItemViewModel.Index
-                        });
-                    }
+                        ContentMappingID = cm.ID,
+                        GameDataItemID = SelectedGameDataItem.ID,
+                        InternalModTypeID = cm.InternalModType,
+                        Slot = item.SlotItemViewModel.Index
+                    });
+                    Log.Debug(String.Format("Association created for ContentMapping '{0}' ID '{1}', slot '{2}', IMT '{3}', GDIID '{4}'", cm.Name, cm.ID, item.SlotItemViewModel.Index, cm.InternalModType, cm.GameDataItemID));
+                    
                 }
                 else
                 {
@@ -494,16 +530,19 @@ namespace Quasar.Controls.Assignation.ViewModels
                     foreach(Association a in La)
                     {
                         ActiveWorkspace.Associations.Remove(a);
+                        Log.Debug(String.Format("Association exists for ContentMapping ID '{0}', slot '{1}', IMT '{2}', GDIID '{3}', removing it", a.ContentMappingID, a.Slot, a.InternalModTypeID, a.GameDataItemID));
                     }
                     foreach(ContentMapping cm in item.SlotItemViewModel.ContentMappings)
                     {
                         ActiveWorkspace.Associations.Add(new Association()
                         {
                             ContentMappingID = cm.ID,
-                            GameDataItemID = cm.GameDataItemID,
+                            GameDataItemID = SelectedGameDataItem.ID,
                             InternalModTypeID = cm.InternalModType,
                             Slot = item.SlotItemViewModel.Index
                         });
+                        Log.Debug(String.Format("Association created for ContentMapping '{0}' ID '{1}', slot '{2}', IMT '{3}', GDIID '{4}'", cm.Name, cm.ID, item.SlotItemViewModel.Index, cm.InternalModType, cm.GameDataItemID));
+
                     }
                 }
                 WorkspaceXML.WriteWorkspaces(Workspaces.ToList());
@@ -522,7 +561,29 @@ namespace Quasar.Controls.Assignation.ViewModels
             {
                 if (gdi.Name.ToLower().Contains(FilterText.ToLower()))
                 {
-                    e.Accepted = true;
+                    if (ItemsWithStuff)
+                    {
+                        GameDataCategory cat = SelectedGameData.Categories.Single(c => c.Items.Contains(gdi));
+                        List<InternalModType> IMT = InternalModTypes.Where(i => i.Association == cat.ID).ToList();
+                        List<int> IMTIDS = new List<int>();
+                        foreach (InternalModType i in IMT)
+                        {
+                            IMTIDS.Add(i.ID);
+                        }
+                        if (ActiveWorkspace.Associations.Any(a => a.GameDataItemID == gdi.ID && IMTIDS.Contains(a.InternalModTypeID)))
+                        {
+                            e.Accepted = true;
+                        }
+                        else
+                        {
+                            e.Accepted = false;
+                        }
+                    }
+                    else
+                    {
+                        e.Accepted = true;
+                    }
+                    
                 }
                 else
                 {
@@ -531,7 +592,28 @@ namespace Quasar.Controls.Assignation.ViewModels
             }
             else
             {
-                e.Accepted = true;
+                if (ItemsWithStuff)
+                {
+                    GameDataCategory cat = SelectedGameData.Categories.Single(c => c.Items.Contains(gdi));
+                    List<InternalModType> IMT = InternalModTypes.Where(i => i.Association == cat.ID).ToList();
+                    List<int> IMTIDS = new List<int>();
+                    foreach(InternalModType i in IMT)
+                    {
+                        IMTIDS.Add(i.ID);
+                    }
+                    if(ActiveWorkspace.Associations.Any(a => a.GameDataItemID == gdi.ID && IMTIDS.Contains(a.InternalModTypeID)))
+                    {
+                        e.Accepted = true;
+                    }
+                    else
+                    {
+                        e.Accepted = false;
+                    }
+                }
+                else
+                {
+                    e.Accepted = true;
+                }
             }
         }
 
@@ -596,8 +678,15 @@ namespace Quasar.Controls.Assignation.ViewModels
 
             if (!TypesGrouped)
             {
-                List<ContentMapping> contentMappings = ContentMappings.Where(a => a.InternalModType == SelectedInternalModType.ID && a.GameDataItemID == SelectedGameDataItem.ID).ToList();
-
+                List<ContentMapping> contentMappings = new List<ContentMapping>();
+                if (SelectedInternalModType.IgnoreableGameDataAssociation)
+                {
+                    contentMappings = ContentMappings.Where(a => a.InternalModType == SelectedInternalModType.ID).ToList();
+                }
+                else
+                {
+                    contentMappings = ContentMappings.Where(a => a.InternalModType == SelectedInternalModType.ID && a.GameDataItemID == SelectedGameDataItem.ID).ToList();
+                }
                 foreach (ContentMapping cm in contentMappings)
                 {
                     SlotItems.Add(new SlotItem()
@@ -644,7 +733,16 @@ namespace Quasar.Controls.Assignation.ViewModels
                 List<ContentMapping> contentMapping = new List<ContentMapping>();
                 foreach(InternalModType IMT in SelectedInternalModTypeGroup.InternalModTypes)
                 {
-                    List<ContentMapping> local = ContentMappings.Where(a => a.InternalModType == IMT.ID && a.GameDataItemID == SelectedGameDataItem.ID).ToList();
+                    List<ContentMapping> local = new List<ContentMapping>();
+                    if (IMT.IgnoreableGameDataAssociation)
+                    {
+                        local = ContentMappings.Where(a => a.InternalModType == IMT.ID).ToList();
+                    }
+                    else
+                    {
+                        local = ContentMappings.Where(a => a.InternalModType == IMT.ID && a.GameDataItemID == SelectedGameDataItem.ID).ToList();
+                    }
+                    
                     contentMapping.AddRange(local);
                 }
                 List<int> ProcessedSlots = new List<int>();
@@ -671,8 +769,33 @@ namespace Quasar.Controls.Assignation.ViewModels
                     }
                     else
                     {
-                        SlotItem item = SlotItems.Single(i => i.SlotItemViewModel.SlotNumber == (cm.Slot + 1));
-                        item.SlotItemViewModel.ContentMappings.Add(cm);
+                        List<SlotItem> items = SlotItems.Where(i => i.SlotItemViewModel.SlotNumber == (cm.Slot + 1)).ToList();
+                        bool added = false;
+                        foreach(SlotItem item in items)
+                        {
+                            if (item.SlotItemViewModel.ContentMappings.Any(cma => cma.ModID == cm.ModID))
+                            {
+                                item.SlotItemViewModel.ContentMappings.Add(cm);
+                                added = true;
+                            }
+                        }
+                        if (!added)
+                        {
+                            SlotItems.Add(new SlotItem()
+                            {
+                                SlotItemViewModel = new SlotItemViewModel()
+                                {
+                                    ContentName = cm.Name,
+                                    SlotNumber = cm.Slot + 1,
+                                    SlotNumberName = cm.Slot > 10 ? (cm.Slot + 1 % 10).ToString() : (cm.Slot + 1).ToString(),
+                                    EmptySlot = false,
+                                    ContentMappings = new List<ContentMapping>()
+                                {
+                                    cm
+                                }
+                                }
+                            });
+                        }
                     }
                 }
 
@@ -707,26 +830,32 @@ namespace Quasar.Controls.Assignation.ViewModels
                         }
                         else
                         {
+                            if(cm.ModID != AvailableSlots[ass.Slot].SlotItemViewModel.ContentMappings[0].ModID)
+                            {
+                                AvailableSlots[ass.Slot].SlotItemViewModel.ContentName = "Mixed Contents";
+                            }
+
                             AvailableSlots[ass.Slot].SlotItemViewModel.ContentMappings.Add(cm);
                         }
                     }
                 }
-
-                
-
-
             }
 
         }
         public void DeleteSlotItem()
         {
+            if (SelectedSlotItem.SlotItemViewModel.EmptySlot)
+                return;
+
             List<Association> Associations = new List<Association>();
             foreach(ContentMapping cm in SelectedSlotItem.SlotItemViewModel.ContentMappings)
             {
-                Association a = ActiveWorkspace.Associations.SingleOrDefault(az => az.InternalModTypeID == cm.InternalModType && az.Slot == SelectedSlotItem.SlotItemViewModel.Index && az.GameDataItemID == cm.GameDataItemID);
+                Association a = ActiveWorkspace.Associations.SingleOrDefault(az => az.InternalModTypeID == cm.InternalModType && az.Slot == SelectedSlotItem.SlotItemViewModel.Index && az.GameDataItemID == SelectedGameDataItem.ID);
                 if(a != null)
                 {
                     ActiveWorkspace.Associations.Remove(a);
+                    Log.Debug(String.Format("Association exists for ContentMapping ID '{0}', slot '{1}', IMT '{2}', GDIID '{3}', removing it", a.ContentMappingID, a.Slot, a.InternalModTypeID, a.GameDataItemID));
+
                 }
             }
 

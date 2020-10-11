@@ -1,9 +1,138 @@
 <?xml version="1.0" encoding="utf-8"?>
-<InternalModType xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="Stage" Filename="SmashUltimate/Stage_SkinModel" ID="6" GameID="1" Association="2" Slots="1" TypeGroup="Stage">
+<InternalModType xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="Stage" Filename="SmashUltimate/Stage_SkinModel" TypeGroup="Stage" ID="6" GameID="1" Association="2" Slots="1" IgnoreableGameDataAssociation="false">
+  <NoGameData>false</NoGameData>
+  <OutsideFolder>false</OutsideFolder>
+  <OutsideFolderPath></OutsideFolderPath>
   <InternalModTypeFile ID="0">
     <SourcePath>stage/{GameData}/{Folder}/model/{Folder}</SourcePath>
     <SourceFile>{AnyFile}.nutexb</SourceFile>
-    <BuilderFile BuilderID="0" File ="{AnyFile}.nutexb" Path ="stage/{GameData}/{Folder}/model/{Folder}"/>
-    <BuilderFile BuilderID="1" File ="{AnyFile}.nutexb" Path ="arc/stage/{GameData}/{Folder}/model/{Folder}"/>
+    <BuilderFile BuilderID="1" Path="arc/stage/{GameData}/{Folder}/model/{Folder}" File="{AnyFile}.nutexb" />
+    <BuilderFile BuilderID="2" Path="stage/{GameData}/{Folder}/model/{Folder}" File="{AnyFile}.nutexb" />
+  </InternalModTypeFile>
+  <InternalModTypeFile ID="1">
+    <SourcePath>stage/{GameData}/{Folder}/lut</SourcePath>
+    <SourceFile>{AnyFile}.nutexb</SourceFile>
+    <BuilderFile BuilderID="1" Path="arc/stage/{GameData}/{Folder}/lut" File="{AnyFile}.nutexb" />
+    <BuilderFile BuilderID="2" Path="stage/{GameData}/{Folder}/lut" File="{AnyFile}.nutexb" />
+  </InternalModTypeFile>
+  <InternalModTypeFile ID="2">
+    <SourcePath>stage/{GameData}/{Folder}/model/{Folder}</SourcePath>
+    <SourceFile>{AnyFile}.numatb</SourceFile>
+    <BuilderFile BuilderID="1" Path="arc/stage/{GameData}/{Folder}/model/{Folder}" File="{AnyFile}.numatb" />
+    <BuilderFile BuilderID="2" Path="stage/{GameData}/{Folder}/model/{Folder}" File="{AnyFile}.numatb" />
+  </InternalModTypeFile>
+  <InternalModTypeFile ID="3">
+    <SourcePath>stage/{GameData}/{Folder}/render</SourcePath>
+    <SourceFile>{AnyFile}.nuanmb</SourceFile>
+    <BuilderFile BuilderID="1" Path="arc/stage/{GameData}/{Folder}/render" File="{AnyFile}.nuanmb" />
+    <BuilderFile BuilderID="2" Path="stage/{GameData}/{Folder}/render" File="{AnyFile}.nuanmb" />
+  </InternalModTypeFile>
+  <InternalModTypeFile ID="4">
+    <SourcePath>stage/{GameData}/{Folder}/render</SourcePath>
+    <SourceFile>{AnyFile}.nutexb</SourceFile>
+    <BuilderFile BuilderID="1" Path="arc/stage/{GameData}/{Folder}/render" File="{AnyFile}.nutexb" />
+    <BuilderFile BuilderID="2" Path="stage/{GameData}/{Folder}/render" File="{AnyFile}.nutexb" />
+  </InternalModTypeFile>
+  <InternalModTypeFile ID="5">
+    <SourcePath>stage/{GameData}/{Folder}/render</SourcePath>
+    <SourceFile>{AnyFile}.shpcanim</SourceFile>
+    <BuilderFile BuilderID="1" Path="arc/stage/{GameData}/{Folder}/render" File="{AnyFile}.shpcanim" />
+    <BuilderFile BuilderID="2" Path="stage/{GameData}/{Folder}/render" File="{AnyFile}.shpcanim" />
+  </InternalModTypeFile>
+  <InternalModTypeFile ID="6">
+    <SourcePath>stage/{GameData}/{Folder}/render</SourcePath>
+    <SourceFile>{AnyFile}.prc</SourceFile>
+    <BuilderFile BuilderID="1" Path="arc/stage/{GameData}/{Folder}/render" File="{AnyFile}.prc" />
+    <BuilderFile BuilderID="2" Path="stage/{GameData}/{Folder}/render" File="{AnyFile}.prc" />
+  </InternalModTypeFile>
+  <InternalModTypeFile ID="7">
+    <SourcePath>stage/{GameData}/{Folder}/model/{Folder}</SourcePath>
+    <SourceFile>{AnyFile}.numdlb</SourceFile>
+    <BuilderFile BuilderID="1" Path="arc/stage/{GameData}/{Folder}/model/{Folder}" File="{AnyFile}.numdlb" />
+    <BuilderFile BuilderID="2" Path="stage/{GameData}/{Folder}/model/{Folder}" File="{AnyFile}.numdlb" />
+  </InternalModTypeFile>
+  <InternalModTypeFile ID="8">
+    <SourcePath>stage/{GameData}/{Folder}/model/{Folder}</SourcePath>
+    <SourceFile>{AnyFile}.numshexb</SourceFile>
+    <BuilderFile BuilderID="1" Path="arc/stage/{GameData}/{Folder}/model/{Folder}" File="{AnyFile}.numshexb" />
+    <BuilderFile BuilderID="2" Path="stage/{GameData}/{Folder}/model/{Folder}" File="{AnyFile}.numshexb" />
+  </InternalModTypeFile>
+  <InternalModTypeFile ID="9">
+    <SourcePath>stage/{GameData}/{Folder}/model/{Folder}</SourcePath>
+    <SourceFile>{AnyFile}.nuhlpb</SourceFile>
+    <BuilderFile BuilderID="1" Path="arc/stage/{GameData}/{Folder}/model/{Folder}" File="{AnyFile}.nuhlpb" />
+    <BuilderFile BuilderID="2" Path="stage/{GameData}/{Folder}/model/{Folder}" File="{AnyFile}.nuhlpb" />
+  </InternalModTypeFile>
+  <InternalModTypeFile ID="10">
+    <SourcePath>stage/{GameData}/{Folder}/model/{Folder}</SourcePath>
+    <SourceFile>{AnyFile}.numshb</SourceFile>
+    <BuilderFile BuilderID="1" Path="arc/stage/{GameData}/{Folder}/model/{Folder}" File="{AnyFile}.numshb" />
+    <BuilderFile BuilderID="2" Path="stage/{GameData}/{Folder}/model/{Folder}" File="{AnyFile}.numshb" />
+  </InternalModTypeFile>
+  <InternalModTypeFile ID="11">
+    <SourcePath>stage/{GameData}/{Folder}/model/{Folder}</SourcePath>
+    <SourceFile>{AnyFile}.nuanmb</SourceFile>
+    <BuilderFile BuilderID="1" Path="arc/stage/{GameData}/{Folder}/model/{Folder}" File="{AnyFile}.nuanmb" />
+    <BuilderFile BuilderID="2" Path="stage/{GameData}/{Folder}/model/{Folder}" File="{AnyFile}.nuanmb" />
+  </InternalModTypeFile>
+  <InternalModTypeFile ID="12">
+    <SourcePath>stage/{GameData}/{Folder}/model/{Folder}</SourcePath>
+    <SourceFile>{AnyFile}.shpcanim</SourceFile>
+    <BuilderFile BuilderID="1" Path="arc/stage/{GameData}/{Folder}/model/{Folder}" File="{AnyFile}.shpcanim" />
+    <BuilderFile BuilderID="2" Path="stage/{GameData}/{Folder}/model/{Folder}" File="{AnyFile}.shpcanim" />
+  </InternalModTypeFile>
+  <InternalModTypeFile ID="13">
+    <SourcePath>stage/{GameData}/{Folder}/model/{Folder}</SourcePath>
+    <SourceFile>{AnyFile}.nusktb</SourceFile>
+    <BuilderFile BuilderID="1" Path="arc/stage/{GameData}/{Folder}/model/{Folder}" File="{AnyFile}.nusktb" />
+    <BuilderFile BuilderID="2" Path="stage/{GameData}/{Folder}/model/{Folder}" File="{AnyFile}.nusktb" />
+  </InternalModTypeFile>
+  <InternalModTypeFile ID="14">
+    <SourcePath>stage/{GameData}/{Folder}/model/{Folder}</SourcePath>
+    <SourceFile>{AnyFile}.nusrcmdlb</SourceFile>
+    <BuilderFile BuilderID="1" Path="arc/stage/{GameData}/{Folder}/model/{Folder}" File="{AnyFile}.nusrcmdlb" />
+    <BuilderFile BuilderID="2" Path="stage/{GameData}/{Folder}/model/{Folder}" File="{AnyFile}.nusrcmdlb" />
+  </InternalModTypeFile>
+  <InternalModTypeFile ID="15">
+    <SourcePath>stage/{GameData}/{Folder}/param</SourcePath>
+    <SourceFile>{AnyFile}.stdat</SourceFile>
+    <BuilderFile BuilderID="1" Path="arc/stage/{GameData}/{Folder}/param" File="{AnyFile}.stdat" />
+    <BuilderFile BuilderID="2" Path="stage/{GameData}/{Folder}/param" File="{AnyFile}.stdat" />
+  </InternalModTypeFile>
+  <InternalModTypeFile ID="16">
+    <SourcePath>stage/{GameData}/{Folder}/param</SourcePath>
+    <SourceFile>{AnyFile}.lvd</SourceFile>
+    <BuilderFile BuilderID="1" Path="arc/stage/{GameData}/{Folder}/param" File="{AnyFile}.lvd" />
+    <BuilderFile BuilderID="2" Path="stage/{GameData}/{Folder}/param" File="{AnyFile}.lvd" />
+  </InternalModTypeFile>
+  <InternalModTypeFile ID="17">
+    <SourcePath>stage/{GameData}/{Folder}/param</SourcePath>
+    <SourceFile>{AnyFile}.stprm</SourceFile>
+    <BuilderFile BuilderID="1" Path="arc/stage/{GameData}/{Folder}/param" File="{AnyFile}.stprm" />
+    <BuilderFile BuilderID="2" Path="stage/{GameData}/{Folder}/param" File="{AnyFile}.stprm" />
+  </InternalModTypeFile>
+  <InternalModTypeFile ID="18">
+    <SourcePath>stage/{GameData}/{Folder}/motion/{Folder}</SourcePath>
+    <SourceFile>{AnyFile}.nuanmb</SourceFile>
+    <BuilderFile BuilderID="1" Path="arc/stage/{GameData}/{Folder}/motion/{Folder}" File="{AnyFile}.nuanmb" />
+    <BuilderFile BuilderID="2" Path="stage/{GameData}/{Folder}/motion/{Folder}" File="{AnyFile}.nuanmb" />
+  </InternalModTypeFile>
+  <InternalModTypeFile ID="19">
+    <SourcePath>effect/stage/{GameData}</SourcePath>
+    <SourceFile>{Anyfile}.eff</SourceFile>
+    <BuilderFile BuilderID="1" Path="arc/effect/stage/{GameData}" File="{Anyfile}.eff" />
+    <BuilderFile BuilderID="2" Path="effect/stage/{GameData}" File="{Anyfile}.eff" />
+  </InternalModTypeFile>
+  <InternalModTypeFile ID="20">
+    <SourcePath>stage/{GameData}/{Folder}/model/{Folder}</SourcePath>
+    <SourceFile>{AnyFile}.dds</SourceFile>
+    <BuilderFile BuilderID="1" Path="arc/stage/{GameData}/{Folder}/model/{Folder}" File="{AnyFile}.dds" />
+    <BuilderFile BuilderID="2" Path="stage/{GameData}/{Folder}/model/{Folder}" File="{AnyFile}.dds" />
+  </InternalModTypeFile>
+  <InternalModTypeFile ID="21">
+    <SourcePath>stage/{GameData}/{Folder}/model/{Folder}</SourcePath>
+    <SourceFile>{AnyFile}.xmb</SourceFile>
+    <BuilderFile BuilderID="1" Path="arc/stage/{GameData}/{Folder}/model/{Folder}" File="{AnyFile}.xmb" />
+    <BuilderFile BuilderID="2" Path="stage/{GameData}/{Folder}/model/{Folder}" File="{AnyFile}.xmb" />
   </InternalModTypeFile>
 </InternalModType>

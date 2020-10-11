@@ -5,6 +5,7 @@ using Quasar.XMLResources;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Reflection.Emit;
 using System.Text;
@@ -13,7 +14,7 @@ using System.Windows.Input;
 
 namespace Quasar.Controls.InternalModTypes.ViewModels
 {
-    class InternalModTypeViewModel : ObservableObject
+    public class InternalModTypeViewModel : ObservableObject
     {
         #region Fields
         private ObservableCollection<InternalModType> _InternalModTypes { get; set; }
@@ -144,6 +145,29 @@ namespace Quasar.Controls.InternalModTypes.ViewModels
                     return;
 
                 _SelectedInternalModTypeFile = value;
+
+                if(value != null)
+                {
+                    if (value.Files == null)
+                    {
+                        _SelectedInternalModTypeFile.Files = new List<BuilderFile>()
+                    {
+                        new BuilderFile()
+                        {
+                            BuilderID = 1,
+                            File = "",
+                            Path = ""
+                        },
+                        new BuilderFile()
+                        {
+                            BuilderID = 2,
+                            File = "",
+                            Path = ""
+                        }
+                    };
+                    }
+                }
+                
                 OnPropertyChanged("SelectedInternalModTypeFile");
             }
         }

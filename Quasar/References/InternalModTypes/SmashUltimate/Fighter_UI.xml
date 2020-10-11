@@ -1,9 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<InternalModType xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="Fighter UI" Filename="SmashUltimate/Fighter_UI" ID="3" GameID="1" Association="1" Slots="8" TypeGroup="Fighter">
+<InternalModType xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="Fighter UI" Filename="SmashUltimate/Fighter_UI" TypeGroup="Fighter" ID="3" GameID="1" Association="1" Slots="8" IgnoreableGameDataAssociation="false">
+  <NoGameData>false</NoGameData>
+  <OutsideFolder>false</OutsideFolder>
+  <OutsideFolderPath></OutsideFolderPath>
   <InternalModTypeFile ID="0">
     <SourcePath>chara/{Folder}</SourcePath>
     <SourceFile>chara_{Part}_{GameData}_{S00}.bntx</SourceFile>
-    <BuilderFile BuilderID="0" File="chara_{Part}_{GameData}_{S00}.bntx" Path="ui/replace/chara/{Folder}" />
-    <BuilderFile BuilderID="1" File="chara_{Part}_{GameData}_{S00}.bntx" Path="arc/ui/replace/chara/{Folder}" />
+    <BuilderFile BuilderID="1" Path="arc/ui/replace{DLC}/chara/{Folder}" File="chara_{Part}_{GameData}_{S00}.bntx" />
+    <BuilderFile BuilderID="2" Path="ui/replace{DLC}/chara/{Folder}" File="chara_{Part}_{GameData}_{S00}.bntx" />
+  </InternalModTypeFile>
+  <InternalModTypeFile ID="1">
+    <SourcePath>chara/{Folder}</SourcePath>
+    <SourceFile>chara_{Part}_{GameData}_{S00}.bftex</SourceFile>
+    <BuilderFile BuilderID="1" Path="arc/ui/replace{DLC}/chara/{Folder}" File="chara_{Part}_{GameData}_{S00}.bftex" />
+    <BuilderFile BuilderID="2" Path="ui/replace{DLC}/chara/{Folder}" File="chara_{Part}_{GameData}_{S00}.bftex" />
   </InternalModTypeFile>
 </InternalModType>

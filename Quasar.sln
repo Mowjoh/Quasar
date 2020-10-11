@@ -7,8 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Quasar", "Quasar\Quasar.csp
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "QuasarSetup", "QuasarSetup\QuasarSetup.vdproj", "{43477B82-4118-4CE2-9F1E-1A891C38DC8E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Quasarite", "Quasarite\Quasarite.csproj", "{6019FD2F-C848-477C-954C-5E027FB276D4}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug Admin|Any CPU = Debug Admin|Any CPU
@@ -25,12 +23,6 @@ Global
 		{43477B82-4118-4CE2-9F1E-1A891C38DC8E}.Debug Admin|Any CPU.ActiveCfg = Debug
 		{43477B82-4118-4CE2-9F1E-1A891C38DC8E}.Debug|Any CPU.ActiveCfg = Debug
 		{43477B82-4118-4CE2-9F1E-1A891C38DC8E}.Release|Any CPU.ActiveCfg = Release
-		{6019FD2F-C848-477C-954C-5E027FB276D4}.Debug Admin|Any CPU.ActiveCfg = Debug|Any CPU
-		{6019FD2F-C848-477C-954C-5E027FB276D4}.Debug Admin|Any CPU.Build.0 = Debug|Any CPU
-		{6019FD2F-C848-477C-954C-5E027FB276D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6019FD2F-C848-477C-954C-5E027FB276D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6019FD2F-C848-477C-954C-5E027FB276D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6019FD2F-C848-477C-954C-5E027FB276D4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

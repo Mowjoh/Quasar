@@ -1,4 +1,5 @@
 ﻿using Quasar.Controls.Build.Models;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml.Serialization;
@@ -32,15 +33,23 @@ namespace Quasar.XMLResources
             string typesFolderPath = Properties.Settings.Default.DefaultDir + @"\References\InternalModTypes\";
             XmlSerializer serializer = new XmlSerializer(typeof(InternalModType));
 
-            foreach (string file in Directory.GetFiles(typesFolderPath,"*",SearchOption.AllDirectories))
+            try
             {
-                using (FileStream fileStream = new FileStream(file, FileMode.Open))
+                foreach (string file in Directory.GetFiles(typesFolderPath, "*", SearchOption.AllDirectories))
                 {
+                    using (FileStream fileStream = new FileStream(file, FileMode.Open))
+                    {
 
-                    InternalModType result = (InternalModType)serializer.Deserialize(fileStream);
-                    InteralModTypes.Add(result);
+                        InternalModType result = (InternalModType)serializer.Deserialize(fileStream);
+                        InteralModTypes.Add(result);
+                    }
                 }
             }
+            catch(Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+            
 
             return InteralModTypes;
         }
@@ -58,6 +67,19 @@ namespace Quasar.XMLResources
             }
 
             return categories;
+        }
+        public static void WriteGameData(List<GameData> GameData)
+        {
+            string GamesDataPath = Properties.Settings.Default.DefaultDir + @"\References\Sources\GameData.xml";
+
+            GamesData gd = new GamesData();
+            gd.Games = GameData;
+
+            XmlSerializer LibrarySerializer = new XmlSerializer(typeof(GamesData));
+            using (StreamWriter Writer = new StreamWriter(GamesDataPath))
+            {
+                LibrarySerializer.Serialize(Writer, gd);
+            }
         }
 
         public static List<ModLoader> GetModLoaders()
@@ -79,6 +101,19 @@ namespace Quasar.XMLResources
         public static void SaveInternalModType(InternalModType type)
         {
             string destination = Properties.Settings.Default.DefaultDir + @"\References\InternalModTypes\" + type.Filename + ".xml";
+
+            type.Files.Sort(delegate (InternalModTypeFile x, InternalModTypeFile y)
+            {
+                return x.ID.CompareTo(y.ID);
+            });
+
+            foreach(InternalModTypeFile imtf in type.Files)
+            {
+                imtf.Files.Sort(delegate (BuilderFile x, BuilderFile y)
+                {
+                    return x.BuilderID.CompareTo(y.BuilderID);
+                });
+            }
 
             XmlSerializer xmlSerializer = new XmlSerializer(typeof(InternalModType));
 

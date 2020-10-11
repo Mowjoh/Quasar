@@ -39,6 +39,11 @@ namespace Quasar.XMLResources
         {
             string AssociationLibraryPath = Properties.Settings.Default["DefaultDir"].ToString() + "\\Library\\Workspaces.xml";
 
+            foreach(Workspace w in Workspaces)
+            {
+                w.Associations = w.Associations.OrderBy(a => a.GameDataItemID).ThenBy(a => a.Slot ).ThenBy(a => a.InternalModTypeID).ToList();
+            }
+
             Workspaces al = new Workspaces(Workspaces);
 
             XmlSerializer LibrarySerializer = new XmlSerializer(typeof(Workspaces));

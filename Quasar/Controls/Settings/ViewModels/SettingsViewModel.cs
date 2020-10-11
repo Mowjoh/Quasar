@@ -57,14 +57,15 @@ namespace Quasar
             SettingItems = new ObservableCollection<SettingItemView>();
             SettingItems.Add(new SettingItemView("AppVersion"));
             //SettingItems.Add(new SettingItemView("Language"));
-            SettingItems.Add(new SettingItemView("SupressBuildDeletion"));
-            SettingItems.Add(new SettingItemView("SupressModDeletion"));
-            SettingItems.Add(new SettingItemView("EnableWorkspaces"));
 
             SettingItems.Add(new SettingItemView("FTPAddress"));
             SettingItems.Add(new SettingItemView("FTPUN"));
             SettingItems.Add(new SettingItemView("FTPPW"));
 
+            SettingItems.Add(new SettingItemView("SupressBuildDeletion"));
+            SettingItems.Add(new SettingItemView("SupressModDeletion"));
+
+            SettingItems.Add(new SettingItemView("EnableWorkspaces"));
             SettingItems.Add(new SettingItemView("EnableCreator"));
             SettingItems.Add(new SettingItemView("EnableAdvanced"));
         }

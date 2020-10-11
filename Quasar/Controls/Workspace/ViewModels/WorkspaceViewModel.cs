@@ -1,4 +1,6 @@
-﻿using Quasar.Controls.Common.Models;
+﻿using log4net;
+using Quasar.Controls.Build.Models;
+using Quasar.Controls.Common.Models;
 using Quasar.Internal;
 using Quasar.Internal.Tools;
 using Quasar.XMLResources;
@@ -155,13 +157,16 @@ namespace Quasar.Controls.Settings.Workspaces.ViewModels
 
         #endregion
 
+        public ILog log { get; set; }
+
         /// <summary>
         /// Default Constructor
         /// </summary>
-        public WorkspaceViewModel(ObservableCollection<Workspace> _Workspaces, Workspace _ActiveWorkspace)
+        public WorkspaceViewModel(ObservableCollection<Workspace> _Workspaces, Workspace _ActiveWorkspace, ILog _log)
         {
             Workspaces = _Workspaces;
             ActiveWorkspace = _ActiveWorkspace;
+            log = _log;
         }
 
 
@@ -258,7 +263,9 @@ namespace Quasar.Controls.Settings.Workspaces.ViewModels
         /// </summary>
         public void ActivateWorkspace()
         {
-
+            FTPWriter Writer = new FTPWriter() { Log = log };
+            TouchmARC.CheckTouchmARC(Writer, ActiveWorkspace.Name);
+            MessageBox.Show("Changes applied");
         }
         #endregion
 

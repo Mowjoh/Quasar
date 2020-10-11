@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<InternalModType xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="CSS Layout" Filename="SmashUltimate/CSS_Layout" TypeGroup="CSS" ID="17" GameID="1" Association="5" Slots="1" IgnoreableGameDataAssociation="false">
+  <NoGameData>true</NoGameData>
+  <OutsideFolder>false</OutsideFolder>
+  <OutsideFolderPath />
+  <InternalModTypeFile ID="0">
+    <SourcePath>database</SourcePath>
+    <SourceFile>ui_chara_db.prc</SourceFile>
+    <BuilderFile BuilderID="1" Path="arc/ui/param/database" File="ui_chara_db.prc" />
+    <BuilderFile BuilderID="2" Path="ui/param/database" File="ui_chara_db.prc" />
+  </InternalModTypeFile>
+</InternalModType>

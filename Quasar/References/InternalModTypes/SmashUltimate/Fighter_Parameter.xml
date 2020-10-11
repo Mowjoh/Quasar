@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<InternalModType xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="Fighter Parameters" Filename="SmashUltimate/Fighter_Parameter" TypeGroup="Fighter" ID="13" GameID="1" Association="1" Slots="1" IgnoreableGameDataAssociation="false">
+  <NoGameData>false</NoGameData>
+  <OutsideFolder>false</OutsideFolder>
+  <OutsideFolderPath></OutsideFolderPath>
+  <InternalModTypeFile ID="0">
+    <SourcePath>{GameData}/param</SourcePath>
+    <SourceFile>{AnyFile}.prc</SourceFile>
+    <BuilderFile BuilderID="1" Path="arc/fighter/{GameData}/param" File="{AnyFile}.prc" />
+    <BuilderFile BuilderID="2" Path="fighter/{GameData}/param" File="{AnyFile}.prc" />
+  </InternalModTypeFile>
+</InternalModType>

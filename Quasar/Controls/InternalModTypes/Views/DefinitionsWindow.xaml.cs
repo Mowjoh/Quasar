@@ -238,6 +238,17 @@ namespace Quasar.Controls
                                                 }
                                             }
 
+                                            if((tf.FileGameData == "" || tf.FileGameData == null) && (tf.FolderGameData == "" || tf.FolderGameData == null))
+                                            {
+                                                if (IMT.NoGameData)
+                                                {
+                                                    tf.ValidFile = true;
+                                                    formOutputs(tf, IMTF.Files[GameBuilderIndex].Path, IMTF.Files[GameBuilderIndex].Path);
+                                                    tf.InternalModType = IMT.Name;
+                                                    tf.InternalModTypeFileID = IMTF.ID;
+                                                }
+                                            }
+
 
                                         }
                                         else
@@ -376,11 +387,11 @@ namespace Quasar.Controls
                     case "GameData":
                         if (file)
                         {
-                            TF.FileGameData = g.Value;
+                            TF.FileGameData = g.Value.ToLower();
                         }
                         else
                         {
-                            TF.FolderGameData = g.Value;
+                            TF.FolderGameData = g.Value.ToLower();
                         }
                         
                         break;
