@@ -39,7 +39,7 @@ namespace Quasar.Internal.Tools
 
             }
             
-            if (Updated && version >= 1500 && previous < 1500)
+            if (Updated && version >= 1504 && previous < 1503)
             {
                 NeedsCleaning = true;
             }

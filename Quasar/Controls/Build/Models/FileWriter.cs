@@ -19,13 +19,14 @@ namespace Quasar.Controls.Build.Models
         public abstract bool VerifyOK();
         public abstract bool CheckFolderExists(string FolderPath);
         public abstract bool CheckFileExists(string FilePath);
-        public abstract bool SendFile(string SourceFilePath, string FilePath, bool OverrideHash = false);
+        public abstract bool SendFile(string SourceFilePath, string FilePath, bool OutsideFile, bool OverrideHash = false);
         public abstract bool DeleteFile(string FilePath);
         public abstract bool DeleteFolder(string FolderPath);
         public abstract void GetFile(string Remote, string DestinationFilePath);
         public abstract List<FileReference> GetRemoteFiles(string FolderPath);
-        public abstract void SetHashes(List<Hash> _DistantHashes, List<Hash> _LocalHashes);
+        public abstract void SetHashes(List<Hash> _DistantHashes, List<Hash> _DistantOutsiderHashes, List<Hash> _LocalHashes);
         public abstract List<Hash> GetHashes();
+        public abstract List<Hash> GetOutsiderHashes();
     }
 
     public class FTPWriter : FileWriter
@@ -40,7 +41,9 @@ namespace Quasar.Controls.Build.Models
         BuildViewModel BVM { get; set; }
 
         public List<Hash> DistantHashes { get; set; }
+        public List<Hash> DistantOutsiderHashes { get; set; }
         public List<Hash> LocalHashes { get; set; }
+        public List<Hash> LocalOutsiderHashes { get; set; }
 
         List<FileReference> list { get; set; }
         public ILog Log { get; set; }
@@ -113,11 +116,11 @@ namespace Quasar.Controls.Build.Models
         {
             return Client.FileExists(FilePath);
         }
-        public override bool SendFile(string SourceFilePath, string FilePath, bool OverrideHash = false)
+        public override bool SendFile(string SourceFilePath, string FilePath,bool OutsideFile, bool OverrideHash = false)
         {
             if (!OverrideHash)
             {
-                Hash distantHash = DistantHashes.SingleOrDefault(H => H.FilePath == FilePath);
+                Hash distantHash = OutsideFile ? DistantOutsiderHashes.SingleOrDefault(H => H.FilePath == FilePath) : DistantHashes.SingleOrDefault(H => H.FilePath == FilePath);
                 string localHash = WriterOperations.GetHash(SourceFilePath);
                 if (distantHash != null)
                 {
@@ -127,20 +130,47 @@ namespace Quasar.Controls.Build.Models
                         Log.Debug(String.Format("Updating File {0} - {1}", SourceFilePath, FilePath));
                         FtpStatus Status = Client.UploadFile(SourceFilePath, FilePath, FtpRemoteExists.Overwrite, true, FtpVerify.None, Progress);
                         distantHash.HashString = localHash;
-                        LocalHashes.Add(distantHash);
+                        if (OutsideFile)
+                        {
+                            LocalOutsiderHashes.Add(distantHash);
+                        }
+                        else
+                        {
+                            LocalHashes.Add(distantHash);
+                        }
+                        
+
                         return Status.IsSuccess();
                     }
                     else
                     {
-                        LocalHashes.Add(distantHash);
+                        if (OutsideFile)
+                        {
+                            LocalOutsiderHashes.Add(distantHash);
+                        }
+                        else
+                        {
+                            LocalHashes.Add(distantHash);
+                        }
                     }
                 }
                 else
                 {
                     BVM.SetSize(String.Format("Current File Size : {0}", WriterOperations.BytesToString(new FileInfo(SourceFilePath).Length)));
                     FtpStatus Status = Client.UploadFile(SourceFilePath, FilePath, FtpRemoteExists.Overwrite, true, FtpVerify.None, Progress);
-                    DistantHashes.Add(new Hash() { HashString = localHash, FilePath = FilePath });
-                    LocalHashes.Add(new Hash() { HashString = localHash, FilePath = FilePath });
+
+                    if (OutsideFile)
+                    {
+                        DistantOutsiderHashes.Add(new Hash() { HashString = localHash, FilePath = FilePath });
+                        LocalOutsiderHashes.Add(new Hash() { HashString = localHash, FilePath = FilePath });
+                    }
+                    else
+                    {
+                        DistantHashes.Add(new Hash() { HashString = localHash, FilePath = FilePath });
+                        LocalHashes.Add(new Hash() { HashString = localHash, FilePath = FilePath });
+                    }
+                    
+
                     Log.Debug(String.Format("Adding File {0} - {1}", SourceFilePath, FilePath));
                     return Status.IsSuccess();
 
@@ -212,11 +242,13 @@ namespace Quasar.Controls.Build.Models
         {
             Client.DownloadFile(DestinationFilePath, Remote);
         }
-        public override void SetHashes(List<Hash> _DistantHashes, List<Hash> _LocalHashes)
+        public override void SetHashes(List<Hash> _DistantHashes, List<Hash> _DistantOutsiderHashes, List<Hash> _LocalHashes)
         {
             DistantHashes = _DistantHashes;
+            DistantOutsiderHashes = _DistantOutsiderHashes;
             LocalHashes = _LocalHashes;
-    }
+            LocalOutsiderHashes = new List<Hash>();
+        }
         public override List<Hash> GetHashes()
         {
             List<Hash> NewDistantHashes = new List<Hash>();
@@ -229,7 +261,21 @@ namespace Quasar.Controls.Build.Models
             }
             return NewDistantHashes;
         }
-
+        public override List<Hash> GetOutsiderHashes()
+        {
+            List<Hash> NewDistantHashes = new List<Hash>();
+            if (DistantOutsiderHashes != null)
+            {
+                foreach (Hash h in DistantOutsiderHashes)
+                {
+                    if (LocalOutsiderHashes.Any(sh => sh.FilePath == h.FilePath))
+                    {
+                        NewDistantHashes.Add(h);
+                    }
+                }
+            }
+            return NewDistantHashes;
+        }
 
         public void ListFiles(FtpListItem[] Files)
         {
@@ -264,7 +310,9 @@ namespace Quasar.Controls.Build.Models
         public string LetterPath { get; set; }
         BuildViewModel BVM { get; set; }
         public List<Hash> DistantHashes { get; set; }
+        public List<Hash> DistantOutsiderHashes { get; set; }
         public List<Hash> LocalHashes { get; set; }
+        public List<Hash> LocalOutsiderHashes { get; set; }
         public ILog Log { get; set; }
 
         public SDWriter(BuildViewModel _BVM)
@@ -284,13 +332,13 @@ namespace Quasar.Controls.Build.Models
         {
             return File.Exists(FilePath);
         }
-        public override bool SendFile(string SourceFilePath, string FilePath, bool OverrideHash = false)
+        public override bool SendFile(string SourceFilePath, string FilePath, bool OutsideFile, bool OverrideHash = false)
         {
             try
             {
                 if (!OverrideHash)
                 {
-                    Hash distantHash = DistantHashes.SingleOrDefault(H => H.FilePath == FilePath);
+                    Hash distantHash = OutsideFile ? DistantOutsiderHashes.SingleOrDefault(H => H.FilePath == FilePath) : DistantHashes.SingleOrDefault(H => H.FilePath == FilePath);
                     string localHash = WriterOperations.GetHash(SourceFilePath);
                     if (distantHash != null)
                     {
@@ -299,17 +347,43 @@ namespace Quasar.Controls.Build.Models
                             BVM.SetSize(String.Format("Current File Size : {0}", WriterOperations.BytesToString(new FileInfo(SourceFilePath).Length)));
                             Folderino.CheckCopyFile(SourceFilePath, FilePath);
                             distantHash.HashString = localHash;
-                            LocalHashes.Add(distantHash);
+                            if (OutsideFile)
+                            {
+                                LocalOutsiderHashes.Add(distantHash);
+                            }
+                            else
+                            {
+                                LocalHashes.Add(distantHash);
+                            }
                             Log.Debug(String.Format("Updating File {0} - {1}",SourceFilePath, FilePath));
                             return true;
+                        }
+                        else
+                        {
+                            if (OutsideFile)
+                            {
+                                LocalOutsiderHashes.Add(distantHash);
+                            }
+                            else
+                            {
+                                LocalHashes.Add(distantHash);
+                            }
                         }
                     }
                     else
                     {
                         BVM.SetSize(String.Format("Current File Size : {0}", WriterOperations.BytesToString(new FileInfo(SourceFilePath).Length)));
                         Folderino.CheckCopyFile(SourceFilePath, FilePath);
-                        DistantHashes.Add(new Hash() { HashString = localHash, FilePath = FilePath });
-                        LocalHashes.Add(new Hash() { HashString = localHash, FilePath = FilePath });
+                        if (OutsideFile)
+                        {
+                            DistantOutsiderHashes.Add(new Hash() { HashString = localHash, FilePath = FilePath });
+                            LocalOutsiderHashes.Add(new Hash() { HashString = localHash, FilePath = FilePath });
+                        }
+                        else
+                        {
+                            DistantHashes.Add(new Hash() { HashString = localHash, FilePath = FilePath });
+                            LocalHashes.Add(new Hash() { HashString = localHash, FilePath = FilePath });
+                        }
                         Log.Debug(String.Format("Adding File {0} - {1}", SourceFilePath, FilePath));
                         return true;
 
@@ -375,7 +449,7 @@ namespace Quasar.Controls.Build.Models
             }
             return list;
         }
-        public override void SetHashes(List<Hash> _DistantHashes, List<Hash> _LocalHashes)
+        public override void SetHashes(List<Hash> _DistantHashes, List<Hash> _DistantOutsiderHashes, List<Hash> _LocalHashes)
         {
             DistantHashes = _DistantHashes;
             LocalHashes = _LocalHashes;
@@ -392,6 +466,21 @@ namespace Quasar.Controls.Build.Models
             }
             return NewDistantHashes;
         }
+        public override List<Hash> GetOutsiderHashes()
+        {
+            List<Hash> NewDistantHashes = new List<Hash>();
+            if(DistantOutsiderHashes != null)
+            {
+                foreach (Hash h in DistantOutsiderHashes)
+                {
+                    if (LocalOutsiderHashes.Any(sh => sh.FilePath == h.FilePath))
+                    {
+                        NewDistantHashes.Add(h);
+                    }
+                }
+            }
+            return NewDistantHashes;
+        }
     }
     public class MTPWriter : FileWriter
     {
@@ -399,6 +488,10 @@ namespace Quasar.Controls.Build.Models
 
         public MediaDevice MediaD { get; set; }
         public ILog Log { get; set; }
+        public List<Hash> DistantHashes { get; set; }
+        public List<Hash> DistantOutsiderHashes { get; set; }
+        public List<Hash> LocalHashes { get; set; }
+        public List<Hash> LocalOutsiderHashes { get; set; }
 
         public override bool VerifyOK()
         {
@@ -412,7 +505,7 @@ namespace Quasar.Controls.Build.Models
         {
             return MediaD.FileExists(FilePath);
         }
-        public override bool SendFile(string SourceFilePath, string FilePath, bool OverrideHash = false)
+        public override bool SendFile(string SourceFilePath, string FilePath, bool OutsideFile, bool OverrideHash = false)
         {
 
             return false;
@@ -433,13 +526,25 @@ namespace Quasar.Controls.Build.Models
             return null;
         }
 
-        public override void SetHashes(List<Hash> _DistantHashes, List<Hash> _LocalHashes)
+        public override void SetHashes(List<Hash> _DistantHashes, List<Hash> _DistantOutsiderHashes, List<Hash> _LocalHashes)
         {
 
         }
         public override List<Hash> GetHashes()
         {
             return null;
+        }
+        public override List<Hash> GetOutsiderHashes()
+        {
+            List<Hash> NewDistantHashes = new List<Hash>();
+            foreach (Hash h in DistantOutsiderHashes)
+            {
+                if (LocalOutsiderHashes.Any(sh => sh.FilePath == h.FilePath))
+                {
+                    NewDistantHashes.Add(h);
+                }
+            }
+            return NewDistantHashes;
         }
     }
 

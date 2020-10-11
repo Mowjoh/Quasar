@@ -344,6 +344,7 @@ namespace Quasar.Controls.ModManagement.ViewModels
             WorkingModList = new ObservableCollection<LibraryMod>();
 
             EventSystem.Subscribe<SettingItem>(SettingChanged);
+            EventSystem.Subscribe<Workspace>(WorkspaceChanged);
         }
 
         #region Actions
@@ -360,6 +361,10 @@ namespace Quasar.Controls.ModManagement.ViewModels
                 mli.ModListItemViewModel.LoadStats();
                 ModListItems.Add(mli);
             }
+        }
+        public void WorkspaceChanged(Workspace workspace)
+        {
+            ActiveWorkspace = workspace;
         }
         public void GetModListElementTrigger(ModListItemViewModel ModListItemViewModel)
         {
@@ -529,15 +534,33 @@ namespace Quasar.Controls.ModManagement.ViewModels
            {
                if (cm.GameDataItemID != -1)
                {
-                   Association associations = ActiveWorkspace.Associations.Find(ass => ass.GameDataItemID == cm.GameDataItemID && ass.InternalModTypeID == cm.InternalModType && ass.Slot == cm.Slot);
-                   if (associations != null)
-                   {
-                        log.Debug(String.Format("Association exists for ContentMapping ID '{0}', slot '{1}', IMT '{2}', GDIID '{3}', removing it", associations.ContentMappingID, associations.Slot, associations.InternalModTypeID, associations.GameDataItemID));
-                        ActiveWorkspace.Associations.Remove(associations);
+                    InternalModType imt = InternalModTypes.Single(i => i.ID == cm.InternalModType);
+                    if (imt.OutsideFolder)
+                    {
+                        int Slot = 0;
+                        bool foundSlot = false;
+
+                        while (!foundSlot)
+                        {
+                            if (!ActiveWorkspace.Associations.Any(a => a.InternalModTypeID == imt.ID && a.Slot == Slot))
+                            {
+                                ActiveWorkspace.Associations.Add(new Association() { ContentMappingID = cm.ID, GameDataItemID = cm.GameDataItemID, InternalModTypeID = cm.InternalModType, Slot = Slot });
+                                foundSlot = true;
+                            }
+                            Slot++;
+                        }
                     }
- 
-                    log.Debug(String.Format("Association created for ContentMapping '{0}' ID '{1}', slot '{2}', IMT '{3}', GDIID '{4}'", cm.Name, cm.ID, cm.Slot, cm.InternalModType, cm.GameDataItemID));
-                    ActiveWorkspace.Associations.Add(new Association() { ContentMappingID = cm.ID, GameDataItemID = cm.GameDataItemID, InternalModTypeID = cm.InternalModType, Slot = cm.Slot });
+                    else
+                    {
+                        Association associations = ActiveWorkspace.Associations.Find(ass => ass.GameDataItemID == cm.GameDataItemID && ass.InternalModTypeID == cm.InternalModType && ass.Slot == cm.Slot);
+                        if (associations != null)
+                        {
+                            log.Debug(String.Format("Association exists for ContentMapping ID '{0}', slot '{1}', IMT '{2}', GDIID '{3}', removing it", associations.ContentMappingID, associations.Slot, associations.InternalModTypeID, associations.GameDataItemID));
+                            ActiveWorkspace.Associations.Remove(associations);
+                        }
+                        log.Debug(String.Format("Association created for ContentMapping '{0}' ID '{1}', slot '{2}', IMT '{3}', GDIID '{4}'", cm.Name, cm.ID, cm.Slot, cm.InternalModType, cm.GameDataItemID));
+                        ActiveWorkspace.Associations.Add(new Association() { ContentMappingID = cm.ID, GameDataItemID = cm.GameDataItemID, InternalModTypeID = cm.InternalModType, Slot = cm.Slot });
+                    }
                 }
            }
            WorkspaceXML.WriteWorkspaces(Workspaces.ToList());
@@ -553,7 +576,17 @@ namespace Quasar.Controls.ModManagement.ViewModels
             {
                 if (cm.GameDataItemID != -1)
                 {
-                    List<Association> associations = ActiveWorkspace.Associations.Where(ass => ass.GameDataItemID == cm.GameDataItemID && ass.InternalModTypeID == cm.InternalModType && ass.Slot == cm.Slot && ass.ContentMappingID == cm.ID).ToList();
+                    InternalModType imt = InternalModTypes.Single(i => i.ID == cm.InternalModType);
+                    List<Association> associations = null;
+                    if (imt.OutsideFolder)
+                    {
+                        associations = ActiveWorkspace.Associations.Where(ass => ass.InternalModTypeID == cm.InternalModType && ass.ContentMappingID == cm.ID).ToList();
+
+                    }
+                    else
+                    {
+                        associations = ActiveWorkspace.Associations.Where(ass => ass.GameDataItemID == cm.GameDataItemID && ass.InternalModTypeID == cm.InternalModType && ass.Slot == cm.Slot && ass.ContentMappingID == cm.ID).ToList();
+                    }
                     if (associations != null)
                     {
                         foreach(Association ass in associations)
@@ -863,11 +896,33 @@ namespace Quasar.Controls.ModManagement.ViewModels
                     Association associations = ActiveWorkspace.Associations.Find(ass => ass.GameDataItemID == cm.GameDataItemID && ass.InternalModTypeID == cm.InternalModType && ass.Slot == cm.Slot);
                     if (associations != null)
                     {
-                        ActiveWorkspace.Associations[ActiveWorkspace.Associations.IndexOf(associations)] = new Association() { ContentMappingID = cm.ID, GameDataItemID = cm.GameDataItemID, InternalModTypeID = cm.InternalModType, Slot = cm.Slot };
+                        InternalModType imt = InternalModTypes.Single(i => i.ID == cm.InternalModType);
+                        if (imt.OutsideFolder)
+                        {
+                            int Slot = 0;
+                            bool foundSlot = false;
+
+                            while (!foundSlot)
+                            {
+                                if (!ActiveWorkspace.Associations.Any(a => a.InternalModTypeID == imt.ID && a.Slot == Slot))
+                                {
+                                    ActiveWorkspace.Associations.Add(new Association() { ContentMappingID = cm.ID, GameDataItemID = cm.GameDataItemID, InternalModTypeID = cm.InternalModType, Slot = Slot });
+                                    foundSlot = true;
+                                }
+                                Slot++;
+                            }
+                        }
+                        else
+                        {
+                            ActiveWorkspace.Associations[ActiveWorkspace.Associations.IndexOf(associations)] = new Association() { ContentMappingID = cm.ID, GameDataItemID = cm.GameDataItemID, InternalModTypeID = cm.InternalModType, Slot = cm.Slot };
+
+                        }
                     }
                     else
                     {
+
                         ActiveWorkspace.Associations.Add(new Association() { ContentMappingID = cm.ID, GameDataItemID = cm.GameDataItemID, InternalModTypeID = cm.InternalModType, Slot = cm.Slot });
+
                     }
                 }
             }

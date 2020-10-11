@@ -134,11 +134,25 @@
 
                 </ListBox.Style>
             </ListBox>
-            <CheckBox Content="Group Types" IsChecked="{Binding TypesGrouped}" Grid.Column="1" HorizontalAlignment="Left" Margin="20,15,0,0" Grid.Row="1" VerticalAlignment="Top" Width="220" Foreground="White"/>
+            <CheckBox Content="Group Types" IsChecked="{Binding TypesGrouped, Mode=TwoWay}" Grid.Column="1" HorizontalAlignment="Left" Margin="20,15,0,0" Grid.Row="1" VerticalAlignment="Top" Width="220">
+                <CheckBox.Style>
+                    <Style TargetType="CheckBox">
+                    <Setter Property="IsEnabled" Value="True"/>
+                    <Setter Property="Foreground" Value="White"/>
+                    <Style.Triggers>
+                            <DataTrigger Binding="{Binding Path=SelectedGameDataCategory.GameDataCategory.Name}" Value="Others">
+                                <Setter Property="IsEnabled" Value="False"/>
+                                <Setter Property="IsChecked" Value="False"/>
+                                <Setter Property="Foreground" Value="#BBBBBB"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </CheckBox.Style>
+            </CheckBox>
 
             <Grid Grid.Column="2" Grid.Row="0" Background="Transparent">
-                <Image Source="C:\Users\Mowjoh\Desktop\Drag.png" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
-                <Image Source="C:\Users\Mowjoh\Desktop\Delete.png" HorizontalAlignment="Right" Margin="0,0,120,0" Height="30" VerticalAlignment="Bottom"/>
+                <Image Source="{Binding dragimage}" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
+                <Image Source="{Binding deleteimage}" HorizontalAlignment="Right" Margin="0,0,120,0" Height="30" VerticalAlignment="Bottom"/>
                 <Label Content="Available Items" HorizontalAlignment="Left" VerticalAlignment="Bottom" Foreground="White"/>
                 <Label Content="Available Slots" HorizontalAlignment="Right" VerticalAlignment="Bottom" Foreground="White"/>
             </Grid>
@@ -207,7 +221,9 @@
                     </ListBox.ItemContainerStyle>
                 </ListBox>
             </Grid>
-            <CheckBox Content="Show items with stuff" IsChecked="{Binding ItemsWithStuff}" Grid.Column="1" HorizontalAlignment="Left" Margin="20,30,0,0" VerticalAlignment="Top" Width="220" Foreground="White" Grid.ColumnSpan="2"/>
+            <CheckBox Content="Show items with stuff" IsChecked="{Binding ItemsWithStuff}" Grid.Column="1" HorizontalAlignment="Left" Margin="20,30,0,0" VerticalAlignment="Top" Width="220" Foreground="White" Grid.ColumnSpan="2">
+                
+            </CheckBox>
         </Grid>
     </Grid>
 </UserControl>

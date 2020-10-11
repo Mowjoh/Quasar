@@ -280,6 +280,12 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <Content Include="References\images\Delete.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="References\images\drag.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="References\images\Games\SmashUltimate\others.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -304,6 +310,12 @@
     <Content Include="References\images\Games\SmashUltimate\music_selected.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="References\images\Games\SmashUltimate\series.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="References\images\Games\SmashUltimate\series_selected.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="References\images\Games\SmashUltimate\stages.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -311,6 +323,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="References\images\NoScreenshot.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="References\InternalModTypes\SmashUltimate\CSS_Layout.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="References\InternalModTypes\SmashUltimate\Series_Icon.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="References\InternalModTypes\SmashUltimate\Common_Effect.xml">

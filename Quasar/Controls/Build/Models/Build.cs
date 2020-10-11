@@ -66,10 +66,13 @@ namespace Quasar.Controls.Build.Models
         int ModLoader { get; set; }
         List<Hash> DistantHashes { get; set; }
         List<Hash> LocalHashes { get; set; }
+        List<Hash> DistantOutsiderHashes { get; set; }
+        List<Hash> LocalOutsiderHashes { get; set; }
         string WorkspacePath { get; set; }
 
         List<FileReference> FilesToBuild { get; set; }
         List<FileReference> DistantFiles { get; set; }
+
 
         
 
@@ -166,16 +169,26 @@ namespace Quasar.Controls.Build.Models
 
                 string DistantWorkspacePath = WorkspacePath.Replace("{Workspace}", ViewModel.ActiveWorkspace.Name);
                 string localHashFilePath = Properties.Settings.Default.DefaultDir + @"\Library\Downloads\Hashes.xml";
+                string localOutsiderHashFilePath = Properties.Settings.Default.DefaultDir + @"\Library\Downloads\OutsiderHashes.xml";
 
+                //Getting Workspace Hashes
                 if (Writer.CheckFileExists(DistantWorkspacePath + @"Hashes.xml"))
                 {
                     Writer.GetFile(DistantWorkspacePath + @"Hashes.xml", localHashFilePath);
                     ViewModel.Log.Debug(String.Format("Distant Hash File Exists : {0}", DistantWorkspacePath + @"Hashes.xml"));
                 }
-                    
 
+                //Getting OutsiderHashes
+                if (Writer.CheckFileExists(@"Quasar/OutsiderHashes.xml"))
+                {
+                    Writer.GetFile(@"Quasar/OutsiderHashes.xml", localOutsiderHashFilePath);
+                    ViewModel.Log.Debug(String.Format("Distant Hash File Exists : {0}", DistantWorkspacePath + @"Hashes.xml"));
+                }
+
+                //Getting Workspace Distant Files
                 DistantFiles = Writer.GetRemoteFiles(DistantWorkspacePath);
 
+                //Loading distant Workspace Hashes if found
                 if (File.Exists(localHashFilePath))
                 {
                     ViewModel.Log.Debug("File Exists, Loading Hashes");
@@ -187,8 +200,22 @@ namespace Quasar.Controls.Build.Models
                     ViewModel.Log.Debug("Hash List Created");
                     DistantHashes = new List<Hash>();
                 }
+
+                //Loading distant Outsider Hashes if found
+                if (File.Exists(localOutsiderHashFilePath))
+                {
+                    ViewModel.Log.Debug("File Exists, Loading Outsider Hashes");
+                    DistantOutsiderHashes = XML.GetHashes(localOutsiderHashFilePath);
+                }
+                else
+                {
+                    ViewModel.Log.Debug("No Remote Hash File");
+                    ViewModel.Log.Debug("Hash List Created");
+                    DistantOutsiderHashes = new List<Hash>();
+                }
+
                 LocalHashes = new List<Hash>();
-                Writer.SetHashes(DistantHashes, LocalHashes);
+                Writer.SetHashes(DistantHashes, LocalHashes, DistantOutsiderHashes);
             }
             catch(Exception e)
             {
@@ -216,6 +243,13 @@ namespace Quasar.Controls.Build.Models
                         }
                     }
                 }
+                foreach(Hash h in DistantOutsiderHashes)
+                {
+                    if (!FilesToBuild.Any(r => "/" + r.OutputFilePath.Replace("\\", "/") == h.FilePath))
+                    {
+                        Writer.DeleteFile(h.FilePath);
+                    }
+                }
             }
             catch(Exception e)
             {
@@ -239,7 +273,7 @@ namespace Quasar.Controls.Build.Models
                     foreach (FileReference Ferb in AssociatedReferences)
                     {
                         SetProgression((TotalFiles - FilesToBuild.Count), TotalFiles);
-                        Writer.SendFile(Ferb.SourceFilePath, Ferb.OutputFilePath);
+                        Writer.SendFile(Ferb.SourceFilePath, Ferb.OutputFilePath, Ferb.OutsideFile);
                         FilesToBuild.Remove(Ferb);
                     }
                     ViewModel.Log.Info(String.Format("Finished copying files for {0}", FRef.LibraryMod.Name));
@@ -256,11 +290,15 @@ namespace Quasar.Controls.Build.Models
             //Saving, sending Hashes file
             string DistantWorkspacePath = WorkspacePath.Replace("{Workspace}", ViewModel.ActiveWorkspace.Name);
             string localHashFilePath = Properties.Settings.Default.DefaultDir + @"\Library\Downloads\Hashes.xml";
+            string localOutsiderHashFilePath = Properties.Settings.Default.DefaultDir + @"\Library\Downloads\OutsiderHashes.xml";
             XML.SaveHashes(localHashFilePath, Writer.GetHashes());
+            XML.SaveHashes(localOutsiderHashFilePath, Writer.GetOutsiderHashes());
             ViewModel.Log.Debug("Saved Hashes");
             Writer.SendFile(localHashFilePath, DistantWorkspacePath + @"Hashes.xml",true);
+            Writer.SendFile(localOutsiderHashFilePath, @"Quasar\OutsiderHashes.xml", true);
             ViewModel.Log.Debug("Sent Hashes");
             File.Delete(localHashFilePath);
+            File.Delete(localOutsiderHashFilePath);
             ViewModel.Log.Debug("Deleted Hashes");
 
         }
@@ -298,9 +336,13 @@ namespace Quasar.Controls.Build.Models
 
                     string[] output = BuilderActions.FormatOutput(bfi.File, bfi.Path, GDI.Attributes[0].Value, file, cm, ass, GDI.Attributes[1].Value);
                     string FinalDestination = WorkspacePath + output[0] + "/" + output[1];
+                    if (imt.OutsideFolder)
+                    {
+                        FinalDestination = imt.OutsideFolderPath + output[0] + "/" + output[1];
+                    }
                     FinalDestination = FinalDestination.Replace(@"{Workspace}", ViewModel.ActiveWorkspace.Name);
                     FinalDestination = FinalDestination.Replace(@"/", @"\");
-                    FilesToBuild.Add(new FileReference() { LibraryMod = lm, SourceFilePath = source, OutputFilePath = FinalDestination });
+                    FilesToBuild.Add(new FileReference() { LibraryMod = lm, SourceFilePath = source, OutputFilePath = FinalDestination, OutsideFile = imt.OutsideFolder });
 
                 }
             }
@@ -393,6 +435,7 @@ namespace Quasar.Controls.Build.Models
         public LibraryMod LibraryMod { get; set; }
         public string SourceFilePath { get; set; }
         public string OutputFilePath { get; set; }
+        public bool OutsideFile { get; set; }
     }
 
 

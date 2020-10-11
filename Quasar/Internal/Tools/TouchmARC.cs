@@ -128,7 +128,7 @@ namespace Quasar.Internal.Tools
         {
             try
             {
-                Writer.SendFile(Properties.Settings.Default.DefaultDir + "\\Library\\arcropolis.toml", "atmosphere\\contents\\01006A800016E000\\romfs\\arcropolis.toml", true);
+                Writer.SendFile(Properties.Settings.Default.DefaultDir + "\\Library\\arcropolis.toml", "atmosphere\\contents\\01006A800016E000\\romfs\\arcropolis.toml", false, true);
                 log.Debug("sent file atmosphere\\contents\\01006A800016E000\\romfs\\arcropolis.toml");
             }
             catch (Exception e)
@@ -151,7 +151,7 @@ namespace Quasar.Internal.Tools
                 try
                 {
                     string source = Properties.Settings.Default.DefaultDir + "\\References\\ModLoaders\\ARCropolis\\" + s;
-                    Writer.SendFile(source, s, true);
+                    Writer.SendFile(source, s, false, true);
                     log.Debug("sent file " + s);
                 }
                 catch(Exception e)

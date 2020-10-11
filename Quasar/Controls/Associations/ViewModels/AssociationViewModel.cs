@@ -210,6 +210,9 @@ namespace Quasar.Controls.Assignation.ViewModels
                 OnPropertyChanged("FilterText");
             }
         }
+
+        public string dragimage { get; set; } = Properties.Settings.Default.DefaultDir + @"\References\images\drag.png";
+        public string deleteimage { get; set; } = Properties.Settings.Default.DefaultDir + @"\References\images\Delete.png";
         #endregion
 
         #region Data
@@ -367,6 +370,16 @@ namespace Quasar.Controls.Assignation.ViewModels
 
                 if (value != null)
                 {
+                    if(value.GameDataCategory.Name == "Others")
+                    {
+                        TypesGrouped = false;
+                    }
+                    else
+                    {
+                        TypesGrouped = true;
+                    }
+                    
+
                     ItemsCollectionViewSource.Source = value.GameDataCategory.Items;
                     ItemsCollectionViewSource.View.MoveCurrentToFirst();    
 
@@ -831,6 +844,9 @@ namespace Quasar.Controls.Assignation.ViewModels
         }
         public void DeleteSlotItem()
         {
+            if (SelectedSlotItem.SlotItemViewModel.EmptySlot)
+                return;
+
             List<Association> Associations = new List<Association>();
             foreach(ContentMapping cm in SelectedSlotItem.SlotItemViewModel.ContentMappings)
             {

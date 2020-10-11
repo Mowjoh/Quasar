@@ -91,7 +91,7 @@
         </Canvas>
 
         <Grid Margin="80,0,10,0" Style="{StaticResource GridStyle}" Panel.ZIndex="1000">
-            <Label HorizontalAlignment="Left" VerticalAlignment="Center" Content="{Binding ContentName}" Foreground="White"/>
+            <Label HorizontalAlignment="Left" VerticalAlignment="Center" Content="{Binding ContentName}" Foreground="White" IsHitTestVisible="False"/>
             
         </Grid>
         <Path x:Name="BorderColor" Stroke="Transparent" StrokeThickness="2" Style="{StaticResource PathStyle}">

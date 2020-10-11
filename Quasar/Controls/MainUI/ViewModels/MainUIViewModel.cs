@@ -596,11 +596,6 @@ namespace Quasar
                 EventSystem.Subscribe<ModListItem>(SetModListItem);
 
                 
-
-
-                //To Delete all mappings and associations then rescan mappings : UNCOMMENT
-                
-                
             }
             catch (Exception e)
             {
@@ -729,52 +724,82 @@ namespace Quasar
 
         public async Task<int> DoTheStuff()
         {
-            foreach(LibraryMod lm in Mods)
+            try
             {
-                ModFileManager manager = new ModFileManager(lm, Games[1]);
-                manager.CheckOldFolderPath();
-            }
-
-            ActiveWorkspace.Associations = new List<Association>();
-            ContentMappings = new ObservableCollection<ContentMapping>();
-            ObservableCollection<ContentMapping> WorkingList = ContentMappings;
-            foreach (LibraryMod lm in Mods)
-            {
-                try
+                foreach (LibraryMod lm in Mods)
                 {
-                    ObservableCollection<ContentMapping> SearchList = Searchie.AutoDetectinator(lm, InternalModTypes, Games[1], GameDatas);
-                    foreach (ContentMapping cm in SearchList)
+                    ModFileManager manager = new ModFileManager(lm, Games[1]);
+                    manager.CheckOldFolderPath();
+                }
+
+                ActiveWorkspace.Associations = new List<Association>();
+                ContentMappings = new ObservableCollection<ContentMapping>();
+                ObservableCollection<ContentMapping> WorkingList = ContentMappings;
+                foreach (LibraryMod lm in Mods)
+                {
+                    try
                     {
-                        WorkingList.Add(cm);
+                        ObservableCollection<ContentMapping> SearchList = Searchie.AutoDetectinator(lm, InternalModTypes, Games[1], GameDatas);
+                        foreach (ContentMapping cm in SearchList)
+                        {
+                            WorkingList.Add(cm);
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        log.Error(e.Message + e.StackTrace);
+                    }
+
+                }
+                ContentMappings = WorkingList;
+                WorkspaceXML.WriteWorkspaces(Workspaces.ToList());
+                ContentXML.WriteContentMappingListFile(ContentMappings.ToList());
+
+                foreach (ContentMapping cm in ContentMappings)
+                {
+                    if (cm.GameDataItemID != -1)
+                    {
+                        Association associations = ActiveWorkspace.Associations.Find(ass => ass.GameDataItemID == cm.GameDataItemID && ass.InternalModTypeID == cm.InternalModType && ass.Slot == cm.Slot);
+                        if (associations != null)
+                        {
+                            InternalModType imt = InternalModTypes.Single(i => i.ID == cm.InternalModType);
+                            if (imt.OutsideFolder)
+                            {
+                                int Slot = 0;
+                                bool foundSlot = false;
+
+                                while (!foundSlot)
+                                {
+                                    if (!ActiveWorkspace.Associations.Any(a => a.InternalModTypeID == imt.ID && a.Slot == Slot))
+                                    {
+                                        ActiveWorkspace.Associations.Add(new Association() { ContentMappingID = cm.ID, GameDataItemID = cm.GameDataItemID, InternalModTypeID = cm.InternalModType, Slot = Slot });
+                                        foundSlot = true;
+                                    }
+                                    Slot++;
+                                }
+                            }
+                            else
+                            {
+                                ActiveWorkspace.Associations[ActiveWorkspace.Associations.IndexOf(associations)] = new Association() { ContentMappingID = cm.ID, GameDataItemID = cm.GameDataItemID, InternalModTypeID = cm.InternalModType, Slot = cm.Slot };
+
+                            }
+                        }
+                        else
+                        {
+
+                            ActiveWorkspace.Associations.Add(new Association() { ContentMappingID = cm.ID, GameDataItemID = cm.GameDataItemID, InternalModTypeID = cm.InternalModType, Slot = cm.Slot });
+
+                        }
                     }
                 }
-                catch(Exception e)
-                {
-                    log.Error(e.Message);
-                }
-                
-            }
-            ContentMappings = WorkingList;
-            WorkspaceXML.WriteWorkspaces(Workspaces.ToList());
-            ContentXML.WriteContentMappingListFile(ContentMappings.ToList());
 
-            foreach (ContentMapping cm in ContentMappings)
+                WorkspaceXML.WriteWorkspaces(Workspaces.ToList());
+            }
+            catch (Exception e)
             {
-                if (cm.GameDataItemID != -1)
-                {
-                    Association associations = ActiveWorkspace.Associations.Find(ass => ass.GameDataItemID == cm.GameDataItemID && ass.InternalModTypeID == cm.InternalModType && ass.Slot == cm.Slot);
-                    if (associations != null)
-                    {
-                        ActiveWorkspace.Associations[ActiveWorkspace.Associations.IndexOf(associations)] = new Association() { ContentMappingID = cm.ID, GameDataItemID = cm.GameDataItemID, InternalModTypeID = cm.InternalModType, Slot = cm.Slot };
-                    }
-                    else
-                    {
-                        ActiveWorkspace.Associations.Add(new Association() { ContentMappingID = cm.ID, GameDataItemID = cm.GameDataItemID, InternalModTypeID = cm.InternalModType, Slot = cm.Slot });
-                    }
-                }
+                log.Error(e.Message + e.StackTrace);
             }
-
-            WorkspaceXML.WriteWorkspaces(Workspaces.ToList());
+            
             return 0;
         }
 
@@ -796,6 +821,7 @@ namespace Quasar
 
             MVM.CollectionViewSource.View.Refresh();
             MVM.ReloadAllStats();
+
             Updating = false;
         }
 

@@ -971,7 +971,7 @@
         <Name>Final Destination</Name>
         <ItemAttribute>
           <Key>foldername</Key>
-          <Value>finaldest</Value>
+          <Value>end</Value>
         </ItemAttribute>
         <ItemAttribute>
           <Key>IsDLC</Key>
@@ -2211,10 +2211,32 @@
         </ItemAttribute>
       </Item>
       <Item ID="114">
-        <Name>Result SCreen</Name>
+        <Name>Result Screen</Name>
         <ItemAttribute>
           <Key>foldername</Key>
-          <Value>resultstage_set</Value>
+          <Value>resultstage</Value>
+        </ItemAttribute>
+        <ItemAttribute>
+          <Key>IsDLC</Key>
+          <Value>False</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="116">
+        <Name>Result Screen Joker</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>resultstage_jack</Value>
+        </ItemAttribute>
+        <ItemAttribute>
+          <Key>IsDLC</Key>
+          <Value>False</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="117">
+        <Name>Small Battlefield</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>battlefield_s</Value>
         </ItemAttribute>
         <ItemAttribute>
           <Key>IsDLC</Key>
@@ -15242,6 +15264,608 @@
         <ItemAttribute>
           <Key>IsDLC</Key>
           <Value>False</Value>
+        </ItemAttribute>
+      </Item>
+    </Category>
+    <Category ID="6" image="SmashUltimate/series.png">
+      <Name>Series</Name>
+      <Item ID="1">
+        <Name>Baloon Fight</Name>
+        <ItemAttribute>
+          <Value>baloonfight</Value>
+
+        </ItemAttribute>
+        <ItemAttribute>
+          <Key>IsDLC</Key>
+          <Value>False</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="2">
+        <Name>Bayonetta</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>bayonetta</Value>
+
+        </ItemAttribute>
+        <ItemAttribute>
+          <Key>IsDLC</Key>
+          <Value>False</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="3">
+        <Name>Castlevania</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>castlevania</Value>
+
+        </ItemAttribute>
+        <ItemAttribute>
+          <Key>IsDLC</Key>
+          <Value>False</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="4">
+        <Name>Donkey Kong</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>donkeykong</Value>
+
+        </ItemAttribute>
+        <ItemAttribute>
+          <Key>IsDLC</Key>
+          <Value>False</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="5">
+        <Name>Animal Crossing</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>doubutsu</Value>
+
+        </ItemAttribute>
+        <ItemAttribute>
+          <Key>IsDLC</Key>
+          <Value>False</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="6">
+        <Name>Duck Hunt</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>duckhunt</Value>
+
+        </ItemAttribute>
+        <ItemAttribute>
+          <Key>IsDLC</Key>
+          <Value>False</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="7">
+        <Name>Others</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>etc</Value>
+
+        </ItemAttribute>
+        <ItemAttribute>
+          <Key>IsDLC</Key>
+          <Value>False</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="8">
+        <Name>R.O.B</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>famicomrobot</Value>
+
+        </ItemAttribute>
+        <ItemAttribute>
+          <Key>IsDLC</Key>
+          <Value>False</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="9">
+        <Name>Final Fantasy</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>finalfantasy</Value>
+
+        </ItemAttribute>
+        <ItemAttribute>
+          <Key>IsDLC</Key>
+          <Value>False</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="10">
+        <Name>Fire Emblem</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>fireemblem</Value>
+
+        </ItemAttribute>
+        <ItemAttribute>
+          <Key>IsDLC</Key>
+          <Value>False</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="11">
+        <Name>F-Zero</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>fzero</Value>
+
+        </ItemAttribute>
+        <ItemAttribute>
+          <Key>IsDLC</Key>
+          <Value>False</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="12">
+        <Name>Game and Watch</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>gamewatch</Value>
+
+        </ItemAttribute>
+        <ItemAttribute>
+          <Key>IsDLC</Key>
+          <Value>False</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="13">
+        <Name>Ice Climbers</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>iceclimber</Value>
+
+        </ItemAttribute>
+        <ItemAttribute>
+          <Key>IsDLC</Key>
+          <Value>False</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="14">
+        <Name>Kirby</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>kirby</Value>
+
+        </ItemAttribute>
+        <ItemAttribute>
+          <Key>IsDLC</Key>
+          <Value>False</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="15">
+        <Name>Pilotwings</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>lightplane</Value>
+
+        </ItemAttribute>
+        <ItemAttribute>
+          <Key>IsDLC</Key>
+          <Value>False</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="16">
+        <Name>Mario</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>mario</Value>
+
+        </ItemAttribute>
+        <ItemAttribute>
+          <Key>IsDLC</Key>
+          <Value>False</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="17">
+        <Name>Mario Kart</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>mariokart</Value>
+
+        </ItemAttribute>
+        <ItemAttribute>
+          <Key>IsDLC</Key>
+          <Value>False</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="18">
+        <Name>Metal Gear</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>metalgear</Value>
+
+        </ItemAttribute>
+        <ItemAttribute>
+          <Key>IsDLC</Key>
+          <Value>False</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="19">
+        <Name>Metroid</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>metroid</Value>
+
+        </ItemAttribute>
+        <ItemAttribute>
+          <Key>IsDLC</Key>
+          <Value>False</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="20">
+        <Name>Mii</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>mii</Value>
+
+        </ItemAttribute>
+        <ItemAttribute>
+          <Key>IsDLC</Key>
+          <Value>False</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="21">
+        <Name>Mii Plaza</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>miiplaza</Value>
+
+        </ItemAttribute>
+        <ItemAttribute>
+          <Key>IsDLC</Key>
+          <Value>False</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="22">
+        <Name>Mother</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>mother</Value>
+
+        </ItemAttribute>
+        <ItemAttribute>
+          <Key>IsDLC</Key>
+          <Value>False</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="23">
+        <Name>Nintendogs</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>nintendogs</Value>
+
+        </ItemAttribute>
+        <ItemAttribute>
+          <Key>IsDLC</Key>
+          <Value>False</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="24">
+        <Name>None</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>none</Value>
+
+        </ItemAttribute>
+        <ItemAttribute>
+          <Key>IsDLC</Key>
+          <Value>False</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="25">
+        <Name>Pacman</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>pacman</Value>
+
+        </ItemAttribute>
+        <ItemAttribute>
+          <Key>IsDLC</Key>
+          <Value>False</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="26">
+        <Name>Kid Icarus</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>palutena</Value>
+
+        </ItemAttribute>
+        <ItemAttribute>
+          <Key>IsDLC</Key>
+          <Value>False</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="27">
+        <Name>Pikmin</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>pikmin</Value>
+
+        </ItemAttribute>
+        <ItemAttribute>
+          <Key>IsDLC</Key>
+          <Value>False</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="28">
+        <Name>Hanenbow</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>plankton</Value>
+
+        </ItemAttribute>
+        <ItemAttribute>
+          <Key>IsDLC</Key>
+          <Value>False</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="29">
+        <Name>Pokémon</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>pokemon</Value>
+
+        </ItemAttribute>
+        <ItemAttribute>
+          <Key>IsDLC</Key>
+          <Value>False</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="30">
+        <Name>Punch Out!</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>punchout</Value>
+
+        </ItemAttribute>
+        <ItemAttribute>
+          <Key>IsDLC</Key>
+          <Value>False</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="31">
+        <Name>Mega Man</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>rockman</Value>
+
+        </ItemAttribute>
+        <ItemAttribute>
+          <Key>IsDLC</Key>
+          <Value>False</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="32">
+        <Name>Smash Bros.</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>smashbros</Value>
+
+        </ItemAttribute>
+        <ItemAttribute>
+          <Key>IsDLC</Key>
+          <Value>False</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="33">
+        <Name>Sonic</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>sonic</Value>
+
+        </ItemAttribute>
+        <ItemAttribute>
+          <Key>IsDLC</Key>
+          <Value>False</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="34">
+        <Name>Splatoon</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>splatoon</Value>
+
+        </ItemAttribute>
+        <ItemAttribute>
+          <Key>IsDLC</Key>
+          <Value>False</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="35">
+        <Name>Star Fox</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>starfox</Value>
+
+        </ItemAttribute>
+        <ItemAttribute>
+          <Key>IsDLC</Key>
+          <Value>False</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="36">
+        <Name>Street Fighter</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>streetfighter</Value>
+
+        </ItemAttribute>
+        <ItemAttribute>
+          <Key>IsDLC</Key>
+          <Value>False</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="37">
+        <Name>Tomodachi Life</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>tomodachi</Value>
+
+        </ItemAttribute>
+        <ItemAttribute>
+          <Key>IsDLC</Key>
+          <Value>False</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="38">
+        <Name>Touch</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>touch</Value>
+
+        </ItemAttribute>
+        <ItemAttribute>
+          <Key>IsDLC</Key>
+          <Value>False</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="39">
+        <Name>Wario</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>wario</Value>
+
+        </ItemAttribute>
+        <ItemAttribute>
+          <Key>IsDLC</Key>
+          <Value>False</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="40">
+        <Name>Wii Fit</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>wiifit</Value>
+
+        </ItemAttribute>
+        <ItemAttribute>
+          <Key>IsDLC</Key>
+          <Value>False</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="41">
+        <Name>Wrecking Crew</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>wreckingcrew</Value>
+
+        </ItemAttribute>
+        <ItemAttribute>
+          <Key>IsDLC</Key>
+          <Value>False</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="42">
+        <Name>Wuhu Island</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>wuhuisland</Value>
+
+        </ItemAttribute>
+        <ItemAttribute>
+          <Key>IsDLC</Key>
+          <Value>False</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="43">
+        <Name>Xenoblade</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>xenoblade</Value>
+
+        </ItemAttribute>
+        <ItemAttribute>
+          <Key>IsDLC</Key>
+          <Value>False</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="44">
+        <Name>Yoshi</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>yoshi</Value>
+
+        </ItemAttribute>
+        <ItemAttribute>
+          <Key>IsDLC</Key>
+          <Value>False</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="45">
+        <Name>The Legend of Zelda</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>zelda</Value>
+
+        </ItemAttribute>
+        <ItemAttribute>
+          <Key>IsDLC</Key>
+          <Value>False</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="46">
+        <Name>Arms</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>arms</Value>
+
+        </ItemAttribute>
+        <ItemAttribute>
+          <Key>IsDLC</Key>
+          <Value>True</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="47">
+        <Name>Banjo Kazooie</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>banjokazooie</Value>
+
+        </ItemAttribute>
+        <ItemAttribute>
+          <Key>IsDLC</Key>
+          <Value>True</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="48">
+        <Name>Dragon Quest</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>dragonquest</Value>
+
+        </ItemAttribute>
+        <ItemAttribute>
+          <Key>IsDLC</Key>
+          <Value>True</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="49">
+        <Name>Fatal Fury</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>fatalfury</Value>
+
+        </ItemAttribute>
+        <ItemAttribute>
+          <Key>IsDLC</Key>
+          <Value>True</Value>
+        </ItemAttribute>
+      </Item>
+      <Item ID="50">
+        <Name>Persona</Name>
+        <ItemAttribute>
+          <Key>foldername</Key>
+          <Value>persona</Value>
+
+        </ItemAttribute>
+        <ItemAttribute>
+          <Key>IsDLC</Key>
+          <Value>True</Value>
         </ItemAttribute>
       </Item>
     </Category>

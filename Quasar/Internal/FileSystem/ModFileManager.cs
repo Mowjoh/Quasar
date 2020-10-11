@@ -103,7 +103,11 @@ namespace Quasar.FileSystem
 
             GameModType mt = _Game.GameModTypes.Find(m => m.ID == _mod.TypeID);
             ModTypeFolderName = mt.LibraryFolder;
-            LibraryContentFolderPath = Properties.Settings.Default.DefaultDir + "\\Library\\Mods\\" + ModTypeFolderName + "\\" + ModID + "\\";
+            LibraryContentFolderPath = Properties.Settings.Default.DefaultDir + "\\Library\\Mods\\" + ModTypeFolderName.Replace(@"/",@"\") + "\\" + ModID + "\\";
+            if (!Directory.Exists(Properties.Settings.Default.DefaultDir + "\\Library\\Mods\\" + ModTypeFolderName.Replace(@"/", @"\")))
+            {
+                Directory.CreateDirectory(Properties.Settings.Default.DefaultDir + "\\Library\\Mods\\" + ModTypeFolderName.Replace(@"/", @"\"));
+            }
         }
 
         public void CheckOldFolderPath()
@@ -113,13 +117,17 @@ namespace Quasar.FileSystem
             {
                 if (Directory.Exists(LibraryContentFolderPath))
                 {
-                    Directory.Delete(LibraryContentFolderPath);
+                    Directory.Delete(LibraryContentFolderPath,true);
                 }
-                Directory.Move(OldContentPath, LibraryContentFolderPath);
-            }
-            if (ModID == "211594" || ModID == "168099")
-            {
-                Console.WriteLine("");
+                try
+                {
+                    Directory.Move(OldContentPath, LibraryContentFolderPath);
+                }
+                catch(Exception e)
+                {
+                    Log.Error(e.Message + e.StackTrace);
+                }
+                
             }
         }
 
