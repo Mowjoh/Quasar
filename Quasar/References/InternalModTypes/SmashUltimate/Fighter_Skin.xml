@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<InternalModType xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="Fighter Skin" Filename="SmashUltimate/Fighter_Skin" ID="2" GameID="1" Association="1" Slots="8">
+<InternalModType xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="Fighter Skin" Filename="SmashUltimate/Fighter_Skin" TypeGroup="Fighter" ID="2" GameID="1" Association="1" Slots="8" IgnoreableGameDataAssociation="false">
+  <NoGameData>false</NoGameData>
+  <OutsideFolder>false</OutsideFolder>
+  <OutsideFolderPath></OutsideFolderPath>
   <InternalModTypeFile ID="0">
-    <Path>{Characters}/model/*/c{S00}</Path>
-    <Destination>fighter/{Characters}/model/{Folder}/c{S00}/{Folder}_{Characters}_{Folder}_{Folder}.nutexb</Destination>
-    <File>*_{Characters}_{000}_*.nutexb</File>
-    <Mandatory>true</Mandatory>
+    <SourcePath>{GameData}/model/{Folder}/c{S00}</SourcePath>
+    <SourceFile>{AnyFile}.nutexb</SourceFile>
+    <BuilderFile BuilderID="1" Path="arc/fighter/{GameData}/model/{Folder}/c{S00}" File="{AnyFile}.nutexb" />
+    <BuilderFile BuilderID="2" Path="fighter/{GameData}/model/{Folder}/c{S00}" File="{AnyFile}.nutexb" />
   </InternalModTypeFile>
 </InternalModType>

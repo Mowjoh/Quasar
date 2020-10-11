@@ -9,11 +9,13 @@
         <SolidColorBrush x:Key="QD0" Color="#121212"/>
         <SolidColorBrush x:Key="QD1" Color="#1e1e1e"/>
         <SolidColorBrush x:Key="QD2" Color="#2e2e2e"/>
+        <SolidColorBrush x:Key="QD3" Color="#3e3e3e"/>
 
         <System:String x:Key="HeaderTabContent">qsd</System:String>
 
-        <SolidColorBrush x:Key="QuasarButtonBackground" Color="#92DEC3"/>
-        <SolidColorBrush x:Key="QuasarButtonText" Color="#000000"/>
+        <SolidColorBrush x:Key="QuasarButtonBackground" Color="White"/>
+        <SolidColorBrush x:Key="QuasarButtonBackgroundPressed" Color="#CCCCCC"/>
+        <SolidColorBrush x:Key="QuasarButtonText" Color="PaleVioletRed"/>
 
         <SolidColorBrush x:Key="QuasarBackgroundDark" Color="#262833"/>
         <SolidColorBrush x:Key="QuasarBackgroundLight" Color="#262833"/>
@@ -23,14 +25,22 @@
 
         <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
 
-
+        <Style x:Key="ControlStyle" TargetType="{x:Type Controls:ModListItem}">
+            <Setter Property="Height" Value="30"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Smol}" Value="true">
+                    <Setter Property="Height" Value="30"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        
         <Style x:Key="QuasarButton" TargetType="{x:Type Button}">
             <Setter Property="Background" Value="{StaticResource QuasarButtonBackground}"/>
             <Setter Property="Foreground" Value="{StaticResource QuasarButtonText}"/>
         </Style>
 
         <Style x:Key="QuasarLabel" TargetType="{x:Type Label}">
-            <Setter Property="Foreground" Value="{StaticResource QuasarButtonText}"/>
+            <Setter Property="Foreground" Value="{StaticResource QuasarTextColor}"/>
             <Setter Property="FontFamily" Value="/Controls/fonts/sofiapro-light.otf"/>
         </Style>
 
@@ -50,8 +60,11 @@
 
         <Style x:Key="QuasarDataGridRow" TargetType="{x:Type DataGridRow}">
             <Setter Property="Background" Value="Black"/>
-            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Foreground" Value="#C0C0C0"/>
             <Setter Property="BorderBrush" Value="Pink"/>
+        </Style>
+        <Style x:Key="QuasarDataGridCell" TargetType="{x:Type DataGridCell}">
+            <Setter Property="BorderBrush" Value="#C0C0C0"/>
         </Style>
         <Style x:Key="QuasarDataGridHeader" TargetType="{x:Type DataGridColumnHeader}">
             <Setter Property="Background" Value="Black"/>
@@ -59,16 +72,32 @@
         </Style>
 
 
-        <ControlTemplate TargetType="Button" x:Key="NewButton">
+        <ControlTemplate TargetType="Button" x:Key="QuasarButtonTemplate">
             <Grid Height="Auto" Width="Auto">
                 <Border Height="Auto" Width="Auto">
                     <Path Stroke="Black" StrokeThickness="1" Fill="{StaticResource QuasarButtonBackground}">
                         <Path.Data>
-                            <RectangleGeometry Rect="0,0,200,50" RadiusX="10" RadiusY="10" />
+                            <RectangleGeometry Rect="0,0,250,50" RadiusX="30" RadiusY="30" />
                         </Path.Data>
+                        <Path.Style>
+                            <Style TargetType="Path">
+                                <Setter Property="Fill" Value="{StaticResource QuasarButtonBackground}"/>
+                            </Style>
+                        </Path.Style>
                     </Path>
                 </Border>
-                <Label VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{StaticResource QuasarButtonText}" FontSize="14">Content</Label>
+                <Label VerticalAlignment="Center" Content="CONTINUE" HorizontalAlignment="Center"  FontSize="18">
+                    <Label.Style >
+                        <Style TargetType="Label">
+                            <Setter Property="Foreground" Value="{StaticResource QuasarButtonText}"/>
+                            <Style.Triggers>
+                                <Trigger Property="IsEnabled" Value="False">
+                                    <Setter Property="Foreground" Value="Gray"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Label.Style>
+                </Label>
                 
             </Grid>
         </ControlTemplate>
@@ -84,7 +113,7 @@
         </Style>
 
         <Style x:Key="QuasarListBox" TargetType="{x:Type ListBox}">
-            <Setter Property="Background" Value="{DynamicResource QuasarBackgroundDark}"/>
+            <Setter Property="Background" Value="{DynamicResource QD1}"/>
         </Style>
 
         <Style TargetType="ListBox" x:Key="QuasarList">

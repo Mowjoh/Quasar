@@ -12,40 +12,43 @@ using System.Deployment;
 using System.Deployment.Application;
 using System.Reflection;
 using System.IO;
-using static Quasar.XMLResources.AssociationXML;
+using static Quasar.XMLResources.WorkspaceXML;
 using Quasar.Internal.Tools;
 using Quasar.XMLResources;
 using Quasar.Properties;
+using log4net;
 
 namespace Quasar.Quasar_Sys
 {
     static class Checker
     {
-        public static Mutex Instances(Mutex _serverMutex,ObservableCollection<string> _DLS)
+        public static Mutex Instances(Mutex _serverMutex, ILog log)
         {
             string[] Args = Environment.GetCommandLineArgs();
             //Checking if Quasar is running alright
             if (Mutex.TryOpenExisting("Quasarite", out Mutex mt))
             {
+                log.Info("Started as a client");
                 //Client
                 if (Args.Length == 2)
                 {
-                    PipeClient.StartPipeClient("Quasarite", Args[1]);
+                    PipeClient.StartPipeClient("Quasarite", Args[1], log);
                 }
                 mt.Close();
                 Environment.Exit(0);
             }
             else
             {
+                log.Info("Started as a server");
                 //Server
                 _serverMutex = new Mutex(true, "Quasarite");
                 if (Args.Length == 2)
                 {
-                    new PipeServer("Quasarite", _DLS, Args[1]);
+                    new PipeServer("Quasarite", Args[1],log);
                 }
                 else
                 {
-                    new PipeServer("Quasarite", _DLS, "");
+                    new PipeServer("Quasarite", "", log);
                 }
 
             }
@@ -72,12 +75,12 @@ namespace Quasar.Quasar_Sys
 
         public static void BaseWorkspace()
         {
-            String AssociationsPath = Properties.Settings.Default.DefaultDir + @"\Library\Associations.xml";
+            String AssociationsPath = Properties.Settings.Default.DefaultDir + @"\Library\Workspaces.xml";
             if (!File.Exists(AssociationsPath))
             {
-                Workspace defaultWorkspace = new Workspace() { ID = IDGenerator.getNewWorkspaceID(), Name = "Default Workspace" };
+                Workspace defaultWorkspace = new Workspace() { Name = "Quasar's Workspace", ID = IDGenerator.getNewWorkspaceID(), Associations = new List<Association>(), Built = false, BuildDate = "" };
                 List<Workspace> DefaultFile = new List<Workspace>() { defaultWorkspace };
-                AssociationXML.WriteAssociationFile(DefaultFile);
+                WorkspaceXML.WriteWorkspaces(DefaultFile);
 
                 Properties.Settings.Default.LastSelectedWorkspace = defaultWorkspace.ID;
                 Properties.Settings.Default.Save();
@@ -99,8 +102,11 @@ namespace Quasar.Quasar_Sys
                 {
                     BaseUserSettings();
                 }
+                string previous = Properties.Settings.Default.AppVersion;
                 Properties.Settings.Default.UpgradeRequired = false;
                 Properties.Settings.Default.AppVersion = executionVersion;
+                Properties.Settings.Default.PreviousVersion = previous;
+
                 Properties.Settings.Default.Save();
             }
             return Update;

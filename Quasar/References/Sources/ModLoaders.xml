@@ -1,0 +1,4 @@
+﻿<ModLoaders>
+  <ModLoader ModLoaderID="1" Name="ARCropolis" BasePath="Quasar/{Workspace}/" InstallPath="" GameID="1"/>
+  <ModLoader ModLoaderID="2" Name="UMM" BasePath="UltimateModManager/mods/{Workspace}/" InstallPath="" GameID="1"/>
+</ModLoaders>

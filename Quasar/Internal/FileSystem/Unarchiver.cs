@@ -1,4 +1,5 @@
 ﻿using Quasar.Controls;
+using Quasar.Controls.Mod.ViewModels;
 using SharpCompress.Archives;
 using SharpCompress.Archives.Rar;
 using SharpCompress.Archives.SevenZip;
@@ -18,18 +19,18 @@ namespace Quasar.FileSystem
 {
     public class Unarchiver
     {
-        ModListItem ModListItem;
+        ModListItemViewModel ModListItemViewModel;
 
-        public Unarchiver(ModListItem mli)
+        public Unarchiver(ModListItemViewModel mli)
         {
-            ModListItem = mli;
+            ModListItemViewModel = mli;
         }
 
         //Archive Extraction async process
         public async Task<int> ExtractArchiveAsync(string _ArchiveSource, string ArchiveDestination, string _ArchiveType)
         {
             //Setting up Extraction UI
-            await ModListItem.Progress.Dispatcher.BeginInvoke(new Action(() => { ModListItem.Progress.IsIndeterminate = true; ModListItem.ModStatusTextValue = ""; }), DispatcherPriority.Background);
+            ModListItemViewModel.ModStatusTextValue = "Extractin";
 
             //Launching Extraction Task
             await Task.Run(() => Extract(_ArchiveSource, ArchiveDestination, _ArchiveType));
@@ -71,13 +72,14 @@ namespace Quasar.FileSystem
                 case "7z":
                     using (var archive = SevenZipArchive.Open(_ArchiveSource))
                     {
-                        foreach (var entry in archive.Entries.Where(entry => !entry.IsDirectory))
+                        var reader = archive.ExtractAllEntries();
+                        while (reader.MoveToNextEntry())
                         {
-                            entry.WriteToDirectory(ArchiveDestination, new ExtractionOptions()
+                            if (!reader.Entry.IsDirectory)
                             {
-                                ExtractFullPath = true,
-                                Overwrite = true
-                            });
+                                SevenZipArchiveEntry entry = (SevenZipArchiveEntry)reader.Entry;
+                                entry.WriteToDirectory(ArchiveDestination, new ExtractionOptions() { ExtractFullPath = true, Overwrite = true });
+                            }
                         }
                     }
                     break;

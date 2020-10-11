@@ -98,30 +98,36 @@ namespace Quasar
         #region Mod Actions
         public static async Task<APIMod> GetAPIMod(string _ItemType, string _ItemID)
         {
+            
             APIMod DownloadedAPIMod = null;
-
-            queryParameters = GetDefaultParameters();
-            queryParameters.Add(new QueryStringItem("itemid", _ItemID));
-            queryParameters.Add(new QueryStringItem("itemtype", _ItemType));
-            queryParameters.Add(new QueryStringItem("fields", "name,Credits().aAuthors(),description,downloads,catid,Updates().nGetUpdatesCount(),Game().name"));
-
-            string queryURL = FormatAPIRequest("Core/Item/Data", queryParameters);
-
-            using (HttpClient webClient = new HttpClient())
+            try
             {
-                HttpResponseMessage response = await webClient.GetAsync(queryURL);
+                queryParameters = GetDefaultParameters();
+                queryParameters.Add(new QueryStringItem("itemid", _ItemID));
+                queryParameters.Add(new QueryStringItem("itemtype", _ItemType));
+                queryParameters.Add(new QueryStringItem("fields", "name,Credits().aAuthors(),description,downloads,catid,Updates().nGetUpdatesCount(),Game().name"));
 
-                if (response.IsSuccessStatusCode)
+                string queryURL = FormatAPIRequest("Core/Item/Data", queryParameters);
+
+                using (HttpClient webClient = new HttpClient())
                 {
-                    string responseText = await response.Content.ReadAsStringAsync();
+                    HttpResponseMessage response = await webClient.GetAsync(queryURL);
 
-                    DownloadedAPIMod = JsonConvert.DeserializeObject<APIMod>(responseText);
+                    if (response.IsSuccessStatusCode)
+                    {
+                        string responseText = await response.Content.ReadAsStringAsync();
+
+                        DownloadedAPIMod = JsonConvert.DeserializeObject<APIMod>(responseText);
+                    }
                 }
+
+                DownloadedAPIMod.ID = Int32.Parse(_ItemID);
+                DownloadedAPIMod.ModType = _ItemType;
             }
-
-            DownloadedAPIMod.ID = Int32.Parse(_ItemID);
-            DownloadedAPIMod.ModType = _ItemType;
-
+            catch(Exception e)
+            {
+                
+            }
 
             return DownloadedAPIMod;
         }

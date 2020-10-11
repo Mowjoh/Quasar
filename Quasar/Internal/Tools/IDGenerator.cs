@@ -22,10 +22,9 @@ namespace Quasar.Internal.Tools
 
         public static int getNewWorkspaceID()
         {
-            int ID = Properties.Settings.Default.WorkspaceID;
-            ID++;
+            int ID = Properties.Settings.Default.WorkspaceIdGenerator;
 
-            Properties.Settings.Default.WorkspaceID = ID;
+            Properties.Settings.Default.WorkspaceIdGenerator = ID + 1;
             Properties.Settings.Default.Save();
 
             return ID;

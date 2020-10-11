@@ -26,19 +26,11 @@ namespace Quasarite
             InitializeComponent();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private async void Button_Click(object sender, RoutedEventArgs e)
         {
-            String PostUrl = UrlInput.Text;
-            String DownloadUrl = DownloadInput.Text;
-            String Extension = TypeInput.Text;
-            String Type = APIInput.Text;
+            string value = await GetDownloadURL();
 
-            String PostID = PostUrl.Split('/')[PostUrl.Split('/').Length - 1];
-            String DownloadID = DownloadUrl.Split('/')[DownloadUrl.Split('/').Length - 1];
-
-            String QuasarURL = @"quasar:https://gamebanana.com/dl/" + DownloadID + "," + Type + "," + PostID + "," + Extension;
-
-            QuasarUrlLabel.Content = QuasarURL;
+            QuasarUrlLabel.Content = value;
 
         }
 
@@ -47,9 +39,52 @@ namespace Quasarite
             Clipboard.SetText(QuasarUrlLabel.Content.ToString());
         }
 
-        private void Button_Click_2(object sender, RoutedEventArgs e)
+        private async void LaunchitClicked(object sender, RoutedEventArgs e)
         {
-            Process.Start(QuasarUrlLabel.Content.ToString());
+            string value = await GetDownloadURL();
+            Process.Start(value);
+            
+        }
+
+        private async Task<string> GetDownloadURL()
+        {
+            List<QueryStringItem> queryParameters;
+            String PostUrl = UrlInput.Text;
+            string quasarURL = "";
+            if (PostUrl != "")
+            {
+                String PostID = PostUrl.Split('/')[PostUrl.Split('/').Length - 1];
+                String PostType = PostUrl.Split('/')[PostUrl.Split('/').Length - 2];
+
+
+                switch (PostType)
+                {
+                    case "skins":
+                        PostType = "Skin";
+                        break;
+                    case "sounds":
+                        PostType = "Sound";
+                        break;
+                    case "gamefiles":
+                        PostType = "Gamefile";
+                        break;
+                    case "stages":
+                        PostType = "Map";
+                        break;
+                    case "guis":
+                        PostType = "Gui";
+                        break;
+                }
+
+                string[] request = await APIRequest.GetDownloadFileName(PostType, PostID);
+
+                string dlID = request[1].Split('/')[request[1].Split('/').Length - 1];
+                string extension = request[0].Split('.')[request[0].Split('.').Length - 1];
+                quasarURL = @"quasar:https://gamebanana.com/dl/" + dlID + "," + PostType + "," + PostID + "," + extension;
+            }
+            
+
+            return quasarURL;
         }
     }
 }

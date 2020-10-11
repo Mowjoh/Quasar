@@ -1,0 +1,103 @@
+﻿<UserControl x:Class="Quasar.Controls.Associations.Views.SlotItem"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Quasar.Controls.Associations.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="40" d:DesignWidth="300" DataContext="{Binding SlotItemViewModel}">
+    <UserControl.Style>
+        <Style TargetType="{x:Type UserControl}">
+            <Style.Triggers>
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding EmptySlot}" Value="False"/>
+                        <Condition Binding="{Binding}" Value="True"/>
+                    </MultiDataTrigger.Conditions>
+                </MultiDataTrigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Style>
+    <UserControl.Resources>
+        <Style x:Key="RectStyle" TargetType="Polygon">
+            <Setter Property="Fill" Value="#66003D"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding SlotNumber}" Value="0">
+                    <Setter Property="Fill" Value="#A35A00"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding SlotNumber}" Value="1">
+                    <Setter Property="Fill" Value="#980B17"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding SlotNumber}" Value="2">
+                    <Setter Property="Fill" Value="#A30062"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding SlotNumber}" Value="3">
+                    <Setter Property="Fill" Value="#6E2380"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding SlotNumber}" Value="4">
+                    <Setter Property="Fill" Value="#001BA3"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding SlotNumber}" Value="5">
+                    <Setter Property="Fill" Value="#0080A3"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding SlotNumber}" Value="6">
+                    <Setter Property="Fill" Value="#00A388"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding SlotNumber}" Value="7">
+                    <Setter Property="Fill" Value="#00A34C"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding SlotNumber}" Value="8">
+                    <Setter Property="Fill" Value="#96AE09"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding SlotNumber}" Value="9">
+                    <Setter Property="Fill" Value="#B8AE00"/> 
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="GridStyle" TargetType="{x:Type Grid}">
+            <Setter Property="Background" Value="#444444"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding EmptySlot}" Value="True">
+                    <Setter Property="Background" Value="{StaticResource QD2}"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="PathStyle" TargetType="{x:Type Path}">
+            <Setter Property="Fill" Value="#444444"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding EmptySlot}" Value="True">
+                    <Setter Property="Fill" Value="{StaticResource QD2}"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="PolygonStyle" TargetType="{x:Type Polygon}">
+            <Setter Property="Fill" Value="#444444"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding EmptySlot}" Value="True">
+                    <Setter Property="Fill" Value="{StaticResource QD2}"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+    <Grid Background="Transparent">
+        <Canvas>
+            <Label Content="{Binding SlotNumberName}" Margin="2,2,0,0" Foreground="White" Panel.ZIndex="1000"></Label>
+            <Polygon Style="{StaticResource RectStyle}"
+                 Points="0,0 80,0 0,40"/>
+        </Canvas>
+        <Canvas>
+            <Polygon Style="{StaticResource PolygonStyle}"
+                 Points="0,40 80,40 80,0"/>
+        </Canvas>
+
+        <Grid Margin="80,0,10,0" Style="{StaticResource GridStyle}" Panel.ZIndex="1000">
+            <Label HorizontalAlignment="Left" VerticalAlignment="Center" Content="{Binding ContentName}" Foreground="White" IsHitTestVisible="False"/>
+            
+        </Grid>
+        <Path x:Name="BorderColor" Stroke="Transparent" StrokeThickness="2" Style="{StaticResource PathStyle}">
+            <Path.Data>
+                <RectangleGeometry x:Name="ColoredRectangle" Rect="275,0,25,40" RadiusX="30" RadiusY="30"  />
+            </Path.Data>
+        </Path>
+    </Grid>
+</UserControl>

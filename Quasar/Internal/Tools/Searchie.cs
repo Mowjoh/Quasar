@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using Quasar.FileSystem;
 using Quasar.Internal.Tools;
@@ -11,19 +13,98 @@ namespace Quasar.Quasar_Sys
 {
     public class Searchie
     {
+        public enum MatchTypes : int { FullMatch = 0, FileMatch = 1, ParentMatch = 2 } 
+
         //Launches Detection process for a specific Mod
-        public static List<ContentMapping> AutoDetectinator(LibraryMod mod,List<InternalModType> types, Game _Game, List<GameData> gamedata)
+        public static ObservableCollection<ContentMapping> AutoDetectinator(LibraryMod LibraryMod,ObservableCollection<InternalModType> InternalModTypes, Game Game, ObservableCollection<GameData> GameDatas)
         {
-            if(mod != null)
+            if(LibraryMod != null)
             {
-                List<ContentMapping> mappings = new List<ContentMapping>();
-                ModFileManager modFileManager = new ModFileManager(mod, _Game);
-                foreach (InternalModType type in types)
+
+                ObservableCollection<ContentMapping> mappings = new ObservableCollection<ContentMapping>();
+                ModFileManager modFileManager = new ModFileManager(LibraryMod, Game);
+                //Getting mod files
+                IEnumerable<string> LibraryModFiles = Directory.EnumerateFiles(modFileManager.LibraryContentFolderPath, "*.*", SearchOption.AllDirectories);
+                List<QuasarFileManager> QFMList = new List<QuasarFileManager>();
+                foreach (string s in LibraryModFiles)
                 {
-                    List<ContentMapping> temp = EvaluatePossibility(type, modFileManager, mod, gamedata);
-                    foreach(ContentMapping map in temp)
+                    QFMList.Add(new QuasarFileManager() { Path = s.Replace("\\", "/") });
+                }
+
+                foreach (InternalModType type in InternalModTypes)
+                {
+                    //Getting data corresponding to current type
+                    GameData SpecificGameData = GameDatas.SingleOrDefault(g => g.GameID == LibraryMod.GameID);
+                    GameDataCategory SpecificCategory = SpecificGameData.Categories.Find(gdc => gdc.ID == type.Association);
+
+                    //Searching for matches for each of the files included in the Internal Mod Type
+                    foreach (InternalModTypeFile IMTF in type.Files)
                     {
-                        mappings.Add(map);
+                        EvaluateForTypeFile(type, IMTF, QFMList, SpecificCategory);
+                    }
+
+                    //Formatting results as Content Mappings
+                    foreach (QuasarFileManager qfm in QFMList)
+                    {
+                        if (qfm.ValidFile)
+                        {
+                            ContentMapping cm = null;
+                            bool cantProcess = false;
+
+                            //Parsing specific data
+                            InternalModType IMT = InternalModTypes.SingleOrDefault(t => t.ID == qfm.InternalModTypeID);
+                            SpecificCategory = SpecificGameData.Categories.Find(gdc => gdc.ID == IMT.Association);
+
+                            if(SpecificCategory != null)
+                            {
+                                int GameDataItemID = IMT.NoGameData ? 1 : SpecificCategory.Items.Find(i => i.Attributes[0].Value.ToLower() == qfm.GameData).ID;
+
+                                //If mappings already exist
+                                if (mappings.Count != 0)
+                                {
+                                    if (!IMT.NoGameData)
+                                    {
+                                        if (qfm.GameData != null)
+                                        {
+                                            cm = mappings.SingleOrDefault(existingMapping => existingMapping.Slot == qfm.SlotInt && existingMapping.InternalModType == qfm.InternalModTypeID && existingMapping.GameDataItemID == GameDataItemID);
+                                        }
+                                        else
+                                        {
+                                            cantProcess = true;
+                                            Console.Write("No ID for " + qfm.FileMatch);
+                                        }
+
+                                    }
+                                    else
+                                    {
+                                        List<ContentMapping> cms = mappings.Where(c => c.Slot == qfm.SlotInt && c.InternalModType == qfm.InternalModTypeID).ToList();
+                                        foreach(ContentMapping c in cms)
+                                        {
+                                            if(c.Files[0].SourcePath == qfm.Path)
+                                            {
+                                                cantProcess = true;
+                                            }
+                                        }
+                                    }
+                                }
+                                if (!cantProcess)
+                                {
+                                    if (cm == null)
+                                    {
+                                        mappings.Add(GetNewMapping(qfm, LibraryMod, GameDataItemID, IMT.NoGameData));
+                                    }
+                                    else
+                                    {
+                                        ContentMappingFile ExpectedContentMapping = GetExpectedContentMappingFile(qfm);
+
+                                        if (!cm.Files.Exists(cmf => cmf.Path == ExpectedContentMapping.Path))
+                                        {
+                                            cm.Files.Add(ExpectedContentMapping);
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
                 return mappings;
@@ -31,94 +112,259 @@ namespace Quasar.Quasar_Sys
             return null;
         }
 
-        //Evaluates possibilities of instances of the selected InternalModType
-        public static List<ContentMapping> EvaluatePossibility(InternalModType type, ModFileManager modFileManager, LibraryMod mod, List<GameData> gamedata)
+        //Collection Management
+        public static ContentMapping GetNewMapping(QuasarFileManager qfm, LibraryMod LibraryMod, int GameDataItemID, bool FileName = false)
         {
-            //List of mapped contents
-            List<ContentMapping> content = new List<ContentMapping>();
-
-            ContentMapping possibleMapping = new ContentMapping() { Files = new List<ContentMappingFile>() };
-            IEnumerable<string> files = Directory.EnumerateFiles(modFileManager.LibraryContentFolderPath, "*.*", SearchOption.AllDirectories);
-            GameData gd = gamedata.Find(g => g.GameID == mod.GameID);
-            GameDataCategory cat = gd.Categories.Find(gdc => gdc.ID == type.Association);
-            foreach (InternalModTypeFile IMTFile in type.Files)
+            ContentMapping newMapping = new ContentMapping()
             {
-                
-                //Setting up Regex
-                Regex fileRegex = new Regex(PrepareRegex(IMTFile.Path.Replace(@"/",@"\") + @"\" + IMTFile.File));
+                ID = IDGenerator.getNewContentID(),
+                GameDataItemID = GameDataItemID,
+                SlotName = qfm.Slot == null ? "00" : qfm.Slot,
+                Slot = qfm.Slot == null ? 0 : int.Parse(qfm.Slot),
+                ModID = LibraryMod.ID,
+                InternalModType = qfm.InternalModTypeID,
+                Name = FileName? String.Format("{0} - {1}", LibraryMod.Name, qfm.Path.Split('/')[qfm.Path.Split('/').Length-1]) : String.Format("{0}", LibraryMod.Name),
 
-                //Foreach file in the mod
-                foreach (string filepath in files)
+            };
+            List<ContentMappingFile> Files = new List<ContentMappingFile>();
+            newMapping.Files = Files;
+            newMapping.Files.Add(new ContentMappingFile()
+            {
+                InternalModTypeFileID = qfm.InternalModTypeFileID,
+                Path = qfm.Path,
+                SourcePath = qfm.Path,
+                FileFolders = qfm.FileFolders,
+                FileParts = qfm.FileParts,
+                FolderFolders = qfm.FolderFolders,
+                FolderParts = qfm.FolderParts,
+                AnyFile = qfm.AnyFile
+            });
+            return newMapping;
+        }
+        public static ContentMappingFile GetExpectedContentMappingFile(QuasarFileManager qfm)
+        {
+            ContentMappingFile ExpectedContentMapping = new ContentMappingFile()
+            {
+                InternalModTypeFileID = qfm.InternalModTypeFileID,
+                Path = qfm.Path,
+                SourcePath = qfm.Path,
+                FileFolders = qfm.FileFolders,
+                FileParts = qfm.FileParts,
+                FolderFolders = qfm.FolderFolders,
+                FolderParts = qfm.FolderParts,
+                AnyFile = qfm.AnyFile
+            };
+
+            return ExpectedContentMapping;
+        }
+
+        //Search Functions
+        public static void EvaluateForTypeFile(InternalModType IMT, InternalModTypeFile IMTF, List<QuasarFileManager> QFMList, GameDataCategory gdc)
+        {
+            Regex FileRegex = new Regex(Searchie.PrepareRegex(IMTF.SourceFile));
+            Regex FolderRegex = new Regex(Searchie.PrepareRegex(IMTF.SourcePath));
+
+            foreach(QuasarFileManager qfm in QFMList)
+            {
+                if (!qfm.ValidFile)
                 {
-                    string outputPath = filepath.Replace(modFileManager.LibraryContentFolderPath, "");
-                    //Try to match with current file in the internal type
-                    Match matchoum = fileRegex.Match(filepath);
-                    if (matchoum.Success)
+                    Match fileMatch = FileRegex.Match(qfm.Path);
+                    Match folderMatch = FolderRegex.Match(qfm.Path);
+                    if (folderMatch.Success)
                     {
-                        //Getting match groups
-                        GroupCollection Groups = matchoum.Groups;
-                        if(Groups.Count != 0)
-                        {
-                            //Getting full match Value
-                            string match = Groups[0].Value;
-                            string previousPath = filepath.Substring(0, matchoum.Index);
+                        //Getting Folder Match Values
+                        qfm.FolderMatch = folderMatch.Value;
+                        getMatchValues(qfm, folderMatch.Groups, false);
+                    }
+                    else
+                    {
+                        //Setting Blank File Match Values
+                        qfm.FolderMatch = null;
+                        qfm.FolderFolders = null;
+                        qfm.FolderGameData = null;
+                        qfm.FolderParts = null;
+                    }
+                    if (fileMatch.Success)
+                    {
+                        //Getting File Match Values
+                        qfm.FileMatch = fileMatch.Value;
+                        getMatchValues(qfm, fileMatch.Groups, true);
+                        //Checking Game Data and validating file
+                        CheckGameData(qfm, gdc, IMT);
+                    }
 
-                            string slot = "Default";
-                            int SlotNumber = 0;
+                    
 
-                            string gamedatavalue = "";
-                            string gamedatatype = "";
-
-                            foreach(Group g in Groups)
-                            {
-                                if(g.Name.Length > 4)
-                                {
-                                    if (g.Name.Substring(0, 4).Equals("Slot"))
-                                    {
-                                        slot = "Slot " + g.Value;
-                                        SlotNumber = int.Parse(g.Value);
-                                    }
-                                    if (g.Name.Substring(0, 8).Equals("gamedata"))
-                                    {
-                                        if (g.Value.Contains(@"\"))
-                                        {
-                                            gamedatavalue = g.Value.Split('\\')[g.Value.Split('\\').Length-1];
-                                        }
-                                        else
-                                        {
-                                            gamedatavalue = g.Value;
-                                        }
-                                        
-                                    }
-                                }
-                            }
-
-
-                            string MatchGroup = mod.Name+ " - " + slot;
-
-                            ContentMapping newMapping = content.Find(map => map.Name == MatchGroup && map.InternalModType == type.ID && map.Folder == previousPath && map.ModID.ToString() == modFileManager.ModID);
-                            if (newMapping != null)
-                            {
-                                newMapping.Files.Add(new ContentMappingFile() { Path = IMTFile.Path, InternalModTypeFileID = IMTFile.ID, SourcePath = outputPath });
-                            }
-                            else
-                            {
-                                int gdiID = -1;
-                                GameDataItem gdi = cat.Items.Find(i => i.Attributes[0].Value == gamedatavalue);
-                                if(gdi != null)
-                                {
-                                    gdiID = gdi.ID;
-                                }
-                                newMapping = new ContentMapping() {ID=IDGenerator.getNewContentID(), Name = MatchGroup, InternalModType = type.ID, Files = new List<ContentMappingFile>(), Folder = previousPath, ModID = Int32.Parse(modFileManager.ModID), SlotName = slot, Slot = SlotNumber, GameDataItemID = gdiID };
-                                newMapping.Files.Add(new ContentMappingFile() { Path = IMTFile.Path, InternalModTypeFileID = IMTFile.ID, SourcePath = outputPath });
-                                content.Add(newMapping);
-                            }
-                        }
+                    //Finishing setup
+                    if (qfm.ValidFile)
+                    {
+                        qfm.InternalModType = IMT.Name;
+                        qfm.InternalModTypeID = IMT.ID;
+                        qfm.InternalModTypeFileID = IMTF.ID;
                     }
                 }
             }
 
-            return content;
+        }
+        public static void getMatchValues(QuasarFileManager qfm, GroupCollection Groups, bool file)
+        {
+            try
+            {
+                
+                if (file)
+                {
+                    qfm.FileGameData = null;
+                    qfm.FileMatch = null;
+                    qfm.FileParts = new List<string>();
+                    qfm.FileFolders = new List<string>();
+                }
+                else
+                {
+                    qfm.FolderGameData = null;
+                    qfm.FolderMatch = null;
+                    qfm.FolderParts = new List<string>();
+                    qfm.FolderFolders = new List<string>();
+                }
+                foreach (Group g in Groups)
+                {
+                    switch (g.Name)
+                    {
+                        default:
+                            break;
+                        case "Slot":
+                            qfm.Slot = g.Value;
+                            break;
+                        case "GameData":
+                            if (file)
+                            {
+                                qfm.FileGameData = g.Value.ToLower();
+                            }
+                            else
+                            {
+                                qfm.FolderGameData = g.Value.ToLower();
+                            }
+
+                            break;
+                        case "AnyFile":
+                            if (file)
+                            {
+                                qfm.AnyFile = g.Value;
+                            }
+                            else
+                            {
+                                qfm.AnyFile = g.Value;
+                            }
+
+                            break;
+                        case "Folder":
+                            if (file)
+                            {
+                                if (qfm.FileFolders.Count == 0)
+                                {
+                                    foreach (Capture c in g.Captures)
+                                    {
+                                        qfm.FileFolders.Add(c.Value);
+                                    }
+                                }
+
+
+                            }
+                            else
+                            {
+                                if (qfm.FolderFolders.Count == 0)
+                                {
+                                    foreach (Capture c in g.Captures)
+                                    {
+                                        qfm.FolderFolders.Add(c.Value);
+                                    }
+                                }
+                            }
+                            break;
+                        case "Part":
+                            if (file)
+                            {
+                                if (qfm.FileParts.Count == 0)
+                                {
+                                    foreach (Capture c in g.Captures)
+                                    {
+                                        qfm.FileParts.Add(c.Value);
+                                    }
+                                }
+
+
+                            }
+                            else
+                            {
+                                if (qfm.FolderParts.Count == 0)
+                                {
+                                    foreach (Capture c in g.Captures)
+                                    {
+                                        qfm.FolderParts.Add(c.Value);
+                                    }
+                                }
+                            }
+                            break;
+                    }
+                }
+                if (qfm.Slot == null)
+                {
+                    qfm.Slot = "0";
+                }
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+            
+        }
+        public static bool ValidateGameData(string Gamedatavalues, GameDataCategory gdc)
+        {
+            GameDataItem item = null;
+            try
+            {
+                item = gdc.Items.Find(i => i.Attributes[0].Value.ToLower() == Gamedatavalues);
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+            
+
+            return item != null;
+        }
+        public static void CheckGameData(QuasarFileManager qfm, GameDataCategory gdc, InternalModType IMT)
+        {
+             //If there is a detected File Gamedata
+            if (qfm.FileGameData != "" && qfm.FileGameData != null)
+            {
+                if (ValidateGameData(qfm.FileGameData, gdc))
+                {
+                    qfm.ValidFile = true;
+                    qfm.GameData = qfm.FileGameData.ToLower();
+                }
+            }
+            else
+            {
+                //If there is a Folder Gamedata
+                if(qfm.FolderGameData != "" && qfm.FolderGameData != null)
+                {
+                    if (ValidateGameData(qfm.FolderGameData, gdc))
+                    {
+                        qfm.ValidFile = true;
+                        qfm.GameData = qfm.FolderGameData.ToLower();
+                    }
+                }
+                else
+                {
+                    //If there is a NoGameData flag
+                    if (IMT.NoGameData)
+                    {
+                        qfm.ValidFile = true;
+                        qfm.GameData = "";
+                    }
+                }
+            }
         }
 
         public static void Log(String input)
@@ -133,36 +379,65 @@ namespace Quasar.Quasar_Sys
             //Replacing underscores for regex interpretation
             //output = output.Replace(@"_", "\\_");
 
-            // Replacing the any tag
-            output = output.Replace(@"*", @"([A-Za-z0-9\_\-]*)");
-
-            //Replacing the folder tag
-            output = output.Replace(@"{Folder}", @"(?'folder'[^\\]*)");
-            output = output.Replace(@"{Part}", @"(?'part'[^\\]*)");
-
-            //Replacing game data
-            output = output.Replace(@"{Characters}", @"(?'gamedata_characters'[^\_\\]*)");
-            output = output.Replace(@"{Stages}", @"(?'gamedata_stages'[A-Za-z0-9\_\-]*)");
-            output = output.Replace(@"{Music}", @"(?'gamedata_music'[A-Za-z0-9\_\-]*)");
+            //Replacing the tags
+            output = output.Replace(@"{Folder}", @"(?'Folder'[^\\\/]*)");
+            output = output.Replace(@"{Part}", @"(?'Part'[a-zA-Z0-9]*)");
+            output = output.Replace(@"{AnyFile}", @"(?'AnyFile'[a-zA-Z0-9\_]*)");
+            output = output.Replace(@"{GameData}", @"(?'GameData'[a-zA-Z0-9\_]*)");
 
             //Replacing backslashes for regex interpretation
             output = output.Replace(@"\", @"\\");
 
             //Replacing points for regex interpretation
             output = output.Replace(@".", "\\.");
-
-
-            //Replacing base digits
-            output = output.Replace(@"{000}", @"(?'DigitTriple'\d{3})");
-            output = output.Replace(@"{00}", @"(?'DigitDouble'\d{2})");
-            output = output.Replace(@"{0}", @"(?'DigitSingle'\d{1})");
+            output = output.Replace(@"+", "\\+");
 
             //Replacing Slot digits
-            output = output.Replace(@"{S000}", @"(?'SlotTripleDigit'\d{3})");
-            output = output.Replace(@"{S00}", @"(?'SlotDoubleDigit'\d{2})");
-            output = output.Replace(@"{S0}", @"(?'SlotSingleDigit'\d{1})");
+            output = output.Replace(@"{S000}", @"(?'Slot'\d{3})");
+            output = output.Replace(@"{S00}", @"(?'Slot'\d{2})");
+            output = output.Replace(@"{S0}", @"(?'Slot'\d{1})");
 
             return output;
+        }
+
+        public class QuasarFileManager
+        {
+            public string Path { get; set; }
+            public bool ValidFile { get; set; }
+            public string FileMatch { get; set; }
+            public string FolderMatch { get; set; }
+
+            public string OutputFileMatch { get; set; }
+            public string OutputFolderMatch { get; set; }
+
+            public List<string> FileParts { get; set; }
+            public List<string> FileFolders { get; set; }
+
+            public string FileGameData { get; set; }
+
+            public List<string> FolderParts { get; set; }
+            public List<string> FolderFolders { get; set; }
+
+            public string FolderGameData { get; set; }
+
+            public string GameData { get; set; }
+            private string _Slot { get; set; }
+            public string Slot 
+            {
+                get => _Slot; 
+                set 
+                {
+                    _Slot = value;
+                    SlotInt = int.Parse(value);
+                } 
+            }
+            public int SlotInt { get; set; }
+
+            public string AnyFile { get; set; }
+
+            public string InternalModType { get; set; }
+            public int InternalModTypeID { get; set; }
+            public int InternalModTypeFileID { get; set; }
         }
     }
 }
