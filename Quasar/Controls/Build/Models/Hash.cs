@@ -19,9 +19,25 @@ namespace Quasar.Controls.Build.Models
     public class Hash : ObservableObject
     {
         #region Fields
+        private string _Category { get; set; }
         private string _HashString { get; set; }
         private string _FilePath { get; set; }
         #endregion
+
+        [XmlAttribute("Category")]
+        public string Category
+        {
+            get => _Category;
+            set
+            {
+                if (_Category == value)
+                    return;
+
+                _Category = value;
+                OnPropertyChanged("Category");
+
+            }
+        }
 
         [XmlAttribute("Hash")]
         public string HashString

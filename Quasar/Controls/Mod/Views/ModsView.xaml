@@ -8,10 +8,12 @@
              d:DesignHeight="620" d:DesignWidth="1120">
     <Grid x:Name="ManagementGrid" Background="{DynamicResource QD1}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="50"/>
-            <RowDefinition Height="35"/>
+            <RowDefinition Height="64"/>
+            <RowDefinition Height="64"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
+        
+        <!-- Download Warning-->
         <Grid Grid.Row="2">
             <Grid.Style>
                 <Style TargetType="{x:Type Grid}">
@@ -23,12 +25,44 @@
                     </Style.Triggers>
                 </Style>
             </Grid.Style>
-            <Label Content="Please download some mods from Gamebanana using the Quasar Download Button" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Wheat" FontSize="20"/>
+            <Label Content="Please download some mods from Gamebanana using the Quasar Download Button" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Wheat" FontFamily="{StaticResource PoppinsBold}" FontSize="20"/>
         </Grid>
-        <ListView x:Name="ManagementModListView" ItemsSource="{Binding CollectionViewSource.View}" SelectedItem="{Binding SelectedModListItem}" Background="Transparent" Margin="0,0,0,0" Grid.Row="2" BorderThickness="0">
-            <ListView.Resources>
 
-            </ListView.Resources>
+        <!-- Top Section-->
+        <ComboBox HorizontalAlignment="Left" Margin="16,32,0,0" Height="32" Width="200" VerticalAlignment="Top" Style="{StaticResource ComboBoxFlatStyle}" ItemsSource="{Binding Path=SelectedGame.GameModTypes}" SelectedItem="{Binding SelectedGameModType}" DisplayMemberPath="Name"/>
+        <TextBox HorizontalAlignment="Left" Margin="248,32,0,0" Height="32" Width="200" VerticalAlignment="Top" Style="{StaticResource CutieTextBoxStyle}" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"  />
+
+        <Button Template="{StaticResource CutieSmallButtonTemplate}" Command="{Binding Path=AddManual}" Width="200" Content="Add mod manually" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="480,32,0,0" Visibility="{Binding CreatorMode,Converter={StaticResource BoolVisi}}"/>
+
+        <TextBlock Style="{StaticResource CutieTextBlockStyle}" Height="20"  Text="Filter Not included" Margin="0,7,35,0" VerticalAlignment="Top" HorizontalAlignment="Right"/>
+        <TextBlock Style="{StaticResource CutieTextBlockStyle}" Height="20"  Text="Filter Partially included" Margin="0,32,35,0" VerticalAlignment="Top" HorizontalAlignment="Right"/>
+        <TextBlock Style="{StaticResource CutieTextBlockStyle}" Height="20"  Text="Filter included" Margin="0,57,35,0" VerticalAlignment="Top" HorizontalAlignment="Right" Grid.RowSpan="2"/>
+        <CheckBox IsChecked="{Binding RedChecked}" Margin="0,5,10,0" VerticalAlignment="Top" Template="{StaticResource CutieCheckBoxRed}" HorizontalAlignment="Right"  />
+        <CheckBox IsChecked="{Binding OrangeChecked}" Margin="0,30,10,0" VerticalAlignment="Top" Template="{StaticResource CutieCheckBoxOrange}" BorderBrush="orange" HorizontalAlignment="Right" />
+        <CheckBox IsChecked="{Binding GreenChecked}" VerticalAlignment="Top" Template="{StaticResource CutieCheckBoxGreen}" BorderBrush="green" HorizontalAlignment="Right" Margin="0,55,10,0" Grid.RowSpan="2"  />
+
+        <!-- Headers-->
+        <Grid Grid.Row="1" Margin="35,34,70,0" Background="Transparent">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="30"/>
+                <ColumnDefinition Width="30*"/>
+                <ColumnDefinition Width="20*"/>
+                <ColumnDefinition Width="20*"/>
+                <ColumnDefinition Width="20*"/>
+                <ColumnDefinition Width="10*"/>
+            </Grid.ColumnDefinitions>
+
+
+            <Label Content="Mod Name" Grid.Column="1" HorizontalAlignment="Left" Style="{StaticResource CutieLabelStyle}" FontFamily="{StaticResource PoppinsItalic}" FontSize="14" />
+            <Label Content="Type" Grid.Column="2" HorizontalAlignment="Left" Style="{StaticResource CutieLabelStyle}" FontFamily="{StaticResource PoppinsItalic}" FontSize="14"  />
+            <Label Content="Category" Grid.Column="3" HorizontalAlignment="Left" Style="{StaticResource CutieLabelStyle}" FontFamily="{StaticResource PoppinsItalic}" FontSize="14"  />
+            <Label Content="Mod Game" Grid.Column="4" HorizontalAlignment="Left" Style="{StaticResource CutieLabelStyle}" FontFamily="{StaticResource PoppinsItalic}" FontSize="14"  />
+            <Label Content="Actions" Grid.Column="5" HorizontalAlignment="Center" Style="{StaticResource CutieLabelStyle}" FontFamily="{StaticResource PoppinsItalic}" FontSize="14"  />
+
+        </Grid>
+
+        <!-- ListView-->
+        <ListView x:Name="ManagementModListView" ItemsSource="{Binding CollectionViewSource.View}" SelectedItem="{Binding SelectedModListItem}" Background="Transparent" Margin="16,0,16,16" Grid.Row="2" BorderThickness="0">
             <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
                     <StackPanel  />
@@ -51,50 +85,8 @@
                 </Style>
             </ListView.ItemContainerStyle>
         </ListView>
-        <Grid Grid.Row="1" Margin="10,0,0,0" Background="Transparent">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="30*"/>
-                <ColumnDefinition Width="20*"/>
-                <ColumnDefinition Width="20*"/>
-                <ColumnDefinition Width="20*"/>
-                <ColumnDefinition Width="10*"/>
-            </Grid.ColumnDefinitions>
-            <Label FontStyle="Italic" Content="ModName" Foreground="{DynamicResource QuasarTextColor}" Grid.Column="0" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Style="{DynamicResource QuasarLabel}"/>
-            <Label FontStyle="Italic" Content="Status" Foreground="{DynamicResource QuasarTextColor}" Grid.Column="0"  HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Visibility="Hidden" Style="{DynamicResource QuasarLabel}"/>
+        
 
-            <Label FontStyle="Italic" Content="Type" Foreground="{DynamicResource QuasarTextColor}" Grid.Column="1"  HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Style="{DynamicResource QuasarLabel}" />
-            <Label FontStyle="Italic"  Content="Category" Foreground="{DynamicResource QuasarTextColor}" Grid.Column="2"    HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Style="{DynamicResource QuasarLabel}"/>
-            <Label FontStyle="Italic" Content="Mod Game" Foreground="{DynamicResource QuasarTextColor}" Grid.Column="3"  HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Style="{DynamicResource QuasarLabel}"/>
-            <Label FontStyle="Italic" Content="Actions" Foreground="{DynamicResource QuasarTextColor}" Grid.Column="4"  HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Style="{DynamicResource QuasarLabel}"/>
-
-        </Grid>
-        <ComboBox HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="225" Height="23" ItemsSource="{Binding Path=SelectedGame.GameModTypes}" SelectedItem="{Binding SelectedGameModType}" DisplayMemberPath="Name"/>
-        <TextBox HorizontalAlignment="Left" Height="23" Margin="240,10,0,0" TextWrapping="Wrap" Text="{Binding SearchText,UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="160">
-            <TextBox.Style>
-                <Style TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
-                    <Style.Resources>
-                        <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
-                            <VisualBrush.Visual>
-                                <Label Content="Type to filter categories" Foreground="LightGray" />
-                            </VisualBrush.Visual>
-                        </VisualBrush>
-                    </Style.Resources>
-                    <Style.Triggers>
-                        <Trigger Property="Text" Value="{x:Static sys:String.Empty}">
-                            <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
-                        </Trigger>
-                        <Trigger Property="Text" Value="{x:Null}">
-                            <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
-                        </Trigger>
-                        <Trigger Property="IsKeyboardFocused" Value="True">
-                            <Setter Property="Background" Value="White" />
-                        </Trigger>
-                    </Style.Triggers>
-                </Style>
-            </TextBox.Style>
-        </TextBox>
-        <CheckBox IsChecked="{Binding RedChecked}" Margin="0,26,50,0" VerticalAlignment="Top" BorderBrush="red" HorizontalAlignment="Right" Width="15" />
-        <CheckBox IsChecked="{Binding OrangeChecked}" Margin="0,26,30,0" VerticalAlignment="Top" BorderBrush="orange" HorizontalAlignment="Right" Width="15" />
-        <CheckBox IsChecked="{Binding GreenChecked}" Margin="0,26,10,0" VerticalAlignment="Top" BorderBrush="green" HorizontalAlignment="Right" Width="15"  />
+        
     </Grid>
 </UserControl>

@@ -26,6 +26,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Resources;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading;
@@ -595,7 +596,6 @@ namespace Quasar
 
                 EventSystem.Subscribe<ModListItem>(SetModListItem);
 
-                
             }
             catch (Exception e)
             {
@@ -659,6 +659,7 @@ namespace Quasar
         }
         public void SetupViews()
         {
+            
             EventSystem.Subscribe<SettingItem>(SettingChanged);
 
             TabItems = new ObservableCollection<TabItem>();
@@ -666,36 +667,36 @@ namespace Quasar
             ModsView = new ModsView();
             MVM = new ModsViewModel(Mods, Games, ContentMappings, Workspaces,ActiveWorkspace, InternalModTypes, GameDatas, log);
             ModsView.DataContext = MVM;
-            TabItems.Add(new TabItem() { Content = ModsView, Header = "Overview", Foreground = new SolidColorBrush() { Color = Colors.White } });
+            TabItems.Add(new TabItem() { Content = ModsView, Header = Properties.Resources.MainUI_OverviewTabHeader, Foreground = new SolidColorBrush() { Color = Colors.White } });
 
             ContentView = new ContentView();
-            TabItems.Add(new TabItem() { Content = ContentView, Header = "Contents", Foreground = new SolidColorBrush() { Color = Colors.White } });
+            TabItems.Add(new TabItem() { Content = ContentView, Header = Properties.Resources.MainUI_ContentsTabHeader, Foreground = new SolidColorBrush() { Color = Colors.White } });
 
             
             AVM = new AssociationViewModel(GameDatas, InternalModTypes, Workspaces,ActiveWorkspace, ContentMappings);
             AVM.Log = log;
             AssociationView = new AssociationView() { AssociationViewModel = AVM };
             AssociationView.DataContext = AVM;
-            TabItems.Add(new TabItem() { Content = AssociationView, Header = "Management", Foreground = new SolidColorBrush() { Color = Colors.White } });
+            TabItems.Add(new TabItem() { Content = AssociationView, Header = Properties.Resources.MainUI_ManagementTabHeader, Foreground = new SolidColorBrush() { Color = Colors.White } });
 
             BuildView = new BuildView();
             BVM = new BuildViewModel(ModLoaders, Workspaces, ActiveWorkspace,Mods,ContentMappings,InternalModTypes,GameDatas,Games);
             BVM.Log = log;
             BuildView.DataContext = BVM;
-            TabItems.Add(new TabItem() { Content = BuildView, Header = "File Transfer", Foreground = new SolidColorBrush() { Color = Colors.White } });
+            TabItems.Add(new TabItem() { Content = BuildView, Header = Properties.Resources.MainUI_FileTransferTabHeader, Foreground = new SolidColorBrush() { Color = Colors.White } });
 
             InternalModTypeView = new InternalModTypeView();
             IMTV = new InternalModTypeViewModel(InternalModTypes, ModLoaders, GameDatas, Games);
             InternalModTypeView.DataContext = IMTV;
-            TabItems.Add(new TabItem() { Content = InternalModTypeView, Header = "Types", Foreground = new SolidColorBrush() { Color = Colors.White }, Visibility = Properties.Settings.Default.EnableAdvanced? Visibility.Visible : Visibility.Collapsed });
+            TabItems.Add(new TabItem() { Content = InternalModTypeView, Header = Properties.Resources.MainUI_InternalModTypesTabHeader, Foreground = new SolidColorBrush() { Color = Colors.White }, Visibility = Properties.Settings.Default.EnableAdvanced? Visibility.Visible : Visibility.Collapsed });
 
             SettingsView = new SettingsView();
-            TabItems.Add(new TabItem() { Content = SettingsView, Header = "Settings", Foreground = new SolidColorBrush() { Color = Colors.White } });
+            TabItems.Add(new TabItem() { Content = SettingsView, Header = Properties.Resources.MainUI_SettingsTabHeader, Foreground = new SolidColorBrush() { Color = Colors.White } });
 
             WorkspaceView = new WorkspaceView();
             WVM = new WorkspaceViewModel(Workspaces, ActiveWorkspace, log);
             WorkspaceView.DataContext = WVM;
-            TabItems.Add(new TabItem() { Content = WorkspaceView, Header = "Workspaces", Foreground = new SolidColorBrush() { Color = Colors.White }, Visibility = Properties.Settings.Default.EnableWorkspaces ? Visibility.Visible : Visibility.Collapsed });
+            TabItems.Add(new TabItem() { Content = WorkspaceView, Header = Properties.Resources.MainUI_WorkspacesTabHeader, Foreground = new SolidColorBrush() { Color = Colors.White }, Visibility = Properties.Settings.Default.EnableWorkspaces ? Visibility.Visible : Visibility.Collapsed });
 
             SettingsView.start();
         }

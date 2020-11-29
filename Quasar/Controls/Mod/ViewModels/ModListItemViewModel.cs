@@ -52,12 +52,13 @@ namespace Quasar.Controls.Mod.ViewModels
         #endregion
 
         #region Commands
-        private ICommand _MinimizeCommand { get; set; }
+        private ICommand _TestModCommand { get; set; }
         private ICommand _FileViewCommand { get; set; }
         private ICommand _DeleteModCommand { get; set; }
         private ICommand _AddModCommand { get; set; }
         private ICommand _ShowContentsCommand { get; set; }
         private ICommand _RetryDownloadCommand { get; set; }
+        private ICommand _BigSmolCommand { get; set; }
         #endregion
 
         #endregion
@@ -249,8 +250,10 @@ namespace Quasar.Controls.Mod.ViewModels
 
                 _Downloading = value;
                 OnPropertyChanged("Downloading");
+                OnPropertyChanged("Standby");
             }
         }
+        public bool Standby => !Downloading;
         public bool DownloadFailed
         {
             get
@@ -309,8 +312,8 @@ namespace Quasar.Controls.Mod.ViewModels
 
                 _Smol = value;
 
-                Rekt = value ? new Rect(0, 0, 50, 30) : new Rect(0, 0, 50, 160);
-                Rekta = value ? new Rect(0, 0, 50, 30) : new Rect(0, 0, 50, 160);
+                Rekt = value ? new Rect(0, 0, 50, 44) : new Rect(0, 0, 50, 217);
+                Rekta = value ? new Rect(0, 0, 50, 44) : new Rect(0, 0, 50, 217);
 
                 LoadImage(_Smol);
                 OnPropertyChanged("Smol");
@@ -358,15 +361,15 @@ namespace Quasar.Controls.Mod.ViewModels
         #endregion
 
         #region Commands
-        public ICommand MinimizeCommand
+        public ICommand TestModCommand
         {
             get
             {
-                if (_MinimizeCommand == null)
+                if (_TestModCommand == null)
                 {
-                    _MinimizeCommand = new RelayCommand(param => Test());
+                    _TestModCommand = new RelayCommand(param => LaunchTestWindow());
                 }
-                return _MinimizeCommand;
+                return _TestModCommand;
             }
         }
         public ICommand FileViewCommand
@@ -425,6 +428,17 @@ namespace Quasar.Controls.Mod.ViewModels
                 return _RetryDownloadCommand;
             }
         }
+        public ICommand BigSmolCommand
+        {
+            get
+            {
+                if (_BigSmolCommand == null)
+                {
+                    _BigSmolCommand = new RelayCommand(param => BigSmol());
+                }
+                return _BigSmolCommand;
+            }
+        }
         #endregion
 
         #endregion
@@ -446,7 +460,8 @@ namespace Quasar.Controls.Mod.ViewModels
             MVM = model;
 
             CreatorMode = Properties.Settings.Default.EnableCreator;
-            
+            AdvancedMode = Properties.Settings.Default.EnableAdvanced;
+
             GetAuthors();
         }
 
@@ -523,7 +538,10 @@ namespace Quasar.Controls.Mod.ViewModels
             {
                 if (_LibraryMod.Authors[i][2] == "0")
                 {
-                    Authors.Add(new Label() { Content = _LibraryMod.Authors[i][0], Foreground = (SolidColorBrush)App.Current.Resources["QuasarTextColor"], Height = 28 });
+                    Authors.Add(new Label() { Content = _LibraryMod.Authors[i][0],
+                        Foreground = (SolidColorBrush)App.Current.Resources["QuasarTextColor"],
+                        FontFamily = (FontFamily)App.Current.Resources["PoppinsRegular"],
+                        Height = 28 });
                 }
                 else
                 {
@@ -534,13 +552,20 @@ namespace Quasar.Controls.Mod.ViewModels
                     hl.NavigateUri = new Uri(@"https://gamebanana.com/members/" + _LibraryMod.Authors[i][2]);
                     hl.Click += new RoutedEventHandler(link_click);
 
-                    TextBlock textBlock = new TextBlock() { Margin = new Thickness(5, 0, 0, 0), Foreground = (SolidColorBrush)App.Current.Resources["QuasarTextColor"], Height = 28, TextAlignment = TextAlignment.Left, LineStackingStrategy = LineStackingStrategy.BlockLineHeight, LineHeight = 22 };
+                    TextBlock textBlock = new TextBlock() { 
+                        Margin = new Thickness(5, 0, 0, 0), 
+                        Foreground = (SolidColorBrush)App.Current.Resources["CutieTextColor"],
+                        FontFamily = (FontFamily)App.Current.Resources["PoppinsRegular"],
+                        Height = 28, 
+                        TextAlignment = TextAlignment.Left, 
+                        LineStackingStrategy = LineStackingStrategy.BlockLineHeight, 
+                        LineHeight = 22 };
                     textBlock.Inlines.Add(hl);
 
                     Authors.Add(textBlock);
                 }
 
-                Roles.Add(new Label() { Content = _LibraryMod.Authors[i][1] != ""? _LibraryMod.Authors[i][1] : "No role provided" , Foreground = (SolidColorBrush)App.Current.Resources["QuasarTextColor"], Height = 28 });
+                Roles.Add(new Label() { Content = _LibraryMod.Authors[i][1] != ""? _LibraryMod.Authors[i][1] : "No role provided" , FontFamily = (FontFamily)App.Current.Resources["PoppinsRegular"], Foreground = (SolidColorBrush)App.Current.Resources["QuasarTextColor"], Height = 28 });
             }
         }
 
@@ -556,7 +581,7 @@ namespace Quasar.Controls.Mod.ViewModels
             new FileView(new ModFileManager(LibraryMod, Game).LibraryContentFolderPath, LibraryMod.Name).Show();
         }
 
-        public void Test()
+        public void LaunchTestWindow()
         {
             ModFileManager mfm = new ModFileManager(LibraryMod, MVM.Games[1]);
             new DefinitionsWindow(mfm, "", "", "", "", MVM.GameDatas[0].Categories.ToList(), MVM.InternalModTypes.ToList(), 0).Show();
@@ -592,6 +617,19 @@ namespace Quasar.Controls.Mod.ViewModels
         {
             ActionRequested = "ShowContents";
             EventSystem.Publish<ModListItemViewModel>(this);
+        }
+
+        public void BigSmol()
+        {
+            if (!Smol)
+            {
+                Smol = true;
+            }
+            else
+            {
+                Smol = false;
+            }
+                
         }
 
         private async void CheckUpdates(object sender, RoutedEventArgs e)

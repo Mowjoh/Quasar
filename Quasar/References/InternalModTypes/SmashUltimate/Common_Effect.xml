@@ -7,6 +7,8 @@
     <SourcePath>effect/system/common</SourcePath>
     <SourceFile>{AnyFile}.eff</SourceFile>
     <BuilderFile BuilderID="1" Path="arc/effect/system/common" File="{AnyFile}.eff" />
-    <BuilderFile BuilderID="2" Path="effect/system/common" File="{AnyFile}.eff" />
+    <BuilderFile BuilderID="2" Path="{ModName}/effect/system/common" File="{AnyFile}.eff" />
+    <BuilderFile BuilderID="3" Path="{ModNameSlot}/effect/system/common" File="{AnyFile}.eff" />
+    <BuilderFile BuilderID="4" Path="effect/system/common" File="{AnyFile}.eff" />
   </InternalModTypeFile>
 </InternalModType>

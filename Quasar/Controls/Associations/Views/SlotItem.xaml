@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Quasar.Controls.Associations.Views"
              mc:Ignorable="d" 
-             d:DesignHeight="40" d:DesignWidth="300" DataContext="{Binding SlotItemViewModel}">
+             d:DesignHeight="40" d:DesignWidth="200" DataContext="{Binding SlotItemViewModel}">
     <UserControl.Style>
         <Style TargetType="{x:Type UserControl}">
             <Style.Triggers>
@@ -19,38 +19,38 @@
         </Style>
     </UserControl.Style>
     <UserControl.Resources>
-        <Style x:Key="RectStyle" TargetType="Polygon">
-            <Setter Property="Fill" Value="#66003D"/>
+        <Style x:Key="BorderStyle" TargetType="Border">
+            <Setter Property="Background" Value="#66003D"/>
             <Style.Triggers>
                 <DataTrigger Binding="{Binding SlotNumber}" Value="0">
-                    <Setter Property="Fill" Value="#A35A00"/>
+                    <Setter Property="Background" Value="{StaticResource CutieBG12}"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding SlotNumber}" Value="1">
-                    <Setter Property="Fill" Value="#980B17"/>
+                    <Setter Property="Background" Value="#4C050B"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding SlotNumber}" Value="2">
-                    <Setter Property="Fill" Value="#A30062"/>
+                    <Setter Property="Background" Value="#520031"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding SlotNumber}" Value="3">
-                    <Setter Property="Fill" Value="#6E2380"/>
+                    <Setter Property="Background" Value="#371240"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding SlotNumber}" Value="4">
-                    <Setter Property="Fill" Value="#001BA3"/>
+                    <Setter Property="Background" Value="#000E52"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding SlotNumber}" Value="5">
-                    <Setter Property="Fill" Value="#0080A3"/>
+                    <Setter Property="Background" Value="#004052"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding SlotNumber}" Value="6">
-                    <Setter Property="Fill" Value="#00A388"/>
+                    <Setter Property="Background" Value="#005244"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding SlotNumber}" Value="7">
-                    <Setter Property="Fill" Value="#00A34C"/>
+                    <Setter Property="Background" Value="#005226"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding SlotNumber}" Value="8">
-                    <Setter Property="Fill" Value="#96AE09"/>
+                    <Setter Property="Background" Value="#536105"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding SlotNumber}" Value="9">
-                    <Setter Property="Fill" Value="#B8AE00"/> 
+                    <Setter Property="Background" Value="#666100"/> 
                 </DataTrigger>
             </Style.Triggers>
         </Style>
@@ -79,25 +79,22 @@
             </Style.Triggers>
         </Style>
     </UserControl.Resources>
-    <Grid Background="Transparent">
-        <Canvas>
-            <Label Content="{Binding SlotNumberName}" Margin="2,2,0,0" Foreground="White" Panel.ZIndex="1000"></Label>
-            <Polygon Style="{StaticResource RectStyle}"
-                 Points="0,0 80,0 0,40"/>
-        </Canvas>
-        <Canvas>
-            <Polygon Style="{StaticResource PolygonStyle}"
-                 Points="0,40 80,40 80,0"/>
-        </Canvas>
-
-        <Grid Margin="80,0,10,0" Style="{StaticResource GridStyle}" Panel.ZIndex="1000">
-            <Label HorizontalAlignment="Left" VerticalAlignment="Center" Content="{Binding ContentName}" Foreground="White" IsHitTestVisible="False"/>
-            
+    <Border CornerRadius="8" Height="50" Style="{StaticResource BorderStyle}"> 
+        <Grid Background="Transparent">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="32" />
+                <ColumnDefinition Width="1" />
+                <ColumnDefinition Width="3*" />
+                <ColumnDefinition Width="1" />
+                <ColumnDefinition Width="1*" MinWidth="40" />
+            </Grid.ColumnDefinitions>
+            <TextBlock Style="{StaticResource CutieTextBlockStyle}" FontSize="14" TextWrapping="NoWrap" Text="{Binding SlotNumber}" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center" />
+            <Grid Grid.Column="1" Background="{StaticResource CutieTextMediumColor}" Margin="0,5" />
+            <Grid Margin="5,0" Grid.Column="2" Background="Transparent" >
+                <TextBlock Style="{StaticResource CutieTextBlockStyle}" Margin="5,0" FontSize="14" Width="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Grid}},Path=ActualWidth}" TextWrapping="NoWrap" Text="{Binding ContentName}" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Left" />
+            </Grid>
+            <Grid Grid.Column="3" Background="{StaticResource CutieTextMediumColor}" Margin="0,5" />
+            <TextBlock Style="{StaticResource CutieTextBlockStyle}" FontSize="14" Margin="5,0" TextWrapping="NoWrap" Text="{Binding TypeName}" Grid.Column="4" VerticalAlignment="Center" HorizontalAlignment="Center" />
         </Grid>
-        <Path x:Name="BorderColor" Stroke="Transparent" StrokeThickness="2" Style="{StaticResource PathStyle}">
-            <Path.Data>
-                <RectangleGeometry x:Name="ColoredRectangle" Rect="275,0,25,40" RadiusX="30" RadiusY="30"  />
-            </Path.Data>
-        </Path>
-    </Grid>
+    </Border>
 </UserControl>

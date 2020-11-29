@@ -6,70 +6,88 @@
              xmlns:local="clr-namespace:Quasar.Controls.Build.Views"
              mc:Ignorable="d" 
              d:DesignHeight="620" d:DesignWidth="1120">
-    <Grid Background="{DynamicResource QD1}">
+    <Grid Background="{DynamicResource CutieBG01}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="69*"/>
-            <RowDefinition Height="55*"/>
+            <RowDefinition Height="500"/>
+            <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
+            <ColumnDefinition Width="750"/>
+            <ColumnDefinition Width="1"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <Label Content="Transfer Settings" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Style="{DynamicResource QuasarLabel}"/>
-        <GroupBox Header="Transfer Options" HorizontalAlignment="Stretch" Height="250" Margin="10,50,10,0" VerticalAlignment="Top"  Foreground="{DynamicResource QuasarTextColor}">
-            <GroupBox.Style>
-                <Style TargetType="GroupBox">
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding Building}" Value="True">
-                            <Setter Property="IsEnabled" Value="False"/>
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </GroupBox.Style>
-            <Grid>
-                <RadioButton Content="Local Transfer (SD)" IsChecked="{Binding LocalSelected}" GroupName="TransferOption" HorizontalAlignment="Left" Margin="209,13,0,0" VerticalAlignment="Top" Foreground="{DynamicResource QuasarTextColor}"/>
-                <RadioButton Content="Wireless Transfer (FTP)" IsChecked="{Binding WirelessSelected}" GroupName="TransferOption" HorizontalAlignment="Left" Margin="10,13,0,0" VerticalAlignment="Top" Foreground="{DynamicResource QuasarTextColor}"/>
-                <ComboBox Margin="330,10,34,0" VerticalAlignment="Top" ItemsSource="{Binding Drives}" SelectedItem="{Binding SelectedDrive}" DisplayMemberPath="Info.Name"/>
-                <Button x:Name="Minimize" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,13,10,0">
-                    <Button.Template>
-                        <ControlTemplate TargetType="{x:Type Button}">
-                            <Path x:Name="Minimize" Stroke="White" Fill="White" Data="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z" Margin="10,0,0,0" Height="15" Width="15"  Stretch="Uniform" ToolTip="Refresh the drive list" />
-                        </ControlTemplate>
-                    </Button.Template>
-                </Button>
-                <Label Content="Mod Loader :" HorizontalAlignment="Left" Margin="10,93,0,0" VerticalAlignment="Top" Style="{DynamicResource QuasarLabel}" Width="89"/>
-                <ComboBox HorizontalAlignment="Left" Margin="104,93,0,0" VerticalAlignment="Top" Width="235" ItemsSource="{Binding ModLoaders}" DisplayMemberPath="Name" SelectedItem="{Binding SelectedModLoader}"/>
-                <Label Content="How do you want Quasar to handle the file transfer ?" HorizontalAlignment="Left" Margin="10,169,0,0" VerticalAlignment="Top" Style="{DynamicResource QuasarLabel}" Width="329"/>
-                <RadioButton Content="Clean and Transfer" IsChecked="{Binding CleanSelected}" GroupName="TransferMode" HorizontalAlignment="Left" Margin="10,0,0,10" VerticalAlignment="Bottom" Foreground="{DynamicResource QuasarTextColor}"/>
-                <RadioButton Content="Synchronize Files" IsChecked="{Binding SynchronizeSelected}" GroupName="TransferMode" HorizontalAlignment="Center" Margin="0,0,0,10" VerticalAlignment="Bottom" Foreground="{DynamicResource QuasarTextColor}" RenderTransformOrigin="1.083,0.733"/>
-                <RadioButton Content="Overwrite Different Files" IsChecked="{Binding OverwriteSelected}" GroupName="TransferMode" HorizontalAlignment="Right" Margin="0,0,10,10" VerticalAlignment="Bottom" Foreground="{DynamicResource QuasarTextColor}" RenderTransformOrigin="1.083,0.733"/>
-            </Grid>
-        </GroupBox>
-        <ScrollViewer Grid.Column="1" Grid.RowSpan="2" Background="#87000000">
-            <TextBlock TextWrapping="Wrap" Text="{Binding Logs}" Foreground="{DynamicResource QuasarTextColor}"/>
-        </ScrollViewer>
-        <Button Content="Send my mods to my Switch" HorizontalAlignment="Center" VerticalAlignment="Top" Width="184" Margin="188,310,188,0" Command="{Binding Path=BuildCommand}">
-            <Button.Style>
-                <Style TargetType="Button">
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding Building}" Value="True">
-                            <Setter Property="IsEnabled" Value="False"/>
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </Button.Style>
-        </Button>
-        <Label Content="Transfer Status :" HorizontalAlignment="Center" Margin="0,10,0,0" VerticalAlignment="Top" Style="{DynamicResource QuasarLabel}" Grid.Row="1"/>
-        <ProgressBar  Value="{Binding BuildProgress}"  IsIndeterminate="{Binding ProgressBarStyle}" Height="10" Margin="10,115,10,0" Grid.Row="1" VerticalAlignment="Top"/>
-        <Label Content="{Binding Steps}" HorizontalAlignment="Left" Margin="10,46,0,0" VerticalAlignment="Top" Style="{DynamicResource QuasarLabel}" Grid.Row="1" Width="420"/>
-        <Label Content="{Binding Size}" HorizontalContentAlignment="Right" HorizontalAlignment="Right" Margin="10,46,0,0" VerticalAlignment="Top" Style="{DynamicResource QuasarLabel}" Grid.Row="1" Width="420"/>
-        <Label Content="{Binding SubStep}" HorizontalAlignment="Left" Margin="10,75,0,0" VerticalAlignment="Top" Style="{DynamicResource QuasarLabel}" Grid.Row="1" Width="420"/>
-        <Label Content="{Binding Speed}" HorizontalContentAlignment="Right" HorizontalAlignment="Right" Margin="10,75,0,0" VerticalAlignment="Top" Style="{DynamicResource QuasarLabel}" Grid.Row="1" Width="420"/>
-        <Label Content="{Binding Total}" HorizontalAlignment="Center" Margin="253,140,260,0" VerticalAlignment="Top" Style="{DynamicResource QuasarLabel}" Grid.Row="1"/>
-        <StackPanel Orientation="Horizontal" Margin="0,10,10,0" VerticalAlignment="Top" HorizontalAlignment="Right">
-            <Label Content="Active Workspace :"  Style="{DynamicResource QuasarLabel}"/>
-            <Label Content="{Binding ActiveWorkspace.Name}"  Style="{DynamicResource QuasarLabel}"/>
-        </StackPanel>
+
+        <!-- Transfer Settings Card-->
+        <Grid Background="{DynamicResource CutieBG03}" Grid.Column="0" Grid.Row="0" Margin="16">
+            <!-- Header-->
+            <TextBlock Text="Transfer Settings" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" FontSize="25" FontFamily="{StaticResource PoppinsBold}" Style="{StaticResource CutieTextBlockStyle}"/>
+            <StackPanel Orientation="Horizontal" Margin="0,16,16,0" VerticalAlignment="Top" HorizontalAlignment="Right">
+                <TextBlock Text="Workspace : "  Style="{DynamicResource CutieTextBlockStyle}" FontFamily="{StaticResource PoppinsRegular}" FontSize="16"/>
+                <TextBlock Text="{Binding ActiveWorkspace.Name}"  Style="{DynamicResource CutieTextBlockStyle}" FontFamily="{StaticResource PoppinsRegular}" FontSize="16"/>
+            </StackPanel>
+
+            <!-- Transfer Options-->
+            <TextBlock Text="Transfer Options" HorizontalAlignment="Left" Margin="10,82,0,0" VerticalAlignment="Top" FontSize="16" FontFamily="{StaticResource PoppinsRegular}" Style="{StaticResource CutieTextBlockStyle}"/>
+
+            <TextBlock Text="Wireless Transfer (FTP)" HorizontalAlignment="Left" Margin="42,139,0,0" VerticalAlignment="Top" FontSize="14" FontFamily="{StaticResource PoppinsRegular}" Style="{StaticResource CutieTextBlockStyle}"/>
+            <RadioButton  Template="{StaticResource CutieRadio}" IsChecked="{Binding WirelessSelected}" GroupName="TransferOption" HorizontalAlignment="Left" Margin="16,137,0,0" VerticalAlignment="Top" Foreground="{DynamicResource QuasarTextColor}"/>
+
+            <TextBlock Text="Local Transfer (SD)" HorizontalAlignment="Left" Margin="274,139,0,0" VerticalAlignment="Top" FontSize="14" FontFamily="{StaticResource PoppinsRegular}" Style="{StaticResource CutieTextBlockStyle}"/>
+            <RadioButton  Template="{StaticResource CutieRadio}"  IsChecked="{Binding LocalSelected}" GroupName="TransferOption" HorizontalAlignment="Left" Margin="248,137,0,0" VerticalAlignment="Top" Foreground="{DynamicResource QuasarTextColor}" RenderTransformOrigin="-12.895,3.133"/>
+            <ComboBox Margin="421,131,0,0" Style="{StaticResource ComboBoxFlatStyle}" Width="200" Height="32" VerticalAlignment="Top" HorizontalAlignment="Left" ItemsSource="{Binding Drives}" SelectedItem="{Binding SelectedDrive}" DisplayMemberPath="DisplayName"/>
+            <Button VerticalAlignment="Top" HorizontalAlignment="Left" Margin="630,131,0,0" Width="32" Height="32" Command="{Binding RefreshUSBCommand}" Template="{StaticResource ActionRefreshButton}" />
+
+            <!-- Mod Loader-->
+            <TextBlock Text="Mod Loader :" HorizontalAlignment="Left" Margin="16,209,0,0" VerticalAlignment="Top" FontSize="16" FontFamily="{StaticResource PoppinsRegular}" Style="{StaticResource CutieTextBlockStyle}"/>
+            <ComboBox HorizontalAlignment="Left" Style="{StaticResource ComboBoxFlatStyle}" Width="200" Height="32" Margin="137,203,0,0" VerticalAlignment="Top" ItemsSource="{Binding ModLoaders}" DisplayMemberPath="Name" SelectedItem="{Binding SelectedModLoader}"/>
+
+            <!-- File Transfer Options-->
+            <TextBlock Text="How do you want Quasar to handle the file transfer ?" HorizontalAlignment="Left" Margin="16,277,0,0" VerticalAlignment="Top" FontSize="16" FontFamily="{StaticResource PoppinsRegular}" Style="{StaticResource CutieTextBlockStyle}"/>
+            
+            <TextBlock Text="Clean and Transfer" HorizontalAlignment="Left" Margin="44,329,0,0" VerticalAlignment="Top" FontSize="14" FontFamily="{StaticResource PoppinsRegular}" Style="{StaticResource CutieTextBlockStyle}"/>
+            <RadioButton Template="{StaticResource CutieRadio}" IsChecked="{Binding CleanSelected}" GroupName="TransferMode" HorizontalAlignment="Left" Margin="16,329,0,0" VerticalAlignment="Top" Foreground="{DynamicResource QuasarTextColor}"/>
+
+            <TextBlock Text="Synchronize Files" HorizontalAlignment="Left" Margin="293,329,0,0" VerticalAlignment="Top" FontSize="14" FontFamily="{StaticResource PoppinsRegular}" Style="{StaticResource CutieTextBlockStyle}"/>
+            <RadioButton Template="{StaticResource CutieRadio}" IsChecked="{Binding SynchronizeSelected}" GroupName="TransferMode" HorizontalAlignment="Left" Margin="267,329,0,0" VerticalAlignment="Top" Foreground="{DynamicResource QuasarTextColor}" RenderTransformOrigin="1.083,0.733"/>
+
+            <TextBlock Text="Overwrite Different Files" HorizontalAlignment="Left" Margin="530,329,0,0" VerticalAlignment="Top" FontSize="14" FontFamily="{StaticResource PoppinsRegular}" Style="{StaticResource CutieTextBlockStyle}"/>
+            <RadioButton Template="{StaticResource CutieRadio}" IsChecked="{Binding OverwriteSelected}" GroupName="TransferMode" HorizontalAlignment="Left" Margin="502,329,0,0" VerticalAlignment="Top" Foreground="{DynamicResource QuasarTextColor}" RenderTransformOrigin="1.083,0.733"/>
+
+            <Button Content="Send my mods to my Switch" Template="{StaticResource CutieButtonTemplate}" HorizontalAlignment="Center" VerticalAlignment="Bottom" Width="282" Margin="0,0,0,48" Command="{Binding Path=BuildCommand}"/>
+
+        </Grid>
+
+        <!-- Transfer Status Grid-->
+        <Grid Grid.Row="1" Grid.Column="0" Background="{DynamicResource CutieBG01}">
+            <StackPanel HorizontalAlignment="Left" Margin="250,10,0,0" VerticalAlignment="Top" Orientation="Horizontal">
+                <TextBlock Text="Transfer Status :  " HorizontalAlignment="Center" FontSize="16" FontFamily="{StaticResource PoppinsRegular}" Style="{StaticResource CutieTextBlockStyle}"/>
+                <TextBlock Text="{Binding Total}" Margin="0,1,0,0" HorizontalAlignment="Center"  FontSize="16" FontFamily="{StaticResource PoppinsRegular}" Style="{StaticResource CutieTextBlockStyle}"/>
+            </StackPanel>
+            
+            
+            <TextBlock Text="{Binding Steps}" HorizontalAlignment="Left" Margin="10,46,0,0" VerticalAlignment="Top" FontSize="12" FontFamily="{StaticResource PoppinsRegular}" Style="{StaticResource CutieTextBlockStyle}"/>
+            <TextBlock Text="{Binding SubStep}" HorizontalAlignment="Left" Margin="10,75,0,0" VerticalAlignment="Top" FontSize="12" FontFamily="{StaticResource PoppinsRegular}" Style="{StaticResource CutieTextBlockStyle}"/>
+
+            <TextBlock Text="{Binding Speed}" HorizontalAlignment="Right" Margin="10,46,10,0" VerticalAlignment="Top" FontSize="12" FontFamily="{StaticResource PoppinsRegular}" Style="{StaticResource CutieTextBlockStyle}"/>
+            <TextBlock Text="{Binding Size}" HorizontalAlignment="Right" Margin="10,75,10,0" VerticalAlignment="Top" FontSize="12" FontFamily="{StaticResource PoppinsRegular}" Style="{StaticResource CutieTextBlockStyle}"/>
+
+            
+
+            <ProgressBar  Value="{Binding BuildProgress}" IsIndeterminate="{Binding ProgressBarStyle}" Height="10" Margin="10,105,10,0" Grid.Row="1" VerticalAlignment="Top"/>
+        </Grid>
+
+        <!-- Logs Grid-->
+        <Grid Grid.Row="0" Grid.Column="2" Grid.RowSpan="2" Background="{DynamicResource CutieBG01}">
+            <ScrollViewer>
+                <TextBlock TextWrapping="Wrap" Text="{Binding Logs}" Foreground="{DynamicResource QuasarTextColor}" FontFamily="{StaticResource PoppinsRegular}"/>
+            </ScrollViewer>
+        </Grid>
+
+        
+
+
+        
+
 
 
     </Grid>

@@ -286,6 +286,9 @@
     <Content Include="References\images\drag.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="References\images\Games\SmashUltimate\characters_selected.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="References\images\Games\SmashUltimate\others.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -293,9 +296,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="References\images\Games\SmashUltimate\others_selected.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="References\images\Games\SmashUltimate\characters_selected.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="References\images\Games\SmashUltimate\items.png">
@@ -352,6 +352,24 @@
     <Content Include="References\Sources\ModLoaders.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Fonts\Poppins-Black.ttf" />
+    <Resource Include="Fonts\Poppins-BlackItalic.ttf" />
+    <Resource Include="Fonts\Poppins-Bold.ttf" />
+    <Resource Include="Fonts\Poppins-BoldItalic.ttf" />
+    <Resource Include="Fonts\Poppins-ExtraBold.ttf" />
+    <Resource Include="Fonts\Poppins-ExtraBoldItalic.ttf" />
+    <Resource Include="Fonts\Poppins-ExtraLight.ttf" />
+    <Resource Include="Fonts\Poppins-ExtraLightItalic.ttf" />
+    <Resource Include="Fonts\Poppins-Italic.ttf" />
+    <Resource Include="Fonts\Poppins-Light.ttf" />
+    <Resource Include="Fonts\Poppins-LightItalic.ttf" />
+    <Resource Include="Fonts\Poppins-Medium.ttf" />
+    <Resource Include="Fonts\Poppins-MediumItalic.ttf" />
+    <Resource Include="Fonts\Poppins-Regular.ttf" />
+    <Resource Include="Fonts\Poppins-SemiBold.ttf" />
+    <Resource Include="Fonts\Poppins-SemiBoldItalic.ttf" />
+    <Resource Include="Fonts\Poppins-Thin.ttf" />
+    <Resource Include="Fonts\Poppins-ThinItalic.ttf" />
     <None Include="Properties\SettingsDefinition.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>SettingsDefinition.Designer.cs</LastGenOutput>

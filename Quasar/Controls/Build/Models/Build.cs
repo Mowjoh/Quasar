@@ -29,26 +29,21 @@ namespace Quasar.Controls.Build.Models
         public abstract Task CopyModLoader();
         public abstract Task StartCheck();
         public abstract Task GetLocalFileList();
+        public abstract Task GetDistantFileList();
 
+        public abstract Task ProcessTransferList();
         public abstract Task DeleteDifferences();
-        public abstract Task StartTransfer();
+        public abstract Task CopyFiles();
 
-        public abstract void GetDistantFileList();
+        
         public abstract void CleanWorkspace();
         
     }
 
     public class SmashBuilder : Builder
     {
-        #region Fields
+
         private BuildViewModel _ViewModel { get; set; }
-        #endregion
-
-        #region Properties
-
-        /// <summary>
-        /// List of all Library Mods
-        /// </summary>
         public BuildViewModel ViewModel
         {
             get => _ViewModel;
@@ -62,28 +57,27 @@ namespace Quasar.Controls.Build.Models
             }
         }
         FileWriter Writer { get; set; }
-        int BuildMode { get; set; }
+        bool CleanSelected { get; set; }
+        bool ManualModsSelected { get; set; }
         int ModLoader { get; set; }
-        List<Hash> DistantHashes { get; set; }
-        List<Hash> LocalHashes { get; set; }
-        List<Hash> DistantOutsiderHashes { get; set; }
-        List<Hash> LocalOutsiderHashes { get; set; }
+        
         string WorkspacePath { get; set; }
 
-        List<FileReference> FilesToBuild { get; set; }
+        List<FileReference> WorkspaceFiles { get; set; }
         List<FileReference> DistantFiles { get; set; }
+        List<FileReference> FilesToCopy { get; set; }
+        List<FileReference> FilesToDelete { get; set; }
+        List<Hash> WorkspaceHashes { get; set; }
+        List<Hash> DistantHashes { get; set; }
 
-
-        
-
-        #endregion
-
-        public SmashBuilder(FileWriter _Writer, int _BuildMode, int _ModLoader, BuildViewModel _ViewModel)
+        public SmashBuilder(FileWriter _Writer, int _ModLoader, bool _CleanSelected, bool _ManualModsSelected, BuildViewModel _ViewModel)
         {
             Writer = _Writer;
-            BuildMode = _BuildMode;
             ModLoader = _ModLoader;
             ViewModel = _ViewModel;
+
+            CleanSelected = _CleanSelected;
+            ManualModsSelected = _ManualModsSelected;
 
         }
 
@@ -93,21 +87,52 @@ namespace Quasar.Controls.Build.Models
             {
                 ViewModel.Building = true;
                 ViewModel.Log.Debug("Building set to true");
-                await CopyModLoader();
-                ViewModel.Log.Debug("Copy ModLoader Finished");
+
                 //Base Operations
                 await StartCheck();
                 ViewModel.Log.Debug("Start Check Finished");
+
                 await GetLocalFileList();
                 ViewModel.Log.Debug("Got Local File List");
+
+                await GetDistantFileList();
+                ViewModel.Log.Debug("Got Distant File List");
+
+                await ProcessTransferList();
+                ViewModel.Log.Debug("Finished processing transfer list");
+
                 //File Operations
-                await DeleteDifferences();
-                await StartTransfer();
+                if(FilesToDelete.Count != 0)
+                {
+                    await DeleteDifferences();
+                }
+                else
+                {
+                    ViewModel.BuildLog("Info","No files to delete");
+                    ViewModel.Log.Debug("No files to delete");
+                }
+                if(FilesToCopy.Count != 0)
+                {
+                    await CopyFiles();
+                }
+                else
+                {
+                    ViewModel.BuildLog("Info", "No files to copy");
+                    ViewModel.Log.Debug("No files to copy");
+                }
+
+                SaveAndSendHashes();
+
+                await CopyModLoader();
+                ViewModel.Log.Debug("Copy ModLoader Finished");
+
             }
+
             ViewModel.Log.Info("Transfer Finished");
             ViewModel.SetStep("Finished");
             ViewModel.SetSubStep("");
             ViewModel.SetProgression(100);
+            ViewModel.SetProgressionStyle(false);
             ViewModel.SetSize("");
             ViewModel.SetSpeed("");
             return false;
@@ -120,135 +145,81 @@ namespace Quasar.Controls.Build.Models
         public override async Task StartCheck()
         {
             //Base File List Setup
-            FilesToBuild = new List<FileReference>();
+            WorkspaceFiles = new List<FileReference>();
             DistantFiles = new List<FileReference>();
+            FilesToCopy = new List<FileReference>();
+            FilesToDelete = new List<FileReference>();
+            WorkspaceHashes = new List<Hash>();
 
             //Base Path Setup
-            WorkspacePath = "";
-            if (typeof(SDWriter).Equals(Writer.GetType()))
-            {
-                SDWriter wrote = (SDWriter)Writer;
-                WorkspacePath = wrote.LetterPath;
-            }
-
             ModLoader sml = ViewModel.ModLoaders.Single(ml => ml.ModLoaderID == ModLoader);
-            WorkspacePath += sml.BasePath;
+            WorkspacePath = sml.BasePath;
 
-
-            if (BuildMode == (int)BuildModes.Clean)
+            if (CleanSelected)
             {
                 CleanWorkspace();
-                GetDistantFileList();
             }
-            if (BuildMode == (int)BuildModes.Synchronize || BuildMode == (int)BuildModes.Overwrite)
-            {
-                GetDistantFileList();
-            }
-            
         }
         public override async Task GetLocalFileList()
         {
+            //UI Setup
             ViewModel.SetStep("Listing Files");
             ViewModel.Log.Debug("Listing Local Files");
+
+            //Getting associated gamedata
             GameData GD = ViewModel.GameDatas.Single(g => g.GameID == ViewModel.Games[1].ID);
 
+            //Getting files foreach association in the workspace
             foreach (Association ass in ViewModel.ActiveWorkspace.Associations)
             {
                 ViewModel.Log.Debug("getting files for association CMID"+ass.ContentMappingID +" - GDIID "+ass.GameDataItemID + " - Slot "+ass.Slot);
                 ListAssociationFiles(ass,GD);
             }
         }
-        public override void GetDistantFileList()
+        public override async Task GetDistantFileList()
         {
             try
             {
+                //UI Setup
                 ViewModel.Log.Debug("Starting to list distant files");
-
                 ViewModel.SetStep("Listing Distant Files, please wait as it might take a while");
                 ViewModel.SetProgressionStyle(true);
 
-                string DistantWorkspacePath = WorkspacePath.Replace("{Workspace}", ViewModel.ActiveWorkspace.Name);
-                string localHashFilePath = Properties.Settings.Default.DefaultDir + @"\Library\Downloads\Hashes.xml";
-                string localOutsiderHashFilePath = Properties.Settings.Default.DefaultDir + @"\Library\Downloads\OutsiderHashes.xml";
+                //Getting distant hashes
+                getDistantHashes();
 
-                //Getting Workspace Hashes
-                if (Writer.CheckFileExists(DistantWorkspacePath + @"Hashes.xml"))
+                if (!ManualModsSelected)
                 {
-                    Writer.GetFile(DistantWorkspacePath + @"Hashes.xml", localHashFilePath);
-                    ViewModel.Log.Debug(String.Format("Distant Hash File Exists : {0}", DistantWorkspacePath + @"Hashes.xml"));
-                }
-
-                //Getting OutsiderHashes
-                if (Writer.CheckFileExists(@"Quasar/OutsiderHashes.xml"))
-                {
-                    Writer.GetFile(@"Quasar/OutsiderHashes.xml", localOutsiderHashFilePath);
-                    ViewModel.Log.Debug(String.Format("Distant Hash File Exists : {0}", DistantWorkspacePath + @"Hashes.xml"));
-                }
-
-                //Getting Workspace Distant Files
-                DistantFiles = Writer.GetRemoteFiles(DistantWorkspacePath);
-
-                //Loading distant Workspace Hashes if found
-                if (File.Exists(localHashFilePath))
-                {
-                    ViewModel.Log.Debug("File Exists, Loading Hashes");
-                    DistantHashes = XML.GetHashes(localHashFilePath);
+                    getDistantFileList();
                 }
                 else
                 {
-                    ViewModel.Log.Debug("No Remote Hash File");
-                    ViewModel.Log.Debug("Hash List Created");
-                    DistantHashes = new List<Hash>();
+                    DistantFiles = new List<FileReference>();
                 }
-
-                //Loading distant Outsider Hashes if found
-                if (File.Exists(localOutsiderHashFilePath))
-                {
-                    ViewModel.Log.Debug("File Exists, Loading Outsider Hashes");
-                    DistantOutsiderHashes = XML.GetHashes(localOutsiderHashFilePath);
-                }
-                else
-                {
-                    ViewModel.Log.Debug("No Remote Hash File");
-                    ViewModel.Log.Debug("Hash List Created");
-                    DistantOutsiderHashes = new List<Hash>();
-                }
-
-                LocalHashes = new List<Hash>();
-                Writer.SetHashes(DistantHashes, LocalHashes, DistantOutsiderHashes);
             }
             catch(Exception e)
             {
                 ViewModel.Log.Error(e.Message);
             }
-            
+        }
+        public override async Task ProcessTransferList()
+        {
+            //List files for copy
+            getCopyFileList();
+
+            //List files for deletion
+            getDeleteFileList();
+
         }
         public override async Task DeleteDifferences()
         {
             try
             {
                 ViewModel.SetStep("Deleting Differences");
-                if (BuildMode == (int)BuildModes.Synchronize)
+                foreach (FileReference reference in FilesToDelete)
                 {
-                    foreach (FileReference reference in DistantFiles)
-                    {
-                        FileReference LocalReference = FilesToBuild.FirstOrDefault(r => "/" + r.OutputFilePath.Replace("\\", "/") == reference.OutputFilePath);
-                        if (LocalReference == null)
-                        {
-                            if (reference.OutputFilePath.Split('/')[reference.OutputFilePath.Split('/').Length - 1] != "Hashes.xml")
-                            {
-                                ViewModel.Log.Debug("Deleting " + reference.OutputFilePath);
-                                Writer.DeleteFile(reference.OutputFilePath);
-                            }
-                        }
-                    }
-                }
-                foreach(Hash h in DistantOutsiderHashes)
-                {
-                    if (!FilesToBuild.Any(r => "/" + r.OutputFilePath.Replace("\\", "/") == h.FilePath))
-                    {
-                        Writer.DeleteFile(h.FilePath);
-                    }
+                    ViewModel.Log.Debug("Deleting " + reference.OutputFilePath);
+                    Writer.DeleteFile(reference.OutputFilePath);
                 }
             }
             catch(Exception e)
@@ -257,24 +228,24 @@ namespace Quasar.Controls.Build.Models
             }
             
         }
-        public override async Task StartTransfer()
+        public override async Task CopyFiles()
         {
             ViewModel.SetStep("Transfering Files");
             ViewModel.SetProgressionStyle(false);
-            int TotalFiles = FilesToBuild.Count;
-            while (FilesToBuild.Count > 0)
+            int TotalFiles = FilesToCopy.Count;
+            while (FilesToCopy.Count > 0)
             {
                 try
                 {
-                    FileReference FRef = FilesToBuild[0];
-                    List<FileReference> AssociatedReferences = FilesToBuild.Where(r => r.LibraryMod == FRef.LibraryMod).ToList();
+                    FileReference FRef = FilesToCopy[0];
+                    List<FileReference> AssociatedReferences = FilesToCopy.Where(r => r.LibraryMod == FRef.LibraryMod).ToList();
 
                     ViewModel.SetSubStep("Copying files for " + FRef.LibraryMod.Name);
                     foreach (FileReference Ferb in AssociatedReferences)
                     {
-                        SetProgression((TotalFiles - FilesToBuild.Count), TotalFiles);
-                        Writer.SendFile(Ferb.SourceFilePath, Ferb.OutputFilePath, Ferb.OutsideFile);
-                        FilesToBuild.Remove(Ferb);
+                        SetProgression((TotalFiles - FilesToCopy.Count), TotalFiles);
+                        Writer.SendFile(Ferb.SourceFilePath, Ferb.OutputFilePath);
+                        FilesToCopy.Remove(Ferb);
                     }
                     ViewModel.Log.Info(String.Format("Finished copying files for {0}", FRef.LibraryMod.Name));
                     ViewModel.BuildLog("Mod", String.Format("Finished copying files for {0}", FRef.LibraryMod.Name));
@@ -285,21 +256,8 @@ namespace Quasar.Controls.Build.Models
                 }
                 
             }
-            SetProgression((TotalFiles - FilesToBuild.Count), TotalFiles);
-
-            //Saving, sending Hashes file
-            string DistantWorkspacePath = WorkspacePath.Replace("{Workspace}", ViewModel.ActiveWorkspace.Name);
-            string localHashFilePath = Properties.Settings.Default.DefaultDir + @"\Library\Downloads\Hashes.xml";
-            string localOutsiderHashFilePath = Properties.Settings.Default.DefaultDir + @"\Library\Downloads\OutsiderHashes.xml";
-            XML.SaveHashes(localHashFilePath, Writer.GetHashes());
-            XML.SaveHashes(localOutsiderHashFilePath, Writer.GetOutsiderHashes());
-            ViewModel.Log.Debug("Saved Hashes");
-            Writer.SendFile(localHashFilePath, DistantWorkspacePath + @"Hashes.xml",true);
-            Writer.SendFile(localOutsiderHashFilePath, @"Quasar\OutsiderHashes.xml", true);
-            ViewModel.Log.Debug("Sent Hashes");
-            File.Delete(localHashFilePath);
-            File.Delete(localOutsiderHashFilePath);
-            ViewModel.Log.Debug("Deleted Hashes");
+            SetProgression((TotalFiles - WorkspaceFiles.Count), TotalFiles);
+           
 
         }
         public override void CleanWorkspace()
@@ -309,6 +267,105 @@ namespace Quasar.Controls.Build.Models
             Writer.DeleteFolder(WorkspacePath.Replace("{Workspace}", ViewModel.ActiveWorkspace.Name));
             ViewModel.Log.Debug("Workspace Cleaned");
 
+        }
+
+        public void getDistantHashes()
+        {
+            string DistantWorkspacePath = WorkspacePath.Replace("{Workspace}", ViewModel.ActiveWorkspace.Name);
+            string localHashFilePath = Properties.Settings.Default.DefaultDir + @"\Library\Downloads\Hashes.xml";
+
+            //Getting Workspace Hashes
+            if (Writer.CheckFileExists(DistantWorkspacePath + @"Hashes.xml"))
+            {
+                Writer.GetFile(DistantWorkspacePath + @"Hashes.xml", localHashFilePath);
+                ViewModel.Log.Debug(String.Format("Distant Hash File Exists : {0}", DistantWorkspacePath + @"Hashes.xml"));
+            }
+
+            //Loading distant Workspace Hashes if found
+            if (File.Exists(localHashFilePath))
+            {
+                ViewModel.Log.Debug("File Exists, Loading Hashes");
+                DistantHashes = XML.GetHashes(localHashFilePath);
+            }
+            else
+            {
+                ViewModel.Log.Debug("No Remote Hash File");
+                ViewModel.Log.Debug("Hash List Created");
+                DistantHashes = new List<Hash>();
+            }
+        }
+        public void getDistantFileList()
+        {
+            //Path Setup
+            string DistantWorkspacePath = WorkspacePath.Replace("{Workspace}", ViewModel.ActiveWorkspace.Name);
+
+            //Getting Workspace Distant Files
+            DistantFiles = Writer.GetRemoteFiles(DistantWorkspacePath);
+        }
+
+        public void getCopyFileList()
+        {
+            if (DistantHashes.Count == 0)
+            {
+                //No distant hashes means first copy
+                FilesToCopy = WorkspaceFiles;
+            }
+            else
+            {
+                //Copy over means find the differences
+                foreach (FileReference reference in WorkspaceFiles)
+                {
+                    Hash distantHash = DistantHashes.FirstOrDefault(h => h.FilePath == reference.OutputFilePath);
+
+                    //If there is no distant match
+                    if (distantHash == null)
+                    {
+                        FilesToCopy.Add(reference);
+                    }
+                    else
+                    {
+                        //If there is a distant match, compare for copy
+                        Hash localHash = WorkspaceHashes.FirstOrDefault(h => h.FilePath == reference.OutputFilePath);
+                        //Different hash means overwrite
+                        if (localHash.HashString != distantHash.HashString)
+                        {
+                            FilesToCopy.Add(reference);
+                        }
+                    }
+
+                }
+            }
+        }
+        public void getDeleteFileList()
+        {
+            //No distant hashes means nothing to compare with
+            if(DistantHashes.Count != 0)
+            {
+                foreach(Hash h in DistantHashes)
+                {
+                    if(!WorkspaceFiles.Exists(fr => fr.OutputFilePath == h.FilePath))
+                    {
+                        FilesToDelete.Add(new FileReference() { OutputFilePath = h.FilePath });
+                    }
+                }
+            }
+        }
+
+        public void SaveAndSendHashes()
+        {
+           //Saving, sending Hashes file
+           string DistantWorkspacePath = WorkspacePath.Replace("{Workspace}", ViewModel.ActiveWorkspace.Name);
+           string localHashFilePath = Properties.Settings.Default.DefaultDir + @"\Library\Downloads\Hashes.xml";
+
+           XML.SaveHashes(localHashFilePath, WorkspaceHashes);
+           ViewModel.Log.Debug("Saved Hashes");
+
+           //Sending Hash Files
+           Writer.SendFile(localHashFilePath, DistantWorkspacePath + @"Hashes.xml");
+
+           ViewModel.Log.Debug("Sent Hashes");
+           File.Delete(localHashFilePath);
+           ViewModel.Log.Debug("Deleted Hashes");
         }
 
         public void ListAssociationFiles(Association ass, GameData GD)
@@ -342,8 +399,8 @@ namespace Quasar.Controls.Build.Models
                     }
                     FinalDestination = FinalDestination.Replace(@"{Workspace}", ViewModel.ActiveWorkspace.Name);
                     FinalDestination = FinalDestination.Replace(@"/", @"\");
-                    FilesToBuild.Add(new FileReference() { LibraryMod = lm, SourceFilePath = source, OutputFilePath = FinalDestination, OutsideFile = imt.OutsideFolder });
-
+                    WorkspaceHashes.Add(new Hash() { Category = imt.OutsideFolder ? "Outsider" : "Workspace", FilePath = FinalDestination, HashString = WriterOperations.GetHash(source) });
+                    WorkspaceFiles.Add(new FileReference() { LibraryMod = lm, SourceFilePath = source, OutputFilePath = FinalDestination, OutsideFile = imt.OutsideFolder });
                 }
             }
             catch(Exception e)

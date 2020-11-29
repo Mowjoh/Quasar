@@ -9,7 +9,7 @@
         xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
         xmlns:Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2" xmlns:view="clr-namespace:Quasar.Controls.Settings.View" xmlns:view1="clr-namespace:Quasar.Controls.Settings.Workspaces.View" xmlns:views="clr-namespace:Quasar.Controls.Build.Views" x:Name="MainWindow1" x:Class="Quasar.MainWindow"
         mc:Ignorable="d"
-        Title="Quasar" MinWidth="1280" MinHeight="720" Width="1280" Height="720" Icon="Quasar.ico" DataContext="{Binding RelativeSource={RelativeSource Self}}" WindowStartupLocation="CenterScreen" Loaded="MainWindow1_Loaded">
+        Title="{x:Static p:Resources.Quasar_WindowTitle}" MinWidth="1280" MinHeight="720" Width="1280" Height="720" Icon="Quasar.ico" DataContext="{Binding RelativeSource={RelativeSource Self}}" WindowStartupLocation="CenterScreen" Loaded="MainWindow1_Loaded">
 
     <Window.Resources>
         
@@ -71,7 +71,7 @@
                                         VerticalAlignment="Center"
                                         HorizontalAlignment="Center"
                                         ContentSource="Header"
-                                        Margin="10,2"/>
+                                        Margin="10,2" TextElement.FontFamily="{StaticResource PoppinsRegular}" TextElement.FontSize="18"/>
                                     </Border>
                                     <ControlTemplate.Triggers>
                                         <Trigger Property="IsSelected" Value="True">

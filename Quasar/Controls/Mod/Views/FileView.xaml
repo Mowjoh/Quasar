@@ -6,22 +6,22 @@
         xmlns:local="clr-namespace:Quasar.Controls"
         mc:Ignorable="d"
         Title="FileView" Height="700" Width="500">
-    <Grid Background="{DynamicResource QuasarBackgroundDark}">
+    <Grid Background="{DynamicResource CutieBG02}">
         <Grid.RowDefinitions>
             <RowDefinition Height="45"/>
             <RowDefinition />
         </Grid.RowDefinitions>
         <Label Content="Browsing Files for :" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Foreground="{DynamicResource QuasarTextColor}"/>
         <Label x:Name="ModNameLabel" Content="ModName" HorizontalAlignment="Left" Margin="124,10,0,0" VerticalAlignment="Top" Foreground="{DynamicResource QuasarTextColor}"/>
-        <TreeView x:Name="Trees"  Grid.Row="1" Foreground="{DynamicResource QuasarTextColor}" Background="#33000000">
+        <TreeView x:Name="Trees"  Grid.Row="1" Foreground="{DynamicResource QuasarTextColor}" Background="{StaticResource CutieBG08}">
             <TreeView.ItemTemplate>
                 <DataTemplate>
                     <TreeViewItem Foreground="{DynamicResource QuasarTextColor}"/>
                 </DataTemplate>
             </TreeView.ItemTemplate>
         </TreeView>
-        <Button Content="-" Margin="0,10,40,0" VerticalAlignment="Top" Height="25" HorizontalAlignment="Right" Width="25" Click="Minimize_Click"/>
-        <Button Content="+" Margin="0,10,10,0" VerticalAlignment="Top" Height="25" HorizontalAlignment="Right" Width="25" Click="Expand_Click"/>
+        <Button Template="{StaticResource ActionMinusButton}" Margin="0,10,40,0" VerticalAlignment="Top" HorizontalAlignment="Right" Click="Minimize_Click"/>
+        <Button Template="{StaticResource ActionPlusButton}" Margin="0,10,10,0" VerticalAlignment="Top" HorizontalAlignment="Right" Click="Expand_Click"/>
 
     </Grid>
 </Window>

@@ -138,7 +138,7 @@ namespace Quasar.Controls.Content.ViewModels
 
                 _Smol = value;
 
-                Rekt = value ? new Rect(0, 0, 50, 30) : new Rect(0, 0, 50, 160);
+                Rekt = value ? new Rect(0, 0, 50, 44) : new Rect(0, 0, 50, 190);
                 OnPropertyChanged("Smol");
             }
         }

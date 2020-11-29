@@ -6,7 +6,9 @@
   <InternalModTypeFile ID="0">
     <SourcePath>fighter/common/param</SourcePath>
     <SourceFile>fighter_param.prc</SourceFile>
-    <BuilderFile BuilderID="1" Path="fighter/common/param" File="fighter_param.prc" />
-    <BuilderFile BuilderID="2" Path="fighter/common/param" File="fighter_param.prc" />
+    <BuilderFile BuilderID="1" Path="arc/fighter/common/param" File="fighter_param.prc" />
+    <BuilderFile BuilderID="2" Path="{ModName}/fighter/common/param" File="fighter_param.prc" />
+    <BuilderFile BuilderID="3" Path="{ModNameSlot}/fighter/common/param" File="fighter_param.prc" />
+    <BuilderFile BuilderID="4" Path="fighter/common/param" File="fighter_param.prc" />
   </InternalModTypeFile>
 </InternalModType>

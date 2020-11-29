@@ -1,4 +1,6 @@
 ﻿<ModLoaders>
   <ModLoader ModLoaderID="1" Name="ARCropolis" BasePath="Quasar/{Workspace}/" InstallPath="" GameID="1"/>
-  <ModLoader ModLoaderID="2" Name="UMM" BasePath="UltimateModManager/mods/{Workspace}/" InstallPath="" GameID="1"/>
+  <ModLoader ModLoaderID="2" Name="ARCadia style" BasePath="Quasar/{Workspace}/Mods/" InstallPath="" GameID="1"/>
+  <ModLoader ModLoaderID="3" Name="ARCadia style Slotted" BasePath="Quasar/{Workspace}/Mods/" InstallPath="" GameID="1"/>
+  <ModLoader ModLoaderID="4" Name="UMM" BasePath="UltimateModManager/mods/{Workspace}/" InstallPath="" GameID="1"/>
 </ModLoaders>

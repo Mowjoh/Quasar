@@ -8,48 +8,52 @@
              d:DesignHeight="620" d:DesignWidth="1120">
     <Grid x:Name="WorkspaceGrid" Background="{StaticResource QD1}">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="500"/>
+            <ColumnDefinition Width="332"/>
             <ColumnDefinition Width="250"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <Button Content="Add a new Workspace" Margin="0,0,0,10" VerticalAlignment="Bottom" Height="26" HorizontalAlignment="Center" Width="153" RenderTransformOrigin="1.172,0.308" Command="{Binding Path=AddWorkspaceCommand}"/>
-
+ 
+        <!--Workspace Selection-->
         <StackPanel Orientation="Horizontal" Margin="10,14,10,0" VerticalAlignment="Top"  >
-            <Label  Content="Active Workspace :"  Foreground="White"/>
-            <Label Content="{Binding ActiveWorkspace.Name}"  Foreground="White"/>
+            <TextBlock Text="Active Workspace : " Style="{StaticResource CutieTextBlockStyle}" FontSize="14" />
+            <TextBlock Text="{Binding ActiveWorkspace.Name}" Style="{StaticResource CutieTextBlockStyle}" FontSize="14" />
         </StackPanel>
-
-
-        <ListBox  Margin="10,45,10,47" Style="{DynamicResource QuasarListBox}" ItemsSource="{Binding Workspaces}" SelectedItem="{Binding ActiveWorkspace}" >
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel Orientation="Horizontal">
-                        <Label Content="{Binding Name}" Width="Auto" Foreground="White" />
-                    </StackPanel>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
-
+        <Border Margin="10,45,10,85" Background="{StaticResource CutieBG03}" Width="300" CornerRadius="8">
+            <ListBox  Margin="0,5"  Style="{StaticResource CutieListBox}" ItemsSource="{Binding Workspaces}" SelectedItem="{Binding ActiveWorkspace}" >
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <Label Content="{Binding Name}" Width="Auto" Foreground="White" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </Border>
         
+        <Button Template="{StaticResource CutieSmallButtonTemplate}" Content="Add a new Workspace" Margin="0,0,0,32" VerticalAlignment="Bottom" Height="32" HorizontalAlignment="Center" Width="250" RenderTransformOrigin="1.172,0.308" Command="{Binding Path=AddWorkspaceCommand}"/>
+
+        <!--Workspace Naming-->
+        <TextBlock Text="Active Workspace : " Margin="10,40,10,0" Style="{StaticResource CutieTextBlockStyle}" FontSize="14" Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Left" />
+        <TextBox Style="{StaticResource CutieTextBoxStyle}" Grid.Column="2" Height="32" Width="300" Margin="10,32,10,0" TextWrapping="Wrap" Text="{Binding WorkspaceName, Mode=TwoWay}" VerticalAlignment="Top" HorizontalAlignment="Left" />
+        <Button Template="{StaticResource CutieSmallButtonTemplate}" Content="Save name" Grid.Column="2" HorizontalAlignment="Left" Margin="320,32,0,0" VerticalAlignment="Top" Height="32" Width="143"  Command="{Binding Path=RenameWorkspaceCommand}" />
+
+        <!--Workspace Actions-->
+        <TextBlock Text="Workspace Actions : " Margin="10,140,10,0" Style="{StaticResource CutieTextBlockStyle}" FontSize="14" Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Left" />
         
-        <Label Content="Workspace Name" Grid.Column="1" Margin="10,10,10,0" VerticalAlignment="Top" Foreground="White"/>
-        <TextBox  Grid.Column="2" Height="23" Margin="10,10,10,0" TextWrapping="Wrap" Text="{Binding WorkspaceName, Mode=TwoWay}" VerticalAlignment="Top" />
-        <Button Content="Save name" Grid.Column="2" HorizontalAlignment="Left" Margin="10,42,0,0" VerticalAlignment="Top" Width="143" Height="24" Command="{Binding Path=RenameWorkspaceCommand}" />
+        <Button Template="{StaticResource CutieSmallButtonTemplate}" Content="Duplicate this Workspace" Grid.Column="2" HorizontalAlignment="Left" Margin="10,140,0,0" VerticalAlignment="Top" Width="250" Height="32" Command="{Binding Path=DuplicateWorkspaceCommand}"/>
+        <Button Template="{StaticResource CutieSmallButtonTemplate}" Content="Empty this Workspace" Grid.Column="2" HorizontalAlignment="Left" Margin="10,185,0,0" VerticalAlignment="Top" Width="250" Height="32" Background="#FFD3945E" Command="{Binding Path=EmptyWorkspaceCommand}"/>
+        <Button Template="{StaticResource CutieSmallButtonTemplate}" Content="Delete this Workspace" Grid.Column="2" HorizontalAlignment="Left" Margin="10,230,0,0" VerticalAlignment="Top" Width="250" Height="32" Background="#FFAE6060" Command="{Binding Path=DeleteWorkspaceCommand}" />
+        <Button Template="{StaticResource CutieSmallButtonTemplate}" Content="(FTP Only) Set as default ARCropolis Workspace" Grid.Column="2" HorizontalAlignment="Left" Margin="10,300,0,0" VerticalAlignment="Top" Width="400" Height="32" Command="{Binding Path=ActivateWorkspaceCommand}" />
 
-        <Label Content="Workspace Actions" Grid.Column="1" Margin="10,140,10,0" VerticalAlignment="Top" Foreground="White"/>
-        <Button Content="Duplicate this Workspace" Grid.Column="2" HorizontalAlignment="Left" Margin="10,140,0,0" VerticalAlignment="Top" Width="143" Height="26" Command="{Binding Path=DuplicateWorkspaceCommand}"/>
-        <Button Content="Empty this Workspace" Grid.Column="2" HorizontalAlignment="Left" Margin="10,196,0,0" VerticalAlignment="Top" Width="143" Height="26" Background="#FFD3945E" Command="{Binding Path=EmptyWorkspaceCommand}"/>
-        <Button Content="Delete this Workspace" Grid.Column="2" HorizontalAlignment="Left" Margin="180,196,0,0" VerticalAlignment="Top" Width="143" Height="26" Background="#FFAE6060" Command="{Binding Path=DeleteWorkspaceCommand}" />
-        <Button Content="(FTP Only) Set as default ARCropolis Workspace" Grid.Column="2" HorizontalAlignment="Left" Margin="10,285,0,0" VerticalAlignment="Top" Width="313" Height="26" Command="{Binding Path=ActivateWorkspaceCommand}" />
-
-        <Label Content="Workspace Info :" Grid.Column="1" Margin="10,346,10,0" VerticalAlignment="Top" Foreground="White"/>
-        <StackPanel Orientation="Horizontal" Grid.Column="2" Margin="10,346,10,0" >
-            <Label Content="Assignments :"  VerticalAlignment="Top" Foreground="White"/>
-            <Label Content="{Binding ActiveWorkspace.Associations.Count}"  VerticalAlignment="Top" Foreground="White"/>
+        <!--Workspace Information-->
+        <TextBlock Text="Workspace Info : " Margin="10,400,10,0" Style="{StaticResource CutieTextBlockStyle}" FontSize="14" Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Left" />
+        <StackPanel Orientation="Horizontal" Grid.Column="2" Margin="10,400,10,0" >
+            <TextBlock  Text="Assignments : "  VerticalAlignment="Top" Style="{StaticResource CutieTextBlockStyle}" FontSize="14"/>
+            <TextBlock Text="{Binding ActiveWorkspace.Associations.Count}"  VerticalAlignment="Top" Style="{StaticResource CutieTextBlockStyle}" FontSize="14"/>
         </StackPanel>
-        <StackPanel Orientation="Horizontal" Grid.Column="2" Margin="10,372,10,0"  >
-            <Label Content="Latest Build Date :" Grid.Column="2" VerticalAlignment="Top" Foreground="White"/>
-            <Label Content="{Binding ActiveWorkspace.BuildDate}"  VerticalAlignment="Top" Foreground="White"/>
+        <StackPanel Orientation="Horizontal" Grid.Column="2" Margin="10,430,10,0"  >
+            <TextBlock Text="Latest Build Date : " Grid.Column="2" VerticalAlignment="Top" Style="{StaticResource CutieTextBlockStyle}" FontSize="14"/>
+            <TextBlock Text="{Binding ActiveWorkspace.BuildDate}"  VerticalAlignment="Top" Style="{StaticResource CutieTextBlockStyle}" FontSize="14"/>
         </StackPanel>
         
         

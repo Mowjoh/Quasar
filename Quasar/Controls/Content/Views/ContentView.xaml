@@ -5,14 +5,62 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Quasar.Controls.Content.Views"
              mc:Ignorable="d" 
-             d:DesignHeight="620" d:DesignWidth="1120">
+             d:DesignHeight="620" d:DesignWidth="1280">
     <Grid x:Name="ContentGrid" Background="{DynamicResource QD1}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="50"/>
-            <RowDefinition Height="35*"/>
+            <RowDefinition Height="64"/>
+            <RowDefinition Height="64"/>
             <RowDefinition Height="656*"/>
         </Grid.RowDefinitions>
 
+        <!-- Top Actions-->
+        <StackPanel Orientation="Horizontal">
+            <Button Template="{StaticResource CutieSmallButtonTemplate}" Width="200" Content="Pick Folder" VerticalAlignment="Bottom" Height="38" />
+            <TextBlock Text="Mod Name :" VerticalAlignment="Bottom" Width="82" Margin="20,0,0,7" Style="{StaticResource CutieTextBlockStyle}" FontSize="15" FontFamily="{StaticResource PoppinsRegular}"/>
+            <TextBox HorizontalAlignment="Left" Margin="10,0" Style="{StaticResource CutieTextBoxStyle}" TextWrapping="NoWrap" Text="{Binding LibraryMod.Name, UpdateSourceTrigger=Explicit}" VerticalAlignment="Bottom" Width="550" />
+            <Button Content="Save Mod Name" Template="{StaticResource CutieSmallButtonTemplate}" VerticalAlignment="Bottom" Width="200" Height="38" Margin="0,0"/>
+
+
+        </StackPanel>
+        <TextBlock Text="Group Types" VerticalAlignment="Bottom" HorizontalAlignment="Right"  Margin="40,0,35,7" Style="{StaticResource CutieTextBlockStyle}" FontSize="15" FontFamily="{StaticResource PoppinsRegular}"/>
+        <CheckBox Template="{StaticResource CutieCheckBox}" VerticalAlignment="Bottom" Margin="0,0,5,7" Foreground="White" HorizontalAlignment="Right" />
+
+        <!-- Column Labels-->
+        <Grid Grid.Row="1" Margin="10,0,0,0" Background="{x:Null}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="35*"/>
+            <ColumnDefinition Width="35*"/>
+            <ColumnDefinition Width="20*"/>
+            <ColumnDefinition Width="20*"/>
+            <ColumnDefinition Width="10*"/>
+
+        </Grid.ColumnDefinitions>
+            <Label Content="Mod Name" Foreground="{DynamicResource QuasarTextColor}" Grid.Column="0" HorizontalContentAlignment="Left" VerticalContentAlignment="Bottom" Style="{StaticResource CutieLabelStyle}" FontFamily="{StaticResource PoppinsItalic}" FontSize="14"/>
+            <Label Content="Content Name" Foreground="{DynamicResource QuasarTextColor}" Grid.Column="1"  HorizontalContentAlignment="Left" VerticalContentAlignment="Bottom" Style="{StaticResource CutieLabelStyle}" FontFamily="{StaticResource PoppinsItalic}" FontSize="14" />
+            <Label Content="Detected Type" Foreground="{DynamicResource QuasarTextColor}" Grid.Column="2"    HorizontalContentAlignment="Left" VerticalContentAlignment="Bottom" Style="{StaticResource CutieLabelStyle}" FontFamily="{StaticResource PoppinsItalic}" FontSize="14"/>
+            <Label Content="Association" Foreground="{DynamicResource QuasarTextColor}" Grid.Column="3"  HorizontalContentAlignment="Left" VerticalContentAlignment="Bottom" Style="{StaticResource CutieLabelStyle}" FontFamily="{StaticResource PoppinsItalic}" FontSize="14"/>
+            <Label Content="Slot" Foreground="{DynamicResource QuasarTextColor}" Grid.Column="4"  HorizontalContentAlignment="Left" VerticalContentAlignment="Bottom" Style="{StaticResource CutieLabelStyle}" FontFamily="{StaticResource PoppinsItalic}" FontSize="14"/>
+
+    </Grid>
+    
+        <!-- Nothing Detected Warning-->
+        <Grid Grid.Row="2" Margin="0,0,10,0" Background="{DynamicResource QD1}" Panel.ZIndex="1000">
+            <Grid.Style>
+                <Style TargetType="{x:Type Grid}">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding ContentListItems.Count}" Value="0">
+                            <Setter Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Grid.Style>
+            <Label Content="No Content has been detected for this mod" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Wheat" FontFamily="{StaticResource PoppinsBold}" FontSize="20">
+
+            </Label>
+        </Grid>
+        
+        <!-- Detection List-->
         <ListView x:Name="ContentListView" ItemsSource="{Binding ContentListItems}" Background="{DynamicResource QD1}" SelectedItem="{Binding SelectedContentListItem}" Margin="0,0,10,0" Grid.Row="2" BorderThickness="0" >
             <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
@@ -36,48 +84,9 @@
                 </Style>
             </ListView.ItemContainerStyle>
         </ListView>
-        <Grid Grid.Row="2" Margin="0,0,10,0" Background="{DynamicResource QD1}" Panel.ZIndex="1000">
-            <Grid.Style>
-                <Style TargetType="{x:Type Grid}">
-                    <Setter Property="Visibility" Value="Collapsed"/>
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding ContentListItems.Count}" Value="0">
-                            <Setter Property="Visibility" Value="Visible"/>
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </Grid.Style>
-            <Label Content="No Content has been detected for this mod" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Wheat" FontSize="20">
+        
+        
+        
 
-            </Label>
-        </Grid>
-        <Grid Grid.Row="1" Margin="10,0,0,0" Background="{x:Null}">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="35*"/>
-                <ColumnDefinition Width="35*"/>
-                <ColumnDefinition Width="20*"/>
-                <ColumnDefinition Width="20*"/>
-                <ColumnDefinition Width="10*"/>
-                <ColumnDefinition Width="10*"/>
-            </Grid.ColumnDefinitions>
-            <Label FontStyle="Italic" Content="Mod Name" Foreground="{DynamicResource QuasarTextColor}" Grid.Column="0" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Style="{DynamicResource QuasarLabel}"/>
-            <Label FontStyle="Italic" Content="Content Name" Foreground="{DynamicResource QuasarTextColor}" Grid.Column="1"  HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Style="{DynamicResource QuasarLabel}" />
-            <Label FontStyle="Italic"  Content="Detected Type" Foreground="{DynamicResource QuasarTextColor}" Grid.Column="2"    HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Style="{DynamicResource QuasarLabel}"/>
-            <Label FontStyle="Italic" Content="Association" Foreground="{DynamicResource QuasarTextColor}" Grid.Column="3"  HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Style="{DynamicResource QuasarLabel}"/>
-            <Label FontStyle="Italic" Content="Slot" Foreground="{DynamicResource QuasarTextColor}" Grid.Column="4"  HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Style="{DynamicResource QuasarLabel}"/>
-            <Label FontStyle="Italic" Content="Actions" Foreground="{DynamicResource QuasarTextColor}" Grid.Column="5"  HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Style="{DynamicResource QuasarLabel}"/>
-
-        </Grid>
-        <StackPanel Orientation="Horizontal">
-            <Button Content="Pick Mod Folder" Margin="20,0,20,0" VerticalAlignment="Center" Width="155" Height="23"/>
-            <Label Content="Mod Name :" VerticalAlignment="Center" Width="75" Foreground="White"/>
-            <TextBox HorizontalAlignment="Left" Margin="0,0,20,0" Height="23" TextWrapping="Wrap" Text="{Binding LibraryMod.Name, UpdateSourceTrigger=Explicit}" VerticalAlignment="Center" Width="205"/>
-            <Button Content="Save Mod Name" VerticalAlignment="Center" Width="155" Height="23"/>
-            
-        </StackPanel>
-        
-        
-        <CheckBox Content="Group Types" Margin="0,0,10,0" VerticalAlignment="Center" Foreground="White" HorizontalAlignment="Right" Width="86"/>
-        
     </Grid>
 </UserControl>

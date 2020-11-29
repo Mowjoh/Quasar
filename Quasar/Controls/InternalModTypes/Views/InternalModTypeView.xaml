@@ -12,38 +12,34 @@
             <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
 
-        <ComboBox ItemsSource="{Binding InternalModTypes}" SelectedItem="{Binding SelectedInternalModType}" DisplayMemberPath="Name" Grid.Column="0" Margin="10,10,0,0"  Width="200" Height="23" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+        <!--Top Bar-->
+        <ComboBox Style="{StaticResource ComboBoxFlatStyle}" Height="32" ItemsSource="{Binding InternalModTypes}" SelectedItem="{Binding SelectedInternalModType}" DisplayMemberPath="Name" Grid.Column="0" Margin="10,32,0,0"  Width="200"  VerticalAlignment="Top" HorizontalAlignment="Left"/>
+        
+        <TextBlock Text="Associated to :" Style="{StaticResource CutieTextBlockStyle}" FontSize="14" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="232,40,0,0"/>
+        <ComboBox Style="{StaticResource ComboBoxFlatStyle}" Height="32" ItemsSource="{Binding CurrentGameData.Categories}" SelectedItem="{Binding SelectedGameDataCategory}" DisplayMemberPath="Name" Grid.Column="0" Margin="330,32,0,0"  Width="200"  VerticalAlignment="Top" HorizontalAlignment="Left"/>
 
-        <Label Content="Associated to :" HorizontalAlignment="Left" Margin="230,7,0,0" VerticalAlignment="Top" Width="105" Background="{x:Null}" Foreground="White"/>
-        <ComboBox ItemsSource="{Binding CurrentGameData.Categories}" SelectedItem="{Binding SelectedGameDataCategory}" DisplayMemberPath="Name" Grid.Column="0" Margin="325,10,0,0"  Width="200" Height="23" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+        <TextBlock Grid.Column="1" Text="Slot Count :" Style="{StaticResource CutieTextBlockStyle}" FontSize="14" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="10,40,0,0"/>
+        <TextBox Style="{StaticResource CutieTextBoxStyle}" Grid.Column="1" Text="{Binding SlotString}" Margin="100,32,0,0" Height="32" VerticalAlignment="Top" HorizontalAlignment="Left" Width="50"/>
 
-        <Label Content="Slot Count :" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="70" Background="{x:Null}" Foreground="White" Grid.Column="1"/>
-        <TextBox Grid.Column="1" Text="{Binding SlotString}" Margin="85,13,0,0" Height="23" VerticalAlignment="Top" HorizontalAlignment="Left" Width="35"/>
+        <TextBlock Grid.Column="1" Text="Ignorable Game Data Category" Style="{StaticResource CutieTextBlockStyle}" FontSize="14" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="205,40,0,0"/>
+        <CheckBox  Template="{StaticResource CutieCheckBox}" Grid.Column="1" IsChecked="{Binding SelectedInternalModType.IgnoreableGameDataAssociation}" HorizontalAlignment="Left" Margin="180,38,0,0" Foreground="White" VerticalAlignment="Top"/>
 
-        <Button x:Name="Trash" Command="{Binding Path=TestInternalModTypeCommand}" Margin="515,7,10,581" Grid.Column="1" Background="#FF0A0F7A" >
-            <Button.Template>
-                <ControlTemplate TargetType="{x:Type Button}">
-                    <Path x:Name="Trash" Stroke="White" Fill="#FF0B189E" Data="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z" Stretch="Uniform" ToolTip="Delete this mod" />
-                </ControlTemplate>
-            </Button.Template>
-        </Button>
+        <Button Template="{StaticResource CutieSmallButtonTemplate}" Content="Save Type" Command="{Binding Path=InternalModTypeSaveCommand}" Grid.Column="1" HorizontalAlignment="Right" Margin="10,32,10,0" VerticalAlignment="Top" Width="105"/>
 
-        <DataGrid Grid.Row="0" Grid.Column="0" Margin="5,50,5,5" ItemsSource="{Binding SelectedInternalModType.Files}" SelectedItem="{Binding SelectedInternalModTypeFile}" AutoGenerateColumns="False" RowStyle="{StaticResource QuasarDataGridRow}" Background="Transparent">
+        <!--Grid Views-->
+        <DataGrid Grid.Row="0" Grid.Column="0" Margin="15,100,15,15" FontFamily="{StaticResource PoppinsExtraLight}" ItemsSource="{Binding SelectedInternalModType.Files}" SelectedItem="{Binding SelectedInternalModTypeFile}" AutoGenerateColumns="False" RowStyle="{StaticResource QuasarDataGridRow}" Background="{StaticResource CutieBG08}">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Search Filename" Binding="{Binding SourceFile}" Width="3*" HeaderStyle="{StaticResource QuasarDataGridHeader}"/>
                 <DataGridTextColumn Header="Search Filepath" Binding="{Binding SourcePath}" Width="7*" HeaderStyle="{StaticResource QuasarDataGridHeader}"/>
             </DataGrid.Columns>
         </DataGrid>
-
-        <DataGrid Grid.Row="0" Grid.Column="1" Margin="5,50,5,5" ItemsSource="{Binding SelectedInternalModTypeFile.Files}" SelectedItem="{Binding SelectedBuilderFile}" AutoGenerateColumns="False" RowStyle="{StaticResource QuasarDataGridRow}" Background="Transparent">
+        <DataGrid Grid.Row="0" Grid.Column="1" Margin="15,100,15,15" FontFamily="{StaticResource PoppinsExtraLight}" ItemsSource="{Binding SelectedInternalModTypeFile.Files}" SelectedItem="{Binding SelectedBuilderFile}" AutoGenerateColumns="False" RowStyle="{StaticResource QuasarDataGridRow}" Background="{StaticResource CutieBG08}">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="ModLoader" Binding="{Binding BuilderID}" Width="1*" HeaderStyle="{StaticResource QuasarDataGridHeader}"/>
+                <DataGridTextColumn Header="ModLoader" Binding="{Binding BuilderID}" Width="75" HeaderStyle="{StaticResource QuasarDataGridHeader}"/>
                 <DataGridTextColumn Header="Destination Filename" Binding="{Binding File}" Width="3*" HeaderStyle="{StaticResource QuasarDataGridHeader}"/>
                 <DataGridTextColumn Header="Destination Filepath" Binding="{Binding Path}" Width="6*" HeaderStyle="{StaticResource QuasarDataGridHeader}"/>
             </DataGrid.Columns>
         </DataGrid>
-        <Button Content="Save Type" Command="{Binding Path=InternalModTypeSaveCommand}" Grid.Column="1" HorizontalAlignment="Left" Margin="380,13,0,0" VerticalAlignment="Top" Width="105"/>
-        <CheckBox Content="Ignorable Game Data Category" Grid.Column="1" IsChecked="{Binding SelectedInternalModType.IgnoreableGameDataAssociation}" HorizontalAlignment="Left" Margin="155,16,0,0" Foreground="White" VerticalAlignment="Top"/>
 
 
     </Grid>

@@ -637,6 +637,7 @@ namespace Quasar.Controls.Assignation.ViewModels
             AvailableSlots = new ObservableCollection<SlotItem>();
             if (TypesGrouped)
             {
+                
                 for (int i = 0; i < SelectedInternalModTypeGroup.InternalModTypes[0].Slots; i++)
                 {
                     AvailableSlots.Add(new SlotItem()
@@ -647,9 +648,10 @@ namespace Quasar.Controls.Assignation.ViewModels
                             SlotNumber = i + 1,
                             Index = i,
                             SlotNumberName = i > 10 ? (i + 1 % 10).ToString() : (i + 1).ToString(),
-                            EmptySlot = true
+                            EmptySlot = true,
+                            TypeName = SelectedGameDataItem.NameMappings[i].Value
                         }
-                    });
+                    }) ;
                 }
 
 
@@ -666,7 +668,8 @@ namespace Quasar.Controls.Assignation.ViewModels
                             SlotNumber = i > 10 ? ((i + 1) % 10) : (i + 1),
                             Index = i,
                             SlotNumberName = (i+1).ToString(),
-                            EmptySlot = true
+                            EmptySlot = true,
+                            TypeName = SelectedGameDataItem.NameMappings[i].Value
                         }
                     });
                 }
@@ -697,6 +700,7 @@ namespace Quasar.Controls.Assignation.ViewModels
                             SlotNumber = cm.Slot + 1,
                             SlotNumberName = cm.Slot > 10 ? (cm.Slot + 1 % 10).ToString() : (cm.Slot + 1).ToString(),
                             EmptySlot = false,
+                            TypeName = SelectedGameDataItem.NameMappings[cm.Slot].Value,
                             ContentMappings = new List<ContentMapping>()
                             {
                                 cm
@@ -719,6 +723,7 @@ namespace Quasar.Controls.Assignation.ViewModels
                             SlotNumber = ass.Slot + 1,
                             SlotNumberName = ass.Slot > 10 ? (ass.Slot + 1 % 10).ToString() : (ass.Slot + 1).ToString(),
                             EmptySlot = false,
+                            TypeName = SelectedGameDataItem.NameMappings[ass.Slot].Value,
                             ContentMappings = new List<ContentMapping>()
                             {
                                 cm
@@ -760,6 +765,7 @@ namespace Quasar.Controls.Assignation.ViewModels
                                 SlotNumber = cm.Slot + 1,
                                 SlotNumberName = cm.Slot > 10 ? (cm.Slot + 1 % 10).ToString() : (cm.Slot + 1).ToString(),
                                 EmptySlot = false,
+                                TypeName = SelectedGameDataItem.NameMappings[cm.Slot].Value,
                                 ContentMappings = new List<ContentMapping>()
                                 {
                                     cm
@@ -789,6 +795,7 @@ namespace Quasar.Controls.Assignation.ViewModels
                                     SlotNumber = cm.Slot + 1,
                                     SlotNumberName = cm.Slot > 10 ? (cm.Slot + 1 % 10).ToString() : (cm.Slot + 1).ToString(),
                                     EmptySlot = false,
+                                    TypeName = SelectedGameDataItem.NameMappings[cm.Slot].Value,
                                     ContentMappings = new List<ContentMapping>()
                                 {
                                     cm
@@ -820,6 +827,7 @@ namespace Quasar.Controls.Assignation.ViewModels
                                     SlotNumber = ass.Slot + 1,
                                     SlotNumberName = ass.Slot > 10 ? (ass.Slot + 1 % 10).ToString() : (ass.Slot + 1).ToString(),
                                     EmptySlot = false,
+                                    TypeName = SelectedGameDataItem.NameMappings[ass.Slot].Value,
                                     ContentMappings = new List<ContentMapping>()
                                     {
                                         cm

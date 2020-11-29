@@ -8,18 +8,18 @@
              d:DesignHeight="40" d:DesignWidth="900" DataContext="{Binding ViewModel}">
 
     <UserControl.Resources>
-        <Style TargetType="{x:Type Label}" x:Key="SettingsLabel" BasedOn="{StaticResource QuasarLabel}">
+        <Style TargetType="{x:Type TextBlock}" x:Key="SettingsTextBlock" BasedOn="{StaticResource  CutieTextBlockStyle}">
             <Setter Property="Visibility" Value="Hidden"/>
             <Style.Triggers>
                 <DataTrigger Binding="{Binding EnableCheckBox}" Value="True">
                     <Setter Property="Visibility" Value="Visible"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding IsChecked}" Value="True">
-                    <Setter Property="Label.Content" Value="Activated"/>
+                    <Setter Property="TextBlock.Text" Value="Activated"/>
                     <Setter Property="Foreground" Value="Green"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding IsChecked}" Value="False">
-                    <Setter Property="Label.Content" Value="Disabled"/>
+                    <Setter Property="TextBlock.Text" Value="Disabled"/>
                     <Setter Property="Foreground" Value="Red"/>
                 </DataTrigger>
             </Style.Triggers>
@@ -48,7 +48,7 @@
                 </DataTrigger>
             </Style.Triggers>
         </Style>
-        <Style TargetType="{x:Type TextBox}" x:Key="SettingsTextBox">
+        <Style TargetType="{x:Type TextBox}" x:Key="SettingsTextBox" BasedOn="{StaticResource CutieTextBoxStyle}">
             <Setter Property="Visibility" Value="Hidden"/>
             <Style.Triggers>
                 <DataTrigger Binding="{Binding EnableTextBox}" Value="True">
@@ -58,24 +58,31 @@
         </Style>
     </UserControl.Resources>
 
-    <Grid Height="40" Background="{DynamicResource QD2}" HorizontalAlignment="Stretch">
+    <Grid Height="40" Background="Transparent" HorizontalAlignment="Stretch" Margin="2">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="200"/>
             <ColumnDefinition Width="200"/>
             <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
-        <Border BorderBrush="Gray" BorderThickness="1" Grid.Column="0" Grid.ColumnSpan="3"/>
+        <Border BorderBrush="{StaticResource CutieBG06}" Background="{StaticResource CutieBG06}" BorderThickness="1" Grid.Column="0" CornerRadius="15" Grid.ColumnSpan="3"/>
 
-        <Label Content="{Binding SettingItem.DisplayName}" HorizontalContentAlignment="Stretch" VerticalAlignment="Center" Grid.Column="0" Style="{DynamicResource QuasarLabel}" />
+        <!-- Setting Name -->
+        <TextBlock Text="{Binding SettingItem.DisplayName}" VerticalAlignment="Center" Grid.Column="0" Style="{StaticResource CutieTextBlockStyle}" Margin="5,0" />
+        
 
-        <Label Content="{Binding SettingItem.DisplayValue}" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource ValueLabel}" Grid.Column="1" />
+        <!-- Value Mode -->
+        <TextBlock Text="{Binding SettingItem.DisplayValue}" VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Column="1" Style="{StaticResource CutieTextBlockStyle}" Margin="5,0" />
+
+        <!-- Check Mode -->
+        <TextBlock  VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Column="1" Style="{StaticResource SettingsTextBlock}" Margin="5,0" />
+        <CheckBox Template="{StaticResource CutieCheckBox}" x:Name="SettingCheckBox" IsChecked="{Binding IsChecked}" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource SettingsCheckBox}" Grid.Column="1" Margin="100,0,0,0" />
+
+        <!-- Input Mode -->
         <TextBox Text="{Binding SettingItem.DisplayValue}" HorizontalAlignment="Stretch" VerticalAlignment="Center" HorizontalContentAlignment="Stretch" Style="{StaticResource SettingsTextBox}" Grid.Column="1" />
 
-        <Label HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource SettingsLabel}" Grid.Column="1"/>
-        <CheckBox x:Name="SettingCheckBox" IsChecked="{Binding IsChecked}" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource SettingsCheckBox}" Grid.Column="1" Margin="100,0,0,0" />
-
+        <!-- Choice Mode -->
         <ComboBox ItemsSource="{Binding SettingItem.Values}" HorizontalAlignment="Stretch" VerticalAlignment="Center" Style="{StaticResource SettingsComboBox}" Grid.Column="1"  DisplayMemberPath="Key"/>
 
-        <Label Content="{Binding SettingItem.DisplayComment}" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="20,0,0,0" Style="{DynamicResource QuasarLabel}"/>
+        <TextBlock Text="{Binding SettingItem.DisplayComment}" VerticalAlignment="Center" Grid.Column="2" Style="{StaticResource CutieTextBlockStyle}" Margin="20,0,0,0" />
     </Grid>
 </UserControl>

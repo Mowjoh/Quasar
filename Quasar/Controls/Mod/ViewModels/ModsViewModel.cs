@@ -17,6 +17,7 @@ using Quasar.Quasar_Sys;
 using log4net;
 using System.Windows.Data;
 using Quasar.Controls.Settings.Model;
+using System.Windows.Input;
 
 namespace Quasar.Controls.ModManagement.ViewModels
 {
@@ -44,6 +45,7 @@ namespace Quasar.Controls.ModManagement.ViewModels
         private bool _OrangeChecked { get; set; } = true;
         private bool _GreenChecked { get; set; } = true;
         private bool _CreatorMode { get; set; }
+        private bool _AdvanceMode { get; set; }
         #endregion
 
         #region Properties
@@ -315,8 +317,39 @@ namespace Quasar.Controls.ModManagement.ViewModels
             }
         }
 
+        public bool AdvanceMode
+
+        {
+            get => _AdvanceMode;
+            set
+            {
+                if (_AdvanceMode == value)
+                    return;
+
+
+                _AdvanceMode = value;
+                ChangeAdvanceVisibility(_AdvanceMode);
+                OnPropertyChanged("AdvanceMode");
+            }
+        }
+
 
         public ILog log { get; set; }
+        #endregion
+
+        #region Commands
+        private ICommand _AddManual { get; set; }
+        public ICommand AddManual
+        {
+            get
+            {
+                if (_AddManual == null)
+                {
+                    _AddManual = new RelayCommand(param => AddManualMod());
+                }
+                return _AddManual;
+            }
+        }
         #endregion
 
         public ModsViewModel(ObservableCollection<LibraryMod> _Mods, ObservableCollection<Game> _Games, ObservableCollection<ContentMapping> _ContentMappings, ObservableCollection<Workspace> _Workspaces, Workspace _ActiveWorkspace, ObservableCollection<InternalModType> _InternalModTypes, ObservableCollection<GameData> _GameDatas, ILog _log)
@@ -459,6 +492,10 @@ namespace Quasar.Controls.ModManagement.ViewModels
             {
                 CreatorMode = Setting.IsChecked;
             }
+            if (Setting.SettingName == "EnableAdvanced")
+            {
+                AdvanceMode = Setting.IsChecked;
+            }
         }
 
         public void ChangeCreatorVisibility(bool val)
@@ -466,6 +503,14 @@ namespace Quasar.Controls.ModManagement.ViewModels
             foreach(ModListItem mli in ModListItems)
             {
                 mli.ModListItemViewModel.CreatorMode = val;
+            }
+        }
+
+        public void ChangeAdvanceVisibility(bool val)
+        {
+            foreach (ModListItem mli in ModListItems)
+            {
+                mli.ModListItemViewModel.AdvancedMode = val;
             }
         }
 
@@ -635,6 +680,14 @@ namespace Quasar.Controls.ModManagement.ViewModels
 
             SelectedModListItem.ModListItemViewModel.ActionRequested = "ShowContents";
             EventSystem.Publish<ModListItem>(SelectedModListItem);
+        }
+
+        public void AddManualMod()
+        {
+            ModListItem mli = new ModListItem();
+            mli.ModListItemViewModel = new ModListItemViewModel();
+            mli.ModListItemViewModel.ActionRequested = "ShowContents";
+            EventSystem.Publish<ModListItem>(mli);
         }
 
         //Mod List Item Downloading

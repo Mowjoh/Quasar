@@ -1,4 +1,5 @@
-﻿using Quasar.Controls.Common.Models;
+﻿using MediaDevices;
+using Quasar.Controls.Common.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -12,7 +13,8 @@ namespace Quasar.Controls.Build.Models
     {
         #region Fields
         private DriveInfo _Info { get; set; }
-
+        private MediaDevice _MediaD { get; set; }
+        private string _DisplayName { get; set; }
         #endregion
 
         #region Properties
@@ -28,18 +30,43 @@ namespace Quasar.Controls.Build.Models
                 OnPropertyChanged("Info");
             }
         }
+        public MediaDevice MediaD
+        {
+            get => _MediaD;
+            set
+            {
+                if (_MediaD == value)
+                    return;
+
+                _MediaD = value;
+                OnPropertyChanged("MediaD");
+            }
+        }
+        public string DisplayName
+        {
+            get => _DisplayName;
+            set
+            {
+                if (_DisplayName == value)
+                    return;
+
+                _DisplayName = value;
+                OnPropertyChanged("DisplayName");
+            }
+        }
 
         #endregion
 
         public USBDrive(DriveInfo _DriveInfo)
         {
             Info = _DriveInfo;
+            DisplayName = String.Format("{0} ({1})", Info.VolumeLabel, Info.Name);
         }
 
-        override public string ToString()
+        public USBDrive(MediaDevice md)
         {
-            //return String.Format("{0}, {1} - {2}/{3}", Info.Name, Info.VolumeLabel, Info.AvailableFreeSpace, Info.TotalSize);
-            return String.Format(@"{0} - '{1}'", Info.Name, Info.VolumeLabel);
+            MediaD = md;
+            DisplayName = String.Format("{0} (MTP)", md.FriendlyName == "" ? "Nintendo Switch" : md.FriendlyName); 
         }
     }
 }

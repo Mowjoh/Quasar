@@ -24,7 +24,14 @@ namespace Quasar.Internal.Tools
             appender.Threshold = log4net.Core.Level.Debug;
             appender.ActivateOptions();
 
-            if (!Writer.CheckFileExists("atmosphere\\contents\\01006A800016E000\\romfs\\skyline\\plugins\\libarcropolis.nro"))
+            string basepath = "";
+            if (typeof(SDWriter).Equals(Writer.GetType()))
+            {
+                SDWriter wrote = (SDWriter)Writer;
+                basepath = wrote.LetterPath;
+            }
+            
+            if (!Writer.CheckFileExists(basepath+"atmosphere\\contents\\01006A800016E000\\romfs\\skyline\\plugins\\libarcropolis.nro"))
             {
                 log.Debug("Remote ARCropolis does not exist");
                 sendTouchmARC(Writer, log);
@@ -128,7 +135,7 @@ namespace Quasar.Internal.Tools
         {
             try
             {
-                Writer.SendFile(Properties.Settings.Default.DefaultDir + "\\Library\\arcropolis.toml", "atmosphere\\contents\\01006A800016E000\\romfs\\arcropolis.toml", false, true);
+                Writer.SendFile(Properties.Settings.Default.DefaultDir + "\\Library\\arcropolis.toml", "atmosphere\\contents\\01006A800016E000\\romfs\\arcropolis.toml");
                 log.Debug("sent file atmosphere\\contents\\01006A800016E000\\romfs\\arcropolis.toml");
             }
             catch (Exception e)
@@ -151,7 +158,7 @@ namespace Quasar.Internal.Tools
                 try
                 {
                     string source = Properties.Settings.Default.DefaultDir + "\\References\\ModLoaders\\ARCropolis\\" + s;
-                    Writer.SendFile(source, s, false, true);
+                    Writer.SendFile(source, s);
                     log.Debug("sent file " + s);
                 }
                 catch(Exception e)

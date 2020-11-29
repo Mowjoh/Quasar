@@ -267,6 +267,9 @@ namespace Quasar.XMLResources
         [XmlElement("ItemAttribute")]
         public List<GameDataItemAttribute> Attributes { get; set; }
 
+        [XmlElement("ItemNameMappings")]
+        public List<GameDataItemMapper> NameMappings { get; set; }
+
     }
 
     public class GameDataItemAttribute
@@ -275,6 +278,15 @@ namespace Quasar.XMLResources
         public string Key { get; set; }
 
         [XmlElement("Value")]
+        public string Value { get; set; }
+    }
+
+    public class GameDataItemMapper
+    {
+        [XmlAttribute("SlotNumber")]
+        public int SlotNumber { get; set; }
+
+        [XmlAttribute("Value")]
         public string Value { get; set; }
     }
     #endregion

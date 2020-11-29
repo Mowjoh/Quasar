@@ -1,5 +1,6 @@
 ﻿using log4net;
 using log4net.Repository.Hierarchy;
+using MediaDevices;
 using Quasar.Controls.Build.Models;
 using Quasar.Controls.Common.Models;
 using Quasar.Internal;
@@ -405,6 +406,7 @@ namespace Quasar.Controls.Build.ViewModels
             Games = _Games;
 
             getSDCards();
+            getMTPDrives();
 
             LoadUI();
 
@@ -440,32 +442,6 @@ namespace Quasar.Controls.Build.ViewModels
                 SynchronizeSelected = true;
             }
 
-            Logs += "Hello, you're in the right place if you want those mods on your Switch.\r\n";
-            Logs += "\r\n";
-            Logs += "\r\n";
-            Logs += "\r\n";
-            Logs += "- FTP is a wireless means of File Transfer, select this if you want to use FTP.\r\n";
-            Logs += "   !Please note that you have to setup the FTP in the settings first!\r\n";
-            Logs += "- Local Transfer is for transfers using an SD reader.If you don't see the SD on the list, click the refresh button. \r\n";
-            Logs += "\r\n";
-            Logs += "\r\n";
-            Logs += "- Mod Loader:\r\n";
-            Logs += "There are two options, ARCropolis and UMM. If you haven't modded before I recommend ARCropolis which is the easiest option. UMM Will require you to have data.arc already dumped.\r\n";
-            Logs += "\r\n";
-            Logs += "\r\n";
-            Logs += "\r\n";
-            Logs += "- Comparative Mode: This will only change the necessary files.\r\n";
-            Logs += "- Wipe and Recreate : This will completely empty the workspace folder and copy everything.\r\n";
-            Logs += "\r\n";
-            Logs += "\r\n";
-            Logs += "-This button will start the process of transferring the files to your Switch according to the options you've selected above\r\n";
-            Logs += "\r\n";
-            Logs += "\r\n";
-            Logs += "\r\n";
-            Logs += "\r\n";
-            Logs += "- Here is some nice info on how it's going !\r\n";
-            Logs += "\r\n";
-
         }
         public void getSDCards()
         {
@@ -479,6 +455,20 @@ namespace Quasar.Controls.Build.ViewModels
                     Drives.Add(new USBDrive(di));
                 }
             }
+            var devices = MediaDevice.GetDevices();
+            foreach (MediaDevice device in devices)
+            {
+                if(device.FriendlyName == "")
+                {
+                    //Drives.Add(new USBDrive(device));
+                }
+            }
+        }
+
+        public void getMTPDrives()
+        {
+            
+            
         }
 
         public async void Build()
@@ -494,10 +484,18 @@ namespace Quasar.Controls.Build.ViewModels
             }
             else
             {
-                FW = new SDWriter(this) { LetterPath = SelectedDrive.Info.Name, Log = Log };
+                if(SelectedDrive.MediaD != null)
+                {
+                    FW = new MTPWriter(this) { MediaD = SelectedDrive.MediaD };
+                }
+                else
+                {
+                    FW = new SDWriter(this) { LetterPath = SelectedDrive.Info.Name, Log = Log };
+                }
+                
             }
 
-            SmashBuilder SB = new SmashBuilder(FW, CleanSelected ? (int)BuildModes.Clean : SynchronizeSelected ? (int)BuildModes.Synchronize : (int)BuildModes.Overwrite, ModLoaders[0].ModLoaderID, this);
+            SmashBuilder SB = new SmashBuilder(FW,ModLoaders[0].ModLoaderID, false, true, this);
 
             await Task.Run(() => {
                 SB.StartBuild();
