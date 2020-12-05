@@ -162,6 +162,7 @@
     </Compile>
     <Compile Include="Internal\EventSystem.cs" />
     <Compile Include="Internal\FileSystem\ModFileManager.cs" />
+    <Compile Include="Internal\Scans\Scannerino.cs" />
     <Compile Include="Internal\Tools\Updater.cs" />
     <Compile Include="Internal\XML\ContentXML.cs" />
     <Compile Include="Internal\XML\WorkspaceXML.cs" />
@@ -501,6 +502,8 @@
   <ItemGroup>
     <Folder Include="Controls\MainUI\Models\" />
     <Folder Include="Controls\MainUI\Views\" />
+    <Folder Include="Internal\Archives\" />
+    <Folder Include="Internal\Downloads\" />
     <Folder Include="References\images\GameDataCategories\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -20,7 +20,7 @@
         <SolidColorBrush x:Key="ColorA" Color="#FF0B397C"/>
         <SolidColorBrush x:Key="ColorB" Color="#FF9E1904"/>
     </UserControl.Resources>
-    <Grid>
+    <Grid Width="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBox}},Path=ActualWidth}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="8"/>
             <ColumnDefinition/>

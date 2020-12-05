@@ -62,10 +62,10 @@
         </Grid>
 
         <!-- ListView-->
-        <ListView x:Name="ManagementModListView" ItemsSource="{Binding CollectionViewSource.View}" SelectedItem="{Binding SelectedModListItem}" Background="Transparent" Margin="16,0,16,16" Grid.Row="2" BorderThickness="0">
+        <ListView x:Name="ManagementModListView"  ScrollViewer.HorizontalScrollBarVisibility="Hidden" ItemsSource="{Binding CollectionViewSource.View}" SelectedItem="{Binding SelectedModListItem}" Background="Transparent" Margin="16,0,16,16" Grid.Row="2" BorderThickness="0">
             <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <StackPanel  />
+                    <WrapPanel Width="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBox}},Path=ActualWidth}" />
                 </ItemsPanelTemplate>
             </ListView.ItemsPanel>
             <ListView.ItemContainerStyle>

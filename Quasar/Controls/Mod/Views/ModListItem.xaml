@@ -92,105 +92,107 @@
         </Style>
 
     </UserControl.Resources>
-    
-    <Grid>
-        
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="8"/>
-            <ColumnDefinition/>
-            <ColumnDefinition Width="8"/>
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="44"/>
-            <RowDefinition Height="10" />
-            <RowDefinition/>
-        </Grid.RowDefinitions>
-        
-        <!-- Left Side Color-->
-        <Path x:Name="BorderColor" Stroke="{StaticResource CutieBG01}" StrokeThickness="2" Grid.ColumnSpan="2" Grid.RowSpan="3" Style="{DynamicResource ModColor}">
-            <Path.Data>
-                <RectangleGeometry  Rect="{Binding Rekt}" RadiusX="5" RadiusY="5" />
-            </Path.Data>
-        </Path>
-        
-        <!-- Right Side Color-->
-        <Path x:Name="SateColorPath" Stroke="{StaticResource CutieBG01}" StrokeThickness="2" Grid.RowSpan="3" Grid.Column="3" Style="{DynamicResource StateColor}" Margin="-40,0,0,0">
-            <Path.Data>
-                <RectangleGeometry  Rect="{Binding Rekta}" RadiusX="5" RadiusY="5"/>
-            </Path.Data>
-        </Path>
-        
-        <!-- Download Fail Action Grid-->
-        <Grid Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" Background="{StaticResource CutieBG08}" Panel.ZIndex="100" Visibility="{Binding DownloadFailed, Converter={StaticResource BoolVisi}}" d:IsHidden="True">
-            <Label Content="Download Failed" Style="{StaticResource CutieLabelStyle}" VerticalAlignment="Center" HorizontalAlignment="Center" />
-            <StackPanel  Orientation="Horizontal" FlowDirection="RightToLeft">
-                <Button Command="{Binding Path=DeleteModCommand}" Template="{StaticResource ActionTrashButton}" Margin="10,0,0,0" />
-                <Button Command="{Binding Path=RetryDownloadCommand}" Template="{StaticResource ActionRetryButton}" Margin="10,0,0,0" />
-            </StackPanel>
-        </Grid>
+    <Grid Width="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBox}},Path=ActualWidth}" Background="Transparent">
+        <Grid  Margin="0,0,30,0">
 
-        <!-- Top Grid-->
-        <Grid x:Name="TopGrid" Background="{DynamicResource CutieBG08}" Grid.Column="1" Grid.Row="0">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="30" />
-                <ColumnDefinition Width="30*" />
-                <ColumnDefinition Width="20*" />
-                <ColumnDefinition Width="20*" />
-                <ColumnDefinition Width="20*" />
-                <ColumnDefinition Width="10*" />
+                <ColumnDefinition Width="8"/>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="8"/>
             </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="44"/>
+                <RowDefinition Height="10" />
+                <RowDefinition/>
+            </Grid.RowDefinitions>
 
-            <Button Grid.Column="0" Template="{StaticResource ActionArrowButton}" VerticalAlignment="Center" Command="{Binding Path=BigSmolCommand}"  />
-            <!-- Normal Mod UI -->
-            <TextBlock Grid.Column="1" Text="{Binding Path=LibraryMod.Name}" Style="{StaticResource CutieTextBlockStyle}"  VerticalAlignment="Center" Visibility="{Binding Path=Standby,Converter={StaticResource BoolVisi}}" Margin="10,0,0,0"/>
-            <TextBlock Grid.Column="2" Text="{Binding Path=LibraryMod.TypeLabel}" Style="{StaticResource CutieTextBlockStyle}" VerticalAlignment="Center" Visibility="{Binding Path=Standby,Converter={StaticResource BoolVisi}}" />
-            <TextBlock Grid.Column="3" Text="{Binding Path=LibraryMod.APICategoryName}" Style="{StaticResource CutieTextBlockStyle}" VerticalAlignment="Center" Visibility="{Binding Path=Standby,Converter={StaticResource BoolVisi}}" />
-            <TextBlock Grid.Column="4" Text="{Binding Path=Game.Name}" Style="{StaticResource CutieTextBlockStyle}" VerticalAlignment="Center" Visibility="{Binding Path=Standby,Converter={StaticResource BoolVisi}}" />
+            <!-- Left Side Color-->
+            <Path x:Name="BorderColor" Stroke="{StaticResource CutieBG01}" StrokeThickness="2" Grid.ColumnSpan="2" Grid.RowSpan="3" Style="{DynamicResource ModColor}">
+                <Path.Data>
+                    <RectangleGeometry  Rect="{Binding Rekt}" RadiusX="5" RadiusY="5" />
+                </Path.Data>
+            </Path>
 
-            <!-- Download UI -->
-            <TextBlock Grid.Column="1" Text="{Binding ModStatusValue}" Style="{StaticResource CutieTextBlockStyle}" HorizontalAlignment="right" VerticalAlignment="Center" Visibility="{Binding Path=Downloading,Converter={StaticResource BoolVisi}}" Margin="0,0,15,0" />
-            <TextBlock Grid.Column="2" Grid.ColumnSpan="3" Text="{Binding ModStatusTextValue}" Style="{StaticResource CutieTextBlockStyle}" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding Path=Downloading,Converter={StaticResource BoolVisi}}" Panel.ZIndex="100" />
-            <ProgressBar Grid.Column="2" Grid.Row="0" Grid.ColumnSpan="3" Value="{Binding ProgressBarValue}" Style="{StaticResource DownloadBar}" VerticalAlignment="Center" />
+            <!-- Right Side Color-->
+            <Path x:Name="SateColorPath" Stroke="{StaticResource CutieBG01}" StrokeThickness="2" Grid.RowSpan="3" Grid.Column="3" Style="{DynamicResource StateColor}" Margin="-40,0,0,0">
+                <Path.Data>
+                    <RectangleGeometry  Rect="{Binding Rekta}" RadiusX="5" RadiusY="5"/>
+                </Path.Data>
+            </Path>
 
-            <!-- Actions -->
-            <StackPanel Grid.Column="5" Orientation="Horizontal" FlowDirection="RightToLeft" Visibility="{Binding Path=Standby,Converter={StaticResource BoolVisi}}">
-                <Button Command="{Binding Path=DeleteModCommand}" Template="{StaticResource ActionTrashButton}" ToolTip="Delete this Mod" Margin="10,0,0,0"   />
-                <Button Command="{Binding Path=ShowContentsCommand}" Template="{StaticResource ActionFolderButton}" ToolTip="Show mod contents" Margin="10,0,0,0" Visibility="{Binding Path=CreatorMode,Converter={StaticResource BoolVisi}}"  />
-                <Button Command="{Binding Path=FileViewCommand}" Template="{StaticResource ActionFileViewButton}" ToolTip="Show mod files" Margin="10,0,0,0" Visibility="{Binding Path=AdvancedMode,Converter={StaticResource BoolVisi}}" />
-                <Button Command="{Binding Path=AddModCommand}" Template="{StaticResource ActionProcessModButton}" ToolTip="Remove the mod from the workspace" Margin="10,0,0,0" />
-                <Button  Command="{Binding Path=TestModCommand}" Template="{StaticResource ActionTestModButton}" ToolTip="Show Compatibility Test Window" Margin="10,0,0,0" Visibility="{Binding Path=AdvancedMode,Converter={StaticResource BoolVisi}}" />
-            </StackPanel>
+            <!-- Download Fail Action Grid-->
+            <Grid Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" Background="{StaticResource CutieBG08}" Panel.ZIndex="100" Visibility="{Binding DownloadFailed, Converter={StaticResource BoolVisi}}" d:IsHidden="True">
+                <Label Content="Download Failed" Style="{StaticResource CutieLabelStyle}" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                <StackPanel  Orientation="Horizontal" FlowDirection="RightToLeft">
+                    <Button Command="{Binding Path=DeleteModCommand}" Template="{StaticResource ActionTrashButton}" Margin="10,0,0,0" />
+                    <Button Command="{Binding Path=RetryDownloadCommand}" Template="{StaticResource ActionRetryButton}" Margin="10,0,0,0" />
+                </StackPanel>
+            </Grid>
+
+            <!-- Top Grid-->
+            <Grid x:Name="TopGrid" Background="{DynamicResource CutieBG08}" Grid.Column="1" Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="30" />
+                    <ColumnDefinition Width="30*" />
+                    <ColumnDefinition Width="20*" />
+                    <ColumnDefinition Width="20*" />
+                    <ColumnDefinition Width="20*" />
+                    <ColumnDefinition Width="10*" />
+                </Grid.ColumnDefinitions>
+
+                <Button Grid.Column="0" Template="{StaticResource ActionArrowButton}" VerticalAlignment="Center" Command="{Binding Path=BigSmolCommand}"  />
+                <!-- Normal Mod UI -->
+                <TextBlock Grid.Column="1" Text="{Binding Path=LibraryMod.Name}" Style="{StaticResource CutieTextBlockStyle}"  VerticalAlignment="Center" Visibility="{Binding Path=Standby,Converter={StaticResource BoolVisi}}" Margin="10,0,0,0"/>
+                <TextBlock Grid.Column="2" Text="{Binding Path=LibraryMod.TypeLabel}" Style="{StaticResource CutieTextBlockStyle}" VerticalAlignment="Center" Visibility="{Binding Path=Standby,Converter={StaticResource BoolVisi}}" />
+                <TextBlock Grid.Column="3" Text="{Binding Path=LibraryMod.APICategoryName}" Style="{StaticResource CutieTextBlockStyle}" VerticalAlignment="Center" Visibility="{Binding Path=Standby,Converter={StaticResource BoolVisi}}" />
+                <TextBlock Grid.Column="4" Text="{Binding Path=Game.Name}" Style="{StaticResource CutieTextBlockStyle}" VerticalAlignment="Center" Visibility="{Binding Path=Standby,Converter={StaticResource BoolVisi}}" />
+
+                <!-- Download UI -->
+                <TextBlock Grid.Column="1" Text="{Binding ModStatusValue}" Style="{StaticResource CutieTextBlockStyle}" HorizontalAlignment="right" VerticalAlignment="Center" Visibility="{Binding Path=Downloading,Converter={StaticResource BoolVisi}}" Margin="0,0,15,0" />
+                <TextBlock Grid.Column="2" Grid.ColumnSpan="3" Text="{Binding ModStatusTextValue}" Style="{StaticResource CutieTextBlockStyle}" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding Path=Downloading,Converter={StaticResource BoolVisi}}" Panel.ZIndex="100" />
+                <ProgressBar Grid.Column="2" Grid.Row="0" Grid.ColumnSpan="3" Value="{Binding ProgressBarValue}" Style="{StaticResource DownloadBar}" VerticalAlignment="Center" />
+
+                <!-- Actions -->
+                <StackPanel Grid.Column="5" Orientation="Horizontal" FlowDirection="RightToLeft" Visibility="{Binding Path=Standby,Converter={StaticResource BoolVisi}}">
+                    <Button Command="{Binding Path=DeleteModCommand}" Template="{StaticResource ActionTrashButton}" ToolTip="Delete this Mod" Margin="10,0,0,0"   />
+                    <Button Command="{Binding Path=ShowContentsCommand}" Template="{StaticResource ActionFolderButton}" ToolTip="Show mod contents" Margin="10,0,0,0" Visibility="{Binding Path=CreatorMode,Converter={StaticResource BoolVisi}}"  />
+                    <Button Command="{Binding Path=FileViewCommand}" Template="{StaticResource ActionFileViewButton}" ToolTip="Show mod files" Margin="10,0,0,0" Visibility="{Binding Path=AdvancedMode,Converter={StaticResource BoolVisi}}" />
+                    <Button Command="{Binding Path=AddModCommand}" Template="{StaticResource ActionProcessModButton}" ToolTip="Remove the mod from the workspace" Margin="10,0,0,0" />
+                    <Button  Command="{Binding Path=TestModCommand}" Template="{StaticResource ActionTestModButton}" ToolTip="Show Compatibility Test Window" Margin="10,0,0,0" Visibility="{Binding Path=AdvancedMode,Converter={StaticResource BoolVisi}}" />
+                </StackPanel>
+            </Grid>
+
+            <Grid Grid.Column="1" Grid.Row="1" Background="{StaticResource CutieBG08}" >
+                <Grid Background="#6C6C6C" Margin="30,0" Height="1" VerticalAlignment="Top"></Grid>
+            </Grid>
+
+            <!-- Bottom Grid -->
+            <Grid x:Name="BottomGrid" Background="{DynamicResource CutieBG08}" Grid.Column="1" Grid.Row="2">
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="225"/>
+                    <ColumnDefinition Width="4*"/>
+                    <ColumnDefinition Width="250"/>
+                    <ColumnDefinition Width="4*"/>
+                </Grid.ColumnDefinitions>
+
+                <Image x:Name="ModImage" Grid.Column="0" Source="{Binding ImageSource}" Margin="30,0,0,0"></Image>
+
+                <!--Version Control-->
+                <Label Style="{StaticResource CutieLabelStyle}" Content="Version Control :" Grid.Column="1" VerticalAlignment="top" HorizontalAlignment="Center" />
+                <Label Style="{StaticResource CutieLabelStyle}" Content="Waiting for API to change to implement this" Margin="0,50,0,0" Grid.Column="1" VerticalAlignment="top" HorizontalAlignment="Center" />
+
+
+                <Grid  Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Right" Background="#6C6C6C" Width="1" Height="130" />
+
+                <!-- Authors Panel-->
+                <Label Style="{StaticResource CutieLabelStyle}" Content="Creators :" Grid.Column="2" Grid.ColumnSpan="2" VerticalAlignment="top" HorizontalAlignment="Center" />
+                <ItemsControl x:Name="AutorNameStackPanel" Margin="10,30,0,0"  Grid.Column="2" ItemsSource="{Binding Authors}" />
+                <ItemsControl x:Name="AutorRoleStackPanel" Margin="0,30,0,0"  Grid.Column="3" ItemsSource="{Binding Roles}" />
+
+            </Grid>
+
         </Grid>
-
-        <Grid Grid.Column="1" Grid.Row="1" Background="{StaticResource CutieBG08}" >
-            <Grid Background="#6C6C6C" Margin="30,0" Height="1" VerticalAlignment="Top"></Grid>
-        </Grid>
-        
-        <!-- Bottom Grid -->
-        <Grid x:Name="BottomGrid" Background="{DynamicResource CutieBG08}" Grid.Column="1" Grid.Row="2">
-            
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="225"/>
-                <ColumnDefinition Width="4*"/>
-                <ColumnDefinition Width="250"/>
-                <ColumnDefinition Width="4*"/>
-            </Grid.ColumnDefinitions>
-            
-            <Image x:Name="ModImage" Grid.Column="0" Source="{Binding ImageSource}" Margin="30,0,0,0"></Image>
-            
-            <!--Version Control-->
-            <Label Style="{StaticResource CutieLabelStyle}" Content="Version Control :" Grid.Column="1" VerticalAlignment="top" HorizontalAlignment="Center" />
-            <Label Style="{StaticResource CutieLabelStyle}" Content="Waiting for API to change to implement this" Margin="0,50,0,0" Grid.Column="1" VerticalAlignment="top" HorizontalAlignment="Center" />
-
-
-            <Grid  Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Right" Background="#6C6C6C" Width="1" Height="130" />
-            
-            <!-- Authors Panel-->
-            <Label Style="{StaticResource CutieLabelStyle}" Content="Creators :" Grid.Column="2" Grid.ColumnSpan="2" VerticalAlignment="top" HorizontalAlignment="Center" />
-            <ItemsControl x:Name="AutorNameStackPanel" Margin="10,30,0,0"  Grid.Column="2" ItemsSource="{Binding Authors}" />
-            <ItemsControl x:Name="AutorRoleStackPanel" Margin="0,30,0,0"  Grid.Column="3" ItemsSource="{Binding Roles}" />
-            
-        </Grid>
-        
     </Grid>
+    
 </UserControl>

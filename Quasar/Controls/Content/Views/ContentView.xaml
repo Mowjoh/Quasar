@@ -61,10 +61,10 @@
         </Grid>
         
         <!-- Detection List-->
-        <ListView x:Name="ContentListView" ItemsSource="{Binding ContentListItems}" Background="{DynamicResource QD1}" SelectedItem="{Binding SelectedContentListItem}" Margin="0,0,10,0" Grid.Row="2" BorderThickness="0" >
+        <ListView x:Name="ContentListView" ItemsSource="{Binding ContentListItems}" ScrollViewer.HorizontalScrollBarVisibility="Hidden" Background="{DynamicResource QD1}"  SelectedItem="{Binding SelectedContentListItem}" Margin="0,0,10,0" Grid.Row="2" BorderThickness="0" >
             <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <StackPanel  />
+                    <WrapPanel Width="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBox}},Path=ActualWidth}" />
                 </ItemsPanelTemplate>
             </ListView.ItemsPanel>
             <ListView.ItemContainerStyle>
