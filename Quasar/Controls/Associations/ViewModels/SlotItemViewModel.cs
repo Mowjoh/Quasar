@@ -1,4 +1,5 @@
 ﻿using Quasar.Controls.Common.Models;
+using Quasar.Data.OldModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -105,7 +106,7 @@ namespace Quasar.Controls.Associations.ViewModels
                 OnPropertyChanged("Association");
             }
         }
-        public List<ContentMapping> ContentMappings
+        public List<OldContentMapping> ContentMappings
         {
             get => _ContentMappings;
             set
