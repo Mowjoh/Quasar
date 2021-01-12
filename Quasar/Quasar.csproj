@@ -91,86 +91,95 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Controls\Associations\Models\Association.cs" />
-    <Compile Include="Controls\Associations\Models\GameDataUXItem.cs" />
-    <Compile Include="Controls\Associations\ViewModels\AssociationViewModel.cs" />
-    <Compile Include="Controls\Associations\ViewModels\SlotItemViewModel.cs" />
-    <Compile Include="Controls\Associations\Views\AssociationView.xaml.cs">
+    <Compile Include="Application\Associations\Models\GameElementSquare.cs" />
+    <Compile Include="Application\Associations\ViewModels\AssociationViewModel.cs" />
+    <Compile Include="Application\Associations\ViewModels\SlotItemViewModel.cs" />
+    <Compile Include="Application\Associations\Views\AssociationView.xaml.cs">
       <DependentUpon>AssociationView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Associations\Views\SlotItem.xaml.cs">
+    <Compile Include="Application\Associations\Views\SlotItem.xaml.cs">
       <DependentUpon>SlotItem.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Build\Models\Build.cs" />
-    <Compile Include="Controls\Build\Models\FileWriter.cs" />
-    <Compile Include="Controls\Build\Models\Hash.cs" />
-    <Compile Include="Controls\Build\Models\ModLoaders.cs" />
-    <Compile Include="Controls\Build\Models\USBDrive.cs" />
-    <Compile Include="Controls\Build\ViewModels\BuildViewModel.cs" />
-    <Compile Include="Controls\Build\Views\BuildView.xaml.cs">
+    <Compile Include="Application\Build\Models\Build.cs" />
+    <Compile Include="Application\Build\Models\FileWriter.cs" />
+    <Compile Include="Application\Build\Models\USBDrive.cs" />
+    <Compile Include="Application\Build\ViewModels\BuildViewModel.cs" />
+    <Compile Include="Application\Build\Views\BuildView.xaml.cs">
       <DependentUpon>BuildView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Common\Models\FTPValidator.cs" />
-    <Compile Include="Controls\Common\Models\NotifyTaskCompletion.cs" />
-    <Compile Include="Controls\Common\Models\ObservableObject.cs" />
-    <Compile Include="Controls\Common\Models\RelayCommand.cs" />
-    <Compile Include="Controls\Content\Models\ContentMapping.cs" />
-    <Compile Include="Controls\Content\ViewModels\ContentListItemViewModel.cs" />
-    <Compile Include="Controls\Content\ViewModels\ContentViewModel.cs" />
-    <Compile Include="Controls\Content\Views\ContentView.xaml.cs">
+    <Compile Include="Data\Converter\V1toV2Converter.cs" />
+    <Compile Include="Data\V1\QuasarModType.cs" />
+    <Compile Include="Data\V2\ModLoader.cs" />
+    <Compile Include="Data\V2\QuasarModType.cs" />
+    <Compile Include="Helpers\Quasar Management\InstallManager.cs" />
+    <Compile Include="Helpers\Tools\FTPValidator.cs" />
+    <Compile Include="Application\Common\Models\NotifyTaskCompletion.cs" />
+    <Compile Include="Application\Common\Models\ObservableObject.cs" />
+    <Compile Include="Application\Common\Models\RelayCommand.cs" />
+    <Compile Include="Application\Content\ViewModels\ContentListItemViewModel.cs" />
+    <Compile Include="Application\Content\ViewModels\ContentViewModel.cs" />
+    <Compile Include="Application\Content\Views\ContentView.xaml.cs">
       <DependentUpon>ContentView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\InternalModTypes\Models\InternalModTypeGroup.cs" />
-    <Compile Include="Controls\InternalModTypes\Views\DefinitionsWindow.xaml.cs">
+    <Compile Include="Application\InternalModTypes\Models\InternalModTypeGroup.cs" />
+    <Compile Include="Application\InternalModTypes\Views\DefinitionsWindow.xaml.cs">
       <DependentUpon>DefinitionsWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\InternalModTypes\Models\InternalModType.cs" />
-    <Compile Include="Controls\InternalModTypes\ViewModels\InternalModTypeViewModel.cs" />
-    <Compile Include="Controls\InternalModTypes\Views\InternalModTypeView.xaml.cs">
+    <Compile Include="Application\InternalModTypes\ViewModels\InternalModTypeViewModel.cs" />
+    <Compile Include="Application\InternalModTypes\Views\InternalModTypeView.xaml.cs">
       <DependentUpon>InternalModTypeView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Mod\Models\QuasarDownload.cs" />
-    <Compile Include="Controls\Mod\ViewModels\ModListItemViewModel.cs" />
-    <Compile Include="Controls\Mod\Views\FileView.xaml.cs">
+    <Compile Include="Application\Mod\Models\QuasarDownload.cs" />
+    <Compile Include="Application\Mod\ViewModels\ModListItemViewModel.cs" />
+    <Compile Include="Application\Mod\Views\FileView.xaml.cs">
       <DependentUpon>FileView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Content\Views\ContentListItem.xaml.cs">
+    <Compile Include="Application\Content\Views\ContentListItem.xaml.cs">
       <DependentUpon>ContentListItem.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\MainUI\ViewModels\MainUIViewModel.cs" />
-    <Compile Include="Controls\Mod\Views\ModListItem.xaml.cs">
+    <Compile Include="Application\MainUI\ViewModels\MainUIViewModel.cs" />
+    <Compile Include="Application\Mod\Views\ModListItem.xaml.cs">
       <DependentUpon>ModListItem.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Mod\Models\ModListItem.cs" />
-    <Compile Include="Controls\Mod\ViewModels\ModsViewModel.cs" />
-    <Compile Include="Controls\Mod\Views\ModsView.xaml.cs">
+    <Compile Include="Application\Mod\ViewModels\ModsViewModel.cs" />
+    <Compile Include="Application\Mod\Views\ModsView.xaml.cs">
       <DependentUpon>ModsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Settings\Models\SettingItem.cs" />
-    <Compile Include="Controls\Settings\ViewModels\SettingItemViewModel.cs" />
-    <Compile Include="Controls\Settings\ViewModels\SettingsViewModel.cs" />
-    <Compile Include="Controls\Settings\Views\SettingItemView.xaml.cs">
+    <Compile Include="Application\Settings\Models\SettingItem.cs" />
+    <Compile Include="Application\Settings\ViewModels\SettingItemViewModel.cs" />
+    <Compile Include="Application\Settings\ViewModels\SettingsViewModel.cs" />
+    <Compile Include="Application\Settings\Views\SettingItemView.xaml.cs">
       <DependentUpon>SettingItemView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Settings\Views\SettingsView.xaml.cs">
+    <Compile Include="Application\Settings\Views\SettingsView.xaml.cs">
       <DependentUpon>SettingsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Workspace\Models\Workspace.cs" />
-    <Compile Include="Controls\Workspace\ViewModels\WorkspaceViewModel.cs" />
-    <Compile Include="Controls\Workspace\Views\WorkspaceView.xaml.cs">
+    <Compile Include="Application\Workspace\ViewModels\WorkspaceViewModel.cs" />
+    <Compile Include="Application\Workspace\Views\WorkspaceView.xaml.cs">
       <DependentUpon>WorkspaceView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Internal\EventSystem.cs" />
-    <Compile Include="Internal\FileSystem\ModFileManager.cs" />
-    <Compile Include="Internal\Scans\Scannerino.cs" />
-    <Compile Include="Internal\Tools\Updater.cs" />
-    <Compile Include="Internal\XML\ContentXML.cs" />
-    <Compile Include="Internal\XML\WorkspaceXML.cs" />
-    <Compile Include="Internal\FileSystem\Unarchiver.cs" />
-    <Compile Include="Internal\Tools\Checker.cs" />
-    <Compile Include="Internal\FileSystem\Folderino.cs" />
-    <Compile Include="Internal\Tools\IDGenerator.cs" />
-    <Compile Include="Internal\Tools\TouchmARC.cs" />
+    <Compile Include="Data\V1\API.cs" />
+    <Compile Include="Data\V1\Game.cs" />
+    <Compile Include="Data\V1\ModLoader.cs" />
+    <Compile Include="Data\V1\Workspace.cs" />
+    <Compile Include="Data\V2\API.cs" />
+    <Compile Include="Data\V2\Content.cs" />
+    <Compile Include="Data\V2\Game.cs" />
+    <Compile Include="Data\V2\Library.cs" />
+    <Compile Include="Data\V2\Workspace.cs" />
+    <Compile Include="Helpers\Downloading\ModUpdater.cs" />
+    <Compile Include="Helpers\EventSystem.cs" />
+    <Compile Include="Helpers\File\ModFileManager.cs" />
+    <Compile Include="Helpers\Mod Scanning\Scannerino.cs" />
+    <Compile Include="Helpers\Quasar Management\Updater.cs" />
+    <Compile Include="Data\V1\Content.cs" />
+    <Compile Include="Helpers\Compression\Unarchiver.cs" />
+    <Compile Include="Helpers\Named Pipes\PipeHelper.cs" />
+    <Compile Include="Helpers\File\FileOperation.cs" />
+    <Compile Include="Helpers\Tools\IDHelper.cs" />
+    <Compile Include="Helpers\Tools\ARCropolisHelper.cs" />
+    <Compile Include="Data\V1\Library.cs" />
+    <Compile Include="Helpers\JSon\JSonHelper.cs" />
     <Compile Include="Properties\Resources.en.Designer.cs">
       <DependentUpon>Resources.en.resx</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -181,67 +190,65 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
-    <Compile Include="Internal\Tools\Protoman.cs" />
-    <Compile Include="Internal\Tools\Searchie.cs" />
-    <Compile Include="Internal\Pipes\PipeClient.cs" />
-    <Compile Include="Internal\Pipes\PipeServer.cs" />
-    <Compile Include="Internal\Web\Downloader.cs" />
-    <Compile Include="Internal\XML\LibraryXML.cs" />
-    <Compile Include="Internal\XML\XML.cs" />
+    <Compile Include="Helpers\Mod Scanning\Searchie.cs" />
+    <Compile Include="Helpers\Named Pipes\PipeClient.cs" />
+    <Compile Include="Helpers\Named Pipes\PipeServer.cs" />
+    <Compile Include="Helpers\Downloading\ModDownloader.cs" />
+    <Compile Include="Helpers\XML\XMLHelper.cs" />
     <Compile Include="Properties\SettingsDefinition.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>SettingsDefinition.settings</DependentUpon>
     </Compile>
-    <Page Include="Controls\Associations\Views\AssociationView.xaml">
+    <Page Include="Application\Associations\Views\AssociationView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Associations\Views\SlotItem.xaml">
+    <Page Include="Application\Associations\Views\SlotItem.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Build\Views\BuildView.xaml">
+    <Page Include="Application\Build\Views\BuildView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Content\Views\ContentView.xaml">
+    <Page Include="Application\Content\Views\ContentView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\InternalModTypes\Views\DefinitionsWindow.xaml">
+    <Page Include="Application\InternalModTypes\Views\DefinitionsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\InternalModTypes\Views\InternalModTypeView.xaml">
+    <Page Include="Application\InternalModTypes\Views\InternalModTypeView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Mod\Views\FileView.xaml">
+    <Page Include="Application\Mod\Views\FileView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Content\Views\ContentListItem.xaml">
+    <Page Include="Application\Content\Views\ContentListItem.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Controls\Mod\Views\ModListItem.xaml">
+    <Page Include="Application\Mod\Views\ModListItem.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Mod\Views\ModsView.xaml">
+    <Page Include="Application\Mod\Views\ModsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Settings\Views\SettingItemView.xaml">
+    <Page Include="Application\Settings\Views\SettingItemView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Controls\Settings\Views\SettingsView.xaml">
+    <Page Include="Application\Settings\Views\SettingsView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Controls\Workspace\Views\WorkspaceView.xaml">
+    <Page Include="Application\Workspace\Views\WorkspaceView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -249,7 +256,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="Internal\Web\API.cs" />
+    <Compile Include="Helpers\API\APIHandler.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -281,76 +288,76 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <Content Include="References\images\Delete.png">
+    <Content Include="Resources\images\Delete.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="References\images\drag.png">
+    <Content Include="Resources\images\drag.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="References\images\Games\SmashUltimate\characters_selected.png">
+    <Content Include="Resources\images\Games\SmashUltimate\characters_selected.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="References\images\Games\SmashUltimate\others.png">
+    <Content Include="Resources\images\Games\SmashUltimate\others.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="References\images\Games\SmashUltimate\characters.png">
+    <Content Include="Resources\images\Games\SmashUltimate\characters.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="References\images\Games\SmashUltimate\others_selected.png">
+    <Content Include="Resources\images\Games\SmashUltimate\others_selected.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="References\images\Games\SmashUltimate\items.png">
+    <Content Include="Resources\images\Games\SmashUltimate\items.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="References\images\Games\SmashUltimate\items_selected.png">
+    <Content Include="Resources\images\Games\SmashUltimate\items_selected.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="References\images\Games\SmashUltimate\music.png">
+    <Content Include="Resources\images\Games\SmashUltimate\music.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="References\images\Games\SmashUltimate\music_selected.png">
+    <Content Include="Resources\images\Games\SmashUltimate\music_selected.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="References\images\Games\SmashUltimate\series.png">
+    <Content Include="Resources\images\Games\SmashUltimate\series.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="References\images\Games\SmashUltimate\series_selected.png">
+    <Content Include="Resources\images\Games\SmashUltimate\series_selected.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="References\images\Games\SmashUltimate\stages.png">
+    <Content Include="Resources\images\Games\SmashUltimate\stages.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="References\images\Games\SmashUltimate\stages_selected.png">
+    <Content Include="Resources\images\Games\SmashUltimate\stages_selected.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="References\images\NoScreenshot.png">
+    <Content Include="Resources\images\NoScreenshot.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="References\InternalModTypes\SmashUltimate\CSS_Layout.xml">
+    <Content Include="Resources\InternalModTypes\SmashUltimate\CSS_Layout.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="References\InternalModTypes\SmashUltimate\Series_Icon.xml">
+    <Content Include="Resources\InternalModTypes\SmashUltimate\Series_Icon.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="References\InternalModTypes\SmashUltimate\Common_Effect.xml">
+    <Content Include="Resources\InternalModTypes\SmashUltimate\Common_Effect.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="References\InternalModTypes\SmashUltimate\Fighter_Parameter.xml">
+    <Content Include="Resources\InternalModTypes\SmashUltimate\Fighter_Parameter.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="References\InternalModTypes\SmashUltimate\Fighter_Animation.xml">
+    <Content Include="Resources\InternalModTypes\SmashUltimate\Fighter_Animation.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="References\InternalModTypes\SmashUltimate\Fighter_Sounds.xml">
+    <Content Include="Resources\InternalModTypes\SmashUltimate\Fighter_Sounds.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="References\InternalModTypes\SmashUltimate\Common_Parameter.xml">
+    <Content Include="Resources\InternalModTypes\SmashUltimate\Common_Parameter.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="References\InternalModTypes\SmashUltimate\nro.xml">
+    <Content Include="Resources\InternalModTypes\SmashUltimate\nro.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="References\Sources\ModLoaders.xml">
+    <Content Include="Resources\Sources\ModLoaders.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Resource Include="Fonts\Poppins-Black.ttf" />
@@ -375,28 +382,28 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>SettingsDefinition.Designer.cs</LastGenOutput>
     </None>
-    <Content Include="References\InternalModTypes\SmashUltimate\Fighter_Effect.xml">
+    <Content Include="Resources\InternalModTypes\SmashUltimate\Fighter_Effect.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="References\InternalModTypes\SmashUltimate\Items.xml">
+    <Content Include="Resources\InternalModTypes\SmashUltimate\Items.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="References\ModLoaders\UMM\Switch\Ultimate_Mod_Manager.nro">
+    <Content Include="Resources\ModLoaders\UMM\Switch\Ultimate_Mod_Manager.nro">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="References\ModLoaders\ARCropolis\atmosphere\contents\01006A800016E000\exefs\main.npdm">
+    <Content Include="Resources\ModLoaders\ARCropolis\atmosphere\contents\01006A800016E000\exefs\main.npdm">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="References\ModLoaders\ARCropolis\atmosphere\contents\01006A800016E000\exefs\subsdk9">
+    <Content Include="Resources\ModLoaders\ARCropolis\atmosphere\contents\01006A800016E000\exefs\subsdk9">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="References\ModLoaders\ARCropolis\arcropolis.toml">
+    <Content Include="Resources\ModLoaders\ARCropolis\arcropolis.toml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="References\ModLoaders\ARCropolis\atmosphere\contents\01006A800016E000\romfs\skyline\plugins\libarcropolis.nro">
+    <Content Include="Resources\ModLoaders\ARCropolis\atmosphere\contents\01006A800016E000\romfs\skyline\plugins\libarcropolis.nro">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Resource Include="Controls\Common\Fonts\sofiapro-light.otf" />
+    <Resource Include="Application\Common\Fonts\sofiapro-light.otf" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -404,16 +411,16 @@
     <Resource Include="Quasar.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
-    <Content Include="References\InternalModTypes\SmashUltimate\Stage_SkinModel.xml">
+    <Content Include="Resources\InternalModTypes\SmashUltimate\Stage_SkinModel.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="References\InternalModTypes\SmashUltimate\Fighter_Model.xml">
+    <Content Include="Resources\InternalModTypes\SmashUltimate\Fighter_Model.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="References\InternalModTypes\SmashUltimate\Music.xml">
+    <Content Include="Resources\InternalModTypes\SmashUltimate\Music.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="References\InternalModTypes\SmashUltimate\Stage_UI.xml">
+    <Content Include="Resources\InternalModTypes\SmashUltimate\Stage_UI.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
@@ -421,34 +428,34 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="References\images\Games\mk8d.jpg">
+    <Content Include="Resources\images\Games\mk8d.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="References\InternalModTypes\SmashUltimate\Fighter_UI.xml">
+    <Content Include="Resources\InternalModTypes\SmashUltimate\Fighter_UI.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="References\InternalModTypes\SmashUltimate\Fighter_Voice.xml">
+    <Content Include="Resources\InternalModTypes\SmashUltimate\Fighter_Voice.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="References\InternalModTypes\SmashUltimate\Fighter_Skin.xml">
+    <Content Include="Resources\InternalModTypes\SmashUltimate\Fighter_Skin.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="References\Sources\GameData.xml">
+    <Content Include="Resources\Sources\GameData.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="References\images\Games\All.png">
+    <Content Include="Resources\images\Games\All.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="References\images\Games\FETH.jpg">
+    <Content Include="Resources\images\Games\FETH.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="References\images\Games\home.png">
+    <Content Include="Resources\images\Games\home.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="References\images\Games\SmashUltimate.jpg">
+    <Content Include="Resources\images\Games\SmashUltimate.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="References\Sources\Games.xml">
+    <Content Include="Resources\Sources\Games.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
@@ -500,11 +507,11 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Controls\MainUI\Models\" />
-    <Folder Include="Controls\MainUI\Views\" />
-    <Folder Include="Internal\Archives\" />
-    <Folder Include="Internal\Downloads\" />
-    <Folder Include="References\images\GameDataCategories\" />
+    <Folder Include="Application\Content\Models\" />
+    <Folder Include="Application\MainUI\Models\" />
+    <Folder Include="Application\MainUI\Views\" />
+    <Folder Include="Application\Workspace\Models\" />
+    <Folder Include="Resources\images\GameDataCategories\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

@@ -94,30 +94,6 @@ namespace Quasar.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool MeaningfulSetting {
-            get {
-                return ((bool)(this["MeaningfulSetting"]));
-            }
-            set {
-                this["MeaningfulSetting"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("-1")]
-        public int LastSelectedGame {
-            get {
-                return ((int)(this["LastSelectedGame"]));
-            }
-            set {
-                this["LastSelectedGame"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0")]
         public int ContentID {
             get {
