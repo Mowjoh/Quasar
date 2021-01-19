@@ -1,5 +1,5 @@
 ﻿using Quasar.Controls.Common.Models;
-using Quasar.Data.V1;
+using Quasar.Data.V2;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Quasar.Controls.Associations.Models
 {
-    public class GameElementSquare : ObservableObject
+    public class GameElementFamilySquare : ObservableObject
     {
         private Uri _ImageSource { get; set; }
         public Uri ImageSource
@@ -36,17 +36,17 @@ namespace Quasar.Controls.Associations.Models
                 OnPropertyChanged("HoverImageSource");
             }
         }
-        private GameDataCategory _GameDataCategory { get; set; }
-        public GameDataCategory GameDataCategory
+        private GameElementFamily _GameElementFamily { get; set; }
+        public GameElementFamily GameElementFamily
         {
-            get => _GameDataCategory;
+            get => _GameElementFamily;
             set
             {
-                if (_GameDataCategory == value)
+                if (_GameElementFamily == value)
                     return;
 
-                _GameDataCategory = value;
-                OnPropertyChanged("GameDataCategory");
+                _GameElementFamily = value;
+                OnPropertyChanged("GameElementFamily");
             }
         }
 

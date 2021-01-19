@@ -2,8 +2,10 @@
 using log4net;
 using Quasar.Controls.Build.ViewModels;
 using Quasar.Controls.Common.Models;
-using Quasar.Data.V1;
+using Quasar.Data.V2;
 using Quasar.FileSystem;
+using Quasar.Helpers.Json;
+using Quasar.Helpers.ModScanning;
 using Quasar.Helpers.Tools;
 using Quasar.Helpers.XML;
 using Quasar.Internal.Tools;
@@ -12,6 +14,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -60,26 +63,25 @@ namespace Quasar.Controls.Build.Models
         }
         FileWriter Writer { get; set; }
         bool CleanSelected { get; set; }
-        bool ManualModsSelected { get; set; }
+        bool OverwriteSelected { get; set; }
         int ModLoader { get; set; }
         
         string WorkspacePath { get; set; }
 
-        List<FileReference> WorkspaceFiles { get; set; }
-        List<FileReference> DistantFiles { get; set; }
-        List<FileReference> FilesToCopy { get; set; }
-        List<FileReference> FilesToDelete { get; set; }
-        List<Hash> WorkspaceHashes { get; set; }
-        List<Hash> DistantHashes { get; set; }
+        ObservableCollection<ModFile> WorkspaceIndex { get; set; }
+        ObservableCollection<ModFile> DistantFiles { get; set; }
+        List<ModFile> WorkspaceFilesToCopy { get; set; }
+        List<ModFile> WorkspaceFilesToDelete { get; set; }
+        ObservableCollection<ModFile> DistantIndex { get; set; }
 
-        public SmashBuilder(FileWriter _Writer, int _ModLoader, bool _CleanSelected, bool _ManualModsSelected, BuildViewModel _ViewModel)
+        public SmashBuilder(FileWriter _Writer, int _ModLoader, bool _CleanSelected, bool _OverwriteSelected, BuildViewModel _ViewModel)
         {
             Writer = _Writer;
             ModLoader = _ModLoader;
             ViewModel = _ViewModel;
 
             CleanSelected = _CleanSelected;
-            ManualModsSelected = _ManualModsSelected;
+            OverwriteSelected = _OverwriteSelected;
 
         }
 
@@ -97,25 +99,29 @@ namespace Quasar.Controls.Build.Models
                 await GetLocalFileList();
                 ViewModel.Log.Debug("Got Local File List");
 
+                
                 await GetDistantFileList();
                 ViewModel.Log.Debug("Got Distant File List");
 
                 await ProcessTransferList();
                 ViewModel.Log.Debug("Finished processing transfer list");
 
+             
                 //File Operations
-                if(FilesToDelete.Count != 0)
+                if(WorkspaceFilesToDelete.Count != 0)
                 {
                     await DeleteDifferences();
+                    ViewModel.BuildLog("Info", "All Differences have been deleted");
                 }
                 else
                 {
                     ViewModel.BuildLog("Info","No files to delete");
                     ViewModel.Log.Debug("No files to delete");
                 }
-                if(FilesToCopy.Count != 0)
+                if(WorkspaceFilesToCopy.Count != 0)
                 {
                     await CopyFiles();
+                    ViewModel.BuildLog("Info", "All Files have been copied");
                 }
                 else
                 {
@@ -123,9 +129,10 @@ namespace Quasar.Controls.Build.Models
                     ViewModel.Log.Debug("No files to copy");
                 }
 
-                SaveAndSendHashes();
+                SaveAndSendIndex();
 
                 await CopyModLoader();
+                ViewModel.BuildLog("Info", "Finished setting up modloaders");
                 ViewModel.Log.Debug("Copy ModLoader Finished");
 
             }
@@ -142,20 +149,19 @@ namespace Quasar.Controls.Build.Models
 
         public override async Task CopyModLoader()
         {
-            ARCropolisHelper.CheckTouchmARC(Writer, ViewModel.ActiveWorkspace.Name);
+            ARCropolisHelper.CheckTouchmARC(Writer, ViewModel.MUVM.ActiveWorkspace.Name);
         }
         public override async Task StartCheck()
         {
             //Base File List Setup
-            WorkspaceFiles = new List<FileReference>();
-            DistantFiles = new List<FileReference>();
-            FilesToCopy = new List<FileReference>();
-            FilesToDelete = new List<FileReference>();
-            WorkspaceHashes = new List<Hash>();
+            WorkspaceIndex = new ObservableCollection<ModFile>();
+            DistantFiles = new ObservableCollection<ModFile>();
+            WorkspaceFilesToCopy = new List<ModFile>();
+            WorkspaceFilesToDelete = new List<ModFile>();
 
             //Base Path Setup
-            ModLoader sml = ViewModel.ModLoaders.Single(ml => ml.ModLoaderID == ModLoader);
-            WorkspacePath = sml.BasePath;
+            ModLoader sml = ViewModel.MUVM.ModLoaders.Single(ml => ml.ID == ModLoader);
+            WorkspacePath = sml.WorkspacePath.Replace("{Workspace}", ViewModel.MUVM.ActiveWorkspace.Name);
 
             if (CleanSelected)
             {
@@ -165,18 +171,24 @@ namespace Quasar.Controls.Build.Models
         public override async Task GetLocalFileList()
         {
             //UI Setup
-            ViewModel.SetStep("Listing Files");
+            ViewModel.SetStep("Listing Local Files");
             ViewModel.Log.Debug("Listing Local Files");
+            WorkspaceIndex = new ObservableCollection<ModFile>();
 
-            //Getting associated gamedata
-            GameData GD = ViewModel.GameDatas.Single(g => g.GameID == ViewModel.Games[1].ID);
-
-            //Getting files foreach association in the workspace
-            foreach (Association ass in ViewModel.ActiveWorkspace.Associations)
+            foreach (Association ass in ViewModel.MUVM.ActiveWorkspace.Associations)
             {
-                ViewModel.Log.Debug("getting files for association CMID"+ass.ContentMappingID +" - GDIID "+ass.GameDataItemID + " - Slot "+ass.Slot);
-                ListAssociationFiles(ass,GD);
+                ContentItem ci = ViewModel.MUVM.ContentItems.Single(c => c.ID == ass.ContentItemID);
+                LibraryItem li = ViewModel.MUVM.Library.Single(l => l.ID == ci.LibraryItemID);
+                QuasarModType qmt = ViewModel.MUVM.QuasarModTypes.Single(t => t.ID == ass.QuasarModTypeID);
+                GameElementFamily gef = ViewModel.MUVM.Games[0].GameElementFamilies.Single(f => f.ID == qmt.GameElementFamilyID);
+
+                foreach (ModFile mf in Scannerino.GetModFiles(qmt, gef, ci, ass.SlotNumber, ModLoader, li))
+                {
+                    mf.Hash = BuilderActions.GetHash(mf.SourceFilePath);
+                    WorkspaceIndex.Add(mf);
+                }
             }
+            
         }
         public override async Task GetDistantFileList()
         {
@@ -188,15 +200,15 @@ namespace Quasar.Controls.Build.Models
                 ViewModel.SetProgressionStyle(true);
 
                 //Getting distant hashes
-                getDistantHashes();
+                GetDistantIndex();
 
-                if (!ManualModsSelected)
+                if (OverwriteSelected)
                 {
                     getDistantFileList();
                 }
                 else
                 {
-                    DistantFiles = new List<FileReference>();
+                    DistantFiles = new ObservableCollection<ModFile>();
                 }
             }
             catch(Exception e)
@@ -218,11 +230,12 @@ namespace Quasar.Controls.Build.Models
             try
             {
                 ViewModel.SetStep("Deleting Differences");
-                foreach (FileReference reference in FilesToDelete)
+                foreach (ModFile reference in WorkspaceFilesToDelete)
                 {
-                    ViewModel.Log.Debug("Deleting " + reference.OutputFilePath);
-                    Writer.DeleteFile(reference.OutputFilePath);
+                    ViewModel.Log.Debug("Deleting " + reference.DestinationFilePath);
+                    Writer.DeleteFile(WorkspacePath + reference.DestinationFilePath);
                 }
+
             }
             catch(Exception e)
             {
@@ -234,31 +247,32 @@ namespace Quasar.Controls.Build.Models
         {
             ViewModel.SetStep("Transfering Files");
             ViewModel.SetProgressionStyle(false);
-            int TotalFiles = FilesToCopy.Count;
-            while (FilesToCopy.Count > 0)
+            int TotalFiles = WorkspaceFilesToCopy.Count;
+            while (WorkspaceFilesToCopy.Count > 0)
             {
                 try
                 {
-                    FileReference FRef = FilesToCopy[0];
-                    List<FileReference> AssociatedReferences = FilesToCopy.Where(r => r.LibraryMod == FRef.LibraryMod).ToList();
-
-                    ViewModel.SetSubStep("Copying files for " + FRef.LibraryMod.Name);
-                    foreach (FileReference Ferb in AssociatedReferences)
+                    ModFile MF = WorkspaceFilesToCopy[0];
+                    
+                    List<ModFile> AssociatedFiles = WorkspaceFilesToCopy.Where(r => r.LibraryItemID == MF.LibraryItemID).ToList();
+                    string ItemName = ViewModel.MUVM.Library.Single(li => li.ID == MF.LibraryItemID).Name;
+                    ViewModel.SetSubStep("Copying files for " + ItemName);
+                    foreach (ModFile Ferb in AssociatedFiles)
                     {
-                        SetProgression((TotalFiles - FilesToCopy.Count), TotalFiles);
-                        Writer.SendFile(Ferb.SourceFilePath, Ferb.OutputFilePath);
-                        FilesToCopy.Remove(Ferb);
+                        SetProgression((TotalFiles - WorkspaceFilesToCopy.Count), TotalFiles);
+                        Writer.SendFile(Ferb.SourceFilePath, WorkspacePath + Ferb.DestinationFilePath);
+                        WorkspaceFilesToCopy.Remove(Ferb);
                     }
-                    ViewModel.Log.Info(String.Format("Finished copying files for {0}", FRef.LibraryMod.Name));
-                    ViewModel.BuildLog("Mod", String.Format("Finished copying files for {0}", FRef.LibraryMod.Name));
+                    ViewModel.Log.Info(String.Format("Finished copying files for {0}", ItemName));
+                    ViewModel.BuildLog("Mod", String.Format("Finished copying files for {0}", ItemName));
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     ViewModel.Log.Error(e.Message);
                 }
                 
             }
-            SetProgression((TotalFiles - WorkspaceFiles.Count), TotalFiles);
+            SetProgression((TotalFiles - WorkspaceIndex.Count), TotalFiles);
            
 
         }
@@ -266,72 +280,67 @@ namespace Quasar.Controls.Build.Models
         {
             ViewModel.SetStep("Cleaning Workspace");
             ViewModel.SetProgressionStyle(true);
-            Writer.DeleteFolder(WorkspacePath.Replace("{Workspace}", ViewModel.ActiveWorkspace.Name));
+            Writer.DeleteFolder(WorkspacePath);
             ViewModel.Log.Debug("Workspace Cleaned");
+            ViewModel.BuildLog("Info", "Workspace Cleaned");
 
         }
 
-        public void getDistantHashes()
+        public void GetDistantIndex()
         {
-            string DistantWorkspacePath = WorkspacePath.Replace("{Workspace}", ViewModel.ActiveWorkspace.Name);
-            string localHashFilePath = Properties.Settings.Default.DefaultDir + @"\Library\Downloads\Hashes.xml";
+            string DistantWorkspacePath = WorkspacePath;
+            string localHashFilePath = Properties.Settings.Default.DefaultDir + @"\Library\Downloads\Files.json";
 
             //Getting Workspace Hashes
-            if (Writer.CheckFileExists(DistantWorkspacePath + @"Hashes.xml"))
+            if (Writer.CheckFileExists(DistantWorkspacePath + @"Files.json"))
             {
-                Writer.GetFile(DistantWorkspacePath + @"Hashes.xml", localHashFilePath);
-                ViewModel.Log.Debug(String.Format("Distant Hash File Exists : {0}", DistantWorkspacePath + @"Hashes.xml"));
+                Writer.GetFile(DistantWorkspacePath + @"Files.json", localHashFilePath);
+                ViewModel.Log.Debug(String.Format("Distant Hash File Exists : {0}", DistantWorkspacePath + @"Files.json"));
             }
 
             //Loading distant Workspace Hashes if found
             if (File.Exists(localHashFilePath))
             {
                 ViewModel.Log.Debug("File Exists, Loading Hashes");
-                DistantHashes = XMLHelper.GetHashes(localHashFilePath);
+                DistantIndex = JSonHelper.GetModFiles();
             }
             else
             {
                 ViewModel.Log.Debug("No Remote Hash File");
                 ViewModel.Log.Debug("Hash List Created");
-                DistantHashes = new List<Hash>();
+                DistantIndex = new ObservableCollection<ModFile>();
             }
         }
         public void getDistantFileList()
         {
-            //Path Setup
-            string DistantWorkspacePath = WorkspacePath.Replace("{Workspace}", ViewModel.ActiveWorkspace.Name);
-
             //Getting Workspace Distant Files
-            DistantFiles = Writer.GetRemoteFiles(DistantWorkspacePath);
+            DistantFiles = Writer.GetRemoteFiles(WorkspacePath);
         }
 
         public void getCopyFileList()
         {
-            if (DistantHashes.Count == 0)
+            if (DistantIndex.Count == 0)
             {
-                //No distant hashes means first copy
-                FilesToCopy = WorkspaceFiles;
+                //No distant index means first copy
+                WorkspaceFilesToCopy = WorkspaceIndex.ToList();
             }
             else
             {
                 //Copy over means find the differences
-                foreach (FileReference reference in WorkspaceFiles)
+                foreach (ModFile reference in WorkspaceIndex)
                 {
-                    Hash distantHash = DistantHashes.FirstOrDefault(h => h.FilePath == reference.OutputFilePath);
-
+                    ModFile distantFile = DistantIndex.FirstOrDefault(mf => mf.DestinationFilePath == reference.DestinationFilePath);
                     //If there is no distant match
-                    if (distantHash == null)
+                    if (distantFile == null)
                     {
-                        FilesToCopy.Add(reference);
+                        WorkspaceFilesToCopy.Add(reference);
                     }
                     else
                     {
-                        //If there is a distant match, compare for copy
-                        Hash localHash = WorkspaceHashes.FirstOrDefault(h => h.FilePath == reference.OutputFilePath);
                         //Different hash means overwrite
-                        if (localHash.HashString != distantHash.HashString)
+                        if (reference.Hash != distantFile.Hash)
                         {
-                            FilesToCopy.Add(reference);
+                            WorkspaceFilesToCopy.Add(reference);
                         }
                     }
 
@@ -341,39 +350,42 @@ namespace Quasar.Controls.Build.Models
         public void getDeleteFileList()
         {
             //No distant hashes means nothing to compare with
-            if(DistantHashes.Count != 0)
+            if(DistantIndex.Count != 0)
             {
-                foreach(Hash h in DistantHashes)
+                foreach(ModFile mf in DistantIndex)
                 {
-                    if(!WorkspaceFiles.Exists(fr => fr.OutputFilePath == h.FilePath))
+                    if(!WorkspaceIndex.Any(fr => fr.DestinationFilePath == mf.DestinationFilePath))
                     {
-                        FilesToDelete.Add(new FileReference() { OutputFilePath = h.FilePath });
+                        WorkspaceFilesToDelete.Add(new ModFile() { DestinationFilePath = mf.DestinationFilePath });
                     }
                 }
             }
         }
 
-        public void SaveAndSendHashes()
+        public void SaveAndSendIndex()
         {
            //Saving, sending Hashes file
-           string DistantWorkspacePath = WorkspacePath.Replace("{Workspace}", ViewModel.ActiveWorkspace.Name);
-           string localHashFilePath = Properties.Settings.Default.DefaultDir + @"\Library\Downloads\Hashes.xml";
+           string LocalIndexFilePath = Properties.Settings.Default.DefaultDir + @"\Library\Downloads\Files.json";
 
-           XMLHelper.SaveHashes(localHashFilePath, WorkspaceHashes);
-           ViewModel.Log.Debug("Saved Hashes");
+            foreach(ModFile mf in WorkspaceIndex)
+            {
+                mf.SourceFilePath = "";
+            }
+            JSonHelper.SaveModFiles(WorkspaceIndex);
+           ViewModel.Log.Debug("Saved Index");
 
            //Sending Hash Files
-           Writer.SendFile(localHashFilePath, DistantWorkspacePath + @"Hashes.xml");
+           Writer.SendFile(LocalIndexFilePath, WorkspacePath + @"Files.json");
 
-           ViewModel.Log.Debug("Sent Hashes");
-           File.Delete(localHashFilePath);
-           ViewModel.Log.Debug("Deleted Hashes");
+           ViewModel.Log.Debug("Sent Index");
+           File.Delete(LocalIndexFilePath);
+           ViewModel.Log.Debug("Deleted Index");
         }
 
-        public void ListAssociationFiles(Association ass, GameData GD)
+        public void ListAssociationFiles(Association ass, GameElementFamily GD)
         {
             try
-            {
+            {/*
                 //References
                 ContentMapping cm = ViewModel.ContentMappings.Single(l => l.ID == ass.ContentMappingID);
                 InternalModType imt = ViewModel.InternalModTypes.Single(t => t.ID == cm.InternalModType);
@@ -402,8 +414,8 @@ namespace Quasar.Controls.Build.Models
                     FinalDestination = FinalDestination.Replace(@"{Workspace}", ViewModel.ActiveWorkspace.Name);
                     FinalDestination = FinalDestination.Replace(@"/", @"\");
                     WorkspaceHashes.Add(new Hash() { Category = imt.OutsideFolder ? "Outsider" : "Workspace", FilePath = FinalDestination, HashString = WriterOperations.GetHash(source) });
-                    WorkspaceFiles.Add(new FileReference() { LibraryMod = lm, SourceFilePath = source, OutputFilePath = FinalDestination, OutsideFile = imt.OutsideFolder });
-                }
+                    WorkspaceFiles.Add(new FileReference() { LibraryItem = lm, SourceFilePath = source, OutputFilePath = FinalDestination, OutsideFile = imt.OutsideFolder });
+                }*/
             }
             catch(Exception e)
             {
@@ -417,11 +429,12 @@ namespace Quasar.Controls.Build.Models
             ViewModel.SetTotal(cnt.ToString(), tot.ToString());
         }
 
+        
     }
 
     static class BuilderActions
     {
-        public static string[] FormatOutput(string file, string path, string GameDataItem, ContentMappingFile cmf, ContentMapping cm,Association ass, string DLC)
+        public static string[] FormatOutput(string file, string path, string GameDataItem, ModFile cmf, ContentItem cm,Association ass, string DLC)
         {
             string OutputFile = file;
             string OutputPath = path;
@@ -432,7 +445,7 @@ namespace Quasar.Controls.Build.Models
             Regex SlotReplacinatorDouble = new Regex("{S00}");
             Regex SlotReplacinatorTriple = new Regex("{S000}");
             Regex AnyReplacinator = new Regex("{AnyFile}");
-
+            /*
             //Processing File Output
             if (cmf.FileParts != null)
             {
@@ -451,9 +464,9 @@ namespace Quasar.Controls.Build.Models
 
             OutputFile = GameDataReplacinator.Replace(OutputFile, GameDataItem, 1);
 
-            OutputFile = SlotReplacinatorSingle.Replace(OutputFile, ass.Slot.ToString("0"), 1);
-            OutputFile = SlotReplacinatorDouble.Replace(OutputFile, ass.Slot.ToString("00"), 1);
-            OutputFile = SlotReplacinatorTriple.Replace(OutputFile, ass.Slot.ToString("000"), 1);
+            OutputFile = SlotReplacinatorSingle.Replace(OutputFile, ass.SlotNumber.ToString("0"), 1);
+            OutputFile = SlotReplacinatorDouble.Replace(OutputFile, ass.SlotNumber.ToString("00"), 1);
+            OutputFile = SlotReplacinatorTriple.Replace(OutputFile, ass.SlotNumber.ToString("000"), 1);
 
             if (cmf.AnyFile != null)
             {
@@ -479,24 +492,35 @@ namespace Quasar.Controls.Build.Models
 
             OutputPath = GameDataReplacinator.Replace(OutputPath, GameDataItem, 1);
 
-            OutputPath = SlotReplacinatorSingle.Replace(OutputPath, ass.Slot.ToString("0"), 1);
-            OutputPath = SlotReplacinatorDouble.Replace(OutputPath, ass.Slot.ToString("00"), 1);
-            OutputPath = SlotReplacinatorTriple.Replace(OutputPath, ass.Slot.ToString("000"), 1);
+            OutputPath = SlotReplacinatorSingle.Replace(OutputPath, ass.SlotNumber.ToString("0"), 1);
+            OutputPath = SlotReplacinatorDouble.Replace(OutputPath, ass.SlotNumber.ToString("00"), 1);
+            OutputPath = SlotReplacinatorTriple.Replace(OutputPath, ass.SlotNumber.ToString("000"), 1);
 
             OutputPath = OutputPath.Replace("{DLC}", DLC == "True" ? "_patch" : "");
-
+            */
             return new string[2] { OutputPath, OutputFile };
+        }
+
+        public static string GetHash(string SourceFilePath)
+        {
+            using (var md5 = MD5.Create())
+            {
+                using (var stream = File.OpenRead(SourceFilePath))
+                {
+                    return BitConverter.ToString(md5.ComputeHash(stream)).Replace("-", "");
+                }
+            }
         }
     }
 
     public class FileReference
     {
-        public LibraryMod LibraryMod { get; set; }
+        public LibraryItem LibraryItem { get; set; }
         public string SourceFilePath { get; set; }
         public string OutputFilePath { get; set; }
         public bool OutsideFile { get; set; }
     }
 
-
+    
 
 }

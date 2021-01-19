@@ -29,9 +29,6 @@ namespace Quasar.Compression
         //Archive Extraction async process
         public async Task<int> ExtractArchiveAsync(string _ArchiveSource, string ArchiveDestination, string _ArchiveType)
         {
-            //Setting up Extraction UI
-            ModListItemViewModel.ModStatusTextValue = "Extractin";
-
             //Launching Extraction Task
             await Task.Run(() => Extract(_ArchiveSource, ArchiveDestination, _ArchiveType));
 

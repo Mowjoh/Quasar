@@ -364,5 +364,17 @@ namespace Quasar.Properties {
                 this["EnableWorkspaces"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int LibraryID {
+            get {
+                return ((int)(this["LibraryID"]));
+            }
+            set {
+                this["LibraryID"] = value;
+            }
+        }
     }
 }

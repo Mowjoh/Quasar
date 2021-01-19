@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Quasar.Controls"
              mc:Ignorable="d" 
-             d:DesignHeight="160" d:DesignWidth="1200" Background="{DynamicResource CutieBG01}" Width="Auto">
+             d:DesignHeight="160" d:DesignWidth="1200" Background="{DynamicResource CutieBG01}">
     <UserControl.Style>
         <Style TargetType="{x:Type UserControl}">
             <Setter Property="Height" Value="44"/>
@@ -66,6 +66,9 @@
                 <DataTrigger Binding="{Binding ContentStatValue}" Value="2">
                     <Setter Property="Fill" Value="green"/>
                 </DataTrigger>
+                <DataTrigger Binding="{Binding ContentStatValue}" Value="3">
+                    <Setter Property="Fill" Value="#9e168e"/>
+                </DataTrigger>
             </Style.Triggers>
         </Style>
         
@@ -73,19 +76,19 @@
             <Setter Property="Fill" Value="{StaticResource DefaultColor}"/>
             <Setter Property="Stroke" Value="AliceBlue"></Setter>
             <Style.Triggers>
-                <DataTrigger Binding="{Binding LibraryMod.TypeID}" Value="1">
+                <DataTrigger Binding="{Binding LibraryItem.APICategoryName}" Value="Skin">
                     <Setter Property="Fill" Value="{StaticResource SkinColor}"/>
                 </DataTrigger>
-                <DataTrigger Binding="{Binding LibraryMod.TypeID}" Value="2">
+                <DataTrigger Binding="{Binding LibraryItem.APICategoryName}" Value="Map">
                     <Setter Property="Fill" Value="{StaticResource MapColor}"/>
                 </DataTrigger>
-                <DataTrigger Binding="{Binding LibraryMod.TypeID}" Value="3">
+                <DataTrigger Binding="{Binding LibraryItem.APICategoryName}" Value="Sound">
                     <Setter Property="Fill" Value="{StaticResource SoundColor}"/>
                 </DataTrigger>
-                <DataTrigger Binding="{Binding LibraryMod.TypeID}" Value="4">
+                <DataTrigger Binding="{Binding LibraryItem.APICategoryName}" Value="Gamefile">
                     <Setter Property="Fill" Value="{StaticResource GamefileColor}"/>
                 </DataTrigger>
-                <DataTrigger Binding="{Binding Path=LibraryMod.TypeID}" Value="5">
+                <DataTrigger Binding="{Binding LibraryItem.APICategoryName}" Value="Gui">
                     <Setter Property="Fill" Value="{StaticResource GUIColor}"/>
                 </DataTrigger>
             </Style.Triggers>
@@ -137,14 +140,14 @@
                     <ColumnDefinition Width="20*" />
                     <ColumnDefinition Width="20*" />
                     <ColumnDefinition Width="20*" />
-                    <ColumnDefinition Width="10*" />
+                    <ColumnDefinition Width="15*" />
                 </Grid.ColumnDefinitions>
 
                 <Button Grid.Column="0" Template="{StaticResource ActionArrowButton}" VerticalAlignment="Center" Command="{Binding Path=BigSmolCommand}"  />
                 <!-- Normal Mod UI -->
-                <TextBlock Grid.Column="1" Text="{Binding Path=LibraryMod.Name}" Style="{StaticResource CutieTextBlockStyle}"  VerticalAlignment="Center" Visibility="{Binding Path=Standby,Converter={StaticResource BoolVisi}}" Margin="10,0,0,0"/>
-                <TextBlock Grid.Column="2" Text="{Binding Path=LibraryMod.TypeLabel}" Style="{StaticResource CutieTextBlockStyle}" VerticalAlignment="Center" Visibility="{Binding Path=Standby,Converter={StaticResource BoolVisi}}" />
-                <TextBlock Grid.Column="3" Text="{Binding Path=LibraryMod.APICategoryName}" Style="{StaticResource CutieTextBlockStyle}" VerticalAlignment="Center" Visibility="{Binding Path=Standby,Converter={StaticResource BoolVisi}}" />
+                <TextBlock Grid.Column="1" Text="{Binding Path=LibraryItem.Name}" Style="{StaticResource CutieTextBlockStyle}"  VerticalAlignment="Center" Visibility="{Binding Path=Standby,Converter={StaticResource BoolVisi}}" Margin="10,0,0,0"/>
+                <TextBlock Grid.Column="2" Text="{Binding Path=APICategoryName}" Style="{StaticResource CutieTextBlockStyle}" VerticalAlignment="Center" Visibility="{Binding Path=Standby,Converter={StaticResource BoolVisi}}" />
+                <TextBlock Grid.Column="3" Text="{Binding Path=APISubCategoryName}" Style="{StaticResource CutieTextBlockStyle}" VerticalAlignment="Center" Visibility="{Binding Path=Standby,Converter={StaticResource BoolVisi}}" />
                 <TextBlock Grid.Column="4" Text="{Binding Path=Game.Name}" Style="{StaticResource CutieTextBlockStyle}" VerticalAlignment="Center" Visibility="{Binding Path=Standby,Converter={StaticResource BoolVisi}}" />
 
                 <!-- Download UI -->
@@ -153,13 +156,12 @@
                 <ProgressBar Grid.Column="2" Grid.Row="0" Grid.ColumnSpan="3" Value="{Binding ProgressBarValue}" Style="{StaticResource DownloadBar}" VerticalAlignment="Center" />
 
                 <!-- Actions -->
-                <StackPanel Grid.Column="5" Orientation="Horizontal" FlowDirection="RightToLeft" Visibility="{Binding Path=Standby,Converter={StaticResource BoolVisi}}">
+                <WrapPanel Grid.Column="5" FlowDirection="RightToLeft" Visibility="{Binding Path=Standby,Converter={StaticResource BoolVisi}}" Height="30">
                     <Button Command="{Binding Path=DeleteModCommand}" Template="{StaticResource ActionTrashButton}" ToolTip="Delete this Mod" Margin="10,0,0,0"   />
-                    <Button Command="{Binding Path=ShowContentsCommand}" Template="{StaticResource ActionFolderButton}" ToolTip="Show mod contents" Margin="10,0,0,0" Visibility="{Binding Path=CreatorMode,Converter={StaticResource BoolVisi}}"  />
                     <Button Command="{Binding Path=FileViewCommand}" Template="{StaticResource ActionFileViewButton}" ToolTip="Show mod files" Margin="10,0,0,0" Visibility="{Binding Path=AdvancedMode,Converter={StaticResource BoolVisi}}" />
-                    <Button Command="{Binding Path=AddModCommand}" Template="{StaticResource ActionProcessModButton}" ToolTip="Remove the mod from the workspace" Margin="10,0,0,0" />
-                    <Button  Command="{Binding Path=TestModCommand}" Template="{StaticResource ActionTestModButton}" ToolTip="Show Compatibility Test Window" Margin="10,0,0,0" Visibility="{Binding Path=AdvancedMode,Converter={StaticResource BoolVisi}}" />
-                </StackPanel>
+                    <Button Command="{Binding Path=AddModCommand}" Template="{StaticResource ActionProcessModButton}" ToolTip="Remove the mod from the workspace" Margin="10,0,0,0" Visibility="{Binding Path=NoContent,Converter={StaticResource BoolVisi}}" />
+                    <Button Command="{Binding Path=ShowContentsCommand}" Template="{StaticResource ActionFolderButton}" ToolTip="Show mod contents" Margin="10,0,0,0" Visibility="{Binding Path=ManualMod,Converter={StaticResource BoolVisi}}"  />
+                </WrapPanel>
             </Grid>
 
             <Grid Grid.Column="1" Grid.Row="1" Background="{StaticResource CutieBG08}" >

@@ -1,5 +1,5 @@
 ﻿using Quasar.Controls.Content.ViewModels;
-using Quasar.Data.V1;
+using Quasar.Data.V2;
 using Quasar.FileSystem;
 using System;
 using System.Collections.Generic;
@@ -30,10 +30,10 @@ namespace Quasar.Controls
     {
         public ContentListItemViewModel CLIVM { get; set; }
 
-        public ContentListItem(ContentMapping contentMapping, LibraryMod libraryMod, InternalModType imt, List<GameDataCategory> Categories, int colorID)
+        public ContentListItem(ContentItem ContentItem, LibraryItem LibraryItem, QuasarModType qmt, List<GameElement> GameElements, int colorID)
         {
             
-            CLIVM = new ContentListItemViewModel(contentMapping, libraryMod, imt, Categories, colorID);
+            CLIVM = new ContentListItemViewModel(ContentItem, LibraryItem, qmt, GameElements, colorID);
             InitializeComponent();
             DataContext = CLIVM;
         }
@@ -61,13 +61,8 @@ namespace Quasar.Controls
         }
 
         private void SaveContentMapping(object sender, RoutedEventArgs e)
-        {/*
-            if (this.SaveRequested != null)
-            {
-                SelectedGDI = (GameDataItem)ContentMappingAssociation.SelectedItem;
-                this.SaveRequested(this, new EventArgs());
-            }*/
-                
+        {
+                   
         }
     }
 }

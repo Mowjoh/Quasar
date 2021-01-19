@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Quasar.Data.V1;
+using Quasar.Data.V2;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -120,7 +120,7 @@ namespace Quasar
             return new string[]{ filename, downloadURL };
         }
 
-        public static async Task<int> GetScreenshot(string _ItemType, string _ItemID, string _GameID, string _TypeID, string _ID)
+        public static async Task<int> GetScreenshot(string _ItemType, string _ItemID, string _GameID, string _TypeID)
         {
             string downloadURL = "";
 
@@ -150,7 +150,7 @@ namespace Quasar
 
                         string downloadextension = downloadURL.Split('.')[downloadURL.Split('.').Length - 1];
 
-                        string imageSource = Properties.Settings.Default.DefaultDir + @"\Library\Screenshots\" + _GameID + "_" + _TypeID + "_" + _ID + "." + downloadextension;
+                        string imageSource = Properties.Settings.Default.DefaultDir + @"\Library\Screenshots\" + _GameID + "_" + _TypeID + "_" + _ItemID + "." + downloadextension;
 
                         await ModDownloader.DownloadFile(downloadURL, imageSource);
                     }

@@ -3,10 +3,12 @@ using log4net;
 using MediaDevices;
 using Quasar.Controls.Build.ViewModels;
 using Quasar.Data.V1;
+using Quasar.Data.V2;
 using Quasar.FileSystem;
 using Quasar.Helpers.FileOperations;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -25,7 +27,7 @@ namespace Quasar.Controls.Build.Models
         public abstract bool DeleteFile(string FilePath);
         public abstract bool DeleteFolder(string FolderPath);
         public abstract void GetFile(string Remote, string DestinationFilePath);
-        public abstract List<FileReference> GetRemoteFiles(string FolderPath);
+        public abstract ObservableCollection<ModFile> GetRemoteFiles(string FolderPath);
 
     }
 
@@ -40,12 +42,9 @@ namespace Quasar.Controls.Build.Models
         public Action<FtpProgress> Progress { get; set; }
         BuildViewModel BVM { get; set; }
 
-        public List<Hash> DistantHashes { get; set; }
-        public List<Hash> DistantOutsiderHashes { get; set; }
-        public List<Hash> LocalHashes { get; set; }
-        public List<Hash> LocalOutsiderHashes { get; set; }
+        public List<Data.V2.Hash> DistantHashes { get; set; }
 
-        List<FileReference> list { get; set; }
+        ObservableCollection<ModFile> list { get; set; }
         public ILog Log { get; set; }
         #endregion
         public FTPWriter(BuildViewModel _BVM)
@@ -127,9 +126,6 @@ namespace Quasar.Controls.Build.Models
         {
             try
             {
-                Hash x = DistantHashes.SingleOrDefault(h => h.FilePath == FilePath);
-                if (x != null)
-                    DistantHashes.Remove(x);
                 Log.Debug(String.Format("Deleting File {0}", FilePath));
                 Client.DeleteFile(FilePath);
 
@@ -151,9 +147,9 @@ namespace Quasar.Controls.Build.Models
                 return false;
             }
         }
-        public override List<FileReference> GetRemoteFiles(string FolderPath)
+        public override ObservableCollection<ModFile> GetRemoteFiles(string FolderPath)
         {
-            list = new List<FileReference>();
+            list = new ObservableCollection<ModFile>();
 
             try
             {
@@ -181,9 +177,9 @@ namespace Quasar.Controls.Build.Models
                 {
                     if (item.Type == FtpFileSystemObjectType.File)
                     {
-                        list.Add(new FileReference()
+                        list.Add(new ModFile()
                         {
-                            OutputFilePath = item.FullName
+                             DestinationFilePath = item.FullName
                         });
                         Log.Debug(String.Format("Adding File to distant list {0}", item.FullName));
                     }
@@ -250,16 +246,15 @@ namespace Quasar.Controls.Build.Models
         {
             File.Copy(LetterPath + Remote, DestinationFilePath, true);
         }
-        public override List<FileReference> GetRemoteFiles(string FolderPath)
+        public override ObservableCollection<ModFile> GetRemoteFiles(string FolderPath)
         {
-            List<FileReference> list = new List<FileReference>();
+            ObservableCollection<ModFile> list = new ObservableCollection<ModFile>();
             if (Directory.Exists(FolderPath))
             {
                 foreach (string file in Directory.GetFiles(FolderPath, "*", SearchOption.AllDirectories))
                 {
-                    list.Add(new FileReference()
-                    {
-                        OutputFilePath = file
+                    list.Add(new ModFile(){
+                     DestinationFilePath = file
                     });
                 }
             }
@@ -341,7 +336,7 @@ namespace Quasar.Controls.Build.Models
                 MediaD.DownloadFile("sdcard\\" + Remote, fsDestination);
             }
         }
-        public override List<FileReference> GetRemoteFiles(string FolderPath)
+        public override ObservableCollection<ModFile> GetRemoteFiles(string FolderPath)
         {
             return null;
         }

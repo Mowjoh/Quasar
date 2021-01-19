@@ -19,19 +19,15 @@ namespace Quasar.Internal.Tools
         public static bool CheckExecuteUpdate()
         {
             bool UpdateSuccessful = false;
-
             if (NeedsUpdate())
             {
                 if(NeedsInitialSetup()){
                     InstallManager.CreateBaseUserSettings();
-                    InstallManager.CopyBaseFiles();
+                    InstallManager.CreateBaseFolders();
                 }
                 else
                 {
-                    if (NeedsCleaning())
-                    {
-                        CheckCleanInstallation();
-                    }
+                    
                                         
                 }
 
@@ -39,6 +35,12 @@ namespace Quasar.Internal.Tools
             else
             {
                 UpdateSuccessful = true;
+            }
+
+            if (NeedsCleaning())
+            {
+                InstallManager.CreateBaseFolders();
+                CheckCleanInstallation();
             }
 
             return UpdateSuccessful;
@@ -60,10 +62,6 @@ namespace Quasar.Internal.Tools
             if (Update)
             {
                 Properties.Settings.Default.Upgrade();
-                
-                
-
-                
             }
             return Update;
         }
@@ -77,7 +75,7 @@ namespace Quasar.Internal.Tools
         }
         public static bool NeedsScanning()
         {
-            return true;
+            return false;
         }
 
         //Setting File Action

@@ -48,11 +48,11 @@
                 <ColumnDefinition Width="10*"/>
             </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Column="0" Text="{Binding Path=LibraryMod.Name}" Style="{StaticResource CutieTextBlockStyle}"  VerticalAlignment="Center" Margin="10,0,0,0"/>
-            <TextBlock Grid.Column="1" Text="{Binding Path=ContentMapping.Name}" Style="{StaticResource CutieTextBlockStyle}"  VerticalAlignment="Center" Margin="10,0,0,0"/>
-            <TextBlock Grid.Column="2" Text="{Binding Path=InternalModType.Name}" Style="{StaticResource CutieTextBlockStyle}"  VerticalAlignment="Center" Margin="10,0,0,0"/>
-            <TextBlock Grid.Column="3" Text="{Binding Path=GameDataItem.Name}" Style="{StaticResource CutieTextBlockStyle}"  VerticalAlignment="Center" Margin="10,0,0,0"/>
-            <TextBlock Grid.Column="40" Text="{Binding Path=ContentMapping.SlotName}" Style="{StaticResource CutieTextBlockStyle}"  VerticalAlignment="Center" Margin="10,0,0,0"/>
+            <TextBlock Grid.Column="0" Text="{Binding Path=LibraryItem.Name}" Style="{StaticResource CutieTextBlockStyle}"  VerticalAlignment="Center" Margin="10,0,0,0"/>
+            <TextBlock Grid.Column="1" Text="{Binding Path=ContentItem.Name}" Style="{StaticResource CutieTextBlockStyle}"  VerticalAlignment="Center" Margin="10,0,0,0"/>
+            <TextBlock Grid.Column="2" Text="{Binding Path=QuasarModType.Name}" Style="{StaticResource CutieTextBlockStyle}"  VerticalAlignment="Center" Margin="10,0,0,0"/>
+            <TextBlock Grid.Column="3" Text="{Binding Path=GameElement.Name}" Style="{StaticResource CutieTextBlockStyle}"  VerticalAlignment="Center" Margin="10,0,0,0"/>
+            <TextBlock Grid.Column="40" Text="{Binding Path=HumanReadableSlotNumber}" Style="{StaticResource CutieTextBlockStyle}"  VerticalAlignment="Center" Margin="10,0,0,0"/>
 
             <StackPanel Grid.Column="5" Orientation="Horizontal" FlowDirection="RightToLeft">
                 <Button x:Name="Minimize" Margin="0,0,0,0" Visibility="Hidden" Click="ExpandRetract_Click">
@@ -69,17 +69,20 @@
         <!-- Bottom Elements-->
         <Grid Background="{DynamicResource QD2}" Grid.Column="1" Grid.Row="1">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="66*"/>
-                <ColumnDefinition Width="173*"/>
+                <ColumnDefinition Width="120"/>
+                <ColumnDefinition Width="1*"/>
             </Grid.ColumnDefinitions>
-            <StackPanel Margin="10" Grid.Column="0">
-                <TextBox x:Name="ContentMappingName" Margin="0,5,0,0" Text="{Binding ContentMapping.Name}" Style="{StaticResource CutieTextBoxStyle}"/>
-                <ComboBox x:Name="ContentMappingAssociation" Margin="0,10,0,0" Style="{StaticResource ComboBoxFlatStyle}" Height="32" ItemsSource="{Binding GameDataCategory.Items}" SelectedValue="{Binding GameDataItem}" DisplayMemberPath="Name"/>
-                <Button x:Name="ContentMappingSaveButton" Margin="0,10,0,0" Content="Save" Click="SaveContentMapping" Template="{StaticResource CutieSmallButtonTemplate}"/>
-            </StackPanel>
-            <ScrollViewer Margin="10" Grid.Column="1" >
-                <TextBlock x:Name="FilesTextBlock" Background="{StaticResource CutieBG00}" Foreground="White" Width="Auto" Text="{Binding Text}" FontFamily="{StaticResource PoppinsExtraLight}"></TextBlock>
-            </ScrollViewer>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="64"/>
+                <RowDefinition Height="64"/>
+            </Grid.RowDefinitions>
+            <TextBlock Text="Content Name :" Style="{StaticResource CutieTextBlockStyle}" FontSize="14" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,10,0" />
+            <TextBox x:Name="ContentMappingName" Margin="0,5,130,0" Text="{Binding ContentItem.Name}" Style="{StaticResource CutieTextBoxStyle}" Grid.Column="1" Grid.Row="0"/>
+            <Button x:Name="ContentMappingSaveButton" Margin="0,2,15,0" Content="Save" Click="SaveContentMapping" Template="{StaticResource CutieSmallButtonTemplate}" HorizontalAlignment="Right" Width="100" Grid.Column="11" Grid.Row="0"/>
+
+            <TextBlock Text="Association :" Style="{StaticResource CutieTextBlockStyle}" FontSize="14" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,10,10,0" />
+            <ComboBox x:Name="ContentMappingAssociation" Margin="0,10,300,0" Style="{StaticResource ComboBoxFlatStyle}" Height="32" ItemsSource="{Binding GameElements}" SelectedValue="{Binding GameElement}" DisplayMemberPath="Name" Grid.Column="1" Grid.Row="1"/>
+            <TextBox Margin="0,7,16,0" Text="{Binding ContentItem.Name}" Style="{StaticResource CutieTextBoxStyle}" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Right" Height="32" Width="275"/>
         </Grid>
     </Grid>
 </UserControl>

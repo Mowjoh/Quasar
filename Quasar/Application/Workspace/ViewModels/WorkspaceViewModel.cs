@@ -167,7 +167,7 @@ namespace Quasar.Controls.Settings.Workspaces.ViewModels
         /// </summary>
         public WorkspaceViewModel(MainUIViewModel MUVM, ILog _log)
         {
-            Workspaces = MUVM.NewWorkspaces;
+            Workspaces = MUVM.Workspaces;
             ActiveWorkspace = _ActiveWorkspace;
             log = _log;
         }

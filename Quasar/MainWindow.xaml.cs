@@ -19,7 +19,7 @@ namespace Quasar
 
         private async void MainWindow1_Loaded(object sender, RoutedEventArgs e)
         {
-            MUVM.UpdateContentAssociations();
+            MUVM.ShowUpdateAndLaunch();
         }
     }
     

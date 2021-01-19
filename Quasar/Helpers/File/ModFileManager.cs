@@ -1,6 +1,6 @@
 ﻿using log4net;
 using log4net.Appender;
-using Quasar.Data.V1;
+using Quasar.Data.V2;
 using Quasar.Helpers.FileOperations;
 using System;
 using System.Collections.Generic;
@@ -41,11 +41,11 @@ namespace Quasar.FileSystem
 
             try
             {
-                GameModType mt = _Game.GameModTypes.Find(m => m.APIName == parameters.Split(',')[1]);
+                GameAPICategory mt = _Game.GameAPICategories.Single(m => m.APICategoryName == parameters.Split(',')[1]);
                 if( mt != null)
                 {
                     ModTypeID = mt.ID.ToString();
-                    ModTypeFolderName = mt.LibraryFolder;
+                    ModTypeFolderName = mt.LibraryFolderName;
 
                     DownloadDestinationFilePath = Properties.Settings.Default.DefaultDir + "\\Library\\Downloads\\" + ModID + "." + ModArchiveFormat;
                     ArchiveContentFolderPath = Properties.Settings.Default.DefaultDir + "\\Library\\Downloads\\" + ModID + "\\";
@@ -82,28 +82,26 @@ namespace Quasar.FileSystem
             appender.ActivateOptions();
         }
 
-        public ModFileManager(string _QuasarURL)
-        {
-            string parameters = _QuasarURL.Substring(7);
-            DownloadURL = parameters.Split(',')[0];
-            ModID = parameters.Split(',')[2];
-            ModArchiveFormat = parameters.Split(',')[3];
-            APIType = parameters.Split(',')[1];
-
-            DownloadDestinationFilePath = Properties.Settings.Default.DefaultDir + "\\Library\\Downloads\\" + ModID + "." + ModArchiveFormat;
-            ArchiveContentFolderPath = Properties.Settings.Default.DefaultDir + "\\Library\\Downloads\\" + ModID + "\\";
-            LibraryContentFolderPath = Properties.Settings.Default.DefaultDir + "\\Library\\Mods\\" + ModTypeFolderName + "\\" + ModID + "\\";
-        }
-
         //Sets up default paths from the Library Mod
-        public ModFileManager(LibraryMod _mod, Game _Game)
+        public ModFileManager(LibraryItem _mod, Game _Game, string ModArchiveFormat = "")
         {
             ModID = _mod.ID.ToString();
-            ModTypeID = _mod.TypeID.ToString();
+            ModTypeID = _mod.GameAPISubCategoryID.ToString();
 
-            GameModType mt = _Game.GameModTypes.Find(m => m.ID == _mod.TypeID);
-            ModTypeFolderName = mt.LibraryFolder;
+            if (_mod.ManualMod)
+            {
+                ModTypeFolderName = "manual";
+            }
+            else
+            {
+                GameAPICategory mt = _Game.GameAPICategories.Single(m => m.APICategoryName == _mod.APICategoryName);
+                ModTypeFolderName = mt.LibraryFolderName;
+            }
+            
+
+            DownloadDestinationFilePath = Properties.Settings.Default.DefaultDir + "\\Library\\Downloads\\" + ModID + "." + ModArchiveFormat;
             LibraryContentFolderPath = Properties.Settings.Default.DefaultDir + "\\Library\\Mods\\" + ModTypeFolderName.Replace(@"/",@"\") + "\\" + ModID + "\\";
+            ArchiveContentFolderPath = Properties.Settings.Default.DefaultDir + "\\Library\\Downloads\\" + ModID + "\\";
             if (!Directory.Exists(Properties.Settings.Default.DefaultDir + "\\Library\\Mods\\" + ModTypeFolderName.Replace(@"/", @"\")))
             {
                 Directory.CreateDirectory(Properties.Settings.Default.DefaultDir + "\\Library\\Mods\\" + ModTypeFolderName.Replace(@"/", @"\"));

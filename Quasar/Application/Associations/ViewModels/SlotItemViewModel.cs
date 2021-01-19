@@ -1,5 +1,5 @@
 ﻿using Quasar.Controls.Common.Models;
-using Quasar.Data.V1;
+using Quasar.Data.V2;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +18,7 @@ namespace Quasar.Controls.Associations.ViewModels
         private bool _EmptySlot { get; set; }
         private string _TypeName { get; set; }
         private Association _Association { get; set; }
-        private List<ContentMapping> _ContentMappings { get; set; }
+        private List<ContentItem> _ContentItems { get; set; }
         #endregion
 
         #region Properties
@@ -106,16 +106,16 @@ namespace Quasar.Controls.Associations.ViewModels
                 OnPropertyChanged("Association");
             }
         }
-        public List<ContentMapping> ContentMappings
+        public List<ContentItem> ContentItems
         {
-            get => _ContentMappings;
+            get => _ContentItems;
             set
             {
-                if (_ContentMappings == value)
+                if (_ContentItems == value)
                     return;
 
-                _ContentMappings = value;
-                OnPropertyChanged("ContentMappings");
+                _ContentItems = value;
+                OnPropertyChanged("ContentItems");
             }
         }
         #endregion

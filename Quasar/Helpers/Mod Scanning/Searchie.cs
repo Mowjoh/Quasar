@@ -16,7 +16,7 @@ namespace Quasar.Helpers.ModScanning
 
         //Launches Detection process for a specific Mod
         public static ObservableCollection<ContentMapping> AutoDetectinator(LibraryMod LibraryMod,ObservableCollection<InternalModType> InternalModTypes, Game Game, ObservableCollection<GameData> GameDatas)
-        {
+        {/*
             if(LibraryMod != null)
             {
 
@@ -107,7 +107,7 @@ namespace Quasar.Helpers.ModScanning
                     }
                 }
                 return mappings;
-            }
+            }*/
             return null;
         }
 

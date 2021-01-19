@@ -16,6 +16,8 @@ namespace Quasar.Data.V2
         public int UpdateCount { get; set; }
         public int GamebananaItemID { get; set; }
         public int GameAPISubCategoryID { get; set; }
+        public string APICategoryName { get; set; }
+        public bool ManualMod { get; set; }
         public ObservableCollection<Author> Authors { get; set; }
     }
 

@@ -20,6 +20,17 @@ namespace Quasar.Internal.Tools
             return ID;
         }
 
+        public static int getNewLibraryID()
+        {
+            int ID = Properties.Settings.Default.LibraryID;
+            ID++;
+
+            Properties.Settings.Default.LibraryID = ID;
+            Properties.Settings.Default.Save();
+
+            return ID;
+        }
+
         public static int getNewWorkspaceID()
         {
             int ID = Properties.Settings.Default.WorkspaceIdGenerator;

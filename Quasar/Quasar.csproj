@@ -91,7 +91,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Application\Associations\Models\GameElementSquare.cs" />
+    <Compile Include="Application\Associations\Models\GameElementFamilySquare.cs" />
     <Compile Include="Application\Associations\ViewModels\AssociationViewModel.cs" />
     <Compile Include="Application\Associations\ViewModels\SlotItemViewModel.cs" />
     <Compile Include="Application\Associations\Views\AssociationView.xaml.cs">
@@ -111,6 +111,8 @@
     <Compile Include="Data\V1\QuasarModType.cs" />
     <Compile Include="Data\V2\ModLoader.cs" />
     <Compile Include="Data\V2\QuasarModType.cs" />
+    <Compile Include="Helpers\Downloading\ModManager.cs" />
+    <Compile Include="Helpers\Mod Scanning\Slotter.cs" />
     <Compile Include="Helpers\Quasar Management\InstallManager.cs" />
     <Compile Include="Helpers\Tools\FTPValidator.cs" />
     <Compile Include="Application\Common\Models\NotifyTaskCompletion.cs" />
@@ -120,14 +122,6 @@
     <Compile Include="Application\Content\ViewModels\ContentViewModel.cs" />
     <Compile Include="Application\Content\Views\ContentView.xaml.cs">
       <DependentUpon>ContentView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Application\InternalModTypes\Models\InternalModTypeGroup.cs" />
-    <Compile Include="Application\InternalModTypes\Views\DefinitionsWindow.xaml.cs">
-      <DependentUpon>DefinitionsWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Application\InternalModTypes\ViewModels\InternalModTypeViewModel.cs" />
-    <Compile Include="Application\InternalModTypes\Views\InternalModTypeView.xaml.cs">
-      <DependentUpon>InternalModTypeView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Application\Mod\Models\QuasarDownload.cs" />
     <Compile Include="Application\Mod\ViewModels\ModListItemViewModel.cs" />
@@ -213,14 +207,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Application\Content\Views\ContentView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Application\InternalModTypes\Views\DefinitionsWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Application\InternalModTypes\Views\InternalModTypeView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -333,31 +319,13 @@
     <Content Include="Resources\images\NoScreenshot.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\InternalModTypes\SmashUltimate\CSS_Layout.xml">
+    <Content Include="Resources\Games.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\InternalModTypes\SmashUltimate\Series_Icon.xml">
+    <Content Include="Resources\ModLoaders.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\InternalModTypes\SmashUltimate\Common_Effect.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\InternalModTypes\SmashUltimate\Fighter_Parameter.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\InternalModTypes\SmashUltimate\Fighter_Animation.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\InternalModTypes\SmashUltimate\Fighter_Sounds.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\InternalModTypes\SmashUltimate\Common_Parameter.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\InternalModTypes\SmashUltimate\nro.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Sources\ModLoaders.xml">
+    <Content Include="Resources\ModTypes.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Resource Include="Fonts\Poppins-Black.ttf" />
@@ -382,12 +350,6 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>SettingsDefinition.Designer.cs</LastGenOutput>
     </None>
-    <Content Include="Resources\InternalModTypes\SmashUltimate\Fighter_Effect.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\InternalModTypes\SmashUltimate\Items.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="Resources\ModLoaders\UMM\Switch\Ultimate_Mod_Manager.nro">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -411,36 +373,12 @@
     <Resource Include="Quasar.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
-    <Content Include="Resources\InternalModTypes\SmashUltimate\Stage_SkinModel.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\InternalModTypes\SmashUltimate\Fighter_Model.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\InternalModTypes\SmashUltimate\Music.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\InternalModTypes\SmashUltimate\Stage_UI.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\images\Games\mk8d.jpg">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\InternalModTypes\SmashUltimate\Fighter_UI.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\InternalModTypes\SmashUltimate\Fighter_Voice.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\InternalModTypes\SmashUltimate\Fighter_Skin.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Sources\GameData.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\images\Games\All.png">
@@ -453,9 +391,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\images\Games\SmashUltimate.jpg">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Sources\Games.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
@@ -507,6 +442,7 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Application\Common\Views\" />
     <Folder Include="Application\Content\Models\" />
     <Folder Include="Application\MainUI\Models\" />
     <Folder Include="Application\MainUI\Views\" />

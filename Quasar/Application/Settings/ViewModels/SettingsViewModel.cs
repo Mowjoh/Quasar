@@ -24,6 +24,7 @@ namespace Quasar
         ObservableCollection<SettingItemView> _SettingItems { get; set; }
 
         private ICommand _ValidateFTPCommand { get; set; }
+        private ICommand _MoveInstallCommand { get; set; }
         #endregion
 
         #region Parameters
@@ -48,6 +49,17 @@ namespace Quasar
                     _ValidateFTPCommand = new RelayCommand(param => ValidateFTP());
                 }
                 return _ValidateFTPCommand;
+            }
+        }
+        public ICommand MoveInstallCommand
+        {
+            get
+            {
+                if (_MoveInstallCommand == null)
+                {
+                    _MoveInstallCommand = new RelayCommand(param => MoveInstall());
+                }
+                return _MoveInstallCommand;
             }
         }
         #endregion
@@ -120,6 +132,11 @@ namespace Quasar
                 Properties.Settings.Default.FTPValid = false;
                 Properties.Settings.Default.Save();
             }
+        }
+
+        public void MoveInstall()
+        {
+
         }
         #endregion
     }

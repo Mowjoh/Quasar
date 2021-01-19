@@ -3,7 +3,7 @@ using log4net.Repository.Hierarchy;
 using MediaDevices;
 using Quasar.Controls.Build.Models;
 using Quasar.Controls.Common.Models;
-using Quasar.Data.V1;
+using Quasar.Data.V2;
 using Quasar.Internal;
 using System;
 using System.Collections.Generic;
@@ -44,13 +44,7 @@ namespace Quasar.Controls.Build.ViewModels
         #endregion
 
         #region Data
-        private ObservableCollection<LibraryMod> _Mods { get; set; }
-        private ObservableCollection<ContentMapping> _ContentMappings { get; set; }
-        private ObservableCollection<ModLoader> _ModLoaders { get; set; }
-        private ObservableCollection<Workspace> _Workspaces { get; set; }
-        private ObservableCollection<InternalModType> _InternalModTypes { get; set; }
-        private ObservableCollection<GameData> _GameDatas { get; set; }
-        private ObservableCollection<Game> _Games { get; set; }
+        private MainUIViewModel _MUVM { get; set; }
         #endregion
 
         #region Commands
@@ -264,103 +258,13 @@ namespace Quasar.Controls.Build.ViewModels
         #endregion
 
         #region Data
-        /// <summary>
-        /// List of all Library Mods
-        /// </summary>
-        public ObservableCollection<LibraryMod> Mods
+        public MainUIViewModel MUVM
         {
-            get => _Mods;
+            get => _MUVM;
             set
             {
-                if (_Mods == value)
-                    return;
-
-                _Mods = value;
-                OnPropertyChanged("Mods");
-            }
-        }
-        /// <summary>
-        /// List of all content mappings
-        /// </summary>
-        public ObservableCollection<ContentMapping> ContentMappings
-        {
-            get => _ContentMappings;
-            set
-            {
-                if (_ContentMappings == value)
-                    return;
-
-                _ContentMappings = value;
-                OnPropertyChanged("ContentMappings");
-            }
-        }
-        public ObservableCollection<ModLoader> ModLoaders
-        {
-            get => _ModLoaders;
-            set
-            {
-                if (_ModLoaders == value)
-                    return;
-
-                _ModLoaders = value;
-                OnPropertyChanged("ModLoaders");
-            }
-        }
-        public ObservableCollection<Workspace> Workspaces
-        {
-            get => _Workspaces;
-            set
-            {
-                if (_Workspaces == value)
-                    return;
-
-                _Workspaces = value;
-                OnPropertyChanged("Workspaces");
-            }
-        }
-        /// <summary>
-        /// List of all Internal Mod Types
-        /// </summary>
-        public ObservableCollection<InternalModType> InternalModTypes
-        {
-            get => _InternalModTypes;
-            set
-            {
-                if (_InternalModTypes == value)
-                    return;
-
-                _InternalModTypes = value;
-                OnPropertyChanged("InternalModTypes");
-            }
-        }
-        /// <summary>
-        /// List of all Game Data
-        /// </summary>
-        public ObservableCollection<GameData> GameDatas
-        {
-            get => _GameDatas;
-            set
-            {
-                if (_GameDatas == value)
-                    return;
-
-                _GameDatas = value;
-                OnPropertyChanged("GameDatas");
-            }
-        }
-        /// <summary>
-        /// List of all Games and their API Categories
-        /// </summary>
-        public ObservableCollection<Game> Games
-        {
-            get => _Games;
-            set
-            {
-                if (_Games == value)
-                    return;
-
-                _Games = value;
-                OnPropertyChanged("Games");
+                _MUVM = value;
+                OnPropertyChanged("MUVM");
             }
         }
         #endregion
@@ -394,16 +298,9 @@ namespace Quasar.Controls.Build.ViewModels
         public ILog Log { get; set; }
         #endregion
 
-        public BuildViewModel(ObservableCollection<ModLoader> _ModLoaders,ObservableCollection<Workspace> _Workspaces, Workspace _Workspace, ObservableCollection<LibraryMod> _Mods, ObservableCollection<ContentMapping> _ContentMappings, ObservableCollection<InternalModType> _InternalModTypes, ObservableCollection<GameData> _GameDatas, ObservableCollection<Game> _Games)
+        public BuildViewModel(MainUIViewModel _MUVM)
         {
-            ModLoaders = _ModLoaders;
-            ActiveWorkspace = _Workspace;
-            Workspaces = _Workspaces;
-            Mods = _Mods;
-            ContentMappings = _ContentMappings;
-            InternalModTypes = _InternalModTypes;
-            GameDatas = _GameDatas;
-            Games = _Games;
+            MUVM = _MUVM;
 
             getSDCards();
             getMTPDrives();
@@ -418,7 +315,7 @@ namespace Quasar.Controls.Build.ViewModels
         
         private void LoadUI()
         {
-            SelectedModLoader = ModLoaders[0];
+            SelectedModLoader = MUVM.ModLoaders[0];
             if (Drives.Count > 0)
             {
                 SelectedDrive = Drives[0];
@@ -495,7 +392,7 @@ namespace Quasar.Controls.Build.ViewModels
                 
             }
 
-            SmashBuilder SB = new SmashBuilder(FW,ModLoaders[0].ModLoaderID, false, true, this);
+            SmashBuilder SB = new SmashBuilder(FW, SelectedModLoader.ID, CleanSelected, OverwriteSelected, this);
 
             await Task.Run(() => {
                 SB.StartBuild();

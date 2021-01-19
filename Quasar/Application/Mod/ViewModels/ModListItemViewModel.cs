@@ -1,6 +1,6 @@
 ﻿using Quasar.Controls.Common.Models;
 using Quasar.Controls.ModManagement.ViewModels;
-using Quasar.Data.V1;
+using Quasar.Data.V2;
 using Quasar.FileSystem;
 using Quasar.Internal;
 using System;
@@ -25,8 +25,8 @@ namespace Quasar.Controls.Mod.ViewModels
         #region Data
         private ObservableCollection<Game> _Games { get; set; }
         private Game _Game { get; set; }
-        private LibraryMod _LibraryMod { get; set; }
-        private ObservableCollection<LibraryMod> _Mods { get; set; }
+        private LibraryItem _LibraryMod { get; set; }
+        private ObservableCollection<LibraryItem> _Mods { get; set; }
         
         private ObservableCollection<Object> _Authors { get; set; }
         private ObservableCollection<Object> _Roles { get; set; }
@@ -93,7 +93,7 @@ namespace Quasar.Controls.Mod.ViewModels
                 OnPropertyChanged("Game");
             }
         }
-        public LibraryMod LibraryMod
+        public LibraryItem LibraryItem
         {
             get
             {
@@ -105,10 +105,11 @@ namespace Quasar.Controls.Mod.ViewModels
                     return;
 
                 _LibraryMod = value;
-                OnPropertyChanged("LibraryMod");
+                OnPropertyChanged("LibraryItem");
+                OnPropertyChanged("APISubCategoryName");
             }
         }
-        public ObservableCollection<LibraryMod> Mods
+        public ObservableCollection<LibraryItem> Mods
         {
             get => _Mods;
             set
@@ -118,6 +119,53 @@ namespace Quasar.Controls.Mod.ViewModels
 
                 _Mods = value;
                 OnPropertyChanged("Mods");
+            }
+        }
+        public string APICategoryName
+        {
+            get
+            {
+                if (LibraryItem != null)
+                {
+                    if (LibraryItem.ManualMod)
+                    {
+                        return "Manual";
+                    }
+                    else
+                    {
+                        return LibraryItem.APICategoryName;
+                    }
+
+                }
+                else
+                {
+                    return "";
+                }
+            }
+        }
+        public string APISubCategoryName 
+        {
+            get
+            {
+                if(LibraryItem != null)
+                {
+                    if (LibraryItem.ManualMod)
+                    {
+                        return "Manual";
+                    }
+                    else
+                    {
+                        GameAPICategory cat = Game.GameAPICategories.Single(ct => ct.APICategoryName == LibraryItem.APICategoryName);
+                        GameAPISubCategory scat = cat.GameAPISubCategories.SingleOrDefault(sc => sc.ID == LibraryItem.GameAPISubCategoryID);
+
+                        return scat.APISubCategoryName;
+                    }
+                    
+                }
+                else
+                {
+                    return "";
+                }
             }
         }
         
@@ -299,6 +347,8 @@ namespace Quasar.Controls.Mod.ViewModels
                 OnPropertyChanged("AdvancedMode");
             }
         }
+        public bool NoContent => ContentStatValue != 3;
+        public bool ManualMod => LibraryItem.ManualMod;
         public bool Smol
         {
             get
@@ -451,10 +501,10 @@ namespace Quasar.Controls.Mod.ViewModels
             Smol = true;
         }
 
-        public ModListItemViewModel(LibraryMod Mod, Game Gamu, ModsViewModel model, bool _Downloading = false)
+        public ModListItemViewModel(LibraryItem Mod, Game Gamu, ModsViewModel model, bool _Downloading = false)
         {
             Game = Gamu;
-            LibraryMod = Mod;
+            LibraryItem = Mod;
             Downloading = _Downloading;
             Smol = true;
             MVM = model;
@@ -465,7 +515,7 @@ namespace Quasar.Controls.Mod.ViewModels
             GetAuthors();
         }
 
-        public ModListItemViewModel(string QuasarURL, ObservableCollection<Game> _Games, ObservableCollection<LibraryMod> _Mods, ModsViewModel model)
+        public ModListItemViewModel(string QuasarURL, ObservableCollection<Game> _Games, ObservableCollection<LibraryItem> _Mods, ModsViewModel model)
         {
             Downloading = true;
             Smol = true;
@@ -486,13 +536,21 @@ namespace Quasar.Controls.Mod.ViewModels
         {
             if (!_Smol)
             {
-                string imageSource = Properties.Settings.Default.DefaultDir + @"\Library\Screenshots\";
-                string imagename = LibraryMod.GameID + "_" + LibraryMod.TypeID + "_" + LibraryMod.ID;
-                string[] files = System.IO.Directory.GetFiles(imageSource, imagename + ".*");
-
-                if (files.Length > 0)
+                if (!LibraryItem.ManualMod)
                 {
-                    ImageSource = new Uri(files[0], UriKind.RelativeOrAbsolute);
+                    GameAPICategory cat = Game.GameAPICategories.SingleOrDefault(c => c.APICategoryName == LibraryItem.APICategoryName);
+                    string imageSource = Properties.Settings.Default.DefaultDir + @"\Library\Screenshots\";
+                    string imagename = LibraryItem.GameID + "_" + cat.ID + "_" + LibraryItem.ID;
+                    string[] files = System.IO.Directory.GetFiles(imageSource, imagename + ".*");
+
+                    if (files.Length > 0)
+                    {
+                        ImageSource = new Uri(files[0], UriKind.RelativeOrAbsolute);
+                    }
+                    else
+                    {
+                        ImageSource = new Uri(Properties.Settings.Default.DefaultDir + @"\Resources\images\NoScreenshot.png");
+                    }
                 }
                 else
                 {
@@ -509,12 +567,12 @@ namespace Quasar.Controls.Mod.ViewModels
         {
             if(MVM != null)
             {
-                List<ContentMapping> CM = MVM.ContentMappings.Where(cm => cm.ModID == LibraryMod.ID).ToList();
+                List<ContentItem> CM = MVM.MUVM.ContentItems.Where(ci => ci.LibraryItemID == LibraryItem.ID).ToList();
                 bool allFound = true;
                 bool noneFound = true;
-                foreach (ContentMapping mapping in CM)
+                foreach (ContentItem item in CM)
                 {
-                    if (!MVM.ActiveWorkspace.Associations.Any(a => a.ContentMappingID == mapping.ID))
+                    if (!MVM.MUVM.ActiveWorkspace.Associations.Any(a => a.ContentItemID == item.ID))
                     {
                         allFound = false;
                     }
@@ -523,7 +581,7 @@ namespace Quasar.Controls.Mod.ViewModels
                         noneFound = false;
                     }
                 }
-                ContentStatValue = noneFound ? 0 : allFound ? 2 : 1;
+                ContentStatValue = CM.Count == 0 ? 3 : noneFound ? 0 : allFound ? 2 : 1;
             }
             
         }
@@ -532,41 +590,46 @@ namespace Quasar.Controls.Mod.ViewModels
         {
             Authors = new ObservableCollection<object>();
             Roles = new ObservableCollection<object>();
-
-            int count = _LibraryMod.Authors.Length > 3 ? 3 : _LibraryMod.Authors.Length;
+            int count = _LibraryMod.Authors.Count > 3 ? 3 : _LibraryMod.Authors.Count;
             for (int i = 0; i < count; i++)
             {
-                if (_LibraryMod.Authors[i][2] == "0")
+                if (_LibraryMod.Authors[i].GamebananaAuthorID == 0)
                 {
-                    Authors.Add(new Label() { Content = _LibraryMod.Authors[i][0],
+                    Authors.Add(new Label()
+                    {
+                        Content = _LibraryMod.Authors[i].Name,
                         Foreground = (SolidColorBrush)App.Current.Resources["QuasarTextColor"],
                         FontFamily = (FontFamily)App.Current.Resources["PoppinsRegular"],
-                        Height = 28 });
+                        Height = 28
+                    });
                 }
                 else
                 {
                     Run run = new Run();
-                    run.Text = _LibraryMod.Authors[i][0];
+                    run.Text = _LibraryMod.Authors[i].Name;
 
                     Hyperlink hl = new Hyperlink(run);
-                    hl.NavigateUri = new Uri(@"https://gamebanana.com/members/" + _LibraryMod.Authors[i][2]);
+                    hl.NavigateUri = new Uri(@"https://gamebanana.com/members/" + _LibraryMod.Authors[i].GamebananaAuthorID);
                     hl.Click += new RoutedEventHandler(link_click);
 
-                    TextBlock textBlock = new TextBlock() { 
-                        Margin = new Thickness(5, 0, 0, 0), 
+                    TextBlock textBlock = new TextBlock()
+                    {
+                        Margin = new Thickness(5, 0, 0, 0),
                         Foreground = (SolidColorBrush)App.Current.Resources["CutieTextColor"],
                         FontFamily = (FontFamily)App.Current.Resources["PoppinsRegular"],
-                        Height = 28, 
-                        TextAlignment = TextAlignment.Left, 
-                        LineStackingStrategy = LineStackingStrategy.BlockLineHeight, 
-                        LineHeight = 22 };
+                        Height = 28,
+                        TextAlignment = TextAlignment.Left,
+                        LineStackingStrategy = LineStackingStrategy.BlockLineHeight,
+                        LineHeight = 22
+                    };
                     textBlock.Inlines.Add(hl);
 
                     Authors.Add(textBlock);
                 }
 
-                Roles.Add(new Label() { Content = _LibraryMod.Authors[i][1] != ""? _LibraryMod.Authors[i][1] : "No role provided" , FontFamily = (FontFamily)App.Current.Resources["PoppinsRegular"], Foreground = (SolidColorBrush)App.Current.Resources["QuasarTextColor"], Height = 28 });
+                Roles.Add(new Label() { Content = _LibraryMod.Authors[i].Role != "" ? _LibraryMod.Authors[i].Role : "No role provided", FontFamily = (FontFamily)App.Current.Resources["PoppinsRegular"], Foreground = (SolidColorBrush)App.Current.Resources["QuasarTextColor"], Height = 28 });
             }
+
         }
 
         public void link_click(Object sender, RoutedEventArgs e)
@@ -578,13 +641,13 @@ namespace Quasar.Controls.Mod.ViewModels
 
         public void ShowFileView()
         {
-            new FileView(new ModFileManager(LibraryMod, Game).LibraryContentFolderPath, LibraryMod.Name).Show();
+            new FileView(new ModFileManager(LibraryItem, Game).LibraryContentFolderPath, LibraryItem.Name).Show();
         }
 
         public void LaunchTestWindow()
         {
-            ModFileManager mfm = new ModFileManager(LibraryMod, MVM.Games[1]);
-            new DefinitionsWindow(mfm, "", "", "", "", MVM.GameDatas[0].Categories.ToList(), MVM.InternalModTypes.ToList(), 0).Show();
+            ModFileManager mfm = new ModFileManager(LibraryItem, MVM.MUVM.Games[0]);
+            //new DefinitionsWindow(mfm, "", "", "", "", MVM.GameDatas[0].Categories.ToList(), MVM.InternalModTypes.ToList(), 0).Show();
         }
 
         public void DeleteMod()

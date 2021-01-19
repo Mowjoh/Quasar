@@ -191,6 +191,15 @@ namespace Quasar.Helpers.Tools
         public string umm { get; set; }
     }
 
+    public class updater
+    {
+        public string server_ip { get; set; }
+        public bool beta_updates { get; set; }
+    }
+    public class logger
+    {
+        public string logger_level { get; set; }
+    }
     public class misc
     {
         public bool debug { get; set; }

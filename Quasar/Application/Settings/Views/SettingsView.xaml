@@ -11,6 +11,7 @@
         <!--Quick Actions-->
         <TextBlock Style="{StaticResource CutieTextBlockStyle}" FontSize="16" Text="Quick Actions :" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="10,23,0,0"/>
         <Button Content="Validate FTP and Save Connection info" Command="{Binding Path=ValidateFTPCommand}" Template="{StaticResource CutieSmallButtonTemplate}" HorizontalAlignment="Left" Margin="145,20,0,0" VerticalAlignment="Top" Width="300" Height="32"/>
+        <Button Content="Move Quasar's Installation Folder" Command="{Binding Path=MoveInstallCommand}" Template="{StaticResource CutieSmallButtonTemplate}" HorizontalAlignment="Left" Margin="475,20,0,0" VerticalAlignment="Top" Width="300" Height="32"/>
         
         <!--Settings Panel-->
         <ItemsControl ItemsSource="{Binding SettingItems}" Background="{DynamicResource CutieBG01}" Margin="15,75,15,15">

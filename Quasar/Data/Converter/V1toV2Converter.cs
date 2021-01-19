@@ -119,6 +119,7 @@ namespace Quasar.Data.Converter
                     NoGameElement = imt.NoGameData,
                     IsExternal = imt.OutsideFolder,
                     ExternalFolderPath = imt.OutsideFolderPath,
+                    SlotCount = imt.Slots,
                     QuasarModTypeFileDefinitions = new ObservableCollection<QuasarModTypeFileDefinition>()
                 };
 
@@ -243,7 +244,8 @@ namespace Quasar.Data.Converter
                     LibraryItemID = cm.ModID,
                     QuasarModTypeID = cm.InternalModType,
                     Name = cm.Name,
-                    SlotNumber = cm.Slot
+                    SlotNumber = cm.Slot,
+                    GameElementID = cm.GameDataItemID
                 };
                 V2ContentItems.Add(ci);
             }

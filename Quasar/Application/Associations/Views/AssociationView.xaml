@@ -9,7 +9,7 @@
     <Grid x:Name="AssignmentGrid" Background="{DynamicResource QD1}">
         <!-- Game Data Choice -->
         <Grid x:Name="GameDataElementChoice" Panel.ZIndex="1000" Background="#C5000000" >
-            <ListBox ItemsSource="{Binding GameDataUXs}" SelectedItem="{Binding SelectedGameDataCategory}" Height="350" Width="680" VerticalAlignment="Center" HorizontalAlignment="Center" Background="Transparent" BorderBrush="Transparent">
+            <ListBox ItemsSource="{Binding GameFamilySquareCollection}" SelectedItem="{Binding SelectedGameElementFamilySquare}" Height="350" Width="680" VerticalAlignment="Center" HorizontalAlignment="Center" Background="Transparent" BorderBrush="Transparent">
                 <ListBox.Resources>
                     <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Transparent" />
                     <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="Transparent" />
@@ -35,7 +35,7 @@
                                         </Setter.Value>
                                     </Setter>
                                     <Style.Triggers>
-                                        <DataTrigger Binding="{Binding Path=GameDataCategory.Name}" Value="Characters">
+                                        <DataTrigger Binding="{Binding Path=GameElementFamily.Name}" Value="Characters">
                                             <Setter Property="Background">
                                                 <Setter.Value>
                                                     <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
@@ -45,7 +45,7 @@
                                                 </Setter.Value>
                                             </Setter>
                                         </DataTrigger>
-                                        <DataTrigger Binding="{Binding Path=GameDataCategory.Name}" Value="Stages">
+                                        <DataTrigger Binding="{Binding Path=GameElementFamily.Name}" Value="Stages">
                                             <Setter Property="Background">
                                                 <Setter.Value>
                                                     <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
@@ -55,7 +55,7 @@
                                                 </Setter.Value>
                                             </Setter>
                                         </DataTrigger>
-                                        <DataTrigger Binding="{Binding Path=GameDataCategory.Name}" Value="Music">
+                                        <DataTrigger Binding="{Binding Path=GameElementFamily.Name}" Value="Music">
                                             <Setter Property="Background">
                                                 <Setter.Value>
                                                     <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
@@ -65,7 +65,7 @@
                                                 </Setter.Value>
                                             </Setter>
                                         </DataTrigger>
-                                        <DataTrigger Binding="{Binding Path=GameDataCategory.Name}" Value="Items">
+                                        <DataTrigger Binding="{Binding Path=GameElementFamily.Name}" Value="Items">
                                             <Setter Property="Background">
                                                 <Setter.Value>
                                                     <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
@@ -75,7 +75,7 @@
                                                 </Setter.Value>
                                             </Setter>
                                         </DataTrigger>
-                                        <DataTrigger Binding="{Binding Path=GameDataCategory.Name}" Value="Others">
+                                        <DataTrigger Binding="{Binding Path=GameElementFamily.Name}" Value="Others">
                                             <Setter Property="Background">
                                                 <Setter.Value>
                                                     <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
@@ -85,7 +85,7 @@
                                                 </Setter.Value>
                                             </Setter>
                                         </DataTrigger>
-                                        <DataTrigger Binding="{Binding Path=GameDataCategory.Name}" Value="Series">
+                                        <DataTrigger Binding="{Binding Path=GameElementFamily.Name}" Value="Series">
                                             <Setter Property="Background">
                                                 <Setter.Value>
                                                     <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
@@ -99,7 +99,7 @@
                                 </Style>
                             </Border.Style>
                             <Border CornerRadius="15">
-                                <TextBlock Text="{Binding Path=GameDataCategory.Name}" Style="{StaticResource CutieTextBlockStyle}" FontSize="24" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                <TextBlock Text="{Binding Path=GameElementFamily.Name}" Style="{StaticResource CutieTextBlockStyle}" FontSize="24" VerticalAlignment="Center" HorizontalAlignment="Center" />
                                 <Border.Style>
                                     <Style TargetType="Border">
                                         <Setter Property="Background" Value="Transparent"/>
@@ -181,18 +181,18 @@
 
             <!-- Bottom Lists -->
            <Border Margin="16,0,16,16" Grid.Row="4" Width="300" Background="{StaticResource CutieBG03}" CornerRadius="8">
-                <ListBox Margin="0,5"  Width="300" Style="{StaticResource CutieListBox}" ItemsSource="{Binding Path=ItemsCollectionViewSource.View}" DisplayMemberPath="Name" SelectedItem="{Binding SelectedGameDataItem}" Foreground="White"/>
+                <ListBox Margin="0,5"  Width="300" Style="{StaticResource CutieListBox}" ItemsSource="{Binding Path=ItemsCollectionViewSource.View}" DisplayMemberPath="Name" SelectedItem="{Binding SelectedGameElement}" Foreground="White"/>
             </Border>
             <Border Margin="16,0,16,16" Grid.Row="4" Grid.Column="1" Width="300" Background="{StaticResource CutieBG03}" CornerRadius="8">
                 <ListBox Margin="0,5" Width="300"  DisplayMemberPath="Name" Grid.Column="1" Foreground="White">
                     <ListBox.Style>
                         <Style TargetType="{x:Type ListBox}" BasedOn="{StaticResource CutieListBox}">
-                            <Setter Property="ItemsSource" Value="{Binding SelectedInternalModTypes}" />
-                            <Setter Property="SelectedItem" Value="{Binding SelectedInternalModType}" />
+                            <Setter Property="ItemsSource" Value="{Binding QuasarModTypeCollection}" />
+                            <Setter Property="SelectedItem" Value="{Binding SelectedQuasarModType}" />
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding TypesGrouped}" Value="True">
-                                    <Setter Property="ItemsSource" Value="{Binding SelectedInternalModTypeGroups}" />
-                                    <Setter Property="SelectedItem" Value="{Binding SelectedInternalModTypeGroup}" />
+                                    <Setter Property="ItemsSource" Value="{Binding QuasarModTypeGroupCollection}" />
+                                    <Setter Property="SelectedItem" Value="{Binding SelectedQuasarModTypeGroup}" />
                                 </DataTrigger>
                             </Style.Triggers>
                         </Style>

@@ -35,11 +35,11 @@
             <TextBlock Text="Local Transfer (SD)" HorizontalAlignment="Left" Margin="274,139,0,0" VerticalAlignment="Top" FontSize="14" FontFamily="{StaticResource PoppinsRegular}" Style="{StaticResource CutieTextBlockStyle}"/>
             <RadioButton  Template="{StaticResource CutieRadio}"  IsChecked="{Binding LocalSelected}" GroupName="TransferOption" HorizontalAlignment="Left" Margin="248,137,0,0" VerticalAlignment="Top" Foreground="{DynamicResource QuasarTextColor}" RenderTransformOrigin="-12.895,3.133"/>
             <ComboBox Margin="421,131,0,0" Style="{StaticResource ComboBoxFlatStyle}" Width="200" Height="32" VerticalAlignment="Top" HorizontalAlignment="Left" ItemsSource="{Binding Drives}" SelectedItem="{Binding SelectedDrive}" DisplayMemberPath="DisplayName"/>
-            <Button VerticalAlignment="Top" HorizontalAlignment="Left" Margin="630,131,0,0" Width="32" Height="32" Command="{Binding RefreshUSBCommand}" Template="{StaticResource ActionRefreshButton}" />
+            <Button VerticalAlignment="Top" HorizontalAlignment="Left" Margin="630,131,0,0" Width="32" Height="32" Command="{Binding RefreshUSBCommand}" Template="{StaticResource ActionRefreshButton}" Background="Transparent" />
 
             <!-- Mod Loader-->
             <TextBlock Text="Mod Loader :" HorizontalAlignment="Left" Margin="16,209,0,0" VerticalAlignment="Top" FontSize="16" FontFamily="{StaticResource PoppinsRegular}" Style="{StaticResource CutieTextBlockStyle}"/>
-            <ComboBox HorizontalAlignment="Left" Style="{StaticResource ComboBoxFlatStyle}" Width="200" Height="32" Margin="137,203,0,0" VerticalAlignment="Top" ItemsSource="{Binding ModLoaders}" DisplayMemberPath="Name" SelectedItem="{Binding SelectedModLoader}"/>
+            <ComboBox HorizontalAlignment="Left" Style="{StaticResource ComboBoxFlatStyle}" Width="200" Height="32" Margin="137,203,0,0" VerticalAlignment="Top" ItemsSource="{Binding MUVM.ModLoaders}" DisplayMemberPath="Name" SelectedItem="{Binding SelectedModLoader}"/>
 
             <!-- File Transfer Options-->
             <TextBlock Text="How do you want Quasar to handle the file transfer ?" HorizontalAlignment="Left" Margin="16,277,0,0" VerticalAlignment="Top" FontSize="16" FontFamily="{StaticResource PoppinsRegular}" Style="{StaticResource CutieTextBlockStyle}"/>

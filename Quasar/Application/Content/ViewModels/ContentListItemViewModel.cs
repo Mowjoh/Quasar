@@ -1,5 +1,5 @@
 ﻿using Quasar.Controls.Common.Models;
-using Quasar.Data.V1;
+using Quasar.Data.V2;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -13,12 +13,12 @@ namespace Quasar.Controls.Content.ViewModels
     public class ContentListItemViewModel : ObservableObject
     {
         #region Fields
-        private ContentMapping _ContentMapping { get; set; }
-        private LibraryMod _LibraryMod { get; set; }
-        private InternalModType _InternalModType { get; set; }
-        private GameData _GameData { get; set; }
-        private GameDataCategory _GameDataCategory { get; set; }
-        private GameDataItem _GameDataItem { get; set; }
+        private ContentItem _ContentItem { get; set; }
+        private LibraryItem _LibraryItem { get; set; }
+        private QuasarModType _QuasarModType { get; set; }
+        private Game _Game { get; set; }
+        private List<GameElement> _GameElements { get; set; }
+        private GameElement _GameElement { get; set; }
 
 
         private string _Text { get; set; }
@@ -28,78 +28,68 @@ namespace Quasar.Controls.Content.ViewModels
         #endregion
 
         #region Properties
-        public ContentMapping ContentMapping
+        public ContentItem ContentItem
         {
-            get => _ContentMapping;
+            get => _ContentItem;
             set
             {
-                if (_ContentMapping == value)
+                if (_ContentItem == value)
                     return;
 
-                _ContentMapping = value;
-                OnPropertyChanged("ContentMapping");
+                _ContentItem = value;
+                OnPropertyChanged("ContentItem");
             }
         }
-        public LibraryMod LibraryMod
+        public LibraryItem LibraryItem
         {
-            get => _LibraryMod;
+            get => _LibraryItem;
             set
             {
-                if (_LibraryMod == value)
+                if (_LibraryItem == value)
                     return;
 
-                _LibraryMod = value;
-                OnPropertyChanged("LibraryMod");
+                _LibraryItem = value;
+                OnPropertyChanged("LibraryItem");
             }
         }
-        public InternalModType InternalModType
+        public QuasarModType QuasarModType
         {
-            get => _InternalModType;
+            get => _QuasarModType;
             set
             {
-                if (_InternalModType == value)
+                if (_QuasarModType == value)
                     return;
 
-                _InternalModType = value;
-                OnPropertyChanged("InternalModType");
+                _QuasarModType = value;
+                OnPropertyChanged("QuasarModType");
             }
         }
-        public GameData GameData
+        public List<GameElement> GameElements
         {
-            get => _GameData;
+            get => _GameElements;
             set
             {
-                if (_GameData == value)
+                if (_GameElements == value)
                     return;
 
-                _GameData = value;
-                OnPropertyChanged("GameData");
+                _GameElements = value;
+                OnPropertyChanged("GameElements");
             }
         }
-        public GameDataCategory GameDataCategory
+        public GameElement GameElement
         {
-            get => _GameDataCategory;
+            get => _GameElement;
             set
             {
-                if (_GameDataCategory == value)
+                if (_GameElement == value)
                     return;
 
-                _GameDataCategory = value;
-                OnPropertyChanged("GameDataCategory");
+                _GameElement = value;
+                OnPropertyChanged("GameElement");
             }
         }
-        public GameDataItem GameDataItem
-        {
-            get => _GameDataItem;
-            set
-            {
-                if (_GameDataItem == value)
-                    return;
 
-                _GameDataItem = value;
-                OnPropertyChanged("GameDataItem");
-            }
-        }
+        public int HumanReadableSlotNumber => ContentItem.SlotNumber + 1;
 
         public string Text
         {
@@ -156,20 +146,14 @@ namespace Quasar.Controls.Content.ViewModels
         }
         #endregion
 
-        public ContentListItemViewModel(ContentMapping _ContentMapping, LibraryMod _LibraryMod, InternalModType _InternalModType, List<GameDataCategory> Categories, int colorID)
+        public ContentListItemViewModel(ContentItem _ContentItem, LibraryItem _LibraryItem, QuasarModType _QuasarModType, List<GameElement> _GameElements, int colorID)
         {
-            ContentMapping = _ContentMapping;
-            LibraryMod = _LibraryMod;
-            InternalModType = _InternalModType;
+            ContentItem = _ContentItem;
+            LibraryItem = _LibraryItem;
+            QuasarModType = _QuasarModType;
+            GameElements = _GameElements;
 
-            GameDataCategory = Categories.Single(gd => gd.ID == InternalModType.GameID);
-            GameDataItem = GameDataCategory.Items.Find(g => g.ID == ContentMapping.GameDataItemID);
-
-            //Displaying files
-            foreach (ContentMappingFile cmf in ContentMapping.Files)
-            {
-                Text += cmf.SourcePath + "\r\n";
-            }
+            GameElement = GameElements.Find(g => g.ID == ContentItem.GameElementID);
 
             ColorValue = colorID;
 
@@ -177,7 +161,6 @@ namespace Quasar.Controls.Content.ViewModels
         }
 
         #region Actions
-
         #endregion
     }
 }

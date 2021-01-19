@@ -15,10 +15,6 @@ namespace Quasar.Helpers.Quasar_Management
 {
     public static class InstallManager
     {
-        public static void CopyBaseFiles()
-        {
-
-        }
         //Verifies needed folders for execution
         public static void CreateBaseFolders()
         {
@@ -31,13 +27,12 @@ namespace Quasar.Helpers.Quasar_Management
             String ScreenshotPath =  "\\Library\\Screenshots\\";
             String ResourcePath =  "\\Resources\\";
 
-            if (!Directory.Exists(InstallationPath))
-                Directory.CreateDirectory(InstallationPath);
-                        
-            FileOperation.CheckCopyFolder(AppPath + LibraryPath, InstallationPath + LibraryPath);
-            FileOperation.CheckCopyFolder(AppPath + ModsPath, InstallationPath + ModsPath);
-            FileOperation.CheckCopyFolder(AppPath + DownloadsPath, InstallationPath + DownloadsPath);
-            FileOperation.CheckCopyFolder(AppPath + ScreenshotPath, InstallationPath + ScreenshotPath);
+            FileOperation.CheckCreate(InstallationPath);
+            FileOperation.CheckCreate(InstallationPath + LibraryPath);
+            FileOperation.CheckCreate(InstallationPath + ModsPath);
+            FileOperation.CheckCreate(InstallationPath + DownloadsPath);
+            FileOperation.CheckCreate(InstallationPath + ScreenshotPath);
+
             FileOperation.CheckCopyFolder(AppPath + ResourcePath, InstallationPath + ResourcePath);
                          
             

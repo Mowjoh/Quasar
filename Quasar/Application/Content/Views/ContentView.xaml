@@ -8,21 +8,19 @@
              d:DesignHeight="620" d:DesignWidth="1280">
     <Grid x:Name="ContentGrid" Background="{DynamicResource QD1}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="64"/>
+            <RowDefinition Height="128"/>
             <RowDefinition Height="64"/>
             <RowDefinition Height="656*"/>
         </Grid.RowDefinitions>
 
         <!-- Top Actions-->
-        <StackPanel Orientation="Horizontal">
-            <Button Template="{StaticResource CutieSmallButtonTemplate}" Width="200" Content="Pick Folder" VerticalAlignment="Bottom" Height="38" />
-            <TextBlock Text="Mod Name :" VerticalAlignment="Bottom" Width="82" Margin="20,0,0,7" Style="{StaticResource CutieTextBlockStyle}" FontSize="15" FontFamily="{StaticResource PoppinsRegular}"/>
-            <TextBox HorizontalAlignment="Left" Margin="10,0" Style="{StaticResource CutieTextBoxStyle}" TextWrapping="NoWrap" Text="{Binding LibraryMod.Name, UpdateSourceTrigger=Explicit}" VerticalAlignment="Bottom" Width="550" />
-            <Button Content="Save Mod Name" Template="{StaticResource CutieSmallButtonTemplate}" VerticalAlignment="Bottom" Width="200" Height="38" Margin="0,0"/>
-
-
-        </StackPanel>
-        <TextBlock Text="Group Types" VerticalAlignment="Bottom" HorizontalAlignment="Right"  Margin="40,0,35,7" Style="{StaticResource CutieTextBlockStyle}" FontSize="15" FontFamily="{StaticResource PoppinsRegular}"/>
+        <Button Template="{StaticResource CutieSmallButtonTemplate}" Width="200" Content="Import Source Folder" VerticalAlignment="Bottom" Height="38" Margin="16,0,0,64" HorizontalAlignment="Left" />
+        <Button Template="{StaticResource CutieSmallButtonTemplate}" Width="200" Content="Prepare Archive" VerticalAlignment="Bottom" Height="38" Margin="448,0,0,64" HorizontalAlignment="Left" />
+        
+        <TextBlock Text="Mod Name :" VerticalAlignment="Bottom" Width="82" Margin="20,0,0,7" Style="{StaticResource CutieTextBlockStyle}" FontSize="15" FontFamily="{StaticResource PoppinsRegular}" HorizontalAlignment="Left"/>
+        <TextBox HorizontalAlignment="Left" Margin="110,0" Style="{StaticResource CutieTextBoxStyle}" TextWrapping="NoWrap" Text="{Binding ModName, Mode=TwoWay}" VerticalAlignment="Bottom" Width="550" />
+        <Button Content="Save" Template="{StaticResource CutieSmallButtonTemplate}" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="100" Height="38" Margin="675,0,0,-3" Command="{Binding Path=SaveModNameCommand}"/>
+        <TextBlock Text="Group Renaming" VerticalAlignment="Bottom" HorizontalAlignment="Right"  Margin="40,0,35,7" Style="{StaticResource CutieTextBlockStyle}" FontSize="15" FontFamily="{StaticResource PoppinsRegular}"/>
         <CheckBox Template="{StaticResource CutieCheckBox}" VerticalAlignment="Bottom" Margin="0,0,5,7" Foreground="White" HorizontalAlignment="Right" />
 
         <!-- Column Labels-->

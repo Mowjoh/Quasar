@@ -1,6 +1,6 @@
 ﻿using Quasar.Controls.Mod.ViewModels;
 using Quasar.Controls.ModManagement.ViewModels;
-using Quasar.Data.V1;
+using Quasar.Data.V2;
 using Quasar.FileSystem;
 using System;
 using System.Collections.Generic;
@@ -68,13 +68,13 @@ namespace Quasar.Controls
             InitializeComponent();
         }
 
-        public ModListItem(ModsViewModel model, LibraryMod _LibraryMod = null,  Game _Game = null, bool Downloading = false)
+        public ModListItem(ModsViewModel model, LibraryItem _LibraryItem = null,  Game _Game = null, bool Downloading = false)
         {
-            ModListItemViewModel = new ModListItemViewModel(_LibraryMod,_Game, model, Downloading);
+            ModListItemViewModel = new ModListItemViewModel(_LibraryItem,_Game, model, Downloading);
             InitializeComponent();
             DataContext = ModListItemViewModel;
         }
-        public ModListItem(string QuasarURL, ObservableCollection<Game> Games, ObservableCollection<LibraryMod> Mods, ModsViewModel model)
+        public ModListItem(string QuasarURL, ObservableCollection<Game> Games, ObservableCollection<LibraryItem> Mods, ModsViewModel model)
         {
             ModListItemViewModel = new ModListItemViewModel(QuasarURL, Games, Mods, model);
             InitializeComponent();

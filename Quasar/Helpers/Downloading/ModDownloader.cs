@@ -13,6 +13,7 @@ using Quasar.Controls;
 using Quasar.FileSystem;
 using Quasar.Controls.Mod.ViewModels;
 using Quasar.Helpers.FileOperations;
+using Quasar.Controls.Mod.Models;
 
 namespace Quasar
 {
@@ -23,24 +24,18 @@ namespace Quasar
 
         ModListItemViewModel ModListItemView;
 
-        string DownloadURL;
-        public string ModTypeID;
-        public string ModID;
-        public string ArchiveExtension;
-
         public ModDownloader(ModListItemViewModel _MIVM)
         {
             ModListItemView = _MIVM;
         }
 
         //The big boi, the download Task
-        public async Task<bool> DownloadArchiveAsync(ModFileManager _ModFileManager)
+        public async Task<bool> DownloadArchiveAsync(QuasarDownload _QuasarDownload)
         {
             //Getting info from Quasar URL
-            ParseQueryStringParameters(_ModFileManager);
-            var DownloadURL = new Uri(this.DownloadURL);
+            var DownloadURL = new Uri(_QuasarDownload.DownloadURL);
             var DestinationFolderPath = DefaultDirectoryPath + "\\Library\\Downloads\\";
-            var DestinationFilePath = DestinationFolderPath + ModID + "." + ArchiveExtension;
+            var DestinationFilePath = DestinationFolderPath + _QuasarDownload.LibraryItemID + "." + _QuasarDownload.ModArchiveFormat;
             FileOperation.CheckCreate(DestinationFolderPath);
 
             //Setting up Progress actions
@@ -68,7 +63,6 @@ namespace Quasar
             return true;
         }
 
-
         public static async Task<bool> DownloadFile(string _URL, string _Destination)
         {
             //File Download
@@ -78,14 +72,6 @@ namespace Quasar
             }
 
             return true;
-        }
-        //Parsing information from a ModFileManager instance
-        public void ParseQueryStringParameters(ModFileManager _ModFileManager)
-        {
-            DownloadURL = _ModFileManager.DownloadURL;
-            ModTypeID = _ModFileManager.ModTypeID;
-            ModID   = _ModFileManager.ModID;
-            ArchiveExtension = _ModFileManager.ModArchiveFormat;
         }
 
     }
