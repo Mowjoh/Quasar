@@ -40,5 +40,11 @@ namespace Quasar.Internal.Tools
 
             return ID;
         }
+
+        public static string getWorkspaceUniqueID()
+        {
+            Guid guid = Guid.NewGuid();
+            return guid.ToString();
+        }
     }
 }

@@ -79,54 +79,61 @@ namespace Quasar.Helpers.Downloading
         #region Evaluation
         public async Task<bool> EvaluateActionNeeded(MainUIViewModel MUVM)
         {
-            //If there already exists a mod with this ID
-            if (MUVM.Library.Any(li => li.ID == int.Parse(QuasarURL.LibraryItemID)))
+            try
             {
-                //Comparing Update Count with the API
-                LibraryItem = MUVM.Library.Single(li => li.ID == int.Parse(QuasarURL.LibraryItemID));
-                await GetAPIModInformation();
-                UpdateNeeded = APIMod.UpdateCount > LibraryItem.UpdateCount;
-            }
-
-            //No mod with this ID is present in the Library
-            else
-            {
-                await GetAPIModInformation();
-                Game RelatedGame = MUVM.Games.Single(g => g.APIGameName == APIMod.GameName);
-                GameAPISubCategory RelatedSubCategory = RelatedGame.GameAPICategories.Single(c => c.APICategoryName == APIMod.ModType).GameAPISubCategories.Single(scat => scat.APISubCategoryID == APIMod.CategoryID);
-                //Generating new LibraryItem
-                LibraryItem = new LibraryItem()
+                //If there already exists a mod with this ID
+                if (MUVM.Library.Any(li => li.ID == int.Parse(QuasarURL.LibraryItemID)))
                 {
-                    ID = APIMod.ID,
-                    APICategoryName = APIMod.ModType,
-                    Name = APIMod.Name,
-                    Description = APIMod.Description,
-                    UpdateCount = APIMod.UpdateCount,
-                    GameAPISubCategoryID = RelatedSubCategory.ID,
-                    GameID = RelatedGame.ID,
-                    Authors = new ObservableCollection<Author>()
-                };
-
-                foreach(string[] val in APIMod.Authors)
-                {
-                    Author au = new Author()
-                    {
-                        Name = val[0],
-                        Role = val[1],
-                        GamebananaAuthorID = int.Parse(val[2])
-                    };
-                    LibraryItem.Authors.Add(au);
+                    //Comparing Update Count with the API
+                    LibraryItem = MUVM.Library.Single(li => li.ID == int.Parse(QuasarURL.LibraryItemID));
+                    await GetAPIModInformation();
+                    UpdateNeeded = APIMod.UpdateCount > LibraryItem.UpdateCount;
                 }
-                DownloadNeeded = true;
-            }
 
-            //Checking if there is a need for a rescan
-            if (DownloadNeeded || UpdateNeeded)
+                //No mod with this ID is present in the Library
+                else
+                {
+                    await GetAPIModInformation();
+                    Game RelatedGame = MUVM.Games.Single(g => g.APIGameName == APIMod.GameName);
+                    GameAPISubCategory RelatedSubCategory = RelatedGame.GameAPICategories.Single(c => c.APICategoryName == APIMod.ModType).GameAPISubCategories.Single(scat => scat.APISubCategoryID == APIMod.CategoryID);
+                    //Generating new LibraryItem
+                    LibraryItem = new LibraryItem()
+                    {
+                        ID = APIMod.ID,
+                        APICategoryName = APIMod.ModType,
+                        Name = APIMod.Name,
+                        Description = APIMod.Description,
+                        UpdateCount = APIMod.UpdateCount,
+                        GameAPISubCategoryID = RelatedSubCategory.ID,
+                        GameID = RelatedGame.ID,
+                        Authors = new ObservableCollection<Author>()
+                    };
+
+                    foreach (string[] val in APIMod.Authors)
+                    {
+                        Author au = new Author()
+                        {
+                            Name = val[0],
+                            Role = val[1],
+                            GamebananaAuthorID = int.Parse(val[2])
+                        };
+                        LibraryItem.Authors.Add(au);
+                    }
+                    DownloadNeeded = true;
+                }
+
+                //Checking if there is a need for a rescan
+                if (DownloadNeeded || UpdateNeeded)
+                {
+                    ScanNeeded = true;
+                }
+
+                return true;
+            }
+            catch(Exception e)
             {
-                ScanNeeded = true;
+                return false;
             }
-
-            return true;
         }
         public async Task<bool> GetAPIModInformation()
         {

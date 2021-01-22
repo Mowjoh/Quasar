@@ -12,6 +12,7 @@ namespace Quasar.Data.V2
     {
         public int ID { get; set; }
         public int SlotCount { get; set; }
+        public int TypePriority { get; set; }
         public string Name { get; set; }
         public string GroupName { get; set; }
         public int GameElementFamilyID { get; set; }
@@ -65,9 +66,9 @@ namespace Quasar.Data.V2
         public int ID { get; set; }
         public string SearchPath { get; set; }
         public string SearchFileName { get; set; }
+        public int FilePriority { get; set; }
         public ObservableCollection<QuasarModTypeBuilderDefinition> QuasarModTypeBuilderDefinitions { get; set; }
     }
-
     public class QuasarModTypeBuilderDefinition
     {
         public int ModLoaderID { get; set; }

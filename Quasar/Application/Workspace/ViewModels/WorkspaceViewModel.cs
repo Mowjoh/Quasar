@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
+using System.Windows.Forms;
 using System.Windows.Input;
 
 namespace Quasar.Controls.Settings.Workspaces.ViewModels
@@ -23,13 +24,15 @@ namespace Quasar.Controls.Settings.Workspaces.ViewModels
 
         private Workspace _ActiveWorkspace {get; set;}
 
+        private MainUIViewModel _MUVM { get; set; }
         private string _WorkspaceName { get; set; }
         private ICommand _RenameWorkspaceCommand { get; set; }
         private ICommand _AddWorkspaceCommand { get; set; }
         private ICommand _DeleteWorkspaceCommand { get; set; }
         private ICommand _EmptyWorkspaceCommand { get; set; }
         private ICommand _DuplicateWorkspaceCommand { get; set; }
-        private ICommand _ActivateWorkspaceCommand { get; set; }
+        private ICommand _ShareWorkspaceCommand { get; set; }
+        private ICommand _ImportWorkspaceCommand { get; set; }
         #endregion
 
         #region Commands
@@ -88,15 +91,26 @@ namespace Quasar.Controls.Settings.Workspaces.ViewModels
                 return _DuplicateWorkspaceCommand;
             }
         }
-        public ICommand ActivateWorkspaceCommand
+        public ICommand ShareWorkspaceCommand
         {
             get
             {
-                if (_ActivateWorkspaceCommand == null)
+                if (_ShareWorkspaceCommand == null)
                 {
-                    _ActivateWorkspaceCommand = new RelayCommand(param => ActivateWorkspace());
+                    _ShareWorkspaceCommand = new RelayCommand(param => ShareWorkspace());
                 }
-                return _ActivateWorkspaceCommand;
+                return _ShareWorkspaceCommand;
+            }
+        }
+        public ICommand ImportWorkspaceCommand
+        {
+            get
+            {
+                if (_ImportWorkspaceCommand == null)
+                {
+                    _ImportWorkspaceCommand = new RelayCommand(param => ImportWorkspace());
+                }
+                return _ImportWorkspaceCommand;
             }
         }
         #endregion
@@ -158,6 +172,18 @@ namespace Quasar.Controls.Settings.Workspaces.ViewModels
             }
         }
 
+        public MainUIViewModel MUVM
+        {
+            get => _MUVM;
+            set
+            {
+                if (_MUVM == value)
+                    return;
+
+                _MUVM = value;
+                OnPropertyChanged("MUVM");
+            }
+        }
         #endregion
 
         public ILog log { get; set; }
@@ -165,8 +191,9 @@ namespace Quasar.Controls.Settings.Workspaces.ViewModels
         /// <summary>
         /// Default Constructor
         /// </summary>
-        public WorkspaceViewModel(MainUIViewModel MUVM, ILog _log)
+        public WorkspaceViewModel(MainUIViewModel _MUVM, ILog _log)
         {
+            MUVM = _MUVM;
             Workspaces = MUVM.Workspaces;
             ActiveWorkspace = _ActiveWorkspace;
             log = _log;
@@ -206,7 +233,7 @@ namespace Quasar.Controls.Settings.Workspaces.ViewModels
                 if (ActiveWorkspace.ID != 0)
                 {
                     bool proceed = false;
-                    MessageBoxResult result = MessageBox.Show("Are you sure you want to delete this workspace ?", "Workspace Deletion", MessageBoxButton.YesNo);
+                    MessageBoxResult result = System.Windows.MessageBox.Show("Are you sure you want to delete this workspace ?", "Workspace Deletion", MessageBoxButton.YesNo);
                     switch (result)
                     {
                         case MessageBoxResult.Yes:
@@ -233,7 +260,7 @@ namespace Quasar.Controls.Settings.Workspaces.ViewModels
             if(ActiveWorkspace != null)
             {
                 bool proceed = false;
-                MessageBoxResult result = MessageBox.Show("Are you sure you want to empty this workspace ?", "Workspace Reset", MessageBoxButton.YesNo);
+                MessageBoxResult result = System.Windows.MessageBox.Show("Are you sure you want to empty this workspace ?", "Workspace Reset", MessageBoxButton.YesNo);
                 switch (result)
                 {
                     case MessageBoxResult.Yes:
@@ -264,12 +291,91 @@ namespace Quasar.Controls.Settings.Workspaces.ViewModels
         /// <summary>
         /// Activates a workspace for ARCropolis
         /// </summary>
-        public void ActivateWorkspace()
+        public void ShareWorkspace()
         {
-            FTPWriter Writer = new FTPWriter() { Log = log };
-            ARCropolisHelper.CheckTouchmARC(Writer, ActiveWorkspace.Name);
-            MessageBox.Show("Changes applied");
+            if (!ActiveWorkspace.Shared)
+            {
+                ActiveWorkspace.Shared = true;
+                ActiveWorkspace.UniqueShareID = IDHelper.getWorkspaceUniqueID();
+                JSonHelper.SaveWorkspaces(MUVM.Workspaces);
+            }
+            
+            ObservableCollection<ContentItem> WorkspaceContentItems = new ObservableCollection<ContentItem>();
+            ObservableCollection<LibraryItem> WorkspaceLibraryItems = new ObservableCollection<LibraryItem>();
+
+            foreach(Association ass in ActiveWorkspace.Associations)
+            {
+                if(!WorkspaceContentItems.Any(c => c.ID == ass.ContentItemID))
+                {
+                    ContentItem cit = MUVM.ContentItems.Single(ci => ci.ID == ass.ContentItemID);
+                    WorkspaceContentItems.Add(cit);
+                    if (!WorkspaceLibraryItems.Any(c => c.ID == cit.LibraryItemID))
+                    {
+                        WorkspaceLibraryItems.Add(MUVM.Library.Single(li => li.ID == cit.LibraryItemID));
+                    }
+                }
+            }
+
+            ShareableWorkspace SharedWorkspace = new ShareableWorkspace()
+            {
+                Workspace = ActiveWorkspace,
+                ContentItems = WorkspaceContentItems,
+                LibraryItems = WorkspaceLibraryItems
+            };
+            string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
+            JSonHelper.SaveSharedWorkspaces(SharedWorkspace, desktopPath+ @"\SharedWorkspace.json");
+            System.Windows.MessageBox.Show("A new file has been saved on your Desktop, please share it with a friend for import !");
         }
+
+        public void ImportWorkspace()
+        {
+            string pathselected = null;
+
+            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            {
+                openFileDialog.InitialDirectory = @"F:\FakeSwitch\";
+                openFileDialog.Filter = "Quasar Workspace File (*.json)|*.json";
+                openFileDialog.FilterIndex = 1;
+                openFileDialog.RestoreDirectory = true;
+
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    //Get the path of specified file
+                    pathselected = openFileDialog.FileName;
+
+                }
+            }
+            if(pathselected != null)
+            {
+                try
+                {
+                    //Reading file
+                    ShareableWorkspace SW = JSonHelper.GetSharedWorkspace(true, pathselected);
+                    if(SW != null)
+                    {
+                        ObservableCollection<LibraryItem> DownloadList = new ObservableCollection<LibraryItem>();
+                        ObservableCollection<LibraryItem> UpdateList = new ObservableCollection<LibraryItem>();
+                        foreach(LibraryItem SharedLibraryItem in SW.LibraryItems)
+                        {
+                            LibraryItem Search = MUVM.Library.SingleOrDefault(s => s.ID == SharedLibraryItem.ID);
+                            if(Search == null)
+                            {
+                                DownloadList.Add(SharedLibraryItem);
+                            }
+                            else
+                            {
+                                UpdateList.Add(SharedLibraryItem);
+                            }
+                        }
+                    }
+                }
+                catch(Exception e)
+                {
+                    System.Windows.MessageBox.Show("Sorry, Quasar could not process this file");
+                }
+            }
+        }
+        
         #endregion
 
     }

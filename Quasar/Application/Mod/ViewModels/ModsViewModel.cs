@@ -675,59 +675,66 @@ namespace Quasar.Controls.ModManagement.ViewModels
                 ActiveModManagers.Add(MM);
 
                 //Evaluating if something needs to be done
-                await MM.EvaluateActionNeeded(MUVM);
-
-                if (MM.ActionNeeded)
+                bool result = await MM.EvaluateActionNeeded(MUVM);
+                if (result)
                 {
-                    ModListItem MLI = null;
-                    if (MM.DownloadNeeded)
+                    if (MM.ActionNeeded)
                     {
-                        //Creating new Mod List Item
-                        Application.Current.Dispatcher.Invoke((Action)delegate {
-                            MLI = new ModListItem(this, MM.LibraryItem, MUVM.Games[0], true);
-                            ModListItems.Add(MLI);
-                        });
+                        ModListItem MLI = null;
+                        if (MM.DownloadNeeded)
+                        {
+                            //Creating new Mod List Item
+                            Application.Current.Dispatcher.Invoke((Action)delegate {
+                                MLI = new ModListItem(this, MM.LibraryItem, MUVM.Games[0], true);
+                                ModListItems.Add(MLI);
+                            });
 
+                        }
+                        else
+                        {
+                            //Parsing Existing Mod List Item
+                            MLI = ModListItems.Single(i => i.ModListItemViewModel.LibraryItem.ID.ToString() == MM.QuasarURL.LibraryItemID);
+                        }
+                        MM.ModListItem = MLI;
+
+                        //Executing tasks for this mod
+                        await MM.TakeAction();
+
+                        //Updating Library
+                        if (MM.DownloadNeeded)
+                        {
+                            //If the mod is new and downloaded
+                            MUVM.Library.Add(MM.LibraryItem);
+                            JSonHelper.SaveLibrary(MUVM.Library);
+                        }
+                        else
+                        {
+                            //If the mod is updated
+                            LibraryItem li = MUVM.Library.Single(i => i.ID == MM.LibraryItem.ID);
+                            li = MM.LibraryItem;
+                            JSonHelper.SaveLibrary(MUVM.Library);
+                        }
+
+                        //Launching scan
+                        await MM.Scan(MUVM.QuasarModTypes, MUVM.Games[0]);
+                        Scannerino.UpdateContents(MUVM, MM.LibraryItem, MM.ScannedContents);
+
+                        //Saving Contents
+                        JSonHelper.SaveContentItems(MUVM.ContentItems);
+
+                        //Slotting Contents
+                        MUVM.ActiveWorkspace = Slotter.AutomaticSlot(MM.ScannedContents.ToList(), MUVM.ActiveWorkspace, MUVM.QuasarModTypes);
+                        JSonHelper.SaveWorkspaces(MUVM.Workspaces);
+                        ReloadAllStats();
+
+                        MLI.ModListItemViewModel.Downloading = false;
                     }
-                    else
-                    {
-                        //Parsing Existing Mod List Item
-                        MLI = ModListItems.Single(i => i.ModListItemViewModel.LibraryItem.ID.ToString() == MM.QuasarURL.LibraryItemID);
-                    }
-                    MM.ModListItem = MLI;
-                    
-                    //Executing tasks for this mod
-                    await MM.TakeAction();
-
-                    //Updating Library
-                    if (MM.DownloadNeeded)
-                    {
-                        //If the mod is new and downloaded
-                        MUVM.Library.Add(MM.LibraryItem);
-                        JSonHelper.SaveLibrary(MUVM.Library);
-                    }
-                    else
-                    {
-                        //If the mod is updated
-                        LibraryItem li = MUVM.Library.Single(i => i.ID == MM.LibraryItem.ID);
-                        li = MM.LibraryItem;
-                        JSonHelper.SaveLibrary(MUVM.Library);
-                    }
-
-                    //Launching scan
-                    await MM.Scan(MUVM.QuasarModTypes,MUVM.Games[0]);
-                    Scannerino.UpdateContents(MUVM, MM.LibraryItem, MM.ScannedContents);
-
-                    //Saving Contents
-                    JSonHelper.SaveContentItems(MUVM.ContentItems);
-
-                    //Slotting Contents
-                    MUVM.ActiveWorkspace = Slotter.AutomaticSlot(MM.ScannedContents.ToList(), MUVM.ActiveWorkspace, MUVM.QuasarModTypes);
-                    JSonHelper.SaveWorkspaces(MUVM.Workspaces);
-                    ReloadAllStats();
-
-                    MLI.ModListItemViewModel.Downloading = false;
                 }
+                else
+                {
+                    
+                }
+                
                 ActiveModManagers.Remove(MM);
             }
 

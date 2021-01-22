@@ -3,6 +3,7 @@ using Newtonsoft.Json.Linq;
 using Quasar.Data.V2;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -12,10 +13,6 @@ using System.Threading.Tasks;
 
 namespace Quasar
 {
-
-    
-
-
     public class QueryStringItem
     {
         public string Name { get; set; }
@@ -79,6 +76,70 @@ namespace Quasar
             }
 
             return DownloadedAPIMod;
+        }
+        public static async Task<List<APIMod>> GetAPIModUpdates(ObservableCollection<LibraryItem> Library)
+        {
+            bool abort = false;
+
+            List<APIMod> ElementCollection = new List<APIMod>();
+
+            queryParameters = GetDefaultParameters();
+
+            foreach (LibraryItem li in Library)
+            {
+                queryParameters.Add(new QueryStringItem("itemid[]", li.ID.ToString()));
+                queryParameters.Add(new QueryStringItem("itemtype[]", li.APICategoryName));
+                queryParameters.Add(new QueryStringItem("fields[]", "Updates().nGetUpdatesCount()"));
+            }
+
+            try
+            {
+                string queryURL = FormatAPIRequest("Core/Item/Data", queryParameters);
+
+                using (HttpClient webClient = new HttpClient())
+                {
+                    HttpResponseMessage response = await webClient.GetAsync(queryURL);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        string responseText = await response.Content.ReadAsStringAsync();
+                        ElementCollection = JsonConvert.DeserializeObject<List<APIMod>>(responseText);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+
+
+
+            if (!abort)
+            {
+                try
+                {
+                    int i = 0;
+                    foreach (LibraryItem li in Library)
+                    {
+                        ElementCollection[i].ID = li.ID;
+                        ElementCollection[i].ModType = li.APICategoryName;
+                        i++;
+                    }
+                }
+                catch (Exception e)
+                {
+                    abort = true;
+                }
+            }
+            if (abort)
+            {
+                return null;
+            }
+            else
+            {
+                return ElementCollection;
+            }
+            
         }
 
         public static async Task<string[]> GetDownloadFileName(string _ItemType, string _ItemID)

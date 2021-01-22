@@ -107,6 +107,7 @@
     <Compile Include="Application\Build\Views\BuildView.xaml.cs">
       <DependentUpon>BuildView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Application\Workspace\Models\ShareableWorkspace.cs" />
     <Compile Include="Data\Converter\V1toV2Converter.cs" />
     <Compile Include="Data\V1\QuasarModType.cs" />
     <Compile Include="Data\V2\ModLoader.cs" />
@@ -446,7 +447,6 @@
     <Folder Include="Application\Content\Models\" />
     <Folder Include="Application\MainUI\Models\" />
     <Folder Include="Application\MainUI\Views\" />
-    <Folder Include="Application\Workspace\Models\" />
     <Folder Include="Resources\images\GameDataCategories\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

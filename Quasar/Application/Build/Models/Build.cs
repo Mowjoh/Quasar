@@ -31,7 +31,7 @@ namespace Quasar.Controls.Build.Models
     {
         public abstract Task<bool> StartBuild();
 
-        public abstract Task CopyModLoader();
+        public abstract Task CopyModLoader(int ModLoader);
         public abstract Task StartCheck();
         public abstract Task GetLocalFileList();
         public abstract Task GetDistantFileList();
@@ -131,7 +131,7 @@ namespace Quasar.Controls.Build.Models
 
                 SaveAndSendIndex();
 
-                await CopyModLoader();
+                await CopyModLoader(ModLoader);
                 ViewModel.BuildLog("Info", "Finished setting up modloaders");
                 ViewModel.Log.Debug("Copy ModLoader Finished");
 
@@ -147,9 +147,21 @@ namespace Quasar.Controls.Build.Models
             return false;
         }
 
-        public override async Task CopyModLoader()
+        public override async Task CopyModLoader(int ModLoader)
         {
-            ARCropolisHelper.CheckTouchmARC(Writer, ViewModel.MUVM.ActiveWorkspace.Name);
+            if(ModLoader == 1)
+            {
+                ARCropolisHelper.CheckTouchmARC(Writer, ViewModel.MUVM.ActiveWorkspace.Name, false, true,true,false);
+            }
+            else
+            {
+                ARCropolisHelper.CheckTouchmARC(Writer, ViewModel.MUVM.ActiveWorkspace.Name, false, true, false, true);
+            }
+            if(ModLoader == 4)
+            {
+                ARCropolisHelper.CheckTouchmARC(Writer, ViewModel.MUVM.ActiveWorkspace.Name, false,false,false,true);
+            }
+           
         }
         public override async Task StartCheck()
         {
@@ -182,7 +194,7 @@ namespace Quasar.Controls.Build.Models
                 QuasarModType qmt = ViewModel.MUVM.QuasarModTypes.Single(t => t.ID == ass.QuasarModTypeID);
                 GameElementFamily gef = ViewModel.MUVM.Games[0].GameElementFamilies.Single(f => f.ID == qmt.GameElementFamilyID);
 
-                foreach (ModFile mf in Scannerino.GetModFiles(qmt, gef, ci, ass.SlotNumber, ModLoader, li))
+                foreach (ModFile mf in Scannerino.GetModFiles(qmt, gef, ci, ass.SlotNumber, ModLoader, li, ViewModel.MUVM.Games[0]))
                 {
                     mf.Hash = BuilderActions.GetHash(mf.SourceFilePath);
                     WorkspaceIndex.Add(mf);
@@ -380,48 +392,6 @@ namespace Quasar.Controls.Build.Models
            ViewModel.Log.Debug("Sent Index");
            File.Delete(LocalIndexFilePath);
            ViewModel.Log.Debug("Deleted Index");
-        }
-
-        public void ListAssociationFiles(Association ass, GameElementFamily GD)
-        {
-            try
-            {/*
-                //References
-                ContentMapping cm = ViewModel.ContentMappings.Single(l => l.ID == ass.ContentMappingID);
-                InternalModType imt = ViewModel.InternalModTypes.Single(t => t.ID == cm.InternalModType);
-                GameDataCategory GDC = GD.Categories.Find(c => c.ID == imt.Association);
-                GameDataItem GDI = GDC.Items.Find(i => i.ID == ass.GameDataItemID);
-
-                //Mod
-                LibraryMod lm = ViewModel.Mods.Single(m => m.ID == cm.ModID);
-                ModFileManager mfm = new ModFileManager(lm, ViewModel.Games[1]);
-
-                foreach (ContentMappingFile file in cm.Files)
-                {
-                    //Looping through recognized files
-                    string source = file.SourcePath;
-
-                    InternalModTypeFile imtf = imt.Files.Find(f => f.ID == file.InternalModTypeFileID);
-
-                    BuilderFile bfi = imtf.Files.Single(f => f.BuilderID == ModLoader);
-
-                    string[] output = BuilderActions.FormatOutput(bfi.File, bfi.Path, GDI.Attributes[0].Value, file, cm, ass, GDI.Attributes[1].Value);
-                    string FinalDestination = WorkspacePath + output[0] + "/" + output[1];
-                    if (imt.OutsideFolder)
-                    {
-                        FinalDestination = imt.OutsideFolderPath + output[0] + "/" + output[1];
-                    }
-                    FinalDestination = FinalDestination.Replace(@"{Workspace}", ViewModel.ActiveWorkspace.Name);
-                    FinalDestination = FinalDestination.Replace(@"/", @"\");
-                    WorkspaceHashes.Add(new Hash() { Category = imt.OutsideFolder ? "Outsider" : "Workspace", FilePath = FinalDestination, HashString = WriterOperations.GetHash(source) });
-                    WorkspaceFiles.Add(new FileReference() { LibraryItem = lm, SourceFilePath = source, OutputFilePath = FinalDestination, OutsideFile = imt.OutsideFolder });
-                }*/
-            }
-            catch(Exception e)
-            {
-                ViewModel.Log.Error(e.Message);
-            }
-            
         }
         public void SetProgression(int cnt, int tot)
         {

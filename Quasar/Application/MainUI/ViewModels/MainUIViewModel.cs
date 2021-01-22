@@ -106,7 +106,6 @@ namespace Quasar
 
                 if ((string)value.Header == "Overview")
                 {
-                    MVM.ViewRefresh();
                     MVM.ReloadAllStats();
                 }
                 if ((string)value.Header == "Management")

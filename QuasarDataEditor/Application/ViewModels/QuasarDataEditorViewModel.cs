@@ -16,7 +16,8 @@ namespace QuasarDataEditor
     class QuasarDataEditorViewModel : ObservableObject
     {
         #region Static paths
-        private static string DocumentsFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+        //private static string DocumentsFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+        private static string DocumentsFolder = "F:";
         private static string GameSource = DocumentsFolder + @"\Quasar\Resources\Games.json";
         private static string LibrarySource = DocumentsFolder + @"\Quasar\Library\Library.json";
         private static string ContentSource = DocumentsFolder + @"\Quasar\Library\ContentItems.json";
@@ -303,6 +304,27 @@ namespace QuasarDataEditor
             set
             {
                 _SelectedQuasarModType = value;
+                if(value != null)
+                {
+                    if(_SelectedQuasarModType.ID == 0)
+                    {
+                        _SelectedQuasarModType.ID = QuasarModTypes.Count;
+                        OnPropertyChanged("QuasarModTypes");
+                    }
+                    if(_SelectedQuasarModType.QuasarModTypeFileDefinitions == null)
+                    {
+                        _SelectedQuasarModType.QuasarModTypeFileDefinitions = new ObservableCollection<QuasarModTypeFileDefinition>();
+                        _SelectedQuasarModType.QuasarModTypeFileDefinitions.Add(new QuasarModTypeFileDefinition()
+                        {
+                            ID = 0,
+                            SearchFileName = "Filename",
+                            SearchPath = "Path",
+                            QuasarModTypeBuilderDefinitions = new ObservableCollection<QuasarModTypeBuilderDefinition>(),
+                        });
+                    }
+                }
+
+                
                 OnPropertyChanged("SelectedQuasarModType");
             }
         }
@@ -439,7 +461,8 @@ namespace QuasarDataEditor
                     ci.ID = i;
                     i++;
                 }
-                ObservableCollection<ScanFile> ScannedFiles = Scannerino.GetScanFiles(pathselected, QuasarModTypes, Games[0], true);
+                string ModFolder = "";
+                ObservableCollection<ScanFile> ScannedFiles = Scannerino.GetScanFiles(pathselected, QuasarModTypes, Games[0], ModFolder, true);
 
                 ProgressString = "Processing ScanFiles";
                 double count = 1;
@@ -490,12 +513,13 @@ namespace QuasarDataEditor
         public async Task<int> TestModAction()
         {
             TestResults = new ObservableCollection<TestResult>();
-            GameAPICategory mt = Games[0].GameAPICategories.Single(m => m.APICategoryName == SelectedTestLibraryItem.APICategoryName);
-            string LibraryContentFolderPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\Quasar\\Library\\Mods\\" + mt.LibraryFolderName + "\\" + SelectedTestLibraryItem.ID + "\\";
+            GameAPICategory Cat = Games[0].GameAPICategories.Single(c => c.APICategoryName == SelectedTestLibraryItem.APICategoryName);
+            //Default Dir + Mods + CategoryFolder + ModID
+            string ModFolder = @"F:\Quasar\Library\Mods\" + Cat.LibraryFolderName.Replace('/', '\\') + @"\" + SelectedTestLibraryItem.ID + @"\";
 
             ProgressString = "Scanning Files";
             ProgressValue = 0;
-            ObservableCollection<ContentItem> Scan = Scannerino.ScanMod(LibraryContentFolderPath, QuasarModTypes, Games[0], SelectedTestLibraryItem);
+            ObservableCollection<ContentItem> Scan = Scannerino.ScanMod(ModFolder, QuasarModTypes, Games[0], SelectedTestLibraryItem);
             int i = 1;
             foreach (ContentItem ci in Scan)
             {
@@ -503,7 +527,8 @@ namespace QuasarDataEditor
                 i++;
             }
 
-            ObservableCollection<ScanFile> ScannedFiles = Scannerino.GetScanFiles(LibraryContentFolderPath, QuasarModTypes, Games[0]);
+            
+            ObservableCollection<ScanFile> ScannedFiles = Scannerino.GetScanFiles(ModFolder, QuasarModTypes, Games[0], ModFolder);
 
             ProgressString = "Processing ScanFiles";
             double count = 1;
@@ -548,11 +573,12 @@ namespace QuasarDataEditor
             ProgressValue = (count / total) * 100;
             if (TestResults.Count != 0 && SelectedTestModLoader != null)
             {
-                foreach(TestResult tr in TestResults)
+                string ModFolder = Scannerino.GetModFolder(SelectedTestLibraryItem.ID, SelectedTestLibraryItem.APICategoryName, Games[0]);
+                foreach (TestResult tr in TestResults)
                 {
                     if (tr.ScanFile.Scanned)
                     {
-                        tr.Output = Scannerino.ProcessOutput(tr.ScanFile.SourcePath, tr.QuasarModTypeFileDefinition, tr.GameElement, int.Parse(tr.ScanFile.Slot), SelectedTestModLoader.ID, SelectedTestLibraryItem);
+                        tr.Output = Scannerino.ProcessOutput(tr.ScanFile.SourcePath, tr.QuasarModTypeFileDefinition, tr.GameElement, int.Parse(tr.ScanFile.Slot), SelectedTestModLoader.ID, SelectedTestLibraryItem, ModFolder);
                     }
                     count++;
                     ProgressValue = (count / total) * 100;

@@ -10,6 +10,8 @@ using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Forms;
 
 namespace Quasar.Internal.Tools
 {
@@ -23,14 +25,19 @@ namespace Quasar.Internal.Tools
             {
                 if(NeedsInitialSetup()){
                     InstallManager.CreateBaseUserSettings();
+
+                    MessageBoxResult result = System.Windows.MessageBox.Show("Hi ! It seems it's Quasar's first launch. Do you want to change where Quasar is gonna store mods?", "First Launch Warning", MessageBoxButton.YesNo);
+                    switch (result)
+                    {
+                        case MessageBoxResult.Yes:
+                            InstallManager.ChangeInstallLocationSetting();
+                            break;
+                        case MessageBoxResult.No:
+                            break;
+                    }             
                     InstallManager.CreateBaseFolders();
                 }
-                else
-                {
-                    
-                                        
-                }
-
+                UpgradeSettingFile();
             }
             else
             {

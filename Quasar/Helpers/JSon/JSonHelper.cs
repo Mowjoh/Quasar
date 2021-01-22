@@ -31,11 +31,11 @@ namespace Quasar.Helpers.Json
             
             if (_ExternalPath != "")
             {
-                SaveJSonFile(@"\Resources\ModTypes.json", _QuasarModTypes.OrderBy(i => i.ID), _ExternalPath);
+                SaveJSonFile(@"\Resources\ModTypes.json", _QuasarModTypes.OrderBy(i => i.TypePriority), _ExternalPath);
             }
             else
             {
-                SaveJSonFile(@"\Resources\ModTypes.json", _QuasarModTypes.OrderBy(i => i.ID));
+                SaveJSonFile(@"\Resources\ModTypes.json", _QuasarModTypes.OrderBy(i => i.TypePriority));
             }
         }
         public static void SaveModLoaders(ObservableCollection<ModLoader> _ModLoaders, string _ExternalPath = "")
@@ -74,6 +74,19 @@ namespace Quasar.Helpers.Json
             else
             {
                 SaveJSonFile(@"\Library\Workspaces.json", _Workspaces.OrderBy(i => i.ID));
+            }
+        }
+        public static void SaveSharedWorkspaces(ShareableWorkspace SW, string _ExternalPath = "")
+        {
+
+            if (_ExternalPath != "")
+            {
+                SaveJSonFile(@"\SharedWorkspace.json", SW, _ExternalPath);
+            }
+            else
+            {
+                
+                SaveJSonFile(@"\SharedWorkspace.json", SW);
             }
         }
         public static void SaveContentItems(ObservableCollection<ContentItem> _ContentItems, string _ExternalPath = "")
@@ -218,6 +231,31 @@ namespace Quasar.Helpers.Json
 
 
             return Workspaces;
+        }
+        public static ShareableWorkspace GetSharedWorkspace(bool External = false, string ExternalPath = "")
+        {
+            ShareableWorkspace SW = new ShareableWorkspace();
+            string Path;
+            if (!External)
+            {
+                Path = Properties.Settings.Default.DefaultDir + @"\Library\Workspaces.json";
+            }
+            else
+            {
+                Path = ExternalPath;
+            }
+            if (File.Exists(Path))
+            {
+                using (StreamReader file = File.OpenText(Path))
+                {
+                    JsonSerializer serializer = new JsonSerializer();
+                    SW = (ShareableWorkspace)serializer.Deserialize(file, typeof(ShareableWorkspace));
+                }
+            }
+
+
+
+            return SW;
         }
         public static ObservableCollection<ContentItem> GetContentItems(bool External = false, string ExternalPath = "")
         {

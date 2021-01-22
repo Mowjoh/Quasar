@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Quasar.Controls.Associations.Views"
              mc:Ignorable="d" 
-             d:DesignHeight="40" d:DesignWidth="200" DataContext="{Binding SlotItemViewModel}">
+             d:DesignHeight="50" d:DesignWidth="200" DataContext="{Binding SlotItemViewModel}">
     <UserControl.Style>
         <Style TargetType="{x:Type UserControl}">
             <Style.Triggers>

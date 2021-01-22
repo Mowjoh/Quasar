@@ -17,7 +17,7 @@ namespace Quasar.Helpers.Tools
 {
     public static class ARCropolisHelper
     {
-        public static void CheckTouchmARC(FileWriter Writer, string WorkspaceName, bool DefaultConfig = false)
+        public static void CheckTouchmARC(FileWriter Writer, string WorkspaceName, bool DefaultConfig = false,bool NativeARCFolder = false, bool ARC = false, bool UMM = false)
         {
             ILog log = LogManager.GetLogger("QuasarAppender");
             FileAppender appender = (FileAppender)log.Logger.Repository.GetAppenders()[0];
@@ -37,7 +37,7 @@ namespace Quasar.Helpers.Tools
                 log.Debug("Remote ARCropolis does not exist");
                 sendTouchmARC(Writer, log);
                 GetLocalConfig(log);
-                ModifyTouchmARCConfig(WorkspaceName, DefaultConfig, log);
+                ModifyTouchmARCConfig(WorkspaceName, DefaultConfig, log, NativeARCFolder,ARC, UMM);
                 sendRemoteFile(Writer, log);
             }
             else
@@ -62,7 +62,7 @@ namespace Quasar.Helpers.Tools
                         sendTouchmARC(Writer, log);
                     }
 
-                    ModifyTouchmARCConfig(WorkspaceName, DefaultConfig, log);
+                    ModifyTouchmARCConfig(WorkspaceName, DefaultConfig, log, NativeARCFolder, ARC, UMM);
                     sendRemoteFile(Writer, log);
 
                 }
@@ -70,7 +70,7 @@ namespace Quasar.Helpers.Tools
             
         }
 
-        public static void ModifyTouchmARCConfig(string WorkspacePath, bool DefaultConfig, ILog log)
+        public static void ModifyTouchmARCConfig(string WorkspacePath, bool DefaultConfig, ILog log, bool NativeARCFolder = false, bool ARC = false, bool UMM = false)
         {
             
             string path = Properties.Settings.Default.DefaultDir + "\\Library\\arcropolis.toml";
@@ -78,12 +78,43 @@ namespace Quasar.Helpers.Tools
             if (DefaultConfig)
             {
                 log.Debug("default arc sent");
-                config.paths.arc = @"rom:/arc/" + WorkspacePath;
+                if (NativeARCFolder)
+                {
+
+                }
+                else
+                {
+                    config.paths.arc = @"rom:/arc/" + WorkspacePath;
+                }
+                
             }
             else
             {
                 log.Debug("arc set to " + @"sd:/Quasar/" + WorkspacePath+"/arc");
-                config.paths.arc = @"sd:/Quasar/" + WorkspacePath + "/arc";
+                if (NativeARCFolder)
+                {
+                    if (ARC)
+                    {
+                        config.paths.arc = @"rom:/arcropolis/workspaces/" + WorkspacePath + "/arc";
+                    }
+                    if (UMM)
+                    {
+                        config.paths.umm = @"rom:/arcropolis/workspaces/" + WorkspacePath + "/umm";
+                    }
+                }
+                else
+                {
+                    if (ARC)
+                    {
+                        config.paths.arc = @"sd:/Quasar/" + WorkspacePath + "/arc";
+                    }
+                    if (UMM)
+                    {
+                        config.paths.umm = @"sd:/Quasar/" + WorkspacePath + "/Mods";
+                    }
+                    
+                }
+               
             }
             
 
