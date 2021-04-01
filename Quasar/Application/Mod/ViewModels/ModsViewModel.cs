@@ -24,6 +24,7 @@ using Quasar.Helpers.Json;
 using Quasar.Helpers.Downloading;
 using Quasar.Helpers.Mod_Scanning;
 using Quasar.Internal.Tools;
+using Quasar.Models;
 
 namespace Quasar.Controls.ModManagement.ViewModels
 {
@@ -354,6 +355,8 @@ namespace Quasar.Controls.ModManagement.ViewModels
 
             EventSystem.Subscribe<ModListItemViewModel>(GetModListElementTrigger);
             EventSystem.Subscribe<QuasarDownload>(Download);
+            EventSystem.Subscribe<ModalEvent>(ModalEvent);
+
             ActiveModManagers = new ObservableCollection<ModManager>();
 
             EventSystem.Subscribe<SettingItem>(SettingChanged);
@@ -385,7 +388,7 @@ namespace Quasar.Controls.ModManagement.ViewModels
             switch (ModListItemViewModel.ActionRequested)
             {
                 case "Delete":
-                    DeleteMod(MLI);
+                    AskDeleteMod(MLI);
                     break;
                 case "Add":
                     AddMod(MLI);
@@ -495,59 +498,62 @@ namespace Quasar.Controls.ModManagement.ViewModels
         }
 
         //Mod List Item Actions
-        public void DeleteMod(ModListItem item)
+        public void AskDeleteMod(ModListItem item)
         {
-            Boolean proceed = false;
             if (!Properties.Settings.Default.SupressModDeletion)
             {
-                MessageBoxResult result = MessageBox.Show("Are you sure you want to delete this mod ?", "Mod Deletion", MessageBoxButton.YesNo);
-                switch (result)
+                mliToDelete = item;
+                
+                ModalEvent meuh = new ModalEvent()
                 {
-                    case MessageBoxResult.Yes:
-                        proceed = true;
-                        break;
-                    case MessageBoxResult.No:
-                        break;
-                }
-            }
+                    EventName = "DeleteMod",
+                    Type = ModalType.OkCancel,
+                    Action = "Show",
+                    Title = "Mod Deletion",
+                    Content = "Are you sure you want to delete this mod ? \rIt's file and information will be removed from Quasar.",
+                    OkButtonText = "I'm sure",
+                    CancelButtonText = "Cancel"
 
-            if (proceed || Properties.Settings.Default.SupressModDeletion)
+                };
+                EventSystem.Publish<ModalEvent>(meuh);
+            }
+        }
+        public void DeleteMod(ModListItem item)
+        {
+            //Removing Files
+            ModFileManager mfm = new ModFileManager(item.ModListItemViewModel.LibraryItem, MUVM.Games[0]);
+            mfm.DeleteFiles();
+
+            //Removing from ContentMappings
+            List<ContentItem> relatedMappings = MUVM.ContentItems.Where(cm => cm.LibraryItemID == item.ModListItemViewModel.LibraryItem.ID).ToList();
+            foreach (ContentItem ci in relatedMappings)
             {
-                //Removing Files
-                ModFileManager mfm = new ModFileManager(item.ModListItemViewModel.LibraryItem, MUVM.Games[0]);
-                mfm.DeleteFiles();
-
-                //Removing from ContentMappings
-                List<ContentItem> relatedMappings = MUVM.ContentItems.Where(cm => cm.LibraryItemID == item.ModListItemViewModel.LibraryItem.ID).ToList();
-                foreach (ContentItem ci in relatedMappings)
+                foreach (Workspace w in MUVM.Workspaces)
                 {
-                    foreach (Workspace w in MUVM.Workspaces)
+                    List<Association> associations = w.Associations.Where(ass => ass.ContentItemID == ci.ID).ToList();
+                    if (associations != null)
                     {
-                        List<Association> associations = w.Associations.Where(ass => ass.ContentItemID == ci.ID).ToList();
-                        if (associations != null)
+                        foreach (Association ass in associations)
                         {
-                            foreach (Association ass in associations)
-                            {
-                                w.Associations.Remove(ass);
-                            }
+                            w.Associations.Remove(ass);
                         }
-                        MUVM.ContentItems.Remove(ci);
                     }
-
+                    MUVM.ContentItems.Remove(ci);
                 }
 
-                ModListItems.Remove(item);
-                MUVM.Library.Remove(item.ModListItemViewModel.LibraryItem);
-
-                //Writing changes
-                JSonHelper.SaveLibrary(MUVM.Library);
-                JSonHelper.SaveContentItems(MUVM.ContentItems);
-                JSonHelper.SaveWorkspaces(MUVM.Workspaces);
-
-                Application.Current.Dispatcher.Invoke((Action)delegate {
-                    EventSystem.Publish<string>("RefreshContents");
-                });
             }
+
+            ModListItems.Remove(item);
+            MUVM.Library.Remove(item.ModListItemViewModel.LibraryItem);
+
+            //Writing changes
+            JSonHelper.SaveLibrary(MUVM.Library);
+            JSonHelper.SaveContentItems(MUVM.ContentItems);
+            JSonHelper.SaveWorkspaces(MUVM.Workspaces);
+
+            Application.Current.Dispatcher.Invoke((Action)delegate {
+                EventSystem.Publish<string>("RefreshContents");
+            });
         }
         public void AddMod(ModListItem MLI)
         {
@@ -653,8 +659,6 @@ namespace Quasar.Controls.ModManagement.ViewModels
             CollectionViewSource.View.Refresh();
             JSonHelper.SaveLibrary(MUVM.Library);
 
-            mli.ModListItemViewModel.ActionRequested = "ShowContents";
-            EventSystem.Publish<ModListItem>(mli);
         }
 
         //Mod List Item Downloading
@@ -760,6 +764,24 @@ namespace Quasar.Controls.ModManagement.ViewModels
 
         #endregion
 
+        #region Modal Events
+        ModListItem mliToDelete { get; set; }
+        public void ModalEvent(ModalEvent me)
+        {
+            if (me.EventName == "DeleteMod")
+            {
+                switch (me.Action)
+                {
+                    case "OK":
+                        DeleteMod(mliToDelete);
+                        break;
+                    default:
+                        break;
+                }
+            }
+            
+        }
+        #endregion
     }
     public enum SortType { AtoZ = 1, ZtoA = 2, Disabled = 3}
 }

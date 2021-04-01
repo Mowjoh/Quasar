@@ -1,14 +1,17 @@
 ﻿using Quasar.Controls.Common.Models;
 using Quasar.Data.V2;
+using Quasar.Internal;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace Quasar.Controls.Associations.ViewModels
 {
-    public class SlotItemViewModel : ObservableObject
+    public class SlotViewModel : ObservableObject
     {
         #region fields
         private string _ContentName { get; set; }
@@ -19,6 +22,7 @@ namespace Quasar.Controls.Associations.ViewModels
         private string _TypeName { get; set; }
         private Association _Association { get; set; }
         private List<ContentItem> _ContentItems { get; set; }
+        private ICommand _DeleteAssociationCommand { get; set; }
         #endregion
 
         #region Properties
@@ -116,17 +120,51 @@ namespace Quasar.Controls.Associations.ViewModels
 
                 _ContentItems = value;
                 OnPropertyChanged("ContentItems");
+                OnPropertyChanged("SlotText");
+            }
+        }
+        public ObservableCollection<QuasarModType> QuasarModTypes { get; set; }
+        public string SlotText
+        {
+            get => getSlotText();
+        }
+        public ICommand DeleteAssociationCommand
+        {
+            get
+            {
+                if (_DeleteAssociationCommand == null)
+                {
+                    _DeleteAssociationCommand = new RelayCommand(param => DeleteAssociations());
+                }
+                return _DeleteAssociationCommand;
             }
         }
         #endregion
 
-        public SlotItemViewModel()
+        public SlotViewModel()
         {
 
         }
 
         #region Actions
-
+        public void DeleteAssociations()
+        {
+            EventSystem.Publish<SlotViewModel>(this);
+        }
+        public string getSlotText()
+        {
+            string SlotText = "";
+            if(ContentItems != null)
+            {
+                foreach (ContentItem ci in ContentItems)
+                {
+                    QuasarModType qmt = QuasarModTypes.Single(q => q.ID == ci.QuasarModTypeID);
+                    SlotText += String.Format("{0} - {1} - {2}\r", (ci.SlotNumber+1).ToString(), qmt.Name, ci.Name);
+                }
+            }
+            
+            return SlotText;
+        }
         #endregion
     }
 }

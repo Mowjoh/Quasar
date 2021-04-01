@@ -5,6 +5,7 @@ using Quasar.Controls.Build.Models;
 using Quasar.Controls.Common.Models;
 using Quasar.Data.V2;
 using Quasar.Internal;
+using Quasar.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -45,6 +46,7 @@ namespace Quasar.Controls.Build.ViewModels
 
         #region Data
         private MainUIViewModel _MUVM { get; set; }
+        private SmashBuilder _SB { get; set; }
         #endregion
 
         #region Commands
@@ -267,6 +269,15 @@ namespace Quasar.Controls.Build.ViewModels
                 OnPropertyChanged("MUVM");
             }
         }
+        public SmashBuilder SB
+        {
+            get => _SB;
+            set
+            {
+                _SB = value;
+                OnPropertyChanged("SB");
+            }
+        }
         #endregion
 
         #region Commands
@@ -308,6 +319,7 @@ namespace Quasar.Controls.Build.ViewModels
             LoadUI();
 
             EventSystem.Subscribe<Workspace>(SelectWorkspace);
+            EventSystem.Subscribe<ModalEvent>(ModalEvent);
 
         }
 
@@ -372,12 +384,22 @@ namespace Quasar.Controls.Build.ViewModels
         {
             ResetLogs();
             BuildLog("Info","Transfer Process Start :");
-
+            bool ok = true;
 
             FileWriter FW;
             if (WirelessSelected)
             {
+                BuildLog("Info", "Attempting to connect to the Switch...");
                 FW = new FTPWriter(this) { Log = Log };
+                ok = await FW.VerifyOK();
+                if (!ok)
+                {
+                    BuildLog("Error", "Could not connect.");
+                }
+                else
+                {
+                    BuildLog("Info", "Connection successful.");
+                }
             }
             else
             {
@@ -391,20 +413,125 @@ namespace Quasar.Controls.Build.ViewModels
                 }
                 
             }
+            if (ok)
+            {
+                SB = new SmashBuilder(FW, SelectedModLoader.ID, CleanSelected, OverwriteSelected, this);
 
-            SmashBuilder SB = new SmashBuilder(FW, SelectedModLoader.ID, CleanSelected, OverwriteSelected, this);
+                await Task.Run(() => {
+                    SB.StartBuild();
+                });
+            }
 
-            await Task.Run(() => {
-                SB.StartBuild();
-            });
+            SB.CheckModLoader(SelectedModLoader.ID);
+            if (!SB.ModLoaderInstalled)
+            {
+                SetStep("ModLoader Configuration");
+                ModalEvent meuh = new ModalEvent()
+                {
+                    Type = ModalType.OkCancel,
+                    Action = "Show",
+                    EventName = "AskModLoaderInstall",
+                    Title = "ARCropolis setup",
+                    Content = "Arcropolis is not detected on your Switch\rIt's required to load mods\rDo you want Quasar to install and setup ARCRopolis for you?",
+                    OkButtonText = "Yes please",
+                    CancelButtonText = "No, I want to do it myself"
+                };
 
+                EventSystem.Publish<ModalEvent>(meuh);
+            }
+            else
+            {
+                if (!Properties.Settings.Default.ModLoaderSetup)
+                {
+                    SetStep("ModLoader Configuration");
+                    ModalEvent meuh = new ModalEvent()
+                    {
+                        Type = ModalType.OkCancel,
+                        Action = "Show",
+                        EventName = "AskModLoaderSetup",
+                        Title = "ARCropolis setup",
+                        Content = "Do you want Quasar to change ARCRopolis'\ractive workspace to this one ?",
+                        OkButtonText = "Yes please",
+                        CancelButtonText = "No"
+                    };
+
+                    EventSystem.Publish<ModalEvent>(meuh);
+                }
+                else
+                {
+                    if (Properties.Settings.Default.ModLoaderSetupState)
+                    {
+                        await Task.Run(() => {
+                            SB.SetupModLoader(SelectedModLoader.ID, MUVM.ActiveWorkspace.Name);
+                        });
+                        
+                    }
+
+                    EndBuildProcess();
+
+                }
+            }
+        }
+
+        public async void InstallModLoader()
+        {
+
+        }
+
+        public async void ConfigureModLoader()
+        {
+
+        }
+
+        public async void EndBuildProcess()
+        {
+            Log.Info("Transfer Finished");
+            SetStep("Finished");
+            SetSubStep("");
+            SetProgression(100);
+            SetProgressionStyle(false);
+            SetSize("");
+            SetSpeed("");
             Building = false;
             BuildLog("Info", "Transfer Process End");
         }
-
         #endregion
 
         #region Events
+        public async void ModalEvent(ModalEvent meuh)
+        {
+            switch (meuh.EventName)
+            {
+                case "AskModLoaderSetup":
+                    if(meuh.Action == "OK")
+                    {
+                        await Task.Run(() => {
+                            SB.SetupModLoader(SelectedModLoader.ID, MUVM.ActiveWorkspace.Name);
+                        });
+                        EndBuildProcess();
+                    }
+                    if(meuh.Action == "KO")
+                    {
+                        EndBuildProcess();
+                    }
+                    break;
+                case "AskModLoaderInstall":
+                    if (meuh.Action == "OK")
+                    {
+                        await Task.Run(() => {
+                            SB.InstallModLoader(SelectedModLoader.ID, MUVM.ActiveWorkspace.Name);
+                        });
+                        EndBuildProcess();
+                    }
+                    if(meuh.Action == "KO")
+                    {
+                        EndBuildProcess();
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
         public void SelectWorkspace(Workspace w)
         {
             ActiveWorkspace = w;

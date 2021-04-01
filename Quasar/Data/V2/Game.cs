@@ -40,6 +40,8 @@ namespace Quasar.Data.V2
         public int ID { get; set; }
         public string Name { get; set; }
         public string ImagePath { get; set; }
+        public string ViewType { get; set; }
+        public string FilterName { get; set; }
         public ObservableCollection<GameElement> GameElements { get; set; }
     }
     public class GameElement
@@ -47,6 +49,7 @@ namespace Quasar.Data.V2
         public int ID { get; set; }
         public string Name { get; set; }
         public string GameFolderName { get; set; }
+        public string FilterValue { get; set; }
         public bool isDLC { get; set; }
     }
 }

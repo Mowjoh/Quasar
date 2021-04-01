@@ -20,7 +20,7 @@ namespace Quasar.Controls.Build.Models
 {
     public abstract class FileWriter
     {
-        public abstract bool VerifyOK();
+        public abstract Task<bool> VerifyOK();
         public abstract bool CheckFolderExists(string FolderPath);
         public abstract bool CheckFileExists(string FilePath);
         public abstract bool SendFile(string SourceFilePath, string FilePath);
@@ -60,14 +60,13 @@ namespace Quasar.Controls.Build.Models
 
                 Client = new FtpClient(Adress);
                 Client.Port = int.Parse(Port);
+                Client.ConnectTimeout = 3000;
                 if (Username != "")
                 {
                     Client.Credentials = new System.Net.NetworkCredential(Username, Password);
                 }
 
                 Client.RecursiveList = true;
-
-                Client.Connect();
 
                 Progress = delegate (FtpProgress p) {
                     if (p.Progress != 100)
@@ -101,8 +100,20 @@ namespace Quasar.Controls.Build.Models
             }
         }
 
-        public override bool VerifyOK()
+        public override async Task<bool> VerifyOK()
         {
+            Client.ConnectTimeout = 3000;
+            await Task.Run(() => {
+                try
+                {
+                    Client.Connect();
+                }
+                catch (Exception e)
+                {
+
+                }
+            });
+            
             return Client.IsConnected;
         }
 
@@ -208,7 +219,7 @@ namespace Quasar.Controls.Build.Models
             BVM = _BVM;
         }
 
-        public override bool VerifyOK()
+        public override async Task<bool> VerifyOK()
         {
             return true;
         }
@@ -274,7 +285,7 @@ namespace Quasar.Controls.Build.Models
             BVM = _BVM;
         }
         
-        public override bool VerifyOK()
+        public override async Task<bool> VerifyOK()
         {
             MediaD.Connect();
             return MediaD.IsConnected;

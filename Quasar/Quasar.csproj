@@ -91,14 +91,19 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Application\Associations\Models\FilterItem.cs" />
     <Compile Include="Application\Associations\Models\GameElementFamilySquare.cs" />
     <Compile Include="Application\Associations\ViewModels\AssociationViewModel.cs" />
-    <Compile Include="Application\Associations\ViewModels\SlotItemViewModel.cs" />
+    <Compile Include="Application\Associations\ViewModels\SlotViewModel.cs" />
+    <Compile Include="Application\Associations\ViewModels\SlotListItemViewModel.cs" />
     <Compile Include="Application\Associations\Views\AssociationView.xaml.cs">
       <DependentUpon>AssociationView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Application\Associations\Views\SlotItem.xaml.cs">
-      <DependentUpon>SlotItem.xaml</DependentUpon>
+    <Compile Include="Application\Associations\Views\SlotListItem.xaml.cs">
+      <DependentUpon>SlotListItem.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Application\Associations\Views\Slot.xaml.cs">
+      <DependentUpon>Slot.xaml</DependentUpon>
     </Compile>
     <Compile Include="Application\Build\Models\Build.cs" />
     <Compile Include="Application\Build\Models\FileWriter.cs" />
@@ -106,6 +111,11 @@
     <Compile Include="Application\Build\ViewModels\BuildViewModel.cs" />
     <Compile Include="Application\Build\Views\BuildView.xaml.cs">
       <DependentUpon>BuildView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Application\Common\Models\ModalEvent.cs" />
+    <Compile Include="Application\MainUI\ViewModels\ModalPopupViewModel.cs" />
+    <Compile Include="Application\MainUI\Views\ModalPopup.xaml.cs">
+      <DependentUpon>ModalPopup.xaml</DependentUpon>
     </Compile>
     <Compile Include="Application\Workspace\Models\ShareableWorkspace.cs" />
     <Compile Include="Data\Converter\V1toV2Converter.cs" />
@@ -199,7 +209,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Application\Associations\Views\SlotItem.xaml">
+    <Page Include="Application\Associations\Views\SlotListItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Application\Associations\Views\Slot.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -208,6 +222,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Application\Content\Views\ContentView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Application\MainUI\Views\ModalPopup.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -417,6 +435,12 @@
     <PackageReference Include="FluentFTP">
       <Version>32.4.3</Version>
     </PackageReference>
+    <PackageReference Include="FontAwesome">
+      <Version>4.7.0</Version>
+    </PackageReference>
+    <PackageReference Include="FontAwesome.WPF">
+      <Version>4.7.0.9</Version>
+    </PackageReference>
     <PackageReference Include="log4net">
       <Version>2.0.9</Version>
     </PackageReference>
@@ -446,7 +470,6 @@
     <Folder Include="Application\Common\Views\" />
     <Folder Include="Application\Content\Models\" />
     <Folder Include="Application\MainUI\Models\" />
-    <Folder Include="Application\MainUI\Views\" />
     <Folder Include="Resources\images\GameDataCategories\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

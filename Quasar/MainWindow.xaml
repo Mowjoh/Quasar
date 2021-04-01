@@ -4,15 +4,16 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:p="clr-namespace:Quasar.Properties"
+        xmlns:fa="http://schemas.fontawesome.io/icons/"
         xmlns:local="clr-namespace:Quasar"
         xmlns:controls="clr-namespace:Quasar.Controls"
         xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
-        xmlns:Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2" xmlns:view="clr-namespace:Quasar.Controls.Settings.View" xmlns:view1="clr-namespace:Quasar.Controls.Settings.Workspaces.View" xmlns:views="clr-namespace:Quasar.Controls.Build.Views" x:Name="MainWindow1" x:Class="Quasar.MainWindow"
+        xmlns:Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2" xmlns:view="clr-namespace:Quasar.Controls.Settings.View" xmlns:view1="clr-namespace:Quasar.Controls.Settings.Workspaces.View" xmlns:views="clr-namespace:Quasar.Controls.Build.Views"  x:Name="MainWindow1" x:Class="Quasar.MainWindow"
         mc:Ignorable="d"
         Title="{x:Static p:Resources.Quasar_WindowTitle}" MinWidth="1080" MinHeight="720" Width="1280" Height="720" Icon="Quasar.ico" DataContext="{Binding RelativeSource={RelativeSource Self}}" WindowStartupLocation="CenterScreen" Loaded="MainWindow1_Loaded">
 
     <Window.Resources>
-        
+        <BooleanToVisibilityConverter x:Key="BoolToVis" />
     </Window.Resources>
 
     <Window.TaskbarItemInfo>
@@ -20,46 +21,63 @@
     </Window.TaskbarItemInfo>
 
     <Grid x:Name="QuasarGrid">
-        <Grid x:Name="OverlayGrid" Margin="0,0,0,0" Panel.ZIndex="1000" Background="#B3000000">
-            <Grid.Style>
-                <Style TargetType="Grid">
-                    <Setter Property="Visibility" Value="Collapsed"/>
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding Updating}" Value="True">
-                            <Setter Property="Visibility" Value="Visible" />
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </Grid.Style>
-            <Grid Width="800" Height="400" VerticalAlignment="Center" HorizontalAlignment="Center">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="3*"/>
-                    <RowDefinition Height="2*"/>
-                    <RowDefinition Height="2*"/>
-                </Grid.RowDefinitions>
-                
-                <Path x:Name="BorderColor" Stroke="{StaticResource QD2}" StrokeThickness="2" Fill="{StaticResource QD2}" Grid.RowSpan="3">
-                    <Path.Data>
-                        <RectangleGeometry  Rect="0,0,800,400" RadiusX="30" RadiusY="30"  />
-                    </Path.Data>
-                </Path>
-
-                <Path Stroke="white" StrokeThickness="2" Fill="white" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center">
-                    <Path.Data>
-                        <RectangleGeometry  Rect="0,0,40,40"   />
-                    </Path.Data>
-                </Path>
-                
-                <Path Stroke="#FFBB527D" Fill="#FFBB527D" Height="75" Width="75"  Stretch="Uniform" Grid.Row="0" Data="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 11c-.55 0-1-.45-1-1V8c0-.55.45-1 1-1s1 .45 1 1v4c0 .55-.45 1-1 1zm1 4h-2v-2h2v2z"   />
-
-                <TextBlock Grid.Row="1" Foreground="White" TextAlignment="Center" FontSize="25" Margin="0,10,0,10"><Run Text="A new Quasar version has been detected."/><LineBreak/><Run Text="A scan will be performed to include changes."/></TextBlock>
-
-                <Button Template="{StaticResource QuasarButtonTemplate}" IsEnabled="{Binding UpdateFinished}" Command="{Binding Path=UpdateOKCommand}" Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Center">
-                </Button>
+        <Grid x:Name="OverlayGrid" Margin="0,0,0,0" Panel.ZIndex="1000">
+            <local:ModalPopup DataContext="{Binding ModalPopupViewModel}"/>
+        </Grid>
+        <Grid x:Name="OnboardingGrid" Margin="0,0,0,0" Panel.ZIndex="1000"  Visibility="{Binding OnboardingVisible, Converter={StaticResource BoolToVis}}">
+            <Button Command="{Binding Path=OnboardingCancel}" Panel.ZIndex="2000" Template="{StaticResource  OnboardingNextButton}" ToolTip="Next step" Margin="16"  HorizontalAlignment="Right" VerticalAlignment="Top"   />
+            <Button Command="{Binding Path=OnboardingPrevious}" Panel.ZIndex="2000"  Template="{StaticResource CutieSmallButtonTemplate}" Width="100" Content="Previous" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,16,115,16"/>
+            <Button Command="{Binding Path=OnboardingNext}" Panel.ZIndex="2000"  Template="{StaticResource CutieSmallButtonTemplate}" Width="100" Content="Next" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="115,16,0,16"/>
+            <Grid x:Name="Step1" Background="#121212">
+                <Grid.Style>
+                    <Style TargetType="Grid">
+                        <Setter Property="Visibility" Value="Collapsed" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding OnboardingStep}" Value="1">
+                                <Setter Property="Visibility" Value="Visible"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Grid.Style>
+                <TextBlock Style="{StaticResource CutieTextBlockStyle}" TextWrapping="Wrap" Margin="64" FontSize="24"><Run Text="                                          Hello, Welcome to Quasar !"/><LineBreak/><Run/><LineBreak/><Run Text="This is a mod manager, library, capable of making your modding journey easier."/><LineBreak/><Run/><LineBreak/><Run Text="You can download mods easily with Quasar by using the Quasar Download button that is shown in Super Smash Bros Ultimate submissions on Gamebanana."/><LineBreak/><Run Text="Press that link and the mod will be downloaded, ready to use !"/><LineBreak/><Run/><LineBreak/><Run Text="For this introduction, I will be showing fake mods to illustrate how you can use Quasar"/><LineBreak/><Run/></TextBlock>
+            </Grid>
+            <Grid x:Name="Step2" >
+                <Grid.Style>
+                    <Style TargetType="Grid">
+                        <Setter Property="Visibility" Value="Collapsed" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding OnboardingStep}" Value="2">
+                                <Setter Property="Visibility" Value="Visible"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Grid.Style>
+                <Grid Background="#121212" Margin="45,50,0,0" Height="125" Width="1100" VerticalAlignment="top" HorizontalAlignment="Left">
+                    
+                </Grid>
+                <fa:ImageAwesome Icon="HandOutlineUp" VerticalAlignment="Top" HorizontalAlignment="Left"  Margin="64,64,0,0" Height="50"  Foreground="{StaticResource CutiePrimaryColor}" />
+                <TextBlock Style="{StaticResource CutieTextBlockStyle}" TextWrapping="Wrap" Margin="135,75,128,0" FontSize="24"><Run Text="We're in the"/><Run Text=" first tab, "/><Run Text="Overview. This is where you will find all your downloaded mods."/><LineBreak/><Run Text="Below you will find the list of all mods in your Library."/><Run Text=" See, we already have 2 !"/></TextBlock>
+            </Grid>
+            <Grid x:Name="Step3">
+                <Grid.Style>
+                    <Style TargetType="Grid">
+                        <Setter Property="Visibility" Value="Collapsed" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding OnboardingStep}" Value="3">
+                                <Setter Property="Visibility" Value="Visible"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Grid.Style>
+                <Grid Background="#121212" Margin="30,100,0,0" Height="125" Width="1100" HorizontalAlignment="Left" VerticalAlignment="Top"  />
+                <Grid Background="#121212" Margin="30,300,30,0" Height="300" Width="250" HorizontalAlignment="Right" VerticalAlignment="Top"  />
+                <fa:ImageAwesome Icon="HandOutlineDown" VerticalAlignment="Top" HorizontalAlignment="Left"  Margin="64,165,0,0" Height="50"  Foreground="{StaticResource CutiePrimaryColor}" />
+                <fa:ImageAwesome Icon="HandOutlineUp" VerticalAlignment="Top" HorizontalAlignment="Right"  Margin="64,315,70,0" Height="50"  Foreground="{StaticResource CutiePrimaryColor}" />
+                <TextBlock Style="{StaticResource CutieTextBlockStyle}" TextWrapping="Wrap" Text="Selecting a mod will expand the view. You'll see a screenshot, information about the authors" Margin="150,120,150,0" FontSize="24"/>
+                <TextBlock Style="{StaticResource CutieTextBlockStyle}" TextWrapping="Wrap" Text="You can do various actions with this mod with those buttons, you can read their tooltips !" Margin="1000,380,40,0" HorizontalAlignment="Right" FontSize="24"/>
             </Grid>
         </Grid>
         <Grid x:Name="AppGrid">
-            
             <TabControl x:Name="NewTabControl" Grid.Column="1" BorderThickness="0" Background="{DynamicResource QD1}" ItemsSource="{Binding TabItems}" SelectedItem="{Binding SelectedTabItem}" >
                 <TabControl.Resources>
                     <Style TargetType="{x:Type TabItem}">
@@ -109,7 +127,7 @@
                     </Style>
                 </TabControl.Resources>
             </TabControl>
-            
+
         </Grid>
     </Grid>
 </Window>

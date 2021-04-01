@@ -654,6 +654,7 @@ namespace Quasar.Controls.Mod.ViewModels
         {
             ActionRequested = "Delete";
             EventSystem.Publish<ModListItemViewModel>(this);
+
         }
 
         public void AddMod()

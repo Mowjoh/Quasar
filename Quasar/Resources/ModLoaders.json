@@ -1,1 +1,26 @@
-[{"ID":1,"Name":"ARCropolis","WorkspacePath":"atmosphere/contents/01006A800016E000/romfs/arcropolis/workspaces/{Workspace}/arc/","GameID":1},{"ID":2,"Name":"ARCadia style","WorkspacePath":"atmosphere/contents/01006A800016E000/romfs/arcropolis/workspaces/{Workspace}/umm/","GameID":1},{"ID":3,"Name":"ARCadia style (Per Slot)","WorkspacePath":"atmosphere/contents/01006A800016E000/romfs/arcropolis/workspaces/{Workspace}/umm/","GameID":1},{"ID":4,"Name":"UMM","WorkspacePath":"UltimateModManager/mods/{Workspace}/","GameID":1}]
+[
+  {
+    "ID": 1,
+    "Name": "ARCropolis",
+    "WorkspacePath": "atmosphere/contents/01006A800016E000/romfs/arcropolis/workspaces/{Workspace}/arc/",
+    "GameID": 1
+  },
+  {
+    "ID": 2,
+    "Name": "ARCadia style",
+    "WorkspacePath": "atmosphere/contents/01006A800016E000/romfs/arcropolis/workspaces/{Workspace}/umm/",
+    "GameID": 1
+  },
+  {
+    "ID": 3,
+    "Name": "ARCadia style (Per Slot)",
+    "WorkspacePath": "atmosphere/contents/01006A800016E000/romfs/arcropolis/workspaces/{Workspace}/umm/",
+    "GameID": 1
+  },
+  {
+    "ID": 4,
+    "Name": "UMM",
+    "WorkspacePath": "UltimateModManager/mods/{Workspace}/",
+    "GameID": 1
+  }
+]

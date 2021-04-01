@@ -7,6 +7,7 @@ using Quasar.Helpers.Tools;
 using Quasar.Helpers.XML;
 using Quasar.Internal;
 using Quasar.Internal.Tools;
+using Quasar.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -64,7 +65,7 @@ namespace Quasar.Controls.Settings.Workspaces.ViewModels
             {
                 if (_DeleteWorkspaceCommand == null)
                 {
-                    _DeleteWorkspaceCommand = new RelayCommand(param => DeleteWorkspace());
+                    _DeleteWorkspaceCommand = new RelayCommand(param => AskDeleteWorkspace());
                 }
                 return _DeleteWorkspaceCommand;
             }
@@ -75,7 +76,7 @@ namespace Quasar.Controls.Settings.Workspaces.ViewModels
             {
                 if (_EmptyWorkspaceCommand == null)
                 {
-                    _EmptyWorkspaceCommand = new RelayCommand(param => EmptyWorkspace());
+                    _EmptyWorkspaceCommand = new RelayCommand(param => AskEmptyWorkspace());
                 }
                 return _EmptyWorkspaceCommand;
             }
@@ -195,12 +196,75 @@ namespace Quasar.Controls.Settings.Workspaces.ViewModels
         {
             MUVM = _MUVM;
             Workspaces = MUVM.Workspaces;
-            ActiveWorkspace = _ActiveWorkspace;
+            ActiveWorkspace = MUVM.ActiveWorkspace;
             log = _log;
+
+            EventSystem.Subscribe<ModalEvent>(ModalEvent);
+
         }
 
+        #region Modal
+        public void ModalEvent(ModalEvent meu)
+        {
+            switch (meu.EventName)
+            {
+                case "DeleteWorkspace":
+                    if(meu.Action == "OK")
+                    {
+                        DeleteWorkspace();
+                    }
+                    break;
+                case "EmptyWorkspace":
+                    if (meu.Action == "OK")
+                    {
+                        EmptyWorkspace();
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+        #endregion
 
         #region Actions
+        public void AskDeleteWorkspace()
+        {
+            if (ActiveWorkspace != null)
+            {
+                if (ActiveWorkspace.ID != 0)
+                {
+                    ModalEvent meuh = new ModalEvent()
+                    {
+                        Action = "Show",
+                        EventName = "DeleteWorkspace",
+                        Type = ModalType.OkCancel,
+                        Title = "Workspace Deletion",
+                        Content = "Are you sure you want to delete this workspace?",
+                        OkButtonText = "Yes I'm sure",
+                        CancelButtonText = "No"
+                    };
+                    EventSystem.Publish(meuh);
+                }
+            }
+        }
+        public void AskEmptyWorkspace()
+        {
+            if (ActiveWorkspace != null)
+            {
+                ModalEvent meuh = new ModalEvent()
+                {
+                    Action = "Show",
+                    EventName = "EmptyWorkspace",
+                    Type = ModalType.OkCancel,
+                    Title = "Workspace Reset",
+                    Content = "Are you sure you want to empty this workspace?",
+                    OkButtonText = "Yes I'm sure",
+                    CancelButtonText = "No"
+                };
+                EventSystem.Publish(meuh);
+            }
+        }
+
         /// <summary>
         /// Saves the workspace Name
         /// </summary>
@@ -228,28 +292,9 @@ namespace Quasar.Controls.Settings.Workspaces.ViewModels
         /// </summary>
         public void DeleteWorkspace()
         {
-            if (ActiveWorkspace != null)
-            {
-                if (ActiveWorkspace.ID != 0)
-                {
-                    bool proceed = false;
-                    MessageBoxResult result = System.Windows.MessageBox.Show("Are you sure you want to delete this workspace ?", "Workspace Deletion", MessageBoxButton.YesNo);
-                    switch (result)
-                    {
-                        case MessageBoxResult.Yes:
-                            proceed = true;
-                            break;
-                        case MessageBoxResult.No:
-                            break;
-                    }
-                    if (proceed)
-                    {
-                        Workspaces.Remove(ActiveWorkspace);
-                        ActiveWorkspace = Workspaces[0];
-                        JSonHelper.SaveWorkspaces(Workspaces);
-                    }
-                }
-            }
+            Workspaces.Remove(ActiveWorkspace);
+            ActiveWorkspace = Workspaces[0];
+            JSonHelper.SaveWorkspaces(Workspaces);
         }
 
         /// <summary>
@@ -257,25 +302,8 @@ namespace Quasar.Controls.Settings.Workspaces.ViewModels
         /// </summary>
         public void EmptyWorkspace()
         {
-            if(ActiveWorkspace != null)
-            {
-                bool proceed = false;
-                MessageBoxResult result = System.Windows.MessageBox.Show("Are you sure you want to empty this workspace ?", "Workspace Reset", MessageBoxButton.YesNo);
-                switch (result)
-                {
-                    case MessageBoxResult.Yes:
-                        proceed = true;
-                        break;
-                    case MessageBoxResult.No:
-                        break;
-                }
-                if (proceed)
-                {
-                    ActiveWorkspace.Associations = new ObservableCollection<Association>();
-                    JSonHelper.SaveWorkspaces(Workspaces);
-                }
-                
-            }
+            ActiveWorkspace.Associations = new ObservableCollection<Association>();
+            JSonHelper.SaveWorkspaces(Workspaces);
         }
 
         /// <summary>

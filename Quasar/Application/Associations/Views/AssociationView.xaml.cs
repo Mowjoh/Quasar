@@ -84,30 +84,33 @@ namespace Quasar.Controls.Assignation.Views
         }
         private void ListBox_Drop(object sender, DragEventArgs e)
         {
-            if (sender is SlotItem)
+            if (sender is Slot)
             {
-                var source = e.Data.GetData(typeof(SlotItem)) as SlotItem;
-                var target = (SlotItem)sender;
-                AssociationViewModel.SetSlot(source, target, true);
+                var source = e.Data.GetData(typeof(Slot)) as Slot;
+                var target = (Slot)sender;
+                AssociationViewModel.SetSlot(source, target);
             }
         }
 
         private T FindVisualParent<T>(DependencyObject child)
             where T : DependencyObject
         {
-            var parentObject = VisualTreeHelper.GetParent(child);
-            if (parentObject == null)
+            try
+            {
+                var parentObject = VisualTreeHelper.GetParent(child);
+                if (parentObject == null)
+                    return null;
+                T parent = parentObject as T;
+                if (parent != null)
+                    return parent;
+                return FindVisualParent<T>(parentObject);
+            }
+            catch(Exception e)
+            {
                 return null;
-            T parent = parentObject as T;
-            if (parent != null)
-                return parent;
-            return FindVisualParent<T>(parentObject);
+            }
+            
         }
 
-        private void SlotItem_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
-        {
-            SlotItem item = (SlotItem)sender;
-            AssociationViewModel.DeleteSlotItem();
-        }
     }
 }

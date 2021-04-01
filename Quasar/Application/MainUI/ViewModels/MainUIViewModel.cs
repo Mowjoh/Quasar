@@ -1,5 +1,6 @@
 ﻿using log4net;
 using log4net.Appender;
+using Quasar.Models;
 using Quasar.Controls;
 using Quasar.Controls.Assignation.ViewModels;
 using Quasar.Controls.Assignation.Views;
@@ -40,6 +41,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
+using Quasar.ViewModels;
 
 namespace Quasar
 {
@@ -61,6 +63,7 @@ namespace Quasar
         private SettingsView _SettingsView { get; set; }
         private WorkspaceView _WorkspaceView { get; set; }
         private WorkspaceViewModel _WVM { get; set; }
+        private ModalPopupViewModel _ModalPopupViewModel { get; set; }
 
         private bool _BeginGameChoice { get; set; }
         private bool _StopGameChoice { get; set; }
@@ -76,7 +79,10 @@ namespace Quasar
         #endregion
 
         #region Commands
-        private ICommand _UpdateOKCommand { get; set; }
+        
+        private ICommand _OnboardingCancel { get; set; }
+        private ICommand _OnboardingNext { get; set; }
+        private ICommand _OnboardingPrevious { get; set; }
         #endregion
 
         #endregion
@@ -229,7 +235,18 @@ namespace Quasar
             }
         }
 
-        
+        public ModalPopupViewModel ModalPopupViewModel
+        {
+            get => _ModalPopupViewModel;
+            set
+            {
+                if (_ModalPopupViewModel == value)
+                    return;
+
+                _ModalPopupViewModel = value;
+                OnPropertyChanged("ModalPopupViewModel");
+            }
+        }
         public WorkspaceView WorkspaceView
         {
             get => _WorkspaceView;
@@ -362,22 +379,98 @@ namespace Quasar
         /// </summary>
         public Mutex serverMutex;
         public ILog log { get; set; }
-        #endregion
+        #endregion-++
 
         #region Commands
-        public ICommand UpdateOKCommand
+        
+        public ICommand OnboardingCancel
         {
             get
             {
-                if (_UpdateOKCommand == null)
+                if (_OnboardingCancel == null)
                 {
-                    _UpdateOKCommand = new RelayCommand(param => UpdateOK());
+                    _OnboardingCancel = new RelayCommand(param => Onboarding(false));
                 }
-                return _UpdateOKCommand;
+                return _OnboardingCancel;
             }
         }
+        public ICommand OnboardingNext
+        {
+            get
+            {
+                if (_OnboardingNext == null)
+                {
+                    _OnboardingNext = new RelayCommand(param => nextStep());
+                }
+                return _OnboardingNext;
+            }
+        }
+        public ICommand OnboardingPrevious
+        {
+            get
+            {
+                if (_OnboardingPrevious == null)
+                {
+                    _OnboardingPrevious = new RelayCommand(param => previousStep());
+                }
+                return _OnboardingPrevious;
+            }
+        }
+
         #endregion
 
+        #endregion
+
+        #region Onboarding
+        private bool _OnboardingVisible { get; set; } = false;
+        public bool OnboardingVisible
+        {
+            get => _OnboardingVisible;
+            set
+            {
+                _OnboardingVisible = value;
+                OnPropertyChanged("OnboardingVisible");
+            }
+        }
+        private int _OnboardingStep { get; set; } = 0;
+        public int OnboardingStep
+        {
+            get => _OnboardingStep;
+            set
+            {
+                _OnboardingStep = value;
+                OnPropertyChanged("OnboardingStep");
+            }
+        }
+
+        public void nextStep()
+        {
+            switch (OnboardingStep)
+            {
+                default:
+                    break;
+                case 2:
+                    MVM.SelectedModListItem = MVM.ModListItems[1];
+                    break;
+            }
+            if (OnboardingStep < 3)
+                OnboardingStep++;
+        }
+        public void previousStep()
+        {
+            if(OnboardingStep > 1)
+                OnboardingStep--;
+        }
+        public void Onboarding(bool visible)
+        {
+            OnboardingVisible = visible;
+            OnboardingStep = visible ? 1 : 0;
+            if (!visible)
+            {
+                Properties.Settings.Default.Onboarded = true;
+                Properties.Settings.Default.Save();
+            }
+        }
         #endregion
 
         public MainUIViewModel()
@@ -419,12 +512,89 @@ namespace Quasar
                 CreatorMode = false;
 
                 EventSystem.Subscribe<ModListItem>(SetModListItem);
+                EventSystem.Subscribe<ModalEvent>(ModalEvent);
+
+                if (!Properties.Settings.Default.CFWAcknowledged)
+                {
+                    ModalEvent meuh = new ModalEvent()
+                    {
+                        EventName = "Hacked",
+                        Action = "Show",
+                        Type = ModalType.Loader,
+                        Content = "Quasar is an application that will help you manage mod \rfiles for you. Modding is only for Switches running \rCustom Firmware (CFW). If your Switch is not hacked, \rQuasar will be of no use to you.",
+                        OkButtonText = "My switch is running CFW"
+                    };
+                    EventSystem.Publish<ModalEvent>(meuh);
+
+                    Task task = Task.Run(() => {
+                        System.Threading.Thread.Sleep(5000);
+                        meuh.Action = "LoadOK";
+                        EventSystem.Publish<ModalEvent>(meuh);
+                    });
+                }
+                else
+                {
+                    if (!Properties.Settings.Default.Onboarded)
+                    {
+                        ModalEvent meuh = new ModalEvent()
+                        {
+                            EventName = "Onboarding",
+                            Action = "Show",
+                            Type = ModalType.OkCancel,
+                            Title = "DO YOU NEED HELP?",
+                            Content = "If it's your first time using Quasar, or if you want\ra tour of what you can do, you can have a little demo.",
+                            OkButtonText = "Yes, please show me around",
+                            CancelButtonText = "No, I don't need help"
+
+                        };
+                        EventSystem.Publish<ModalEvent>(meuh);
+                    }
+                }
+
 
             }
             catch (Exception e)
             {
                 log.Info(e.Message);
                 log.Info(e.StackTrace);
+            }
+        }
+        public void ModalEvent(ModalEvent me)
+        {
+            switch (me.EventName)
+            {
+                case "Hacked":
+                    if((me.Action ?? "") == "OK")
+                    {
+                        Properties.Settings.Default.CFWAcknowledged = true;
+                        Properties.Settings.Default.Save();
+                        if (!Properties.Settings.Default.Onboarded)
+                        {
+                            ModalEvent meuh = new ModalEvent()
+                            {
+                                EventName = "Onboarding",
+                                Action = "Show",
+                                Type = ModalType.OkCancel,
+                                Title = "DO YOU NEED HELP?",
+                                Content = "If it's your first time using Quasar, or if you want\ra tour of what you can do, you can have a little demo.",
+                                OkButtonText = "Yes, please show me around",
+                                CancelButtonText = "No, I don't need help"
+
+                            };
+                            EventSystem.Publish<ModalEvent>(meuh);
+                        }
+                    }
+                    break;
+                case "Onboarding":
+                    Onboarding(me.Action == "OK");
+                    if (me.Action == "KO")
+                    {
+                        Properties.Settings.Default.Onboarded = true;
+                        Properties.Settings.Default.Save();
+                    }
+                    break;
+                default:
+                    break;
             }
         }
 
@@ -526,7 +696,7 @@ namespace Quasar
             WorkspaceView.DataContext = WVM;
             TabItems.Add(new TabItem() { Content = WorkspaceView, Header = Properties.Resources.MainUI_WorkspacesTabHeader, Foreground = new SolidColorBrush() { Color = Colors.White }, Visibility = Properties.Settings.Default.EnableWorkspaces ? Visibility.Visible : Visibility.Collapsed });
 
-            
+            ModalPopupViewModel = new ModalPopupViewModel();
 
             SettingsView.start();
         }

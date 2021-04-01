@@ -160,7 +160,6 @@
                     <Button Command="{Binding Path=DeleteModCommand}" Template="{StaticResource ActionTrashButton}" ToolTip="Delete this Mod" Margin="10,0,0,0"   />
                     <Button Command="{Binding Path=FileViewCommand}" Template="{StaticResource ActionFileViewButton}" ToolTip="Show mod files" Margin="10,0,0,0" Visibility="{Binding Path=AdvancedMode,Converter={StaticResource BoolVisi}}" />
                     <Button Command="{Binding Path=AddModCommand}" Template="{StaticResource ActionProcessModButton}" ToolTip="Remove the mod from the workspace" Margin="10,0,0,0" Visibility="{Binding Path=NoContent,Converter={StaticResource BoolVisi}}" />
-                    <Button Command="{Binding Path=ShowContentsCommand}" Template="{StaticResource ActionFolderButton}" ToolTip="Show mod contents" Margin="10,0,0,0" Visibility="{Binding Path=ManualMod,Converter={StaticResource BoolVisi}}"  />
                 </WrapPanel>
             </Grid>
 
@@ -180,11 +179,38 @@
 
                 <Image x:Name="ModImage" Grid.Column="0" Source="{Binding ImageSource}" Margin="30,0,0,0"></Image>
 
-                <!--Version Control-->
-                <Label Style="{StaticResource CutieLabelStyle}" Content="Version Control :" Grid.Column="1" VerticalAlignment="top" HorizontalAlignment="Center" />
-                <Label Style="{StaticResource CutieLabelStyle}" Content="Waiting for API to change to implement this" Margin="0,50,0,0" Grid.Column="1" VerticalAlignment="top" HorizontalAlignment="Center" />
-
-
+                <Grid Grid.Column="1">
+                    <Grid.Style>
+                        <Style TargetType="Grid">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding LibraryItem.ManualMod}" Value="False">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Grid.Style>
+                    <!--Version Control-->
+                    <Label Style="{StaticResource CutieLabelStyle}" Content="Version Control :" Grid.Column="1" VerticalAlignment="top" HorizontalAlignment="Center" />
+                    <Label Style="{StaticResource CutieLabelStyle}" Content="Update Count :" Margin="16,50,0,0" Grid.Column="1" VerticalAlignment="top" HorizontalAlignment="Left" />
+                    <Label Style="{StaticResource CutieLabelStyle}" Content="{Binding LibraryItem.UpdateCount}" Margin="115,50,0,0" Grid.Column="1" VerticalAlignment="top" HorizontalAlignment="Left" />
+                    <Button Template="{StaticResource CutieSmallButtonTemplate}" Command="{Binding Path=AddManual}" Grid.Column="1" Width="200" Content="Check for updates" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,100,0,0" Visibility="{Binding CreatorMode,Converter={StaticResource BoolVisi}}"/>
+                </Grid>
+                <Grid Grid.Column="1">
+                    <Grid.Style>
+                        <Style TargetType="Grid">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding LibraryItem.ManualMod}" Value="True">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Grid.Style>
+                    <!--Version Control-->
+                    <Label Style="{StaticResource CutieLabelStyle}" Content="Options" Grid.Column="1" VerticalAlignment="top" HorizontalAlignment="Center" />
+                    <Button Template="{StaticResource CutieSmallButtonTemplate}" Command="{Binding Path=ShowContentsCommand}" Grid.Column="1" Width="200" Content="Change Files" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,100,0,0" Visibility="{Binding CreatorMode,Converter={StaticResource BoolVisi}}"/>
+                </Grid>
                 <Grid  Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Right" Background="#6C6C6C" Width="1" Height="130" />
 
                 <!-- Authors Panel-->

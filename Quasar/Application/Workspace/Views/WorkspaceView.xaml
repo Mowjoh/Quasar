@@ -43,8 +43,6 @@
         <Button Template="{StaticResource CutieSmallButtonTemplate}" Content="Duplicate this Workspace" Grid.Column="2" HorizontalAlignment="Left" Margin="10,140,0,0" VerticalAlignment="Top" Width="250" Height="32" Command="{Binding Path=DuplicateWorkspaceCommand}"/>
         <Button Template="{StaticResource CutieSmallButtonTemplate}" Content="Empty this Workspace" Grid.Column="2" HorizontalAlignment="Left" Margin="10,185,0,0" VerticalAlignment="Top" Width="250" Height="32" Background="#FFD3945E" Command="{Binding Path=EmptyWorkspaceCommand}"/>
         <Button Template="{StaticResource CutieSmallButtonTemplate}" Content="Delete this Workspace" Grid.Column="2" HorizontalAlignment="Left" Margin="10,230,0,0" VerticalAlignment="Top" Width="250" Height="32" Background="#FFAE6060" Command="{Binding Path=DeleteWorkspaceCommand}" />
-        <Button Template="{StaticResource CutieSmallButtonTemplate}" Content="Share Workspace" Grid.Column="2" HorizontalAlignment="Left" Margin="10,300,0,0" VerticalAlignment="Top" Width="250" Height="32" Command="{Binding Path=ShareWorkspaceCommand}" />
-        <Button Template="{StaticResource CutieSmallButtonTemplate}" Content="Import Shared Workspace" Grid.Column="2" HorizontalAlignment="Left" Margin="10,345,0,0" VerticalAlignment="Top" Width="250" Height="32" Command="{Binding Path=ImportWorkspaceCommand}" />
 
         <!--Workspace Information-->
         <TextBlock Text="Workspace Info : " Margin="10,400,10,0" Style="{StaticResource CutieTextBlockStyle}" FontSize="14" Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Left" />

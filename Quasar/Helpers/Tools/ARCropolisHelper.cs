@@ -17,7 +17,7 @@ namespace Quasar.Helpers.Tools
 {
     public static class ARCropolisHelper
     {
-        public static void CheckTouchmARC(FileWriter Writer, string WorkspaceName, bool DefaultConfig = false,bool NativeARCFolder = false, bool ARC = false, bool UMM = false)
+        public static void SendTouchmARC(FileWriter Writer, string WorkspaceName, bool DefaultConfig = false,bool NativeARCFolder = false, bool ARC = false, bool UMM = false)
         {
             ILog log = LogManager.GetLogger("QuasarAppender");
             FileAppender appender = (FileAppender)log.Logger.Repository.GetAppenders()[0];
@@ -31,48 +31,22 @@ namespace Quasar.Helpers.Tools
                 SDWriter wrote = (SDWriter)Writer;
                 basepath = wrote.LetterPath;
             }
-            
-            if (!Writer.CheckFileExists(basepath+"atmosphere\\contents\\01006A800016E000\\romfs\\skyline\\plugins\\libarcropolis.nro"))
-            {
-                log.Debug("Remote ARCropolis does not exist");
-                sendTouchmARC(Writer, log);
-                GetLocalConfig(log);
-                ModifyTouchmARCConfig(WorkspaceName, DefaultConfig, log, NativeARCFolder,ARC, UMM);
-                sendRemoteFile(Writer, log);
-            }
-            else
-            {
-                log.Debug("Remote ARCropolis exists");
-                getRemoteFile(Writer, log);
-                if (!File.Exists(Properties.Settings.Default.DefaultDir + "\\Library\\arcropolis.toml"))
-                {
-                    log.Debug("Remote TOML does not exist");
-                    sendTouchmARC(Writer, log);
-                    GetLocalConfig(log);
-                    ModifyTouchmARCConfig(WorkspaceName, DefaultConfig, log);
-                    sendRemoteFile(Writer, log);
-                }
-                else
-                {
-                    log.Debug("Remote TOML exists");
-                    if (LocalNewer(log))
-                    {
-                        log.Debug("Local TOML is newer");
-                        GetLocalConfig(log);
-                        sendTouchmARC(Writer, log);
-                    }
 
-                    ModifyTouchmARCConfig(WorkspaceName, DefaultConfig, log, NativeARCFolder, ARC, UMM);
-                    sendRemoteFile(Writer, log);
+            sendTouchmARC(Writer, log);
+            GetLocalConfig(log);
+            ModifyTouchmARCConfig(WorkspaceName, DefaultConfig, NativeARCFolder, ARC, UMM);
+            sendRemoteFile(Writer, log);
 
-                }
-            }
-            
         }
 
-        public static void ModifyTouchmARCConfig(string WorkspacePath, bool DefaultConfig, ILog log, bool NativeARCFolder = false, bool ARC = false, bool UMM = false)
+        public static void ModifyTouchmARCConfig(string WorkspacePath, bool DefaultConfig, bool NativeARCFolder = false, bool ARC = false, bool UMM = false)
         {
-            
+            ILog log = LogManager.GetLogger("QuasarAppender");
+            FileAppender appender = (FileAppender)log.Logger.Repository.GetAppenders()[0];
+            appender.File = Properties.Settings.Default.DefaultDir + "\\Quasar.log";
+            appender.Threshold = log4net.Core.Level.Debug;
+            appender.ActivateOptions();
+
             string path = Properties.Settings.Default.DefaultDir + "\\Library\\arcropolis.toml";
             ARCropolisConfiguration config = Toml.ReadFile<ARCropolisConfiguration>(path);
             if (DefaultConfig)
@@ -215,13 +189,11 @@ namespace Quasar.Helpers.Tools
     {
         public string version { get; set; }
     }
-
     public class paths
     {
         public string arc { get; set; }
         public string umm { get; set; }
     }
-
     public class updater
     {
         public string server_ip { get; set; }

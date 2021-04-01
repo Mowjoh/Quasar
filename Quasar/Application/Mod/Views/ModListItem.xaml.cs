@@ -80,5 +80,6 @@ namespace Quasar.Controls
             InitializeComponent();
             DataContext = ModListItemViewModel;
         }
+
     }
 }

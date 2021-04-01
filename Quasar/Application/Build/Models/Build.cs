@@ -31,7 +31,10 @@ namespace Quasar.Controls.Build.Models
     {
         public abstract Task<bool> StartBuild();
 
-        public abstract Task CopyModLoader(int ModLoader);
+        public abstract Task CheckModLoader(int ModLoader);
+        public abstract Task SetupModLoader(int ModLoader, string WorkspaceName);
+        public abstract Task InstallModLoader(int ModLoader, string WorkspaceName);
+        
         public abstract Task StartCheck();
         public abstract Task GetLocalFileList();
         public abstract Task GetDistantFileList();
@@ -73,6 +76,8 @@ namespace Quasar.Controls.Build.Models
         List<ModFile> WorkspaceFilesToCopy { get; set; }
         List<ModFile> WorkspaceFilesToDelete { get; set; }
         ObservableCollection<ModFile> DistantIndex { get; set; }
+        public bool ModLoaderInstalled { get; set; }
+        public bool ModLoaderSetup { get; set; }
 
         public SmashBuilder(FileWriter _Writer, int _ModLoader, bool _CleanSelected, bool _OverwriteSelected, BuildViewModel _ViewModel)
         {
@@ -87,81 +92,86 @@ namespace Quasar.Controls.Build.Models
 
         public override async Task<bool> StartBuild()
         {
-            if (Writer.VerifyOK())
+            ViewModel.Building = true;
+            ViewModel.Log.Debug("Building set to true");
+
+            //Base Operations
+            await StartCheck();
+            ViewModel.Log.Debug("Start Check Finished");
+
+            await GetLocalFileList();
+            ViewModel.Log.Debug("Got Local File List");
+
+
+            await GetDistantFileList();
+            ViewModel.Log.Debug("Got Distant File List");
+
+            await ProcessTransferList();
+            ViewModel.Log.Debug("Finished processing transfer list");
+
+
+            //File Operations
+            if (WorkspaceFilesToDelete.Count != 0)
             {
-                ViewModel.Building = true;
-                ViewModel.Log.Debug("Building set to true");
-
-                //Base Operations
-                await StartCheck();
-                ViewModel.Log.Debug("Start Check Finished");
-
-                await GetLocalFileList();
-                ViewModel.Log.Debug("Got Local File List");
-
-                
-                await GetDistantFileList();
-                ViewModel.Log.Debug("Got Distant File List");
-
-                await ProcessTransferList();
-                ViewModel.Log.Debug("Finished processing transfer list");
-
-             
-                //File Operations
-                if(WorkspaceFilesToDelete.Count != 0)
-                {
-                    await DeleteDifferences();
-                    ViewModel.BuildLog("Info", "All Differences have been deleted");
-                }
-                else
-                {
-                    ViewModel.BuildLog("Info","No files to delete");
-                    ViewModel.Log.Debug("No files to delete");
-                }
-                if(WorkspaceFilesToCopy.Count != 0)
-                {
-                    await CopyFiles();
-                    ViewModel.BuildLog("Info", "All Files have been copied");
-                }
-                else
-                {
-                    ViewModel.BuildLog("Info", "No files to copy");
-                    ViewModel.Log.Debug("No files to copy");
-                }
-
-                SaveAndSendIndex();
-
-                await CopyModLoader(ModLoader);
-                ViewModel.BuildLog("Info", "Finished setting up modloaders");
-                ViewModel.Log.Debug("Copy ModLoader Finished");
-
-            }
-
-            ViewModel.Log.Info("Transfer Finished");
-            ViewModel.SetStep("Finished");
-            ViewModel.SetSubStep("");
-            ViewModel.SetProgression(100);
-            ViewModel.SetProgressionStyle(false);
-            ViewModel.SetSize("");
-            ViewModel.SetSpeed("");
-            return false;
-        }
-
-        public override async Task CopyModLoader(int ModLoader)
-        {
-            if(ModLoader == 1)
-            {
-                ARCropolisHelper.CheckTouchmARC(Writer, ViewModel.MUVM.ActiveWorkspace.Name, false, true,true,false);
+                await DeleteDifferences();
+                ViewModel.BuildLog("Info", "All Differences have been deleted");
             }
             else
             {
-                ARCropolisHelper.CheckTouchmARC(Writer, ViewModel.MUVM.ActiveWorkspace.Name, false, true, false, true);
+                ViewModel.BuildLog("Info", "No files to delete");
+                ViewModel.Log.Debug("No files to delete");
             }
-            if(ModLoader == 4)
+            if (WorkspaceFilesToCopy.Count != 0)
             {
-                ARCropolisHelper.CheckTouchmARC(Writer, ViewModel.MUVM.ActiveWorkspace.Name, false,false,false,true);
+                await CopyFiles();
+                ViewModel.BuildLog("Info", "All Files have been copied");
             }
-           
+            else
+            {
+                ViewModel.BuildLog("Info", "No files to copy");
+                ViewModel.Log.Debug("No files to copy");
+            }
+
+            SaveAndSendIndex();
+
+
+
+            
+            
+            return false;
+        }
+        public override async Task CheckModLoader(int ModLoader)
+        {
+            ViewModel.Log.Debug("Checking Mod Loader existence");
+            if (ModLoader != 4)
+            {
+                string tomlfile = "atmosphere\\contents\\01006A800016E000\\romfs\\arcropolis\\arcropolis.toml";
+                string arcropolisfile = "atmosphere\\contents\\01006A800016E000\\romfs\\skyline\\plugins\\libarcropolis.nro";
+                if (Writer.CheckFileExists(arcropolisfile))
+                {
+                    ModLoaderInstalled = true;
+                }
+                if (Writer.CheckFileExists(tomlfile))
+                {
+                    ModLoaderSetup = true;
+                }
+            }
+        }
+        public override async Task InstallModLoader(int ModLoader, string WorkspaceName)
+        {
+            if(ModLoader != 4)
+            {
+                ARCropolisHelper.SendTouchmARC(Writer, WorkspaceName);
+            }
+            ViewModel.BuildLog("Info", "Finished installing modloader");
+        }
+        public override async Task SetupModLoader(int ModLoader, string WorkspaceName)
+        {
+            if (ModLoader != 4)
+            {
+                ARCropolisHelper.ModifyTouchmARCConfig(WorkspaceName, false);
+            }
+            ViewModel.BuildLog("Info", "Finished modloader setup");
         }
         public override async Task StartCheck()
         {

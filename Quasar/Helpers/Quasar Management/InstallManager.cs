@@ -11,6 +11,8 @@ using Quasar.Helpers.Json;
 using System.Globalization;
 using Quasar.Helpers.FileOperations;
 using System.Windows.Forms;
+using Quasar.Models;
+using Quasar.Internal;
 
 namespace Quasar.Helpers.Quasar_Management
 {
@@ -105,9 +107,63 @@ namespace Quasar.Helpers.Quasar_Management
             }
         }
 
-        public static void ChangeInstallLocation()
+        public static void ChangeInstallLocation(string newPath)
         {
+            string SourcePath = Properties.Settings.Default.DefaultDir;
+            bool proceed = true;
+            try
+            {
+                FileOperation.CheckCopyFolder(SourcePath + "\\Library", newPath + "\\Library");
+                FileOperation.CheckCopyFolder(SourcePath + "\\Resources", newPath + "\\Resources");
 
+                File.Copy(SourcePath + "\\Quasar.log", newPath + "\\Quasar.log", true);
+            }
+            catch(Exception e)
+            {
+                proceed = false;
+            }
+
+            if (proceed)
+            {
+                try
+                {
+                    Directory.Delete(SourcePath + "\\Library", true);
+                }
+                catch (Exception e)
+                {
+                    proceed = false;
+                }
+            }
+
+            if (proceed)
+            {
+                Properties.Settings.Default.DefaultDir = newPath;
+                Properties.Settings.Default.Save();
+                ModalEvent Meuh = new ModalEvent()
+                {
+                    EventName = "MoveInstall",
+                    Action = "LoadOK",
+                };
+
+                EventSystem.Publish<ModalEvent>(Meuh);
+            }
+            else
+            {
+                ModalEvent Meuh = new ModalEvent()
+                {
+                    EventName = "MoveInstall",
+                    Action = "LoadKO",
+                };
+
+                EventSystem.Publish<ModalEvent>(Meuh);
+            }
+            
+
+            
+
+            
+
+            
         }
     }
 }

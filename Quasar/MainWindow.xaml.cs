@@ -19,7 +19,11 @@ namespace Quasar
 
         private async void MainWindow1_Loaded(object sender, RoutedEventArgs e)
         {
-            MUVM.ShowUpdateAndLaunch();
+        }
+
+        private void ModalPopup_Loaded(object sender, RoutedEventArgs e)
+        {
+
         }
     }
     

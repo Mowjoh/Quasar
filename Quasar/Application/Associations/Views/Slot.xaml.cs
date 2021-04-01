@@ -20,7 +20,7 @@ namespace Quasar.Controls.Associations.Views
     /// <summary>
     /// Interaction logic for SlotItem.xaml
     /// </summary>
-    public partial class SlotItem : UserControl, INotifyPropertyChanged
+    public partial class Slot : UserControl, INotifyPropertyChanged
     {
         protected virtual void OnPropertyChanged(string propertyName)
         {
@@ -31,20 +31,20 @@ namespace Quasar.Controls.Associations.Views
             }
         }
 
-        private SlotItemViewModel _SlotItemViewModel { get; set; }
-        public SlotItemViewModel SlotItemViewModel
+        private SlotViewModel _SlotViewModel { get; set; }
+        public SlotViewModel SlotViewModel
         {
-            get => _SlotItemViewModel;
+            get => _SlotViewModel;
             set
             {
-                if (_SlotItemViewModel == value)
+                if (_SlotViewModel == value)
                     return;
 
-                _SlotItemViewModel = value;
-                OnPropertyChanged("SlotItemViewModel");
+                _SlotViewModel = value;
+                OnPropertyChanged("SlotViewModel");
             }
         }
-        public SlotItem()
+        public Slot()
         {
             InitializeComponent();
         }
