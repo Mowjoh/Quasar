@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.Windows.Input;
 
-namespace Quasar
+namespace Quasar.Common.Models
 {
     /// <summary>
     /// A command whose sole purpose is to relay its functionality to other

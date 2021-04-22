@@ -1,21 +1,24 @@
-﻿using Quasar.Controls.Common.Models;
+﻿using Quasar.Common.Models;
 using Quasar.Data.V2;
+using Quasar.FileSystem;
 using Quasar.Helpers.Json;
+using Quasar.Helpers.ModScanning;
 using Quasar.Internal;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
+using Quasar.MainUI.ViewModels;
+using Quasar.Content.Views;
 
-namespace Quasar.Controls.Content.ViewModels
+namespace Quasar.Content.ViewModels
 {
 
     public class ContentViewModel : ObservableObject
     {
-        #region Fields
+
+        #region Data
+
+        #region Private
         //Working Data
         private ObservableCollection<ContentItem> _ContentItems { get; set; }
         private LibraryItem _LibraryItem { get; set; }
@@ -27,12 +30,9 @@ namespace Quasar.Controls.Content.ViewModels
 
         private ContentListItem _SelectedContentListItem { get; set; }
         private MainUIViewModel _MUVM { get; set; }
-
-        private string _ModName { get; set; }
-        private ICommand _SaveModNameCommand { get; set; }
         #endregion
 
-        #region Properties
+        #region Public
         public ObservableCollection<ContentItem> ContentItems
         {
             get => _ContentItems;
@@ -67,7 +67,7 @@ namespace Quasar.Controls.Content.ViewModels
                     return;
 
                 _ContentListItems = value;
-                
+
                 OnPropertyChanged("ContentListItems");
             }
         }
@@ -130,7 +130,18 @@ namespace Quasar.Controls.Content.ViewModels
                 OnPropertyChanged("SelectedContentListItem");
             }
         }
+        #endregion
 
+        #endregion
+
+        #region View
+
+        #region Private
+        private string _ModName { get; set; }
+        private bool _GroupRenaming { get; set; }
+        #endregion
+
+        #region Public
         public string ModName
         {
             get => _ModName;
@@ -140,6 +151,29 @@ namespace Quasar.Controls.Content.ViewModels
                 OnPropertyChanged("ModName");
             }
         }
+
+        public bool GroupRenaming
+        {
+            get => _GroupRenaming;
+            set
+            {
+                _GroupRenaming = value;
+                OnPropertyChanged("GroupRenaming");
+            }
+        }
+        #endregion
+
+        #endregion
+
+        #region Commands
+
+        #region Private
+        private ICommand _SaveModNameCommand { get; set; }
+
+        private ICommand _PickModFilesCommand { get; set; }
+        #endregion
+
+        #region Public
         public ICommand SaveModNameCommand
         {
             get
@@ -151,19 +185,40 @@ namespace Quasar.Controls.Content.ViewModels
                 return _SaveModNameCommand;
             }
         }
+
+        public ICommand PickModFilesCommand
+        {
+            get
+            {
+                if (_PickModFilesCommand == null)
+                {
+                    _PickModFilesCommand = new RelayCommand(param => PickModFiles());
+                }
+                return _PickModFilesCommand;
+            }
+        }
         #endregion
 
+        #endregion
+
+        /// <summary>
+        /// Basic Content View Model constructor
+        /// </summary>
+        /// <param name="_MUVM">MainUI View Model to link</param>
         public ContentViewModel(MainUIViewModel _MUVM)
         {
             MUVM = _MUVM;
-            
 
             EventSystem.Subscribe<string>(GetRefreshed);
-            
+            EventSystem.Subscribe<ContentItem>(GroupRename);
 
         }
 
         #region Actions
+
+        /// <summary>
+        /// Parses all the corresponding Content List Items
+        /// </summary>
         public void GetContentListItems()
         {
             ContentListItems = new ObservableCollection<ContentListItem>();
@@ -190,29 +245,91 @@ namespace Quasar.Controls.Content.ViewModels
             }
         }
 
-        public void GetRefreshed(string Action)
+        #endregion
+
+        #region User Action
+
+        /// <summary>
+        /// Opens a folder browser to pick a new source for this mod's files
+        /// </summary>
+        public void PickModFiles()
         {
-            if(Action == "RefreshContents")
+            ModFileManager FileManager = new ModFileManager(LibraryItem, MUVM.Games[0]);
+
+            var dialog = new System.Windows.Forms.FolderBrowserDialog();
+            System.Windows.Forms.DialogResult result = dialog.ShowDialog();
+            if (result == System.Windows.Forms.DialogResult.OK)
             {
-                if(MUVM.SelectedModListItem != null)
-                {
-                    LibraryItem = MUVM.SelectedModListItem.ModListItemViewModel.LibraryItem;
-                    ModName = LibraryItem.Name;
-                }
-                
+                //Importing files
+                string NewInstallPath = dialog.SelectedPath;
+                FileManager.ImportFolder(NewInstallPath);
+
+                //Launching scan
+                Scannerino.UpdateContents(MUVM, LibraryItem, Scannerino.ScanMod(FileManager.LibraryContentFolderPath, MUVM.QuasarModTypes, MUVM.Games[0], LibraryItem));
+
+                //Saving Contents
+                JSonHelper.SaveContentItems(MUVM.ContentItems);
+
                 GetContentListItems();
             }
         }
 
+        /// <summary>
+        /// Saves a mod's name
+        /// </summary>
         public void SaveModName()
         {
             LibraryItem.Name = ModName;
+            EventSystem.Publish<LibraryItem>(LibraryItem);
             GetContentListItems();
             JSonHelper.SaveLibrary(MUVM.Library);
         }
+
         #endregion
-        
-        
+
+        #region Events
+        /// <summary>
+        /// Refreshes the UI
+        /// </summary>
+        /// <param name="Action">Action to specify</param>
+        public void GetRefreshed(string Action)
+        {
+            if (Action == "RefreshContents")
+            {
+                if (MUVM.SelectedModListItem != null)
+                {
+                    LibraryItem = MUVM.SelectedModListItem.ModListItemViewModel.LibraryItem;
+                    ModName = LibraryItem.Name;
+                }
+
+                GetContentListItems();
+            }
+        }
+
+        /// <summary>
+        /// Function that renames all matching Content Items
+        /// </summary>
+        /// <param name="ci">Content Item to base the rename on</param>
+        public void GroupRename(ContentItem ci)
+        {
+            QuasarModType qmtci = MUVM.QuasarModTypes.Single(q => q.ID == ci.QuasarModTypeID);
+
+            if (GroupRenaming)
+            {
+
+                foreach (ContentListItem c in ContentListItems)
+                {
+
+                    QuasarModType qmtc = MUVM.QuasarModTypes.Single(q => q.ID == c.CLIVM.ContentItem.QuasarModTypeID);
+                    if (c.CLIVM.ContentItem.SlotNumber == ci.SlotNumber && c.CLIVM.ContentItem.GameElementID == ci.GameElementID && qmtc.GroupName == qmtci.GroupName)
+                    {
+                        c.CLIVM.ContentItem.Name = ci.Name;
+                        c.CLIVM.RefreshName();
+                    }
+                }
+            }
+        }
+        #endregion
 
     }
 }

@@ -1,31 +1,66 @@
-﻿using Quasar.Controls.Common.Models;
+﻿using Quasar.Common.Models;
 using Quasar.Data.V2;
 using Quasar.Internal;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace Quasar.Controls.Associations.ViewModels
+namespace Quasar.Associations.ViewModels
 {
     public class SlotViewModel : ObservableObject
     {
-        #region fields
+        #region Data
+
+        #region Private
+        private Association _Association { get; set; }
+        private List<ContentItem> _ContentItems { get; set; }
+        #endregion
+
+        #region Public
+        public Association Association
+        {
+            get => _Association;
+            set
+            {
+                if (_Association == value)
+                    return;
+
+                _Association = value;
+                OnPropertyChanged("Association");
+            }
+        }
+        public List<ContentItem> ContentItems
+        {
+            get => _ContentItems;
+            set
+            {
+                if (_ContentItems == value)
+                    return;
+
+                _ContentItems = value;
+                OnPropertyChanged("ContentItems");
+                OnPropertyChanged("SlotText");
+            }
+        }
+        public ObservableCollection<QuasarModType> QuasarModTypes { get; set; }
+        #endregion
+
+        #endregion
+
+        #region View
+
+        #region Private
         private string _ContentName { get; set; }
         private int _SlotNumber { get; set; }
         private int _Index { get; set; }
         private string _SlotNumberName { get; set; }
         private bool _EmptySlot { get; set; }
         private string _TypeName { get; set; }
-        private Association _Association { get; set; }
-        private List<ContentItem> _ContentItems { get; set; }
-        private ICommand _DeleteAssociationCommand { get; set; }
         #endregion
 
-        #region Properties
+        #region Public
         public string ContentName
         {
             get => _ContentName;
@@ -98,36 +133,21 @@ namespace Quasar.Controls.Associations.ViewModels
                 OnPropertyChanged("TypeName");
             }
         }
-        public Association Association
-        {
-            get => _Association;
-            set
-            {
-                if (_Association == value)
-                    return;
-
-                _Association = value;
-                OnPropertyChanged("Association");
-            }
-        }
-        public List<ContentItem> ContentItems
-        {
-            get => _ContentItems;
-            set
-            {
-                if (_ContentItems == value)
-                    return;
-
-                _ContentItems = value;
-                OnPropertyChanged("ContentItems");
-                OnPropertyChanged("SlotText");
-            }
-        }
-        public ObservableCollection<QuasarModType> QuasarModTypes { get; set; }
         public string SlotText
         {
             get => getSlotText();
         }
+        #endregion
+
+        #endregion
+
+        #region Commands
+
+        #region Private
+        private ICommand _DeleteAssociationCommand { get; set; }
+        #endregion
+
+        #region Public
         public ICommand DeleteAssociationCommand
         {
             get
@@ -141,16 +161,21 @@ namespace Quasar.Controls.Associations.ViewModels
         }
         #endregion
 
+        #endregion
+
+        /// <summary>
+        /// Slot View Model Constructor
+        /// </summary>
         public SlotViewModel()
         {
 
         }
 
         #region Actions
-        public void DeleteAssociations()
-        {
-            EventSystem.Publish<SlotViewModel>(this);
-        }
+        /// <summary>
+        /// Gets the displayed slot Text
+        /// </summary>
+        /// <returns>The formatted Slot Text</returns>
         public string getSlotText()
         {
             string SlotText = "";
@@ -164,6 +189,16 @@ namespace Quasar.Controls.Associations.ViewModels
             }
             
             return SlotText;
+        }
+        #endregion
+
+        #region User Actions
+        /// <summary>
+        /// Triggers an event to delete all Associations related to this slot
+        /// </summary>
+        public void DeleteAssociations()
+        {
+            EventSystem.Publish<SlotViewModel>(this);
         }
         #endregion
     }

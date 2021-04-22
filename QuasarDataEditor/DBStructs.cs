@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Quasar.Data.V2;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -13,7 +14,13 @@ namespace QuasarDataEditor
 {
     class DBStructs
     {
-        public static void GetXML()
+        /// <summary>
+        /// This function will read the CSV containing all song names, 
+        /// Then, it matches them with the database ID's
+        /// Then, it matches them with the appropriate series.
+        /// Then it outputs the whole as a CSV
+        /// </summary>
+        public static Game GetXML(Game game)
         {
             List<MSBTMatch> Matches = new List<MSBTMatch>();
             List<MSBTValue> MSBTRegionalValues = new List<MSBTValue>();
@@ -108,9 +115,41 @@ namespace QuasarDataEditor
                 }
             }
 
+            //Editing matches
 
 
+            foreach (MSBTMatch m in Matches)
+            {
+                //If no database entry already matches this filename
+                if(!game.GameElementFamilies[2].GameElements.Any(ge => ge.GameFolderName == m.Filename))
+                {
+                    int lastID = game.GameElementFamilies[2].GameElements.Last().ID;
+                    while(game.GameElementFamilies[2].GameElements.Any(ge => ge.ID == lastID))
+                    {
+                        lastID++;
+                    }
+                    GameElement newElement = new GameElement()
+                    {
+                        ID = lastID,
+                        FilterValue = m.Series,
+                        GameFolderName = m.Filename,
+                        Name = String.Format("{0} [{1}]", m.us_en, m.RecordingType)
+                    };
 
+                    game.GameElementFamilies[2].GameElements.Add(newElement);
+
+
+                }
+                //Replacing the name if it exists
+                else
+                {
+                    GameElement gel = game.GameElementFamilies[2].GameElements.Single(ge => ge.GameFolderName == m.Filename);
+                    gel.Name = String.Format("{0} [{1}]",m.us_en,m.RecordingType);
+                    gel.FilterValue = m.Series;
+                }
+            }
+
+            return game;
 
             /*
             XmlSerializer serializer = new XmlSerializer(typeof(@struct));

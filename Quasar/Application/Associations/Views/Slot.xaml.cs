@@ -1,36 +1,20 @@
-﻿using Quasar.Controls.Associations.ViewModels;
-using System;
-using System.Collections.Generic;
+﻿using Quasar.Associations.ViewModels;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
-namespace Quasar.Controls.Associations.Views
+namespace Quasar.Associations.Views
 {
     /// <summary>
     /// Interaction logic for SlotItem.xaml
     /// </summary>
     public partial class Slot : UserControl, INotifyPropertyChanged
     {
-        protected virtual void OnPropertyChanged(string propertyName)
-        {
-            if (this.PropertyChanged != null)
-            {
-                var e = new PropertyChangedEventArgs(propertyName);
-                this.PropertyChanged(this, e);
-            }
-        }
+        #region Properties
 
+        //Events
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        //Data View Model
         private SlotViewModel _SlotViewModel { get; set; }
         public SlotViewModel SlotViewModel
         {
@@ -44,11 +28,32 @@ namespace Quasar.Controls.Associations.Views
                 OnPropertyChanged("SlotViewModel");
             }
         }
+
+        #endregion
+        
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public Slot()
         {
             InitializeComponent();
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        #region Actions
+        /// <summary>
+        /// OnPropertyChanged Event
+        /// </summary>
+        /// <param name="propertyName"></param>
+        protected virtual void OnPropertyChanged(string propertyName)
+        {
+            if (this.PropertyChanged != null)
+            {
+                var e = new PropertyChangedEventArgs(propertyName);
+                this.PropertyChanged(this, e);
+            }
+        }
+        #endregion
+
     }
 }

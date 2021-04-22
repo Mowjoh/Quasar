@@ -1,4 +1,4 @@
-﻿using Quasar.Controls.Build.Models;
+﻿using Quasar.Build.Models;
 using Quasar.Data.V1;
 using System;
 using System.Collections.Generic;
@@ -67,9 +67,9 @@ namespace Quasar.Helpers.XML
                 w.Associations = w.Associations.OrderBy(a => a.GameDataItemID).ThenBy(a => a.Slot).ThenBy(a => a.InternalModTypeID).ToList();
             }
 
-            Workspaces al = new Workspaces(Workspaces);
+            WorkspaceCollection al = new WorkspaceCollection(Workspaces);
 
-            XmlSerializer LibrarySerializer = new XmlSerializer(typeof(Workspaces));
+            XmlSerializer LibrarySerializer = new XmlSerializer(typeof(WorkspaceCollection));
             using (StreamWriter Writer = new StreamWriter(AssociationLibraryPath))
             {
                 LibrarySerializer.Serialize(Writer, al);
@@ -181,14 +181,14 @@ namespace Quasar.Helpers.XML
         {
             List<Workspace> Workspaces = new List<Workspace>();
             string AssociationLibraryPath = Properties.Settings.Default.DefaultDir + @"\Library\Workspaces.xml";
-            XmlSerializer serializer = new XmlSerializer(typeof(Workspaces));
+            XmlSerializer serializer = new XmlSerializer(typeof(WorkspaceCollection));
 
             if (File.Exists(AssociationLibraryPath))
             {
                 using (FileStream fileStream = new FileStream(AssociationLibraryPath, FileMode.Open))
                 {
 
-                    Workspaces result = (Workspaces)serializer.Deserialize(fileStream);
+                    WorkspaceCollection result = (WorkspaceCollection)serializer.Deserialize(fileStream);
                     foreach (Workspace workspace in result)
                     {
                         Workspaces.Add(workspace);

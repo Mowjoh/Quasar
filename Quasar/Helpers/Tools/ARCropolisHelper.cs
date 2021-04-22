@@ -2,7 +2,7 @@
 using log4net;
 using log4net.Appender;
 using Nett;
-using Quasar.Controls.Build.Models;
+using Quasar.Build.Models;
 using Quasar.FileSystem;
 using Quasar.Helpers.FileOperations;
 using System;

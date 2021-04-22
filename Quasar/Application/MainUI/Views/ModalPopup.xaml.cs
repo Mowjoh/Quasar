@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Quasar
+namespace Quasar.MainUI.Views
 {
     /// <summary>
     /// Interaction logic for ModalPopup.xaml

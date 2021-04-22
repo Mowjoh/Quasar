@@ -33,6 +33,8 @@ namespace Quasar.Internal.Tools
                             InstallManager.ChangeInstallLocationSetting();
                             break;
                         case MessageBoxResult.No:
+                            Properties.Settings.Default.DefaultDir = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\Quasar";
+                            Properties.Settings.Default.Save();
                             break;
                     }             
                     InstallManager.CreateBaseFolders();

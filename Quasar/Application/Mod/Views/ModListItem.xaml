@@ -194,7 +194,7 @@
                     <Label Style="{StaticResource CutieLabelStyle}" Content="Version Control :" Grid.Column="1" VerticalAlignment="top" HorizontalAlignment="Center" />
                     <Label Style="{StaticResource CutieLabelStyle}" Content="Update Count :" Margin="16,50,0,0" Grid.Column="1" VerticalAlignment="top" HorizontalAlignment="Left" />
                     <Label Style="{StaticResource CutieLabelStyle}" Content="{Binding LibraryItem.UpdateCount}" Margin="115,50,0,0" Grid.Column="1" VerticalAlignment="top" HorizontalAlignment="Left" />
-                    <Button Template="{StaticResource CutieSmallButtonTemplate}" Command="{Binding Path=AddManual}" Grid.Column="1" Width="200" Content="Check for updates" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,100,0,0" Visibility="{Binding CreatorMode,Converter={StaticResource BoolVisi}}"/>
+                    <Button Template="{StaticResource CutieSmallButtonTemplate}" Command="{Binding Path=UpdateModCommand}" Grid.Column="1" Width="200" Content="Check for updates" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,100,0,0" Visibility="{Binding CreatorMode,Converter={StaticResource BoolVisi}}"/>
                 </Grid>
                 <Grid Grid.Column="1">
                     <Grid.Style>

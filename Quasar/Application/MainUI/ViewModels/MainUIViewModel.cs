@@ -1,55 +1,89 @@
 ﻿using log4net;
 using log4net.Appender;
-using Quasar.Models;
 using Quasar.Controls;
-using Quasar.Controls.Assignation.ViewModels;
-using Quasar.Controls.Assignation.Views;
-using Quasar.Controls.Build.ViewModels;
-using Quasar.Controls.Build.Views;
-using Quasar.Controls.Common.Models;
-using Quasar.Controls.Content.ViewModels;
-using Quasar.Controls.Content.Views;
+using Quasar.Build.ViewModels;
+using Quasar.Build.Views;
+using Quasar.Common.Models;
+using Quasar.Content.ViewModels;
+using Quasar.Content.Views;
 using Quasar.Controls.ModManagement.ViewModels;
 using Quasar.Controls.ModManagement.Views;
-using Quasar.Controls.Settings.Model;
-using Quasar.Controls.Settings.View;
-using Quasar.Controls.Settings.Workspaces.View;
-using Quasar.Controls.Settings.Workspaces.ViewModels;
-using Quasar.Data.Converter;
+using Quasar.Settings.Models;
+using Quasar.Workspaces.Views;
+using Quasar.Workspaces.ViewModels;
 using Quasar.Data.V2;
-using Quasar.FileSystem;
 using Quasar.Helpers.Json;
 using Quasar.Helpers.ModScanning;
 using Quasar.Helpers.Quasar_Management;
-using Quasar.Helpers.XML;
 using Quasar.Internal;
 using Quasar.Internal.Tools;
 using Quasar.NamedPipes;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
-using System.Linq;
-using System.Resources;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Web.UI;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Threading;
-using Quasar.ViewModels;
+using Quasar.Settings.Views;
+using Quasar.Associations.Views;
+using Quasar.Associations.ViewModels;
 
-namespace Quasar
+namespace Quasar.MainUI.ViewModels
 {
     public class MainUIViewModel : ObservableObject
     {
-        #region Fields
+        #region Instance Data
+
+        #region Private
+        private ModListItem _SelectedModListItem { get; set; }
+        #endregion
+
+        #region Public
+        public ModListItem SelectedModListItem
+        {
+            get => _SelectedModListItem;
+            set
+            {
+                if (_SelectedModListItem == value)
+                    return;
+
+                _SelectedModListItem = value;
+                if (value != null)
+                {
+                    //CVM = new ContentViewModel(ContentMappings, _SelectedModListItem.ModListItemViewModel.LibraryItem, InternalModTypes, GameDatas);
+                    //ContentView.DataContext = CVM;
+                }
+                OnPropertyChanged("SelectedModListItem");
+            }
+        }
+        /// <summary>
+        /// Mutex that serves to know if a Quasar instance is already running
+        /// </summary>
+        public Mutex serverMutex;
+        public ILog log { get; set; }
+        #endregion
+
+        #endregion
+
+        #region Resource Data
+        public ObservableCollection<Game> Games { get; set; }
+        public Game CurrentGame { get; set; }
+        public ObservableCollection<QuasarModType> QuasarModTypes { get; set; }
+        public ObservableCollection<ModLoader> ModLoaders { get; set; }
+        #endregion
+
+        #region User Data
+        public Workspace ActiveWorkspace { get; set; }
+        public ObservableCollection<Workspace> Workspaces { get; set; }
+        public ObservableCollection<LibraryItem> Library { get; set; }
+        public ObservableCollection<ContentItem> ContentItems { get; set; }
+        #endregion
 
         #region Views
+
+        #region Private
         private ObservableCollection<TabItem> _TabItems { get; set; }
         private TabItem _SelectedTabItem { get; set; }
         private ModsView _ModsView { get; set; }
@@ -74,22 +108,7 @@ namespace Quasar
         private bool _UpdateFinished { get; set; } = false;
         #endregion
 
-        #region Working Data
-        private ModListItem _SelectedModListItem { get; set; }
-        #endregion
-
-        #region Commands
-        
-        private ICommand _OnboardingCancel { get; set; }
-        private ICommand _OnboardingNext { get; set; }
-        private ICommand _OnboardingPrevious { get; set; }
-        #endregion
-
-        #endregion
-
-        #region Properties
-
-        #region Views
+        #region Public
         public ObservableCollection<TabItem> TabItems
         {
             get => _TabItems;
@@ -116,7 +135,7 @@ namespace Quasar
                 }
                 if ((string)value.Header == "Management")
                 {
-                    AVM.ShowSlots();
+                    AVM.RefreshSlotData();
                 }
                 _SelectedTabItem = value;
                 OnPropertyChanged("SelectedTabItem");
@@ -305,7 +324,7 @@ namespace Quasar
                 if (_CreatorMode == value)
                     return;
 
-                
+
                 _CreatorMode = value;
                 OnPropertyChanged("CreatorMode");
             }
@@ -342,47 +361,19 @@ namespace Quasar
         }
         #endregion
 
-        #region Resource Data
-        public ObservableCollection<Game> Games { get; set; }
-        public Game CurrentGame { get; set; }
-        public ObservableCollection<QuasarModType> QuasarModTypes { get; set; }
-        public ObservableCollection<ModLoader> ModLoaders { get; set; }
         #endregion
 
-        #region User Data
-        public Workspace ActiveWorkspace { get; set; }
-        public ObservableCollection<Workspace> Workspaces { get; set; }
-        public ObservableCollection<LibraryItem> Library { get; set; }
-        public ObservableCollection<ContentItem> ContentItems { get; set; }
-        #endregion
-
-        #region Working Data
-        public ModListItem SelectedModListItem
-        {
-            get => _SelectedModListItem;
-            set
-            {
-                if (_SelectedModListItem == value)
-                    return;
-
-                _SelectedModListItem = value;
-                if(value != null)
-                {
-                    //CVM = new ContentViewModel(ContentMappings, _SelectedModListItem.ModListItemViewModel.LibraryItem, InternalModTypes, GameDatas);
-                    //ContentView.DataContext = CVM;
-                }
-                OnPropertyChanged("SelectedModListItem");
-            }
-        }
-        /// <summary>
-        /// Mutex that serves to know if a Quasar instance is already running
-        /// </summary>
-        public Mutex serverMutex;
-        public ILog log { get; set; }
-        #endregion-++
-
+        //TO CLEANUP ELSEWHERE
         #region Commands
-        
+
+        #region Private
+
+        private ICommand _OnboardingCancel { get; set; }
+        private ICommand _OnboardingNext { get; set; }
+        private ICommand _OnboardingPrevious { get; set; }
+        #endregion
+
+        #region Public
         public ICommand OnboardingCancel
         {
             get
@@ -416,11 +407,11 @@ namespace Quasar
                 return _OnboardingPrevious;
             }
         }
-
         #endregion
 
         #endregion
 
+        //TO CLEANUP ELSEWHERE
         #region Onboarding
         private bool _OnboardingVisible { get; set; } = false;
         public bool OnboardingVisible
@@ -486,24 +477,8 @@ namespace Quasar
                 log.Info("Update Process Started");
                 Updater.CheckExecuteUpdate();
 
-                bool RemakeFiles = false;
-
-                if (RemakeFiles)
-                {
-                    /*
-                    //User Converts
-                    V1toV2Converter.ProcessWorkspace(Workspaces);
-                    V1toV2Converter.ProcessLibrary(Mods);
-                    V1toV2Converter.ProcessContent(ContentMappings);
-
-                    //Dev Converts
-                    V1toV2Converter.ProcessGameFile(Games, GameDatas);
-                    V1toV2Converter.ProcessQuasarModTypes(InternalModTypes);
-                    V1toV2Converter.ProcessModLoaders(ModLoaders);*/
-                }
-
                 log.Info("Loading References");
-                LoadNewStuff();
+                LoadData();
 
                 log.Info("Loading Views");
                 SetupViews();
@@ -511,45 +486,10 @@ namespace Quasar
                 AdvancedMode = false;
                 CreatorMode = false;
 
-                EventSystem.Subscribe<ModListItem>(SetModListItem);
-                EventSystem.Subscribe<ModalEvent>(ModalEvent);
+                EventSystem.Subscribe<ModListItem>(ModListItemEvent);
+                EventSystem.Subscribe<ModalEvent>(ProcessModalEvent);
 
-                if (!Properties.Settings.Default.CFWAcknowledged)
-                {
-                    ModalEvent meuh = new ModalEvent()
-                    {
-                        EventName = "Hacked",
-                        Action = "Show",
-                        Type = ModalType.Loader,
-                        Content = "Quasar is an application that will help you manage mod \rfiles for you. Modding is only for Switches running \rCustom Firmware (CFW). If your Switch is not hacked, \rQuasar will be of no use to you.",
-                        OkButtonText = "My switch is running CFW"
-                    };
-                    EventSystem.Publish<ModalEvent>(meuh);
-
-                    Task task = Task.Run(() => {
-                        System.Threading.Thread.Sleep(5000);
-                        meuh.Action = "LoadOK";
-                        EventSystem.Publish<ModalEvent>(meuh);
-                    });
-                }
-                else
-                {
-                    if (!Properties.Settings.Default.Onboarded)
-                    {
-                        ModalEvent meuh = new ModalEvent()
-                        {
-                            EventName = "Onboarding",
-                            Action = "Show",
-                            Type = ModalType.OkCancel,
-                            Title = "DO YOU NEED HELP?",
-                            Content = "If it's your first time using Quasar, or if you want\ra tour of what you can do, you can have a little demo.",
-                            OkButtonText = "Yes, please show me around",
-                            CancelButtonText = "No, I don't need help"
-
-                        };
-                        EventSystem.Publish<ModalEvent>(meuh);
-                    }
-                }
+                InitialWarnings();
 
 
             }
@@ -559,84 +499,14 @@ namespace Quasar
                 log.Info(e.StackTrace);
             }
         }
-        public void ModalEvent(ModalEvent me)
-        {
-            switch (me.EventName)
-            {
-                case "Hacked":
-                    if((me.Action ?? "") == "OK")
-                    {
-                        Properties.Settings.Default.CFWAcknowledged = true;
-                        Properties.Settings.Default.Save();
-                        if (!Properties.Settings.Default.Onboarded)
-                        {
-                            ModalEvent meuh = new ModalEvent()
-                            {
-                                EventName = "Onboarding",
-                                Action = "Show",
-                                Type = ModalType.OkCancel,
-                                Title = "DO YOU NEED HELP?",
-                                Content = "If it's your first time using Quasar, or if you want\ra tour of what you can do, you can have a little demo.",
-                                OkButtonText = "Yes, please show me around",
-                                CancelButtonText = "No, I don't need help"
-
-                            };
-                            EventSystem.Publish<ModalEvent>(meuh);
-                        }
-                    }
-                    break;
-                case "Onboarding":
-                    Onboarding(me.Action == "OK");
-                    if (me.Action == "KO")
-                    {
-                        Properties.Settings.Default.Onboarded = true;
-                        Properties.Settings.Default.Save();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
 
         #region Actions
-        //Startup Actions
-        public void SetupLogger()
-        {
-            log = LogManager.GetLogger("QuasarAppender");
-            FileAppender appender = (FileAppender)log.Logger.Repository.GetAppenders()[0];
-            appender.File = Properties.Settings.Default.DefaultDir + "\\Quasar.log";
-            if (Properties.Settings.Default.EnableAdvanced)
-            {
-                appender.Threshold = log4net.Core.Level.Debug;
-            }
-            else
-            {
-                appender.Threshold = log4net.Core.Level.Info;
-            }
-            
-            appender.ActivateOptions();
 
-            log.Info("------------------------------");
-            log.Warn("Quasar Start");
-            log.Info("------------------------------");
-        }
-
-        public void ChangeLogger(bool debug)
-        {
-            FileAppender appender = (FileAppender)log.Logger.Repository.GetAppenders()[0];
-            appender.Threshold = log4net.Core.Level.Debug;
-            if (debug)
-            {
-                appender.Threshold = log4net.Core.Level.Debug;
-            }
-            else
-            {
-                appender.Threshold = log4net.Core.Level.Info;
-            }
-            
-        }
-
-        public void LoadNewStuff()
+        //Startup
+        /// <summary>
+        /// Loads Reference and User Data
+        /// </summary>
+        public void LoadData()
         {
             //Loading User Data
             Workspaces = JSonHelper.GetWorkspaces();
@@ -658,10 +528,13 @@ namespace Quasar
             ModLoaders = JSonHelper.GetModLoaders();
 
         }
+        /// <summary>
+        /// Sets up all the Views with their ViewModels
+        /// </summary>
         public void SetupViews()
         {
             
-            EventSystem.Subscribe<SettingItem>(SettingChanged);
+            EventSystem.Subscribe<SettingItem>(SettingChangedEvent);
 
             TabItems = new ObservableCollection<TabItem>();
 
@@ -698,14 +571,67 @@ namespace Quasar
 
             ModalPopupViewModel = new ModalPopupViewModel();
 
-            SettingsView.start();
+            SettingsView.Load();
         }
+        /// <summary>
+        /// Sets up Quasar as a client or server 
+        /// Depends on if a Quasar instance is already running
+        /// Takes action according to it's role
+        /// </summary>
         public void SetupClientOrServer()
         {
             serverMutex = PipeHelper.CheckExecuteInstance(serverMutex, log);
         }
 
-        public async void ShowUpdateAndLaunch()
+        /// <summary>
+        /// Shows the user warnings when he never saw them
+        /// </summary>
+        public void InitialWarnings()
+        {
+            if(!Properties.Settings.Default.CFWAcknowledged)
+            {
+                ModalEvent meuh = new ModalEvent()
+                {
+                    EventName = "Hacked",
+                    Action = "Show",
+                    Type = ModalType.Loader,
+                    Content = "Quasar is an application that will help you manage mod \rfiles for you. Modding is only for Switches running \rCustom Firmware (CFW). If your Switch is not hacked, \rQuasar will be of no use to you.",
+                    OkButtonText = "My switch is running CFW"
+                };
+                EventSystem.Publish<ModalEvent>(meuh);
+
+                Task task = Task.Run(() => {
+                    System.Threading.Thread.Sleep(5000);
+                    meuh.Action = "LoadOK";
+                    EventSystem.Publish<ModalEvent>(meuh);
+                });
+            }
+            else
+            {
+                //if (!Properties.Settings.Default.Onboarded)
+                if(false)
+                {
+                    ModalEvent meuh = new ModalEvent()
+                    {
+                        EventName = "Onboarding",
+                        Action = "Show",
+                        Type = ModalType.OkCancel,
+                        Title = "DO YOU NEED HELP?",
+                        Content = "If it's your first time using Quasar, or if you want\ra tour of what you can do, you can have a little demo.",
+                        OkButtonText = "Yes, please show me around",
+                        CancelButtonText = "No, I don't need help"
+
+                    };
+                    EventSystem.Publish<ModalEvent>(meuh);
+                }
+            }
+        }
+
+        //Updates
+        /// <summary>
+        /// Shows a Modal to block UI while the app updates
+        /// </summary>
+        public async void ShowUpdateModal()
         {
             Application.Current.Dispatcher.Invoke((Action)delegate {
                 Updating = Updater.NeedsScanning();
@@ -726,6 +652,17 @@ namespace Quasar
             });
         }
 
+        /// <summary>
+        /// Updates Quasar
+        /// </summary>
+        public async void UpdateQuasar()
+        {
+
+        }
+
+        /// <summary>
+        /// Sends the OK for the update Modal and refreshes UI
+        /// </summary>
         public void UpdateOK()
         { 
 
@@ -735,10 +672,60 @@ namespace Quasar
             Updating = false;
         }
 
-        //Events
-        public void SetModListItem(ModListItem _SelectedModListItem)
+        #endregion
+
+        #region Events
+        /// <summary>
+        /// Processes the incoming Modal Event
+        /// </summary>
+        /// <param name="me">Modal Event to use</param>
+        public void ProcessModalEvent(ModalEvent me)
         {
-            if(_SelectedModListItem.ModListItemViewModel.ActionRequested == "ShowContents")
+            switch (me.EventName)
+            {
+                case "Hacked":
+                    if ((me.Action ?? "") == "OK")
+                    {
+                        Properties.Settings.Default.CFWAcknowledged = true;
+                        Properties.Settings.Default.Save();
+                        //if (!Properties.Settings.Default.Onboarded)
+                        if(false)
+                        {
+                            ModalEvent meuh = new ModalEvent()
+                            {
+                                EventName = "Onboarding",
+                                Action = "Show",
+                                Type = ModalType.OkCancel,
+                                Title = "DO YOU NEED HELP?",
+                                Content = "If it's your first time using Quasar, or if you want\ra tour of what you can do, you can have a little demo.",
+                                OkButtonText = "Yes, please show me around",
+                                CancelButtonText = "No, I don't need help"
+
+                            };
+                            EventSystem.Publish<ModalEvent>(meuh);
+                        }
+                    }
+                    break;
+                case "Onboarding":
+                    Onboarding(me.Action == "OK");
+                    if (me.Action == "KO")
+                    {
+                        Properties.Settings.Default.Onboarded = true;
+                        Properties.Settings.Default.Save();
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Opens the Content tab with this item
+        /// </summary>
+        /// <param name="_SelectedModListItem"></param>
+        public void ModListItemEvent(ModListItem _SelectedModListItem)
+        {
+            if (_SelectedModListItem.ModListItemViewModel.ActionRequested == "ShowContents")
             {
                 SelectedTabItem = TabItems[1];
                 SelectedModListItem = _SelectedModListItem;
@@ -746,15 +733,13 @@ namespace Quasar
             }
         }
 
-        public void StartGameSelection()
+        /// <summary>
+        /// Updates the UI with the new settings
+        /// </summary>
+        /// <param name="Setting"></param>
+        public void SettingChangedEvent(SettingItem Setting)
         {
-            BeginGameChoice = true;
-            StopGameChoice = false;
-        }
-
-        public void SettingChanged(SettingItem Setting)
-        {
-            if(Setting.SettingName == "EnableCreator")
+            if (Setting.SettingName == "EnableCreator")
             {
                 CreatorMode = Setting.IsChecked;
             }
@@ -770,6 +755,49 @@ namespace Quasar
         }
         #endregion
 
+        #region Logging
+        /// <summary>
+        /// Sets up the logger
+        /// </summary>
+        public void SetupLogger()
+        {
+            log = LogManager.GetLogger("QuasarAppender");
+            FileAppender appender = (FileAppender)log.Logger.Repository.GetAppenders()[0];
+            appender.File = Properties.Settings.Default.DefaultDir + "\\Quasar.log";
+            if (Properties.Settings.Default.EnableAdvanced)
+            {
+                appender.Threshold = log4net.Core.Level.Debug;
+            }
+            else
+            {
+                appender.Threshold = log4net.Core.Level.Info;
+            }
 
+            appender.ActivateOptions();
+
+            log.Info("------------------------------");
+            log.Warn("Quasar Start");
+            log.Info("------------------------------");
+        }
+
+        /// <summary>
+        /// Changes the logger's configuration
+        /// </summary>
+        /// <param name="debug"></param>
+        public void ChangeLogger(bool debug)
+        {
+            FileAppender appender = (FileAppender)log.Logger.Repository.GetAppenders()[0];
+            appender.Threshold = log4net.Core.Level.Debug;
+            if (debug)
+            {
+                appender.Threshold = log4net.Core.Level.Debug;
+            }
+            else
+            {
+                appender.Threshold = log4net.Core.Level.Info;
+            }
+
+        }
+        #endregion
     }
 }

@@ -1,16 +1,15 @@
 ﻿using Quasar.Compression;
 using Quasar.Controls;
-using Quasar.Controls.Common.Models;
+using Quasar.Common.Models;
 using Quasar.Controls.Mod.Models;
 using Quasar.Data.V2;
 using Quasar.FileSystem;
 using Quasar.Helpers.ModScanning;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using Quasar.MainUI.ViewModels;
 
 namespace Quasar.Helpers.Downloading
 {

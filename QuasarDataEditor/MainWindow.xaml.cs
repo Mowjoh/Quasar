@@ -1,4 +1,4 @@
-﻿using Quasar.Controls.Common.Models;
+﻿using Quasar.Common.Models;
 using Quasar.Data.V2;
 using Quasar.Helpers.Json;
 using System;
@@ -56,9 +56,5 @@ namespace QuasarDataEditor
             }
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            DBStructs.GetXML();
-        }
     }
 }

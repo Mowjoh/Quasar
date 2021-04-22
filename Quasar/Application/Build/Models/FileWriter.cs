@@ -1,22 +1,17 @@
 ﻿using FluentFTP;
 using log4net;
 using MediaDevices;
-using Quasar.Controls.Build.ViewModels;
-using Quasar.Data.V1;
+using Quasar.Build.ViewModels;
 using Quasar.Data.V2;
-using Quasar.FileSystem;
 using Quasar.Helpers.FileOperations;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace Quasar.Controls.Build.Models
+namespace Quasar.Build.Models
 {
     public abstract class FileWriter
     {

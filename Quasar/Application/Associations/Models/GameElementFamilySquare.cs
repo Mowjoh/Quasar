@@ -1,16 +1,19 @@
-﻿using Quasar.Controls.Common.Models;
+﻿using Quasar.Common.Models;
 using Quasar.Data.V2;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Quasar.Controls.Associations.Models
+namespace Quasar.Associations.Models
 {
     public class GameElementFamilySquare : ObservableObject
     {
+        #region View
+
+        #region Private
         private Uri _ImageSource { get; set; }
+        private Uri _HoverImageSource { get; set; }
+        #endregion
+
+        #region Public
         public Uri ImageSource
         {
             get => _ImageSource;
@@ -23,7 +26,6 @@ namespace Quasar.Controls.Associations.Models
                 OnPropertyChanged("ImageSource");
             }
         }
-        private Uri _HoverImageSource { get; set; }
         public Uri HoverImageSource
         {
             get => _HoverImageSource;
@@ -36,7 +38,17 @@ namespace Quasar.Controls.Associations.Models
                 OnPropertyChanged("HoverImageSource");
             }
         }
+        #endregion
+
+        #endregion
+
+        #region Data
+
+        #region Private
         private GameElementFamily _GameElementFamily { get; set; }
+        #endregion
+
+        #region Public
         public GameElementFamily GameElementFamily
         {
             get => _GameElementFamily;
@@ -49,6 +61,9 @@ namespace Quasar.Controls.Associations.Models
                 OnPropertyChanged("GameElementFamily");
             }
         }
+        #endregion
+
+        #endregion
 
     }
 }

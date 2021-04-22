@@ -5,9 +5,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+using Quasar.MainUI.ViewModels;
+
 
 namespace Quasar.Helpers.ModScanning
 {
@@ -24,8 +24,7 @@ namespace Quasar.Helpers.ModScanning
 
         public static void UpdateContents(MainUIViewModel MUVM, LibraryItem li, ObservableCollection<ContentItem> ScannedResults = null)
         {
-            GameAPICategory mt = MUVM.Games[0].GameAPICategories.Single(m => m.APICategoryName == li.APICategoryName);
-            string ModFolder = GetModFolder(li.ID, li.APICategoryName, MUVM.Games[0]);
+            string ModFolder = GetModFolder(li.ID, li.APICategoryName, MUVM.Games[0], li.ManualMod);
 
             //Getting all scanned Content Items
             ObservableCollection<ContentItem> ScanResults;
@@ -90,7 +89,7 @@ namespace Quasar.Helpers.ModScanning
             ObservableCollection<ContentItem> SearchResults = new ObservableCollection<ContentItem>();
 
             ObservableCollection<ScanFile> ScannedFiles = new ObservableCollection<ScanFile>();
-            string ModFolder = GetModFolder(LibraryItem.ID, LibraryItem.APICategoryName, game);
+            string ModFolder = GetModFolder(LibraryItem.ID, LibraryItem.APICategoryName, game, LibraryItem.ManualMod);
             ScannedFiles = GetScanFiles(FolderPath, QuasarModTypes, game, ModFolder, FileList);
 
             //Processing Search Results into ContentMappings
@@ -296,7 +295,7 @@ namespace Quasar.Helpers.ModScanning
             {
                 QuasarModTypeFileDefinition FileDefinition = qmt.QuasarModTypeFileDefinitions.Single(def => def.ID == sf.QuasarModTypeFileDefinitionID);
                 GameElement ge = Family.GameElements.Single(e => e.ID == sf.GameElementID);
-                string ModFolder = GetModFolder(li.ID, li.APICategoryName, game);
+                string ModFolder = GetModFolder(li.ID, li.APICategoryName, game,li.ManualMod);
 
                 ModFile mf = new ModFile()
                 {
@@ -432,12 +431,21 @@ namespace Quasar.Helpers.ModScanning
 
             return output;
         }
-        public static string GetModFolder(int LibraryModID, string APICategoryName, Game game)
+        public static string GetModFolder(int LibraryModID, string APICategoryName, Game game, bool Manual = false)
         {
-            GameAPICategory Cat = game.GameAPICategories.Single(c => c.APICategoryName == APICategoryName);
-            //Default Dir + Mods + CategoryFolder + ModID
-            string ModFolder = Properties.Settings.Default.DefaultDir + @"\Library\Mods\" + Cat.LibraryFolderName.Replace('/', '\\') + @"\" + LibraryModID + @"\";
-            return ModFolder;
+            
+            if (Manual)
+            {
+                return Properties.Settings.Default.DefaultDir + @"\Library\Mods\manual\" + LibraryModID + @"\";
+            }
+            else
+            {
+                GameAPICategory Cat = game.GameAPICategories.Single(c => c.APICategoryName == APICategoryName);
+                //Default Dir + Mods + CategoryFolder + ModID
+                string ModFolder = Properties.Settings.Default.DefaultDir + @"\Library\Mods\" + Cat.LibraryFolderName.Replace('/', '\\') + @"\" + LibraryModID + @"\";
+                return ModFolder;
+            }
+           
         }
     }
 

@@ -1,95 +1,128 @@
-﻿<Window
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:p="clr-namespace:Quasar.Properties"
-        xmlns:fa="http://schemas.fontawesome.io/icons/"
-        xmlns:local="clr-namespace:Quasar"
-        xmlns:controls="clr-namespace:Quasar.Controls"
-        xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
-        xmlns:Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2" xmlns:view="clr-namespace:Quasar.Controls.Settings.View" xmlns:view1="clr-namespace:Quasar.Controls.Settings.Workspaces.View" xmlns:views="clr-namespace:Quasar.Controls.Build.Views"  x:Name="MainWindow1" x:Class="Quasar.MainWindow"
-        mc:Ignorable="d"
-        Title="{x:Static p:Resources.Quasar_WindowTitle}" MinWidth="1080" MinHeight="720" Width="1280" Height="720" Icon="Quasar.ico" DataContext="{Binding RelativeSource={RelativeSource Self}}" WindowStartupLocation="CenterScreen" Loaded="MainWindow1_Loaded">
+﻿<Window x:Class="Quasar.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2" xmlns:controls="clr-namespace:Quasar.Controls" xmlns:fa="http://schemas.fontawesome.io/icons/" xmlns:local="clr-namespace:Quasar" xmlns:p="clr-namespace:Quasar.Properties" xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase" xmlns:views="clr-namespace:Quasar.Build.Views" xmlns:views1="clr-namespace:Quasar.MainUI.Views"
+        x:Name="MainWindow1" Title="{x:Static p:Resources.Quasar_WindowTitle}"
+        Width="1280" Height="720" MinWidth="1080" MinHeight="720"
+        DataContext="{Binding RelativeSource={RelativeSource Self}}" Icon="Quasar.ico" Loaded="MainWindow1_Loaded" WindowStartupLocation="CenterScreen">
 
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis" />
     </Window.Resources>
 
     <Window.TaskbarItemInfo>
-        <TaskbarItemInfo x:Name="QuasarTaskBar"/>
+        <TaskbarItemInfo x:Name="QuasarTaskBar" />
     </Window.TaskbarItemInfo>
 
     <Grid x:Name="QuasarGrid">
-        <Grid x:Name="OverlayGrid" Margin="0,0,0,0" Panel.ZIndex="1000">
-            <local:ModalPopup DataContext="{Binding ModalPopupViewModel}"/>
+        <Grid x:Name="OverlayGrid"
+              Margin="0,0,0,0" Panel.ZIndex="1000">
+            <views1:ModalPopup DataContext="{Binding ModalPopupViewModel}" />
         </Grid>
-        <Grid x:Name="OnboardingGrid" Margin="0,0,0,0" Panel.ZIndex="1000"  Visibility="{Binding OnboardingVisible, Converter={StaticResource BoolToVis}}">
-            <Button Command="{Binding Path=OnboardingCancel}" Panel.ZIndex="2000" Template="{StaticResource  OnboardingNextButton}" ToolTip="Next step" Margin="16"  HorizontalAlignment="Right" VerticalAlignment="Top"   />
-            <Button Command="{Binding Path=OnboardingPrevious}" Panel.ZIndex="2000"  Template="{StaticResource CutieSmallButtonTemplate}" Width="100" Content="Previous" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,16,115,16"/>
-            <Button Command="{Binding Path=OnboardingNext}" Panel.ZIndex="2000"  Template="{StaticResource CutieSmallButtonTemplate}" Width="100" Content="Next" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="115,16,0,16"/>
-            <Grid x:Name="Step1" Background="#121212">
+        <Grid x:Name="OnboardingGrid"
+              Margin="0,0,0,0" Panel.ZIndex="1000"
+              Visibility="{Binding OnboardingVisible, Converter={StaticResource BoolToVis}}">
+            <Button Command="{Binding Path=OnboardingCancel}"
+                    Template="{StaticResource OnboardingNextButton}"
+                    Margin="16" HorizontalAlignment="Right" VerticalAlignment="Top" Panel.ZIndex="2000"
+                    ToolTip="Next step" />
+            <Button Command="{Binding Path=OnboardingPrevious}" Content="Previous"
+                    Template="{StaticResource CutieSmallButtonTemplate}"
+                    Width="100"
+                    Margin="0,16,115,16" HorizontalAlignment="Center" VerticalAlignment="Bottom" Panel.ZIndex="2000" />
+            <Button Command="{Binding Path=OnboardingNext}" Content="Next"
+                    Template="{StaticResource CutieSmallButtonTemplate}"
+                    Width="100"
+                    Margin="115,16,0,16" HorizontalAlignment="Center" VerticalAlignment="Bottom" Panel.ZIndex="2000" />
+            <Grid x:Name="Step1"
+                  Background="#121212">
                 <Grid.Style>
                     <Style TargetType="Grid">
                         <Setter Property="Visibility" Value="Collapsed" />
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding OnboardingStep}" Value="1">
-                                <Setter Property="Visibility" Value="Visible"/>
+                            <DataTrigger Binding="{Binding OnboardingStep}"
+                                         Value="1">
+                                <Setter Property="Visibility" Value="Visible" />
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>
                 </Grid.Style>
-                <TextBlock Style="{StaticResource CutieTextBlockStyle}" TextWrapping="Wrap" Margin="64" FontSize="24"><Run Text="                                          Hello, Welcome to Quasar !"/><LineBreak/><Run/><LineBreak/><Run Text="This is a mod manager, library, capable of making your modding journey easier."/><LineBreak/><Run/><LineBreak/><Run Text="You can download mods easily with Quasar by using the Quasar Download button that is shown in Super Smash Bros Ultimate submissions on Gamebanana."/><LineBreak/><Run Text="Press that link and the mod will be downloaded, ready to use !"/><LineBreak/><Run/><LineBreak/><Run Text="For this introduction, I will be showing fake mods to illustrate how you can use Quasar"/><LineBreak/><Run/></TextBlock>
+                <TextBlock FontSize="24" Style="{StaticResource CutieTextBlockStyle}" TextWrapping="Wrap"
+                           Margin="64"><Run Text="                                          Hello, Welcome to Quasar !" /><LineBreak /><Run /><LineBreak /><Run Text="This is a mod manager, library, capable of making your modding journey easier." /><LineBreak /><Run /><LineBreak /><Run Text="You can download mods easily with Quasar by using the Quasar Download button that is shown in Super Smash Bros Ultimate submissions on Gamebanana." /><LineBreak /><Run Text="Press that link and the mod will be downloaded, ready to use !" /><LineBreak /><Run /><LineBreak /><Run Text="For this introduction, I will be showing fake mods to illustrate how you can use Quasar" /><LineBreak /><Run /></TextBlock>
             </Grid>
-            <Grid x:Name="Step2" >
+            <Grid x:Name="Step2">
                 <Grid.Style>
                     <Style TargetType="Grid">
                         <Setter Property="Visibility" Value="Collapsed" />
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding OnboardingStep}" Value="2">
-                                <Setter Property="Visibility" Value="Visible"/>
+                            <DataTrigger Binding="{Binding OnboardingStep}"
+                                         Value="2">
+                                <Setter Property="Visibility" Value="Visible" />
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>
                 </Grid.Style>
-                <Grid Background="#121212" Margin="45,50,0,0" Height="125" Width="1100" VerticalAlignment="top" HorizontalAlignment="Left">
-                    
-                </Grid>
-                <fa:ImageAwesome Icon="HandOutlineUp" VerticalAlignment="Top" HorizontalAlignment="Left"  Margin="64,64,0,0" Height="50"  Foreground="{StaticResource CutiePrimaryColor}" />
-                <TextBlock Style="{StaticResource CutieTextBlockStyle}" TextWrapping="Wrap" Margin="135,75,128,0" FontSize="24"><Run Text="We're in the"/><Run Text=" first tab, "/><Run Text="Overview. This is where you will find all your downloaded mods."/><LineBreak/><Run Text="Below you will find the list of all mods in your Library."/><Run Text=" See, we already have 2 !"/></TextBlock>
+                <Grid Background="#121212"
+                      Width="1100" Height="125"
+                      Margin="45,50,0,0" HorizontalAlignment="Left" VerticalAlignment="top" />
+                <fa:ImageAwesome Foreground="{StaticResource CutiePrimaryColor}"
+                                 Height="50"
+                                 Margin="64,64,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
+                                 Icon="HandOutlineUp" />
+                <TextBlock FontSize="24" Style="{StaticResource CutieTextBlockStyle}" TextWrapping="Wrap"
+                           Margin="135,75,128,0"><Run Text="We're in the" /><Run Text=" first tab, " /><Run Text="Overview. This is where you will find all your downloaded mods." /><LineBreak /><Run Text="Below you will find the list of all mods in your Library." /><Run Text=" See, we already have 2 !" /></TextBlock>
             </Grid>
             <Grid x:Name="Step3">
                 <Grid.Style>
                     <Style TargetType="Grid">
                         <Setter Property="Visibility" Value="Collapsed" />
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding OnboardingStep}" Value="3">
-                                <Setter Property="Visibility" Value="Visible"/>
+                            <DataTrigger Binding="{Binding OnboardingStep}"
+                                         Value="3">
+                                <Setter Property="Visibility" Value="Visible" />
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>
                 </Grid.Style>
-                <Grid Background="#121212" Margin="30,100,0,0" Height="125" Width="1100" HorizontalAlignment="Left" VerticalAlignment="Top"  />
-                <Grid Background="#121212" Margin="30,300,30,0" Height="300" Width="250" HorizontalAlignment="Right" VerticalAlignment="Top"  />
-                <fa:ImageAwesome Icon="HandOutlineDown" VerticalAlignment="Top" HorizontalAlignment="Left"  Margin="64,165,0,0" Height="50"  Foreground="{StaticResource CutiePrimaryColor}" />
-                <fa:ImageAwesome Icon="HandOutlineUp" VerticalAlignment="Top" HorizontalAlignment="Right"  Margin="64,315,70,0" Height="50"  Foreground="{StaticResource CutiePrimaryColor}" />
-                <TextBlock Style="{StaticResource CutieTextBlockStyle}" TextWrapping="Wrap" Text="Selecting a mod will expand the view. You'll see a screenshot, information about the authors" Margin="150,120,150,0" FontSize="24"/>
-                <TextBlock Style="{StaticResource CutieTextBlockStyle}" TextWrapping="Wrap" Text="You can do various actions with this mod with those buttons, you can read their tooltips !" Margin="1000,380,40,0" HorizontalAlignment="Right" FontSize="24"/>
+                <Grid Background="#121212"
+                      Width="1100" Height="125"
+                      Margin="30,100,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                <Grid Background="#121212"
+                      Width="250" Height="300"
+                      Margin="30,300,30,0" HorizontalAlignment="Right" VerticalAlignment="Top" />
+                <fa:ImageAwesome Foreground="{StaticResource CutiePrimaryColor}"
+                                 Height="50"
+                                 Margin="64,165,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
+                                 Icon="HandOutlineDown" />
+                <fa:ImageAwesome Foreground="{StaticResource CutiePrimaryColor}"
+                                 Height="50"
+                                 Margin="64,315,70,0" HorizontalAlignment="Right" VerticalAlignment="Top"
+                                 Icon="HandOutlineUp" />
+                <TextBlock Text="Selecting a mod will expand the view. You'll see a screenshot, information about the authors"
+                           FontSize="24" Style="{StaticResource CutieTextBlockStyle}" TextWrapping="Wrap"
+                           Margin="150,120,150,0" />
+                <TextBlock Text="You can do various actions with this mod with those buttons, you can read their tooltips !"
+                           FontSize="24" Style="{StaticResource CutieTextBlockStyle}" TextWrapping="Wrap"
+                           Margin="1000,380,40,0" HorizontalAlignment="Right" />
             </Grid>
         </Grid>
         <Grid x:Name="AppGrid">
-            <TabControl x:Name="NewTabControl" Grid.Column="1" BorderThickness="0" Background="{DynamicResource QD1}" ItemsSource="{Binding TabItems}" SelectedItem="{Binding SelectedTabItem}" >
+            <TabControl x:Name="NewTabControl"
+                        ItemsSource="{Binding TabItems}" SelectedItem="{Binding SelectedTabItem}"
+                        Grid.Column="1"
+                        Background="{DynamicResource QD1}"
+                        BorderThickness="0">
                 <TabControl.Resources>
                     <Style TargetType="{x:Type TabItem}">
                         <Setter Property="Template">
                             <Setter.Value>
                                 <ControlTemplate TargetType="{x:Type TabItem}">
-                                    <Border x:Name="Border" BorderThickness="1,1,1,0" BorderBrush="#1e1e1e" CornerRadius="4,4,0,0" Margin="2,5,2,0" Width="150" Height="50">
+                                    <Border x:Name="Border"
+                                            Width="150" Height="50"
+                                            Margin="2,5,2,0"
+                                            BorderBrush="#1e1e1e" BorderThickness="1,1,1,0" CornerRadius="4,4,0,0">
                                         <ContentPresenter x:Name="ContentSite"
-                                        VerticalAlignment="Center"
-                                        HorizontalAlignment="Center"
-                                        ContentSource="Header"
-                                        Margin="10,2" TextElement.FontFamily="{StaticResource PoppinsRegular}" TextElement.FontSize="18"/>
+                                                          Margin="10,2" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                          ContentSource="Header" TextElement.FontFamily="{StaticResource PoppinsRegular}" TextElement.FontSize="18" />
                                     </Border>
                                     <ControlTemplate.Triggers>
                                         <Trigger Property="IsSelected" Value="True">
@@ -101,20 +134,20 @@
                                         </Trigger>
                                         <MultiTrigger>
                                             <MultiTrigger.Conditions>
-                                                <Condition Property="Header" Value="Contents"/>
-                                                <Condition Property="IsSelected" Value="True"/>
+                                                <Condition Property="Header" Value="Contents" />
+                                                <Condition Property="IsSelected" Value="True" />
                                             </MultiTrigger.Conditions>
                                             <MultiTrigger.Setters>
-                                                <Setter Property="Visibility" Value="Visible"/>
+                                                <Setter Property="Visibility" Value="Visible" />
                                             </MultiTrigger.Setters>
                                         </MultiTrigger>
                                         <MultiTrigger>
                                             <MultiTrigger.Conditions>
-                                                <Condition Property="Header" Value="Contents"/>
-                                                <Condition Property="IsSelected" Value="False"/>
+                                                <Condition Property="Header" Value="Contents" />
+                                                <Condition Property="IsSelected" Value="False" />
                                             </MultiTrigger.Conditions>
                                             <MultiTrigger.Setters>
-                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                <Setter Property="Visibility" Value="Collapsed" />
                                             </MultiTrigger.Setters>
                                         </MultiTrigger>
                                     </ControlTemplate.Triggers>
@@ -123,7 +156,7 @@
                         </Setter>
                     </Style>
                     <Style TargetType="{x:Type Grid}">
-                        <Setter Property="Background" Value="{DynamicResource QD0}"/>
+                        <Setter Property="Background" Value="{DynamicResource QD0}" />
                     </Style>
                 </TabControl.Resources>
             </TabControl>

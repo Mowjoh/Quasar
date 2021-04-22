@@ -75,6 +75,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_85897F9D4AD0A0768326B0BB5362F8EA"
+        "OwnerKey" = "8:_D3F486953354489DB751F2F563B8EBFB"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_9966C9A9362C74C21906D9F2AB823212"
         "OwnerKey" = "8:_D3F486953354489DB751F2F563B8EBFB"
         "MsmSig" = "8:_UNDEFINED"
@@ -179,6 +185,12 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_3B6EE030339A72F22D7D9CAA3D5CF7E6"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_85897F9D4AD0A0768326B0BB5362F8EA"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -542,6 +554,37 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_85897F9D4AD0A0768326B0BB5362F8EA"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:FontAwesome.WPF, Version=4.7.0.37774, Culture=neutral, PublicKeyToken=0758b07a11a4f466, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_85897F9D4AD0A0768326B0BB5362F8EA"
+                    {
+                    "Name" = "8:FontAwesome.WPF.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:FontAwesome.WPF.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_98530811AAC548198210D459D2DE76BD"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_9966C9A9362C74C21906D9F2AB823212"
             {
             "AssemblyRegister" = "3:1"
@@ -795,15 +838,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Quasar"
-        "ProductCode" = "8:{8976D04A-13B7-4A97-AAB5-26D47680D65C}"
-        "PackageCode" = "8:{2D8CA656-2DB6-433C-9482-0A228037D36B}"
+        "ProductCode" = "8:{7632E368-F82D-4D7D-8C82-FEA693C9E5BF}"
+        "PackageCode" = "8:{67E89BDE-503C-4040-B222-995FA794A650}"
         "UpgradeCode" = "8:{33FBFAE5-777F-41E5-9E5C-1629D77AAA77}"
         "AspNetVersion" = "8:2.0.50727.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.9.0"
+        "ProductVersion" = "8:2.0.1"
         "Manufacturer" = "8:Mowjoh"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"

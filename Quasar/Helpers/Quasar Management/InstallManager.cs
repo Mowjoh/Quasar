@@ -1,18 +1,14 @@
 ﻿using Quasar.Data.V2;
 using Quasar.Internal.Tools;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Collections.ObjectModel;
 using Quasar.Helpers.Json;
 using System.Globalization;
 using Quasar.Helpers.FileOperations;
 using System.Windows.Forms;
-using Quasar.Models;
 using Quasar.Internal;
+using Quasar.Common.Models;
 
 namespace Quasar.Helpers.Quasar_Management
 {
@@ -102,6 +98,8 @@ namespace Quasar.Helpers.Quasar_Management
                 }
                 else
                 {
+                    Properties.Settings.Default.DefaultDir = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\Quasar";
+                    Properties.Settings.Default.Save();
                     MessageBox.Show("No path selected, using defaults. Don't worry you can still change later in the settings");
                 }
             }

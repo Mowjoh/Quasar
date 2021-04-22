@@ -1,21 +1,20 @@
-﻿using Quasar.Controls.Common.Models;
+﻿using Quasar.Common.Models;
 using Quasar.Internal;
-using Quasar.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace Quasar.ViewModels
+namespace Quasar.MainUI.ViewModels
 {
 
     public class ModalPopupViewModel : ObservableObject
     {
         #region Commands
+
+        #region Private
         private ICommand _ModalOKCommand { get; set; }
         private ICommand _ModalCancelCommand { get; set; }
+        #endregion
+
+        #region Public
         public ICommand ModalOKCommand
         {
             get
@@ -40,8 +39,18 @@ namespace Quasar.ViewModels
         }
         #endregion
 
-        #region Modal Properties
+        #endregion
+
+        #region Data
+
+        #region Private
         private ModalEvent _Meuh { get; set; }
+        #endregion
+
+        #region Public
+        /// <summary>
+        /// ModalEvent tied to the Modal
+        /// </summary>
         public ModalEvent Meuh
         {
             get => _Meuh;
@@ -62,8 +71,18 @@ namespace Quasar.ViewModels
                 OnPropertyChanged("ModalFailureVisible");
             }
         }
+        #endregion
 
+        #endregion
+
+        #region View
+
+        #region Private
         private bool _ModalVisible { get; set; }
+        #endregion
+
+        #region Public
+        //Base properties
         public bool ModalVisible
         {
             get => _ModalVisible;
@@ -73,38 +92,45 @@ namespace Quasar.ViewModels
                 OnPropertyChanged("ModalVisible");
             }
         }
-        public bool ModalLoading { get; set; }
-        
-        public bool ModalSuccess { get; set; }
-        public bool ModalSuccessShown { get; set; }
-
         public bool TitleVisible => (Meuh?.Title ?? "") != "";
         public bool TitleInvisible => !TitleVisible;
         public bool OkButtonVisible => Meuh?.Type == ModalType.Warning || Meuh?.Type == ModalType.Loader;
         public bool OkCancelButtonVisible => Meuh?.Type == ModalType.OkCancel;
 
-        public bool OKButtonEnabled => !ModalLoading;
+        //Spinner properties
+        public bool ModalSuccess { get; set; }
+        public bool ModalSuccessShown { get; set; }
         public bool ModalSuccessVisible => ModalSuccessShown && ModalSuccess;
         public bool ModalFailureVisible => ModalSuccessShown && !ModalSuccess;
 
-        
+        //Loader properties
+        public bool ModalLoading { get; set; }
+        public bool OKButtonEnabled => !ModalLoading;
 
         #endregion
 
-        #region Modal
-        
-        public void CreateModal(ModalEvent meuh)
+        #endregion
+
+        /// <summary>
+        /// Modal Popup Constructor
+        /// </summary>
+        public ModalPopupViewModel()
         {
-            switch(meuh.Action ?? "")
+            EventSystem.Subscribe<ModalEvent>(ProcessModalEvent);
+        }
+
+        #region Actions
+
+        /// <summary>
+        /// Processes an incoming Modal Event
+        /// </summary>
+        /// <param name="meuh">Modal Event to act upon</param>
+        public void ProcessModalEvent(ModalEvent meuh)
+        {
+            switch (meuh.Action ?? "")
             {
                 case "Show":
-                    ModalVisible = true;
-                    Meuh = meuh;
-                    if(meuh.Type == ModalType.Loader)
-                    {
-                        ModalLoading = true;
-                        OnPropertyChanged("ModalLoading");
-                    }
+                    ShowModal(meuh);
                     break;
                 case "LoadOK":
                     EnableModal(true, meuh);
@@ -115,18 +141,43 @@ namespace Quasar.ViewModels
                 case "Update":
                     UpdateModal(meuh);
                     break;
-                   
+
             }
         }
+
+        /// <summary>
+        /// Enables the Modal and displays it's data
+        /// </summary>
+        /// <param name="meuh">ModalEvent to be displayed</param>
+        public void ShowModal(ModalEvent meuh)
+        {
+            ModalVisible = true;
+            Meuh = meuh;
+            if (meuh.Type == ModalType.Loader)
+            {
+                ModalLoading = true;
+                OnPropertyChanged("ModalLoading");
+            }
+        }
+
+        /// <summary>
+        /// Enables the OK button
+        /// </summary>
+        /// <param name="Success">State to show</param>
+        /// <param name="meuh">Modal Event to update data with</param>
         public void EnableModal(bool Success, ModalEvent meuh)
         {
-            
+
             ModalLoading = false;
             ModalSuccessShown = true;
             ModalSuccess = Success;
             UpdateModal(meuh);
-            
+
         }
+
+        /// <summary>
+        /// Resets the Modal to it's default state
+        /// </summary>
         public void ResetModal()
         {
             ModalVisible = false;
@@ -135,6 +186,10 @@ namespace Quasar.ViewModels
             Meuh = null;
         }
 
+        /// <summary>
+        /// Updates the Modal UI
+        /// </summary>
+        /// <param name="me">Modal Event to be based on</param>
         public void UpdateModal(ModalEvent me)
         {
             if ((me.Title ?? "") != "")
@@ -155,6 +210,13 @@ namespace Quasar.ViewModels
             OnPropertyChanged("OKButtonEnabled");
         }
 
+        #endregion
+
+        #region User Actions
+
+        /// <summary>
+        /// Sends an OK response from the User
+        /// </summary>
         public void SendOK()
         {
             ModalEvent me = new ModalEvent()
@@ -164,8 +226,12 @@ namespace Quasar.ViewModels
             };
             ResetModal();
             EventSystem.Publish<ModalEvent>(me);
-            
+
         }
+
+        /// <summary>
+        /// Sends a KO response from the user
+        /// </summary>
         public void SendKO()
         {
             ModalEvent me = new ModalEvent()
@@ -176,13 +242,10 @@ namespace Quasar.ViewModels
             ResetModal();
             EventSystem.Publish<ModalEvent>(me);
         }
+
         #endregion
 
-       
-        public ModalPopupViewModel()
-        {
-            EventSystem.Subscribe<ModalEvent>(CreateModal);
-        }
+
     }
 
 }

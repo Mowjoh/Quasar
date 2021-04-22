@@ -1,22 +1,19 @@
 ﻿using log4net;
-using Quasar.Controls.Build.Models;
-using Quasar.Controls.Common.Models;
+using Quasar.Common.Models;
 using Quasar.Data.V2;
 using Quasar.Helpers.Json;
-using Quasar.Helpers.Tools;
-using Quasar.Helpers.XML;
 using Quasar.Internal;
 using Quasar.Internal.Tools;
-using Quasar.Models;
+using Quasar.Workspaces.Models;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Input;
+using Quasar.MainUI.ViewModels;
 
-namespace Quasar.Controls.Settings.Workspaces.ViewModels
+
+namespace Quasar.Workspaces.ViewModels
 {
     public class WorkspaceViewModel : ObservableObject
     {
@@ -317,7 +314,7 @@ namespace Quasar.Controls.Settings.Workspaces.ViewModels
         }
 
         /// <summary>
-        /// Activates a workspace for ARCropolis
+        /// Shares a workspace for other users to import
         /// </summary>
         public void ShareWorkspace()
         {
@@ -355,6 +352,9 @@ namespace Quasar.Controls.Settings.Workspaces.ViewModels
             System.Windows.MessageBox.Show("A new file has been saved on your Desktop, please share it with a friend for import !");
         }
 
+        /// <summary>
+        /// Imports a shared workspace
+        /// </summary>
         public void ImportWorkspace()
         {
             string pathselected = null;
@@ -403,7 +403,11 @@ namespace Quasar.Controls.Settings.Workspaces.ViewModels
                 }
             }
         }
-        
+
+        #endregion
+
+        #region User Actions
+
         #endregion
 
     }

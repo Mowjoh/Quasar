@@ -30,9 +30,10 @@
 
         <!-- Top Section-->
         <ComboBox HorizontalAlignment="Left" Margin="16,32,0,0" Height="32" Width="200" VerticalAlignment="Top" Style="{StaticResource ComboBoxFlatStyle}" ItemsSource="{Binding Path=MUVM.Games[0].GameAPICategories}" SelectedItem="{Binding SelectedGameAPICategory}" DisplayMemberPath="Name"/>
-        <TextBox HorizontalAlignment="Left" Margin="248,32,0,0" Height="32" Width="200" VerticalAlignment="Top" Style="{StaticResource CutieTextBoxStyle}" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"  />
+        <Button Command="{Binding Path=ResetFilters}" Template="{StaticResource ActionTestModButton}" ToolTip="Reset the filters" Margin="223,0,0,5" Width="24" VerticalAlignment="Bottom" HorizontalAlignment="Left"  />
+        <TextBox HorizontalAlignment="Left" Margin="254,32,0,0" Height="32" Width="200" VerticalAlignment="Top" Style="{StaticResource CutieTextBoxStyle}" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" />
 
-        <Button Template="{StaticResource CutieSmallButtonTemplate}" Command="{Binding Path=AddManual}" Width="200" Content="Add mod manually" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="480,32,0,0" Visibility="{Binding CreatorMode,Converter={StaticResource BoolVisi}}"/>
+        <Button Template="{StaticResource CutieSmallButtonTemplate}" Command="{Binding Path=AddManual}" Width="200" Content="Add mod manually" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="500,32,0,0" Visibility="{Binding CreatorMode,Converter={StaticResource BoolVisi}}"/>
 
         <TextBlock Style="{StaticResource CutieTextBlockStyle}" Height="20"  Text="Filter Not included" Margin="0,7,35,0" VerticalAlignment="Top" HorizontalAlignment="Right"/>
         <TextBlock Style="{StaticResource CutieTextBlockStyle}" Height="20"  Text="Filter Partially included" Margin="0,32,35,0" VerticalAlignment="Top" HorizontalAlignment="Right"/>

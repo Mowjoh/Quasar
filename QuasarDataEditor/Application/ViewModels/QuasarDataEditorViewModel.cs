@@ -1,4 +1,4 @@
-﻿using Quasar.Controls.Common.Models;
+﻿using Quasar.Common.Models;
 using Quasar.Data.V2;
 using Quasar.Helpers.Json;
 using Quasar.Helpers.ModScanning;
@@ -68,7 +68,7 @@ namespace QuasarDataEditor
             {
                 if (_SaveGameCommand == null)
                 {
-                    _SaveGameCommand = new Quasar.RelayCommand(param => SaveGameFile());
+                    _SaveGameCommand = new RelayCommand(param => SaveGameFile());
                 }
                 return _SaveGameCommand;
             }
@@ -80,7 +80,7 @@ namespace QuasarDataEditor
             {
                 if (_SaveLibraryCommand == null)
                 {
-                    _SaveLibraryCommand = new Quasar.RelayCommand(param => SaveLibraryFile());
+                    _SaveLibraryCommand = new RelayCommand(param => SaveLibraryFile());
                 }
                 return _SaveLibraryCommand;
             }
@@ -92,7 +92,7 @@ namespace QuasarDataEditor
             {
                 if (_SaveContentCommand == null)
                 {
-                    _SaveContentCommand = new Quasar.RelayCommand(param => SaveContentItemFile());
+                    _SaveContentCommand = new RelayCommand(param => SaveContentItemFile());
                 }
                 return _SaveContentCommand;
             }
@@ -104,7 +104,7 @@ namespace QuasarDataEditor
             {
                 if (_SaveWorkspaceCommand == null)
                 {
-                    _SaveWorkspaceCommand = new Quasar.RelayCommand(param => SaveWorkspaceFile());
+                    _SaveWorkspaceCommand = new RelayCommand(param => SaveWorkspaceFile());
                 }
                 return _SaveWorkspaceCommand;
             }
@@ -116,7 +116,7 @@ namespace QuasarDataEditor
             {
                 if (_SaveModLoaderCommand == null)
                 {
-                    _SaveModLoaderCommand = new Quasar.RelayCommand(param => SaveModLoaderFile());
+                    _SaveModLoaderCommand = new RelayCommand(param => SaveModLoaderFile());
                 }
                 return _SaveModLoaderCommand;
             }
@@ -128,7 +128,7 @@ namespace QuasarDataEditor
             {
                 if (_SaveQuasarModTypeCommand == null)
                 {
-                    _SaveQuasarModTypeCommand = new Quasar.RelayCommand(param => SaveQuasarModTypeFile());
+                    _SaveQuasarModTypeCommand = new RelayCommand(param => SaveQuasarModTypeFile());
                 }
                 return _SaveQuasarModTypeCommand;
             }
@@ -142,7 +142,7 @@ namespace QuasarDataEditor
             {
                 if (_RefreshCommand == null)
                 {
-                    _RefreshCommand = new Quasar.RelayCommand(param => LoadStuff());
+                    _RefreshCommand = new RelayCommand(param => LoadStuff());
                 }
                 return _RefreshCommand;
             }
@@ -155,7 +155,7 @@ namespace QuasarDataEditor
             {
                 if (_PickFolderCommand == null)
                 {
-                    _PickFolderCommand = new Quasar.RelayCommand(param => PickPath());
+                    _PickFolderCommand = new RelayCommand(param => PickPath());
                 }
                 return _PickFolderCommand;
             }
@@ -167,7 +167,7 @@ namespace QuasarDataEditor
             {
                 if (_TestModCommand == null)
                 {
-                    _TestModCommand = new Quasar.RelayCommand(param => TestMod());
+                    _TestModCommand = new RelayCommand(param => TestMod());
                 }
                 return _TestModCommand;
             }
@@ -179,12 +179,27 @@ namespace QuasarDataEditor
             {
                 if (_ProcessOutputCommand == null)
                 {
-                    _ProcessOutputCommand = new Quasar.RelayCommand(param => ProcessModOutput());
+                    _ProcessOutputCommand = new RelayCommand(param => ProcessModOutput());
                 }
                 return _ProcessOutputCommand;
             }
         }
         private ICommand _ProcessOutputCommand { get; set; }
+        
+
+        public ICommand ImportSongs
+        {
+            get
+            {
+                if (_ImportSongs == null)
+                {
+                    _ImportSongs = new RelayCommand(param => ProcessSongs());
+                }
+                return _ImportSongs;
+            }
+        }
+        private ICommand _ImportSongs { get; set; }
+
 
         #endregion
 
@@ -513,9 +528,18 @@ namespace QuasarDataEditor
         public async Task<int> TestModAction()
         {
             TestResults = new ObservableCollection<TestResult>();
-            GameAPICategory Cat = Games[0].GameAPICategories.Single(c => c.APICategoryName == SelectedTestLibraryItem.APICategoryName);
-            //Default Dir + Mods + CategoryFolder + ModID
-            string ModFolder = @"F:\Quasar\Library\Mods\" + Cat.LibraryFolderName.Replace('/', '\\') + @"\" + SelectedTestLibraryItem.ID + @"\";
+            string ModFolder = "";
+            if (SelectedTestLibraryItem.ManualMod)
+            {
+                ModFolder = @"F:\Quasar\Library\Mods\manual\" + SelectedTestLibraryItem.ID + @"\";
+            }
+            else
+            {
+                GameAPICategory Cat = Games[0].GameAPICategories.Single(c => c.APICategoryName == SelectedTestLibraryItem.APICategoryName);
+                ModFolder = @"F:\Quasar\Library\Mods\" + Cat.LibraryFolderName.Replace('/', '\\') + @"\" + SelectedTestLibraryItem.ID + @"\";
+            }
+            
+
 
             ProgressString = "Scanning Files";
             ProgressValue = 0;
@@ -586,6 +610,11 @@ namespace QuasarDataEditor
             }
             ProgressString = "Done";
             OnPropertyChanged("TestResults");
+        }
+
+        public void ProcessSongs()
+        {
+            Games[0] = DBStructs.GetXML(Games[0]);
         }
 
         #region Saves

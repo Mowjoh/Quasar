@@ -1,32 +1,21 @@
-﻿using Quasar.Controls.Common.Models;
-using Quasar.Controls.Settings.Model;
+﻿using Quasar.Common.Models;
+using Quasar.Settings.Models;
 using Quasar.Internal;
 using System;
 using System.Linq;
 using System.Windows.Input;
 
-namespace Quasar.Controls.Settings.ViewModels
+namespace Quasar.Settings.ViewModels
 {
     public class SettingItemViewModel : ObservableObject
     {
-        #region Fields
-        
+        #region Data
+
+        #region Private
         private SettingItem _SettingItem { get; set; }
-
-        private bool _IsChecked { get; set; }
-
-        private bool _EnableValue { get; set; }
-
-        private bool _EnableCheckBox { get; set; }
-
-        private bool _EnableComboBox { get; set; }
-
-        private bool _EnableTextBox { get; set; }
-
         #endregion
 
-        #region Parameters
-
+        #region Public
         /// <summary>
         /// Setting Item containing the data
         /// </summary>
@@ -42,7 +31,25 @@ namespace Quasar.Controls.Settings.ViewModels
                 OnPropertyChanged("SettingItem");
             }
         }
+        #endregion
 
+        #endregion
+
+        #region View
+
+        #region Private
+        private bool _IsChecked { get; set; }
+
+        private bool _EnableValue { get; set; }
+
+        private bool _EnableCheckBox { get; set; }
+
+        private bool _EnableComboBox { get; set; }
+
+        private bool _EnableTextBox { get; set; }
+        #endregion
+
+        #region Public
         public bool IsChecked
         {
             get => _IsChecked;
@@ -50,7 +57,7 @@ namespace Quasar.Controls.Settings.ViewModels
             {
                 if (_IsChecked == value)
                     return;
-                
+
                 _IsChecked = value;
                 SettingItem.IsChecked = value;
                 OnPropertyChanged("IsChecked");
@@ -65,12 +72,12 @@ namespace Quasar.Controls.Settings.ViewModels
 
                 Properties.Settings.Default[SettingItem.SettingName] = value;
                 Properties.Settings.Default.Save();
-                
+
             }
         }
 
         /// <summary>
-        /// Trigger to enable the Value display
+        /// Trigger to enable the Value Display mode
         /// </summary>
         public bool EnableValue
         {
@@ -86,7 +93,7 @@ namespace Quasar.Controls.Settings.ViewModels
         }
 
         /// <summary>
-        /// Enables the Checkbox
+        /// Enables the Checkbox Display mode
         /// </summary>
         public bool EnableCheckBox
         {
@@ -102,7 +109,7 @@ namespace Quasar.Controls.Settings.ViewModels
         }
 
         /// <summary>
-        /// Enables the ComboBox
+        /// Enables the ComboBox Display mode
         /// </summary>
         public bool EnableComboBox
         {
@@ -116,8 +123,9 @@ namespace Quasar.Controls.Settings.ViewModels
                 OnPropertyChanged("EnableComboBox");
             }
         }
+
         /// <summary>
-        /// Enables the TextBox
+        /// Enables the TextBox Display mode
         /// </summary>
         public bool EnableTextBox
         {
@@ -131,6 +139,7 @@ namespace Quasar.Controls.Settings.ViewModels
                 OnPropertyChanged("EnableTextBox");
             }
         }
+        #endregion
 
         #endregion
 
@@ -144,14 +153,17 @@ namespace Quasar.Controls.Settings.ViewModels
             GetPropertyValues(Property);
         }
 
+        #region Actions
         /// <summary>
         /// Loads data associated to the Property
         /// </summary>
         /// <param name="PropertyName">Name of the Property to look for</param>
         void GetPropertyValues(string PropertyName)
         {
+            //Parsing setting
             var Property = Properties.Settings.Default[PropertyName];
 
+            //Parsing definition values
             SettingItem.SettingName = PropertyName;
             SettingItem.DisplayName = (string)Properties.SettingsDefinition.Default[PropertyName + "Name"];
             SettingItem.DisplayComment = (string)Properties.SettingsDefinition.Default[PropertyName + "Comment"];
@@ -159,13 +171,16 @@ namespace Quasar.Controls.Settings.ViewModels
 
             switch (Property.GetType().Name)
             {
+                //Setting up Checkbox View
                 case "Boolean":
 
                     EnableCheckBox = true;
                     IsChecked = (bool)Property;
                     break;
 
+
                 case "String":
+                    //Setting up Combobox View
                     if (Values != "")
                     {
                         SettingItem.Values = Values.Split(',')
@@ -180,8 +195,9 @@ namespace Quasar.Controls.Settings.ViewModels
                         {
                             EnableComboBox = true;
                         }
-                        
+
                     }
+                    //Setting up Text View
                     else
                     {
                         EnableValue = true;
@@ -189,7 +205,7 @@ namespace Quasar.Controls.Settings.ViewModels
                     }
 
                     break;
-
+                //Setting up Combobox View
                 case "Integer":
                     SettingItem.Values = Values.Split(',')
                          .Select(x => x.Split('='))
@@ -198,15 +214,23 @@ namespace Quasar.Controls.Settings.ViewModels
                     EnableComboBox = true;
                     break;
             }
+
+            //Notify UI
             NotifySettingChanged();
         }
 
+        /// <summary>
+        /// Publishes a Setting Item System Event
+        /// </summary>
         public void NotifySettingChanged()
         {
             EventSystem.Publish<SettingItem>(SettingItem);
         }
-        
+        #endregion
 
-        
+        #region User Action
+
+        #endregion
+
     }
 }

@@ -1,30 +1,27 @@
 ﻿using log4net;
-using Quasar.Controls.Associations.Models;
-using Quasar.Controls.Associations.ViewModels;
-using Quasar.Controls.Associations.Views;
-using Quasar.Controls.Common.Models;
+using Quasar.Associations.Models;
+using Quasar.Associations.ViewModels;
+using Quasar.Associations.Views;
+using Quasar.Common.Models;
 using Quasar.Data.V2;
 using Quasar.Helpers.Json;
-using Quasar.Helpers.XML;
 using Quasar.Internal;
-using Quasar.Models;
+using Quasar.MainUI.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Data;
-using System.Windows.Documents.DocumentStructures;
 using System.Windows.Input;
 
-namespace Quasar.Controls.Assignation.ViewModels
+namespace Quasar.Associations.ViewModels
 {
     public class AssociationViewModel : ObservableObject
     {
-        #region Fields
-
         #region View
+
+        #region Private
+
         private ObservableCollection<GameElementFamilySquare> _GameFamilySquareCollection { get; set; }
         private GameElementFamilySquare _SelectedGameElementFamilySquare { get; set; }
         private GameElementFamily _SelectedGameElementFamily { get; set; }
@@ -44,23 +41,7 @@ namespace Quasar.Controls.Assignation.ViewModels
         private string _FilterName { get; set; }
         #endregion
 
-        #region Data
-        private MainUIViewModel _MUVM { get; set; }
-        private ObservableCollection<QuasarModType> _QuasarModTypeCollection { get; set; }
-        private QuasarModType _SelectedQuasarModType { get; set; }
-        private ObservableCollection<QuasarModTypeGroup> _SelectedQuasarModTypeGroupCollection { get; set; }
-        private QuasarModTypeGroup _SelectedQuasarModTypeGroup { get; set; }
-        #endregion
-
-        #region Commands
-        private ICommand _SelectItemCommand { get; set; }
-        #endregion
-        
-        #endregion
-
-        #region Properties
-
-        #region View
+        #region Public
         public ObservableCollection<GameElementFamilySquare> GameFamilySquareCollection
         {
             get => _GameFamilySquareCollection;
@@ -85,7 +66,7 @@ namespace Quasar.Controls.Assignation.ViewModels
                 OnPropertyChanged("SelectedGameElement");
                 if (TypesGrouped && SelectedQuasarModTypeGroup != null || !TypesGrouped && SelectedQuasarModType != null)
                 {
-                    ShowSlots();
+                    RefreshSlotData();
                 }
             }
         }
@@ -101,7 +82,7 @@ namespace Quasar.Controls.Assignation.ViewModels
                 OnPropertyChanged("SelectedGameElementFamily");
                 if (TypesGrouped && SelectedQuasarModTypeGroup != null || !TypesGrouped && SelectedQuasarModType != null)
                 {
-                    ShowSlots();
+                    RefreshSlotData();
                 }
             }
         }
@@ -221,7 +202,7 @@ namespace Quasar.Controls.Assignation.ViewModels
 
                 if (value)
                 {
-                    if(QuasarModTypeGroupCollection != null)
+                    if (QuasarModTypeGroupCollection != null)
                         SelectedQuasarModTypeGroup = QuasarModTypeGroupCollection[0];
                 }
                 else
@@ -229,7 +210,7 @@ namespace Quasar.Controls.Assignation.ViewModels
                     if (QuasarModTypeCollection != null)
                         SelectedQuasarModType = QuasarModTypeCollection[0];
                 }
-                ShowSlots();
+                RefreshSlotData();
             }
         }
         public bool ItemsWithStuff
@@ -247,7 +228,7 @@ namespace Quasar.Controls.Assignation.ViewModels
                     ItemsCollectionViewSource.View.Refresh();
                 }
                 OnPropertyChanged("ItemsWithStuff");
-                
+
             }
         }
         public string FilterText
@@ -297,7 +278,20 @@ namespace Quasar.Controls.Assignation.ViewModels
         public string deleteimage { get; set; } = Properties.Settings.Default.DefaultDir + @"\Resources\images\Delete.png";
         #endregion
 
+        #endregion
+
         #region Data
+
+        #region Private
+        private MainUIViewModel _MUVM { get; set; }
+        private ObservableCollection<QuasarModType> _QuasarModTypeCollection { get; set; }
+        private QuasarModType _SelectedQuasarModType { get; set; }
+        private ObservableCollection<QuasarModTypeGroup> _SelectedQuasarModTypeGroupCollection { get; set; }
+        private QuasarModTypeGroup _SelectedQuasarModTypeGroup { get; set; }
+        #endregion
+
+        #region Public
+
         public MainUIViewModel MUVM
         {
             get => _MUVM;
@@ -331,7 +325,7 @@ namespace Quasar.Controls.Assignation.ViewModels
                 OnPropertyChanged("SelectedQuasarModType");
                 if (SelectedGameElement != null)
                 {
-                    ShowSlots();
+                    RefreshSlotData();
                 }
 
             }
@@ -360,7 +354,7 @@ namespace Quasar.Controls.Assignation.ViewModels
                 OnPropertyChanged("SelectedQuasarModTypeGroup");
                 if (SelectedGameElement != null)
                 {
-                    ShowSlots();
+                    RefreshSlotData();
                 }
             }
         }
@@ -377,7 +371,7 @@ namespace Quasar.Controls.Assignation.ViewModels
 
                 if (value != null)
                 {
-                    if(value.GameElementFamily.Name == "Others")
+                    if (value.GameElementFamily.Name == "Others")
                     {
                         TypesGrouped = false;
                     }
@@ -385,10 +379,10 @@ namespace Quasar.Controls.Assignation.ViewModels
                     {
                         TypesGrouped = true;
                     }
-                    
+
 
                     ItemsCollectionViewSource.Source = value.GameElementFamily.GameElements;
-                    ItemsCollectionViewSource.View.MoveCurrentToFirst();    
+                    ItemsCollectionViewSource.View.MoveCurrentToFirst();
 
                     QuasarModTypeCollection = new ObservableCollection<QuasarModType>(MUVM.QuasarModTypes.Where(i => i.GameElementFamilyID == value.GameElementFamily.ID));
                     QuasarModTypeGroupCollection = new ObservableCollection<QuasarModTypeGroup>();
@@ -414,15 +408,15 @@ namespace Quasar.Controls.Assignation.ViewModels
                         }
                     }
 
-                SelectedQuasarModType = QuasarModTypeCollection[0];
-                SelectedQuasarModTypeGroup = QuasarModTypeGroupCollection[0];
+                    SelectedQuasarModType = QuasarModTypeCollection[0];
+                    SelectedQuasarModTypeGroup = QuasarModTypeGroupCollection[0];
 
                 }
 
                 _SelectedGameElementFamilySquare = value;
                 OnPropertyChanged("SelectedGameElementFamilySquare");
 
-                if(value != null)
+                if (value != null)
                 {
                     ViewType = value?.GameElementFamily.ViewType ?? "";
                     FilterName = value?.GameElementFamily.FilterName ?? "";
@@ -433,7 +427,7 @@ namespace Quasar.Controls.Assignation.ViewModels
                     FilterValues.Add(new FilterItem() { Name = "Any" });
                     foreach (GameElement ge in value?.GameElementFamily.GameElements)
                     {
-                        if(ge.FilterValue != null)
+                        if (ge.FilterValue != null)
                         {
                             if (!FilterValues.Any(f => f.Name == ge.FilterValue))
                             {
@@ -450,7 +444,15 @@ namespace Quasar.Controls.Assignation.ViewModels
 
         #endregion
 
+        #endregion
+
         #region Commands
+
+        #region Private
+        private ICommand _SelectItemCommand { get; set; }
+        #endregion
+
+        #region Public
         public ICommand SelectItemCommand
         {
             get
@@ -464,7 +466,12 @@ namespace Quasar.Controls.Assignation.ViewModels
         }
         #endregion
 
+        #endregion
+
         #region Slots
+
+        #region Private
+
         private SlotViewModel _Slot0ViewModel { get; set; }
         private SlotViewModel _Slot1ViewModel { get; set; }
         private SlotViewModel _Slot2ViewModel { get; set; }
@@ -474,6 +481,10 @@ namespace Quasar.Controls.Assignation.ViewModels
         private SlotViewModel _Slot6ViewModel { get; set; }
         private SlotViewModel _Slot7ViewModel { get; set; }
         private SlotViewModel _Slot8ViewModel { get; set; }
+
+        #endregion
+
+        #region Public
         public SlotViewModel Slot1ViewModel
         {
             get => _Slot1ViewModel;
@@ -548,9 +559,14 @@ namespace Quasar.Controls.Assignation.ViewModels
         }
         #endregion
 
-        public ILog Log { get; set; }
         #endregion
 
+        public ILog Log { get; set; }
+
+        /// <summary>
+        /// Association View Model Constructor
+        /// </summary>
+        /// <param name="_MUVM">MainUI View Model to link</param>
         public AssociationViewModel(MainUIViewModel _MUVM)
         {
             MUVM = _MUVM;
@@ -651,80 +667,13 @@ namespace Quasar.Controls.Assignation.ViewModels
             };
         }
 
-        #region Actions
-        public void SlotViewModelAction(SlotViewModel svm)
-        {
-            if(svm.ContentItems != null)
-            {
-                DeleteSlotItem(svm);
-            }
-        }
-        public void goSelection()
-        {
-            SelectedGameElementFamilySquare = null;
-        }
-
-        public void SetSlot(Slot SourceItem, Slot DestinationSlot)
-        {
-            SlotViewModel DestinationViewModel = (SlotViewModel)DestinationSlot.DataContext;
-            int Index = DestinationViewModel.Index;
-            try
-            {
-                if (SourceItem.SlotViewModel.ContentItems.Count == 1)
-                {
-                    //Single Type addition
-                    ContentItem ci = SourceItem.SlotViewModel.ContentItems[0];
-                    QuasarModType qmt = MUVM.QuasarModTypes.Single(t => t.ID == ci.QuasarModTypeID);
-                    Association a = MUVM.ActiveWorkspace.Associations.SingleOrDefault(az => az.QuasarModTypeID == ci.QuasarModTypeID && az.SlotNumber == Index && az.GameElementID == ci.GameElementID);
-
-                    if (a != null)
-                    {
-                        a.ContentItemID = ci.ID;
-                        MUVM.ActiveWorkspace.Associations.Remove(a);
-                        Log.Debug(String.Format("Association exists for ContentMapping ID '{0}', slot '{1}', IMT '{2}', GDIID '{3}', removing it", a.ContentItemID, a.SlotNumber, a.QuasarModTypeID, a.GameElementID));
-                    }
-
-                    MUVM.ActiveWorkspace.Associations.Add(new Association()
-                    {
-                        ContentItemID = ci.ID,
-                        GameElementID = SelectedGameElement.ID,
-                        QuasarModTypeID = ci.QuasarModTypeID,
-                        SlotNumber = Index
-                    });
-                    Log.Debug(String.Format("Association created for ContentMapping '{0}' ID '{1}', slot '{2}', IMT '{3}', GDIID '{4}'", ci.Name, ci.ID, Index, ci.QuasarModTypeID, ci.GameElementID));
-
-                }
-                else
-                {
-                    //Grouped Types Addition
-                    List<Association> La = MUVM.ActiveWorkspace.Associations.Where(az => az.SlotNumber == Index && az.GameElementID == SourceItem.SlotViewModel.ContentItems[0].GameElementID).ToList();
-                    foreach (Association a in La)
-                    {
-                        MUVM.ActiveWorkspace.Associations.Remove(a);
-                        Log.Debug(String.Format("Association exists for ContentMapping ID '{0}', slot '{1}', IMT '{2}', GDIID '{3}', removing it", a.GameElementID, a.SlotNumber, a.QuasarModTypeID, a.GameElementID));
-                    }
-                    foreach (ContentItem ci in SourceItem.SlotViewModel.ContentItems)
-                    {
-                        MUVM.ActiveWorkspace.Associations.Add(new Association()
-                        {
-                            ContentItemID = ci.ID,
-                            GameElementID = SelectedGameElement.ID,
-                            QuasarModTypeID = ci.QuasarModTypeID,
-                            SlotNumber = Index
-                        });
-                        Log.Debug(String.Format("Association created for ContentMapping '{0}' ID '{1}', slot '{2}', IMT '{3}', GDIID '{4}'", ci.Name, ci.ID, Index, ci.QuasarModTypeID, ci.GameElementID));
-
-                    }
-                }
-                JSonHelper.SaveWorkspaces(MUVM.Workspaces);
-                FillSlots();
-            }
-            catch (Exception e)
-            {
-                Log.Error(e.Message);
-            }
-        }
-
+        #region Actions    
+        
+        /// <summary>
+        /// Automatic Filter function
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         public void FilterItems(object sender, FilterEventArgs e)
         {
             GameElement ge = e.Item as GameElement;
@@ -817,12 +766,15 @@ namespace Quasar.Controls.Assignation.ViewModels
             }
         }
 
-        public void ShowSlots()
+        /// <summary>
+        /// Refreshes the Slots contents and UI
+        /// </summary>
+        public void RefreshSlotData()
         {
             if (SelectedGameElement != null && (SelectedQuasarModType != null && !TypesGrouped || SelectedQuasarModTypeGroup != null && TypesGrouped))
             {
-                FillItems();
-                FillSlots();
+                GetAvailableSlots();
+                GetSlottedSoloContent();
             }
             else
             {
@@ -832,132 +784,137 @@ namespace Quasar.Controls.Assignation.ViewModels
 
         }
 
-        public void AddEmptySlots()
+        /// <summary>
+        /// Refreshes the Available Slot list
+        /// </summary>
+        public void GetAvailableSlots()
         {
-            
-
-            AvailableSlots = new ObservableCollection<Slot>();
-            if (TypesGrouped)
+            if (!TypesGrouped)
             {
-                
-                for (int i = 0; i < SelectedQuasarModTypeGroup.QuasarModTypeCollection[0].SlotCount; i++)
-                {
-                    AvailableSlots.Add(new Slot()
-                    {
-                        SlotViewModel = new SlotViewModel()
-                        {
-                            ContentName = "Empty",
-                            SlotNumber = i + 1,
-                            Index = i,
-                            SlotNumberName = i > 10 ? (i + 1 % 10).ToString() : (i + 1).ToString(),
-                            EmptySlot = true
-                        }
-                    }) ;
-                }
-                
-
-
+                SlotItems = GetAvailableSoloContent();
             }
             else
             {
-                for (int i = 0; i < SelectedQuasarModType.SlotCount; i++)
-                {
-                    AvailableSlots.Add(new Slot()
-                    {
-                        SlotViewModel = new SlotViewModel()
-                        {
-                            ContentName = "Empty",
-                            SlotNumber = i > 10 ? ((i + 1) % 10) : (i + 1),
-                            Index = i,
-                            SlotNumberName = (i+1).ToString(),
-                            EmptySlot = true
-                        }
-                    });
-                }
+                SlotItems = GetAvailableGroupedContent();
             }
-        }
-        public void FillItems()
-        {
-            SlotItems = new ObservableCollection<Slot>();
 
-            if (!TypesGrouped)
+        }
+
+        /// <summary>
+        /// Gets the new Available Slots Collection as Solo elements
+        /// </summary>
+        /// <returns>Observable Collection of Slots</returns>
+        public ObservableCollection<Slot> GetAvailableSoloContent()
+        {
+            ObservableCollection<Slot> SoloContent = new ObservableCollection<Slot>();
+
+            //Listing corresponding Content Items
+            List<ContentItem> ContentItems = new List<ContentItem>();
+            if (SelectedQuasarModType.IgnoreGameElementFamily)
             {
-                List<ContentItem> ContentItems = new List<ContentItem>();
-                if (SelectedQuasarModType.IgnoreGameElementFamily)
+                ContentItems = MUVM.ContentItems.Where(a => a.QuasarModTypeID == SelectedQuasarModType.ID).ToList();
+            }
+            else
+            {
+                ContentItems = MUVM.ContentItems.Where(a => a.QuasarModTypeID == SelectedQuasarModType.ID && a.GameElementID == SelectedGameElement.ID).ToList();
+            }
+
+            //Adding them as Slots
+            foreach (ContentItem ci in ContentItems)
+            {
+                SoloContent.Add(new Slot()
                 {
-                    ContentItems = MUVM.ContentItems.Where(a => a.QuasarModTypeID == SelectedQuasarModType.ID).ToList();
+                    SlotViewModel = new SlotViewModel()
+                    {
+                        ContentName = ci.Name,
+                        SlotNumber = ci.SlotNumber + 1,
+                        SlotNumberName = ci.SlotNumber > 10 ? (ci.SlotNumber + 1 % 10).ToString() : (ci.SlotNumber + 1).ToString(),
+                        TypeName = MUVM.QuasarModTypes.Single(mt => mt.ID == ci.QuasarModTypeID).Name,
+                        EmptySlot = false,
+                        ContentItems = new List<ContentItem>()
+                            {
+                                ci
+                            }
+                    }
+                });
+            }
+
+            return SoloContent;
+        }
+
+        /// <summary>
+        /// Gets the new Available Slots Collection as Grouped elements
+        /// </summary>
+        /// <returns>Observable Collection of Slots</returns>
+        public ObservableCollection<Slot> GetAvailableGroupedContent()
+        {
+            ObservableCollection<Slot> GroupedContent = new ObservableCollection<Slot>();
+
+            //Parsing Content Items with a matching Mod Type Collection
+            List<ContentItem> ContentItems = new List<ContentItem>();
+            foreach (QuasarModType qmt in SelectedQuasarModTypeGroup.QuasarModTypeCollection)
+            {
+                List<ContentItem> local = new List<ContentItem>();
+                if (qmt.IgnoreGameElementFamily)
+                {
+                    local = MUVM.ContentItems.Where(a => a.QuasarModTypeID == qmt.ID).ToList();
                 }
                 else
                 {
-                    ContentItems = MUVM.ContentItems.Where(a => a.QuasarModTypeID == SelectedQuasarModType.ID && a.GameElementID == SelectedGameElement.ID).ToList();
+                    local = MUVM.ContentItems.Where(a => a.QuasarModTypeID == qmt.ID && a.GameElementID == SelectedGameElement.ID).ToList();
                 }
-                foreach (ContentItem ci in ContentItems)
+
+                ContentItems.AddRange(local);
+            }
+
+            List<int> ProcessedSlots = new List<int>();
+
+            //Looping through every ContentItem
+            foreach (ContentItem ci in ContentItems)
+            {
+                //Checking if no slot exists there
+                if (!ProcessedSlots.Contains(ci.SlotNumber))
                 {
-                    SlotItems.Add(new Slot()
+                    //Creating a Slot
+                    ProcessedSlots.Add(ci.SlotNumber);
+                    QuasarModType qmt = MUVM.QuasarModTypes.Single(t => t.ID == ci.QuasarModTypeID);
+                    GroupedContent.Add(new Slot()
                     {
                         SlotViewModel = new SlotViewModel()
                         {
                             ContentName = ci.Name,
                             SlotNumber = ci.SlotNumber + 1,
                             SlotNumberName = ci.SlotNumber > 10 ? (ci.SlotNumber + 1 % 10).ToString() : (ci.SlotNumber + 1).ToString(),
-                            TypeName = MUVM.QuasarModTypes.Single(mt => mt.ID == ci.QuasarModTypeID).Name,
+                            TypeName = qmt.GroupName,
                             EmptySlot = false,
                             ContentItems = new List<ContentItem>()
-                            {
-                                ci
-                            }
+                                {
+                                    ci
+                                }
                         }
                     });
                 }
-
-
-
-                List<Association> Associations = MUVM.ActiveWorkspace.Associations.Where(a => a.QuasarModTypeID == SelectedQuasarModType.ID && a.GameElementID == SelectedGameElement.ID).ToList();
-                foreach (Association ass in Associations)
+                else
                 {
-                    ContentItem ci = ContentItems.Single(c => c.ID == ass.ContentItemID);
-                    Slot SI = new Slot()
+                    //Parsing Slots with the same Slot Number
+                    List<Slot> items = GroupedContent.Where(i => i.SlotViewModel.SlotNumber == (ci.SlotNumber + 1)).ToList();
+                    bool added = false;
+
+                    //Looping through matching slots
+                    foreach (Slot item in items)
                     {
-                        SlotViewModel = new SlotViewModel()
+                        //Checking if an item exists with the same Library Item ID
+                        if (item.SlotViewModel.ContentItems.Any(cma => cma.LibraryItemID == ci.LibraryItemID))
                         {
-                            ContentName = ci.Name,
-                            SlotNumber = ass.SlotNumber + 1,
-                            SlotNumberName = ass.SlotNumber > 10 ? (ass.SlotNumber + 1 % 10).ToString() : (ass.SlotNumber + 1).ToString(),
-                            TypeName = MUVM.QuasarModTypes.Single(mt => mt.ID == ci.QuasarModTypeID).Name,
-                            EmptySlot = false,
-                            ContentItems = new List<ContentItem>()
-                            {
-                                ci
-                            }
+                            //Adding the Content Item to that slot
+                            item.SlotViewModel.ContentItems.Add(ci);
+                            added = true;
                         }
-                    };
-                }
-            }
-            else
-            {
-                List<ContentItem> ContentItems = new List<ContentItem>();
-                foreach(QuasarModType qmt in SelectedQuasarModTypeGroup.QuasarModTypeCollection)
-                {
-                    List<ContentItem> local = new List<ContentItem>();
-                    if (qmt.IgnoreGameElementFamily)
-                    {
-                        local = MUVM.ContentItems.Where(a => a.QuasarModTypeID == qmt.ID).ToList();
                     }
-                    else
+                    //If no Slot matches
+                    if (!added)
                     {
-                        local = MUVM.ContentItems.Where(a => a.QuasarModTypeID == qmt.ID && a.GameElementID == SelectedGameElement.ID).ToList();
-                    }
-                    
-                    ContentItems.AddRange(local);
-                }
-                List<int> ProcessedSlots = new List<int>();
-
-                foreach(ContentItem ci in ContentItems)
-                {
-                    if (!ProcessedSlots.Contains(ci.SlotNumber))
-                    {
-                        ProcessedSlots.Add(ci.SlotNumber);
-                        QuasarModType qmt = MUVM.QuasarModTypes.Single(t => t.ID == ci.QuasarModTypeID);
+                        //Creating a Slot
                         SlotItems.Add(new Slot()
                         {
                             SlotViewModel = new SlotViewModel()
@@ -965,90 +922,30 @@ namespace Quasar.Controls.Assignation.ViewModels
                                 ContentName = ci.Name,
                                 SlotNumber = ci.SlotNumber + 1,
                                 SlotNumberName = ci.SlotNumber > 10 ? (ci.SlotNumber + 1 % 10).ToString() : (ci.SlotNumber + 1).ToString(),
-                                TypeName = qmt.GroupName,
                                 EmptySlot = false,
                                 ContentItems = new List<ContentItem>()
                                 {
                                     ci
                                 }
                             }
-                        }) ;
-                    }
-                    else
-                    {
-                        List<Slot> items = SlotItems.Where(i => i.SlotViewModel.SlotNumber == (ci.SlotNumber + 1)).ToList();
-                        bool added = false;
-                        foreach(Slot item in items)
-                        {
-                            if (item.SlotViewModel.ContentItems.Any(cma => cma.LibraryItemID == ci.LibraryItemID))
-                            {
-                                item.SlotViewModel.ContentItems.Add(ci);
-                                added = true;
-                            }
-                        }
-                        if (!added)
-                        {
-                            SlotItems.Add(new Slot()
-                            {
-                                SlotViewModel = new SlotViewModel()
-                                {
-                                    ContentName = ci.Name,
-                                    SlotNumber = ci.SlotNumber + 1,
-                                    SlotNumberName = ci.SlotNumber > 10 ? (ci.SlotNumber + 1 % 10).ToString() : (ci.SlotNumber + 1).ToString(),
-                                    EmptySlot = false,
-                                    ContentItems = new List<ContentItem>()
-                                {
-                                    ci
-                                }
-                                }
-                            });
-                        }
-                    }
-                }
-
-                ProcessedSlots = new List<int>();
-                foreach (QuasarModType qmt in SelectedQuasarModTypeGroup.QuasarModTypeCollection)
-                {
-                    List<Association> Associations = MUVM.ActiveWorkspace.Associations.Where(a => a.QuasarModTypeID == qmt.ID && a.GameElementID == SelectedGameElement.ID).ToList();
-                    foreach (Association ass in Associations)
-                    {
-                        ContentItem ci = MUVM.ContentItems.Single(c => c.ID == ass.ContentItemID);
-
-                        if (!ProcessedSlots.Contains(ass.SlotNumber))
-                        {
-                            ProcessedSlots.Add(ass.SlotNumber);
-
-                            
-                            Slot SI = new Slot()
-                            {
-                                SlotViewModel = new SlotViewModel()
-                                {
-                                    ContentName = ci.Name,
-                                    SlotNumber = ass.SlotNumber + 1,
-                                    SlotNumberName = ass.SlotNumber > 10 ? (ass.SlotNumber + 1 % 10).ToString() : (ass.SlotNumber + 1).ToString(),
-                                    TypeName = qmt.GroupName,
-                                    EmptySlot = false,
-                                    ContentItems = new List<ContentItem>()
-                                    {
-                                        ci
-                                    }
-                                }
-                            };
-                        }
-                        else
-                        {
-                        }
+                        });
                     }
                 }
             }
 
+            return GroupedContent;
         }
-        public void FillSlots()
+
+        /// <summary>
+        /// Parses all matching Content Items for each slot and sets them in the corresponding Slot View Model
+        /// </summary>
+        public void GetSlottedSoloContent()
         {
             for(int i = 0; i < 9; i++)
             {
                 List<ContentItem> contentItems = new List<ContentItem>();
                 List <Association> associations = MUVM.ActiveWorkspace.Associations.Where(a => a.GameElementID == SelectedGameElement.ID && a.SlotNumber == i).ToList();
+
                 foreach(Association a in associations)
                 {
                     contentItems.Add(MUVM.ContentItems.Single(c => c.ID == a.ContentItemID));
@@ -1084,12 +981,100 @@ namespace Quasar.Controls.Assignation.ViewModels
                  
             }
         }
-        public void DeleteSlotItem(SlotViewModel svm)
+
+        #endregion
+
+        #region User Actions
+        public void goSelection()
         {
-            foreach(ContentItem ci in svm.ContentItems)
+            SelectedGameElementFamilySquare = null;
+        }
+
+        public void SetSlot(Slot SourceItem, Slot DestinationSlot)
+        {
+            SlotViewModel DestinationViewModel = (SlotViewModel)DestinationSlot.DataContext;
+            int Index = DestinationViewModel.Index;
+            try
+            {
+                if (SourceItem.SlotViewModel.ContentItems.Count == 1)
+                {
+                    //Single Type addition
+                    ContentItem ci = SourceItem.SlotViewModel.ContentItems[0];
+                    QuasarModType qmt = MUVM.QuasarModTypes.Single(t => t.ID == ci.QuasarModTypeID);
+                    Association a = MUVM.ActiveWorkspace.Associations.SingleOrDefault(az => az.QuasarModTypeID == ci.QuasarModTypeID && az.SlotNumber == Index && az.GameElementID == ci.GameElementID);
+
+                    if (a != null)
+                    {
+                        a.ContentItemID = ci.ID;
+                        MUVM.ActiveWorkspace.Associations.Remove(a);
+                        Log.Debug(String.Format("Association exists for ContentMapping ID '{0}', slot '{1}', IMT '{2}', GDIID '{3}', removing it", a.ContentItemID, a.SlotNumber, a.QuasarModTypeID, a.GameElementID));
+                    }
+
+                    MUVM.ActiveWorkspace.Associations.Add(new Association()
+                    {
+                        ContentItemID = ci.ID,
+                        GameElementID = SelectedGameElement.ID,
+                        QuasarModTypeID = ci.QuasarModTypeID,
+                        SlotNumber = Index
+                    });
+                    Log.Debug(String.Format("Association created for ContentMapping '{0}' ID '{1}', slot '{2}', IMT '{3}', GDIID '{4}'", ci.Name, ci.ID, Index, ci.QuasarModTypeID, ci.GameElementID));
+
+                }
+                else
+                {
+                    //Grouped Types Addition
+                    List<Association> La = MUVM.ActiveWorkspace.Associations.Where(az => az.SlotNumber == Index && az.GameElementID == SourceItem.SlotViewModel.ContentItems[0].GameElementID).ToList();
+                    foreach (Association a in La)
+                    {
+                        MUVM.ActiveWorkspace.Associations.Remove(a);
+                        Log.Debug(String.Format("Association exists for ContentMapping ID '{0}', slot '{1}', IMT '{2}', GDIID '{3}', removing it", a.GameElementID, a.SlotNumber, a.QuasarModTypeID, a.GameElementID));
+                    }
+                    foreach (ContentItem ci in SourceItem.SlotViewModel.ContentItems)
+                    {
+                        MUVM.ActiveWorkspace.Associations.Add(new Association()
+                        {
+                            ContentItemID = ci.ID,
+                            GameElementID = SelectedGameElement.ID,
+                            QuasarModTypeID = ci.QuasarModTypeID,
+                            SlotNumber = Index
+                        });
+                        Log.Debug(String.Format("Association created for ContentMapping '{0}' ID '{1}', slot '{2}', IMT '{3}', GDIID '{4}'", ci.Name, ci.ID, Index, ci.QuasarModTypeID, ci.GameElementID));
+
+                    }
+                }
+                JSonHelper.SaveWorkspaces(MUVM.Workspaces);
+                GetSlottedSoloContent();
+            }
+            catch (Exception e)
+            {
+                Log.Error(e.Message);
+            }
+        }
+
+        #endregion
+
+        #region Events
+        /// <summary>
+        /// Responds to a trigger from a Slot View Model
+        /// </summary>
+        /// <param name="svm"></param>
+        public void SlotViewModelAction(SlotViewModel svm)
+        {
+            if (svm.ContentItems != null)
+            {
+                RemoveAllSlotAssociations(svm);
+            }
+        }
+        /// <summary>
+        /// Removes all associations for a specific slot
+        /// </summary>
+        /// <param name="svm">Corresponding Slot View Model</param>
+        public void RemoveAllSlotAssociations(SlotViewModel svm)
+        {
+            foreach (ContentItem ci in svm.ContentItems)
             {
                 Association a = MUVM.ActiveWorkspace.Associations.SingleOrDefault(az => az.QuasarModTypeID == ci.QuasarModTypeID && az.SlotNumber == svm.Index && az.GameElementID == SelectedGameElement.ID);
-                if(a != null)
+                if (a != null)
                 {
                     MUVM.ActiveWorkspace.Associations.Remove(a);
                     Log.Debug(String.Format("Association exists for ContentMapping ID '{0}', slot '{1}', IMT '{2}', GDIID '{3}', removing it", a.ContentItemID, a.SlotNumber, a.QuasarModTypeID, a.GameElementID));
@@ -1097,12 +1082,17 @@ namespace Quasar.Controls.Assignation.ViewModels
                 }
             }
 
-            FillSlots();
+            GetSlottedSoloContent();
             JSonHelper.SaveWorkspaces(MUVM.Workspaces);
         }
+
+        /// <summary>
+        /// Refreshes the UI with the new Workspace's data
+        /// </summary>
+        /// <param name="w">Corresponding Workspace</param>
         public void SetActiveWorkspace(Workspace w)
         {
-            ShowSlots();
+            RefreshSlotData();
         }
         #endregion
 

@@ -1,16 +1,11 @@
-﻿using Quasar.Controls.Common.Models;
-using System;
+﻿using Quasar.Common.Models;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Quasar.Controls.Settings.Model
+namespace Quasar.Settings.Models
 {
     public class SettingItem : ObservableObject
     {
-        #region Fields
+        #region Private
         private string _SettingName { get; set; }
 
         private string _DisplayName { get; set; }
@@ -24,7 +19,7 @@ namespace Quasar.Controls.Settings.Model
         private Dictionary<string, string> _Values { get; set; }
         #endregion
 
-        #region Properties
+        #region Public
 
         /// <summary>
         /// Represents the name of the Setting to change

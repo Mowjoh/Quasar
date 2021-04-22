@@ -130,7 +130,7 @@
 
                     <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top" Margin="15,45,15,15" Grid.Column="0" Orientation="Vertical">
                         <Button Content="Refresh" Command="{Binding Path=RefreshCommand}" Margin="0,5"/>
-                        <Button Content="Import MSBT File" Command="{Binding Path=RefreshCommand}" Margin="0,5" Click="Button_Click"/>
+                        <Button Content="Import MSBT File" Command="{Binding Path=ImportSongs}" Margin="0,5"/>
                     </StackPanel>
 
                 </Grid>

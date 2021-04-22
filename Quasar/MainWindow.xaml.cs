@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using Quasar.MainUI.ViewModels;
 
 namespace Quasar
 {

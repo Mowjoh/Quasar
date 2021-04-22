@@ -1,7 +1,7 @@
 ﻿using FluentFTP.Rules;
 using log4net;
-using Quasar.Controls.Build.ViewModels;
-using Quasar.Controls.Common.Models;
+using Quasar.Build.ViewModels;
+using Quasar.Common.Models;
 using Quasar.Data.V2;
 using Quasar.FileSystem;
 using Quasar.Helpers.Json;
@@ -22,7 +22,7 @@ using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Threading;
 
-namespace Quasar.Controls.Build.Models
+namespace Quasar.Build.Models
 {
 
     enum BuildModes { Clean, Synchronize, Overwrite }

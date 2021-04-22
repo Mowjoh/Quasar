@@ -1,21 +1,17 @@
 ﻿using log4net;
-using log4net.Repository.Hierarchy;
 using MediaDevices;
-using Quasar.Controls.Build.Models;
-using Quasar.Controls.Common.Models;
+using Quasar.Build.Models;
+using Quasar.Common.Models;
 using Quasar.Data.V2;
 using Quasar.Internal;
-using Quasar.Models;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using System.Windows.Input;
-using System.Windows.Threading;
+using Quasar.MainUI.ViewModels;
 
-namespace Quasar.Controls.Build.ViewModels
+namespace Quasar.Build.ViewModels
 {
     public class BuildViewModel : ObservableObject
     {

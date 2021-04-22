@@ -1,4 +1,4 @@
-﻿using Quasar.Controls.Common.Models;
+﻿using Quasar.Common.Models;
 using Quasar.Data.V1;
 using Quasar.Helpers.ModScanning;
 using System;

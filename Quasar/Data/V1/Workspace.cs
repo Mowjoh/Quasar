@@ -1,4 +1,4 @@
-﻿using Quasar.Controls.Common.Models;
+﻿using Quasar.Common.Models;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -12,17 +12,17 @@ namespace Quasar.Data.V1
     //XML Serialization elements
     [Serializable()]
     [XmlRoot("Workspaces")]
-    public class Workspaces : ICollection
+    public class WorkspaceCollection : ICollection
     {
         public string CollectionName;
         public ArrayList empArray = new ArrayList();
 
-        public Workspaces()
+        public WorkspaceCollection()
         {
 
         }
 
-        public Workspaces(List<Workspace> _inputList)
+        public WorkspaceCollection(List<Workspace> _inputList)
         {
             foreach (Workspace m in _inputList)
             {

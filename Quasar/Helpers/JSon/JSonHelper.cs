@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Quasar.Data.V2;
+using Quasar.Workspaces.Models;
 
 namespace Quasar.Helpers.Json
 {

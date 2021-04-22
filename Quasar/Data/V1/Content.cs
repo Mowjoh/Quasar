@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Xml.Serialization;
 using System.IO;
 using System.Collections;
-using Quasar.Controls.Common.Models;
+using Quasar.Common.Models;
 
 namespace Quasar.Data.V1
 {

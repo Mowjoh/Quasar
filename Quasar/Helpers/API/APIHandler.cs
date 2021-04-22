@@ -251,7 +251,24 @@ namespace Quasar
 
         public static string GetQuasarDownloadURL(string _Filename, string _ResourceURL, string _APITypeName, string _ModID)
         {
-            string extension = _Filename.Split('.')[1];
+            string filename = "";
+            string resource = "";
+            string extension = "";
+            if (_Filename == "")
+            {
+                string[] downloadinfo = GetDownloadFileName(_APITypeName, _ModID).Result;
+
+                filename = downloadinfo[0];
+                extension = filename.Split('.')[1];
+                resource = downloadinfo[1];
+
+            }
+            else
+            {
+                filename = _Filename;
+                extension = filename.Split('.')[1];
+                resource = _ResourceURL;
+            }
 
             string url = "quasar:";
             url += _ResourceURL;

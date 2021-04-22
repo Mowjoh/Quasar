@@ -1,94 +1,166 @@
-﻿<UserControl x:Class="Quasar.Controls.Build.Views.BuildView"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:Quasar.Controls.Build.Views"
-             mc:Ignorable="d" 
-             d:DesignHeight="620" d:DesignWidth="1120">
+﻿<UserControl x:Class="Quasar.Build.Views.BuildView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:Quasar.Build.Views">
+
     <Grid Background="{DynamicResource CutieBG01}">
+
         <Grid.RowDefinitions>
-            <RowDefinition Height="500"/>
-            <RowDefinition Height="1*"/>
+            <RowDefinition Height="500" />
+            <RowDefinition Height="1*" />
         </Grid.RowDefinitions>
+
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="750"/>
-            <ColumnDefinition Width="1"/>
-            <ColumnDefinition/>
+            <ColumnDefinition Width="750" />
+            <ColumnDefinition Width="1" />
+            <ColumnDefinition />
         </Grid.ColumnDefinitions>
 
-        <!-- Transfer Settings Card-->
-        <Grid Background="{DynamicResource CutieBG03}" Grid.Column="0" Grid.Row="0" Margin="16">
-            <!-- Header-->
-            <TextBlock Text="Transfer Settings" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" FontSize="25" FontFamily="{StaticResource PoppinsBold}" Style="{StaticResource CutieTextBlockStyle}"/>
-            <StackPanel Orientation="Horizontal" Margin="0,16,16,0" VerticalAlignment="Top" HorizontalAlignment="Right">
-                <TextBlock Text="Workspace : "  Style="{DynamicResource CutieTextBlockStyle}" FontFamily="{StaticResource PoppinsRegular}" FontSize="16"/>
-                <TextBlock Text="{Binding ActiveWorkspace.Name}"  Style="{DynamicResource CutieTextBlockStyle}" FontFamily="{StaticResource PoppinsRegular}" FontSize="16"/>
+        <!--#region  Transfer Settings Card-->
+        <Grid Grid.Row="0" Grid.Column="0"
+              Background="{DynamicResource CutieBG03}"
+              Margin="16">
+
+            <!--#region  Header-->
+            <TextBlock Text="Transfer Settings"
+                       FontSize="25" FontFamily="{StaticResource PoppinsBold}" Style="{StaticResource CutieTextBlockStyle}"
+                       Margin="10,10,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+            <StackPanel Margin="0,16,16,0" HorizontalAlignment="Right" VerticalAlignment="Top"
+                        Orientation="Horizontal">
+                <TextBlock Text="Workspace : "
+                           FontSize="16" FontFamily="{StaticResource PoppinsRegular}" Style="{DynamicResource CutieTextBlockStyle}" />
+                <TextBlock Text="{Binding ActiveWorkspace.Name}"
+                           FontSize="16" FontFamily="{StaticResource PoppinsRegular}" Style="{DynamicResource CutieTextBlockStyle}" />
             </StackPanel>
+            <!--#endregion-->
 
-            <!-- Transfer Options-->
-            <TextBlock Text="Transfer Options" HorizontalAlignment="Left" Margin="10,82,0,0" VerticalAlignment="Top" FontSize="16" FontFamily="{StaticResource PoppinsRegular}" Style="{StaticResource CutieTextBlockStyle}"/>
+            <!--#region  Transfer Options-->
+            <TextBlock Text="Transfer Options"
+                       FontSize="16" FontFamily="{StaticResource PoppinsRegular}" Style="{StaticResource CutieTextBlockStyle}"
+                       Margin="10,82,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
 
-            <TextBlock Text="Wireless Transfer (FTP)" HorizontalAlignment="Left" Margin="42,139,0,0" VerticalAlignment="Top" FontSize="14" FontFamily="{StaticResource PoppinsRegular}" Style="{StaticResource CutieTextBlockStyle}"/>
-            <RadioButton  Template="{StaticResource CutieRadio}" IsChecked="{Binding WirelessSelected}" GroupName="TransferOption" HorizontalAlignment="Left" Margin="16,137,0,0" VerticalAlignment="Top" Foreground="{DynamicResource QuasarTextColor}"/>
+            <TextBlock Text="Wireless Transfer (FTP)"
+                       FontSize="14" FontFamily="{StaticResource PoppinsRegular}" Style="{StaticResource CutieTextBlockStyle}"
+                       Margin="42,139,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+            <RadioButton Template="{StaticResource CutieRadio}" Foreground="{DynamicResource QuasarTextColor}"
+                         Margin="16,137,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
+                         GroupName="TransferOption" IsChecked="{Binding WirelessSelected}" />
 
-            <TextBlock Text="Local Transfer (SD)" HorizontalAlignment="Left" Margin="274,139,0,0" VerticalAlignment="Top" FontSize="14" FontFamily="{StaticResource PoppinsRegular}" Style="{StaticResource CutieTextBlockStyle}"/>
-            <RadioButton  Template="{StaticResource CutieRadio}"  IsChecked="{Binding LocalSelected}" GroupName="TransferOption" HorizontalAlignment="Left" Margin="248,137,0,0" VerticalAlignment="Top" Foreground="{DynamicResource QuasarTextColor}" RenderTransformOrigin="-12.895,3.133"/>
-            <ComboBox Margin="421,131,0,0" Style="{StaticResource ComboBoxFlatStyle}" Width="200" Height="32" VerticalAlignment="Top" HorizontalAlignment="Left" ItemsSource="{Binding Drives}" SelectedItem="{Binding SelectedDrive}" DisplayMemberPath="DisplayName"/>
-            <Button VerticalAlignment="Top" HorizontalAlignment="Left" Margin="630,131,0,0" Width="32" Height="32" Command="{Binding RefreshUSBCommand}" Template="{StaticResource ActionRefreshButton}" Background="Transparent" />
+            <TextBlock Text="Local Transfer (SD)"
+                       FontSize="14" FontFamily="{StaticResource PoppinsRegular}" Style="{StaticResource CutieTextBlockStyle}"
+                       Margin="274,139,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+            <RadioButton Template="{StaticResource CutieRadio}" Foreground="{DynamicResource QuasarTextColor}"
+                         Margin="248,137,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
+                         GroupName="TransferOption" IsChecked="{Binding LocalSelected}" RenderTransformOrigin="-12.895,3.133" />
+            <ComboBox ItemsSource="{Binding Drives}" SelectedItem="{Binding SelectedDrive}"
+                      Style="{StaticResource ComboBoxFlatStyle}"
+                      Width="200" Height="32"
+                      Margin="421,131,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
+                      DisplayMemberPath="DisplayName" />
+            <Button Command="{Binding RefreshUSBCommand}"
+                    Template="{StaticResource ActionRefreshButton}" Background="Transparent"
+                    Width="32" Height="32"
+                    Margin="630,131,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+            <!--#endregion-->
 
-            <!-- Mod Loader-->
-            <TextBlock Text="Mod Loader :" HorizontalAlignment="Left" Margin="16,209,0,0" VerticalAlignment="Top" FontSize="16" FontFamily="{StaticResource PoppinsRegular}" Style="{StaticResource CutieTextBlockStyle}"/>
-            <ComboBox HorizontalAlignment="Left" Style="{StaticResource ComboBoxFlatStyle}" Width="200" Height="32" Margin="137,203,0,0" VerticalAlignment="Top" ItemsSource="{Binding MUVM.ModLoaders}" DisplayMemberPath="Name" SelectedItem="{Binding SelectedModLoader}"/>
+            <!--#region  Mod Loader-->
+            <TextBlock Text="Mod Loader :"
+                       FontSize="16" FontFamily="{StaticResource PoppinsRegular}" Style="{StaticResource CutieTextBlockStyle}"
+                       Margin="16,209,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+            <ComboBox ItemsSource="{Binding MUVM.ModLoaders}" SelectedItem="{Binding SelectedModLoader}"
+                      Style="{StaticResource ComboBoxFlatStyle}"
+                      Width="200" Height="32"
+                      Margin="137,203,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
+                      DisplayMemberPath="Name" />
+            <!--#endregion-->
 
-            <!-- File Transfer Options-->
-            <TextBlock Text="How do you want Quasar to handle the file transfer ?" HorizontalAlignment="Left" Margin="16,277,0,0" VerticalAlignment="Top" FontSize="16" FontFamily="{StaticResource PoppinsRegular}" Style="{StaticResource CutieTextBlockStyle}"/>
-            
-            <TextBlock Text="Clean and Transfer" HorizontalAlignment="Left" Margin="44,329,0,0" VerticalAlignment="Top" FontSize="14" FontFamily="{StaticResource PoppinsRegular}" Style="{StaticResource CutieTextBlockStyle}"/>
-            <RadioButton Template="{StaticResource CutieRadio}" IsChecked="{Binding CleanSelected}" GroupName="TransferMode" HorizontalAlignment="Left" Margin="16,329,0,0" VerticalAlignment="Top" Foreground="{DynamicResource QuasarTextColor}"/>
+            <!--#region  File Transfer Options-->
+            <TextBlock Text="How do you want Quasar to handle the file transfer ?"
+                       FontSize="16" FontFamily="{StaticResource PoppinsRegular}" Style="{StaticResource CutieTextBlockStyle}"
+                       Margin="16,277,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
 
-            <TextBlock Text="Synchronize Files" HorizontalAlignment="Left" Margin="293,329,0,0" VerticalAlignment="Top" FontSize="14" FontFamily="{StaticResource PoppinsRegular}" Style="{StaticResource CutieTextBlockStyle}"/>
-            <RadioButton Template="{StaticResource CutieRadio}" IsChecked="{Binding SynchronizeSelected}" GroupName="TransferMode" HorizontalAlignment="Left" Margin="267,329,0,0" VerticalAlignment="Top" Foreground="{DynamicResource QuasarTextColor}" RenderTransformOrigin="1.083,0.733"/>
+            <TextBlock Text="Clean and Transfer"
+                       FontSize="14" FontFamily="{StaticResource PoppinsRegular}" Style="{StaticResource CutieTextBlockStyle}"
+                       Margin="44,329,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+            <RadioButton Template="{StaticResource CutieRadio}" Foreground="{DynamicResource QuasarTextColor}"
+                         Margin="16,329,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
+                         GroupName="TransferMode" IsChecked="{Binding CleanSelected}" />
 
-            <TextBlock Text="Overwrite Different Files" HorizontalAlignment="Left" Margin="530,329,0,0" VerticalAlignment="Top" FontSize="14" FontFamily="{StaticResource PoppinsRegular}" Style="{StaticResource CutieTextBlockStyle}"/>
-            <RadioButton Template="{StaticResource CutieRadio}" IsChecked="{Binding OverwriteSelected}" GroupName="TransferMode" HorizontalAlignment="Left" Margin="502,329,0,0" VerticalAlignment="Top" Foreground="{DynamicResource QuasarTextColor}" RenderTransformOrigin="1.083,0.733"/>
+            <TextBlock Text="Synchronize Files"
+                       FontSize="14" FontFamily="{StaticResource PoppinsRegular}" Style="{StaticResource CutieTextBlockStyle}"
+                       Margin="293,329,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+            <RadioButton Template="{StaticResource CutieRadio}" Foreground="{DynamicResource QuasarTextColor}"
+                         Margin="267,329,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
+                         GroupName="TransferMode" IsChecked="{Binding SynchronizeSelected}" RenderTransformOrigin="1.083,0.733" />
 
-            <Button Content="Send my mods to my Switch" Template="{StaticResource CutieButtonTemplate}" HorizontalAlignment="Center" VerticalAlignment="Bottom" Width="282" Margin="0,0,0,48" Command="{Binding Path=BuildCommand}"/>
+            <TextBlock Text="Overwrite Different Files"
+                       FontSize="14" FontFamily="{StaticResource PoppinsRegular}" Style="{StaticResource CutieTextBlockStyle}"
+                       Margin="530,329,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+            <RadioButton Template="{StaticResource CutieRadio}" Foreground="{DynamicResource QuasarTextColor}"
+                         Margin="502,329,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
+                         GroupName="TransferMode" IsChecked="{Binding OverwriteSelected}" RenderTransformOrigin="1.083,0.733" />
+            <!--#endregion-->
+
+            <!--  Transfer Button  -->
+            <Button Command="{Binding Path=BuildCommand}" Content="Send my mods to my Switch"
+                    Template="{StaticResource CutieButtonTemplate}"
+                    Width="282"
+                    Margin="0,0,0,48" HorizontalAlignment="Center" VerticalAlignment="Bottom" />
 
         </Grid>
+        <!--#endregion-->
 
-        <!-- Transfer Status Grid-->
-        <Grid Grid.Row="1" Grid.Column="0" Background="{DynamicResource CutieBG01}">
-            <StackPanel HorizontalAlignment="Left" Margin="250,10,0,0" VerticalAlignment="Top" Orientation="Horizontal">
-                <TextBlock Text="Transfer Status :  " HorizontalAlignment="Center" FontSize="16" FontFamily="{StaticResource PoppinsRegular}" Style="{StaticResource CutieTextBlockStyle}"/>
-                <TextBlock Text="{Binding Total}" Margin="0,1,0,0" HorizontalAlignment="Center"  FontSize="16" FontFamily="{StaticResource PoppinsRegular}" Style="{StaticResource CutieTextBlockStyle}"/>
+        <!--#region  Transfer Status Grid-->
+        <Grid Grid.Row="1" Grid.Column="0"
+              Background="{DynamicResource CutieBG01}">
+
+            <!--#region  Status-->
+            <StackPanel Margin="250,10,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
+                        Orientation="Horizontal">
+                <TextBlock Text="Transfer Status :  "
+                           FontSize="16" FontFamily="{StaticResource PoppinsRegular}" Style="{StaticResource CutieTextBlockStyle}"
+                           HorizontalAlignment="Center" />
+                <TextBlock Text="{Binding Total}"
+                           FontSize="16" FontFamily="{StaticResource PoppinsRegular}" Style="{StaticResource CutieTextBlockStyle}"
+                           Margin="0,1,0,0" HorizontalAlignment="Center" />
             </StackPanel>
-            
-            
-            <TextBlock Text="{Binding Steps}" HorizontalAlignment="Left" Margin="10,46,0,0" VerticalAlignment="Top" FontSize="12" FontFamily="{StaticResource PoppinsRegular}" Style="{StaticResource CutieTextBlockStyle}"/>
-            <TextBlock Text="{Binding SubStep}" HorizontalAlignment="Left" Margin="10,75,0,0" VerticalAlignment="Top" FontSize="12" FontFamily="{StaticResource PoppinsRegular}" Style="{StaticResource CutieTextBlockStyle}"/>
+            <!--#endregion-->
 
-            <TextBlock Text="{Binding Speed}" HorizontalAlignment="Right" Margin="10,46,10,0" VerticalAlignment="Top" FontSize="12" FontFamily="{StaticResource PoppinsRegular}" Style="{StaticResource CutieTextBlockStyle}"/>
-            <TextBlock Text="{Binding Size}" HorizontalAlignment="Right" Margin="10,75,10,0" VerticalAlignment="Top" FontSize="12" FontFamily="{StaticResource PoppinsRegular}" Style="{StaticResource CutieTextBlockStyle}"/>
+            <!--#region Information panel-->
+            <TextBlock Text="{Binding Steps}"
+                       FontSize="12" FontFamily="{StaticResource PoppinsRegular}" Style="{StaticResource CutieTextBlockStyle}"
+                       Margin="10,46,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+            <TextBlock Text="{Binding SubStep}"
+                       FontSize="12" FontFamily="{StaticResource PoppinsRegular}" Style="{StaticResource CutieTextBlockStyle}"
+                       Margin="10,75,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
 
-            
+            <TextBlock Text="{Binding Speed}"
+                       FontSize="12" FontFamily="{StaticResource PoppinsRegular}" Style="{StaticResource CutieTextBlockStyle}"
+                       Margin="10,46,10,0" HorizontalAlignment="Right" VerticalAlignment="Top" />
+            <TextBlock Text="{Binding Size}"
+                       FontSize="12" FontFamily="{StaticResource PoppinsRegular}" Style="{StaticResource CutieTextBlockStyle}"
+                       Margin="10,75,10,0" HorizontalAlignment="Right" VerticalAlignment="Top" />
+            <!--#endregion-->
 
-            <ProgressBar  Value="{Binding BuildProgress}" IsIndeterminate="{Binding ProgressBarStyle}" Height="10" Margin="10,105,10,0" Grid.Row="1" VerticalAlignment="Top"/>
+            <!--  Progress Bar  -->
+            <ProgressBar Grid.Row="1"
+                         Height="10"
+                         Margin="10,105,10,0" VerticalAlignment="Top"
+                         IsIndeterminate="{Binding ProgressBarStyle}"
+                         Value="{Binding BuildProgress}" />
+
         </Grid>
+        <!--#endregion-->
 
-        <!-- Logs Grid-->
-        <Grid Grid.Row="0" Grid.Column="2" Grid.RowSpan="2" Background="{DynamicResource CutieBG01}">
+        <!--#region  Logs Grid-->
+        <Grid Grid.Row="0" Grid.RowSpan="2" Grid.Column="2"
+              Background="{DynamicResource CutieBG01}">
             <ScrollViewer>
-                <TextBlock TextWrapping="Wrap" Text="{Binding Logs}" Foreground="{DynamicResource QuasarTextColor}" FontFamily="{StaticResource PoppinsRegular}"/>
+                <TextBlock Text="{Binding Logs}"
+                           FontFamily="{StaticResource PoppinsRegular}" Foreground="{DynamicResource QuasarTextColor}" TextWrapping="Wrap" />
             </ScrollViewer>
         </Grid>
-
-        
-
-
-        
-
-
+        <!--#endregion-->
 
     </Grid>
+
 </UserControl>

@@ -1,4 +1,4 @@
-﻿using Quasar.Controls.Common.Models;
+﻿using Quasar.Common.Models;
 using Quasar.Controls.Mod.Models;
 using Quasar.Controls.Mod.ViewModels;
 using Quasar.Internal;
@@ -7,24 +7,20 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Runtime.InteropServices;
-using System.Security;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using log4net;
 using System.Windows.Data;
-using Quasar.Controls.Settings.Model;
+using Quasar.Settings.Models;
 using System.Windows.Input;
 using Quasar.Data.V2;
-using Quasar.Helpers.XML;
 using Quasar.Helpers.ModScanning;
-using Quasar.Compression;
 using Quasar.Helpers.Json;
 using Quasar.Helpers.Downloading;
 using Quasar.Helpers.Mod_Scanning;
 using Quasar.Internal.Tools;
-using Quasar.Models;
+using Quasar.MainUI.ViewModels;
+
 
 namespace Quasar.Controls.ModManagement.ViewModels
 {
@@ -338,6 +334,19 @@ namespace Quasar.Controls.ModManagement.ViewModels
                 return _AddManual;
             }
         }
+
+        private ICommand _ResetFilters { get; set; }
+        public ICommand ResetFilters
+        {
+            get
+            {
+                if (_ResetFilters == null)
+                {
+                    _ResetFilters = new RelayCommand(param => ResetFilter());
+                }
+                return _ResetFilters;
+            }
+        }
         #endregion
 
         public ModsViewModel(MainUIViewModel _MUVM, ILog _log)
@@ -398,6 +407,9 @@ namespace Quasar.Controls.ModManagement.ViewModels
                     break;
                 case "ShowContents":
                     ShowModContents(MLI);
+                    break;
+                case "Update":
+                    UpdateMod(MLI);
                     break;
                 default:
                     break;
@@ -495,6 +507,14 @@ namespace Quasar.Controls.ModManagement.ViewModels
             {
                 mli.ModListItemViewModel.AdvancedMode = val;
             }
+        }
+
+        public void ResetFilter()
+        {
+            SelectedGameAPICategory = null;
+            SearchText = "";
+            OnPropertyChanged("SelectedGameAPICategory");
+            OnPropertyChanged("SearchText");
         }
 
         //Mod List Item Actions
@@ -601,29 +621,12 @@ namespace Quasar.Controls.ModManagement.ViewModels
             CollectionViewSource.View.Refresh();
 
         }
-        public void UpdateMod()
+        public void UpdateMod(ModListItem MLI)
         {
-            /*
-           ModListItem element = (ModListItem)ManagementModListView.SelectedItem;
-           if (element != null)
-           {
-               //Getting local Mod
-               LibraryMod mod = Mods.Find(mm => mm.ID == element.LocalMod.ID && mm.TypeID == element.LocalMod.TypeID);
-               Game game = Games.Find(g => g.ID == mod.GameID);
-               GameModType mt = game.GameModTypes.Find(g => g.ID == mod.TypeID);
-               //Parsing mod info from API
-               APIMod newAPIMod = await APIRequest.GetAPIMod(mt.APIName, element.LocalMod.ID.ToString());
-
-               //Create Mod from API information
-               LibraryMod newmod = GetLibraryMod(newAPIMod, game);
-
-               if (mod.Updates < newmod.Updates)
-               {
-                   string[] newDL = await APIRequest.GetDownloadFileName(mt.APIName, element.LocalMod.ID.ToString());
-                   string quasarURL = APIRequest.GetQuasarDownloadURL(newDL[0], newDL[1], mt.APIName, element.LocalMod.ID.ToString());
-                   LaunchDownload(quasarURL);
-               }
-           }*/
+            
+            Application.Current.Dispatcher.Invoke((Action)delegate {
+                Task.Run(() => DownloadMod(APIRequest.GetQuasarDownloadURL("","", MLI.ModListItemViewModel.LibraryItem.APICategoryName, MLI.ModListItemViewModel.LibraryItem.ID.ToString())));
+            });
         }
         public void ShowModContents(ModListItem MLI)
         {
@@ -664,6 +667,7 @@ namespace Quasar.Controls.ModManagement.ViewModels
         //Mod List Item Downloading
         public void Download(QuasarDownload download)
         {
+
             Application.Current.Dispatcher.Invoke((Action)delegate {
                 Task.Run(() => DownloadMod(download.QuasarURL));
             });

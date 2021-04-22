@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using System.ComponentModel;
 
 
-namespace Quasar.Controls.Common.Models
+namespace Quasar.Common.Models
 {
     public sealed class NotifyTaskCompletion<TResult> : INotifyPropertyChanged
     {

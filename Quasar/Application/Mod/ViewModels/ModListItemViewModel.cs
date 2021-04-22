@@ -1,4 +1,4 @@
-﻿using Quasar.Controls.Common.Models;
+﻿using Quasar.Common.Models;
 using Quasar.Controls.ModManagement.ViewModels;
 using Quasar.Data.V2;
 using Quasar.FileSystem;
@@ -52,7 +52,7 @@ namespace Quasar.Controls.Mod.ViewModels
         #endregion
 
         #region Commands
-        private ICommand _TestModCommand { get; set; }
+        private ICommand _UpdateModCommand { get; set; }
         private ICommand _FileViewCommand { get; set; }
         private ICommand _DeleteModCommand { get; set; }
         private ICommand _AddModCommand { get; set; }
@@ -411,15 +411,15 @@ namespace Quasar.Controls.Mod.ViewModels
         #endregion
 
         #region Commands
-        public ICommand TestModCommand
+        public ICommand UpdateModCommand
         {
             get
             {
-                if (_TestModCommand == null)
+                if (_UpdateModCommand == null)
                 {
-                    _TestModCommand = new RelayCommand(param => LaunchTestWindow());
+                    _UpdateModCommand = new RelayCommand(param => UpdateMod());
                 }
-                return _TestModCommand;
+                return _UpdateModCommand;
             }
         }
         public ICommand FileViewCommand
@@ -499,6 +499,8 @@ namespace Quasar.Controls.Mod.ViewModels
         {
             Downloading = true;
             Smol = true;
+
+            EventSystem.Subscribe<LibraryItem>(Refresh);
         }
 
         public ModListItemViewModel(LibraryItem Mod, Game Gamu, ModsViewModel model, bool _Downloading = false)
@@ -513,6 +515,8 @@ namespace Quasar.Controls.Mod.ViewModels
             AdvancedMode = Properties.Settings.Default.EnableAdvanced;
 
             GetAuthors();
+
+            EventSystem.Subscribe<LibraryItem>(Refresh);
         }
 
         public ModListItemViewModel(string QuasarURL, ObservableCollection<Game> _Games, ObservableCollection<LibraryItem> _Mods, ModsViewModel model)
@@ -522,11 +526,19 @@ namespace Quasar.Controls.Mod.ViewModels
             Games = _Games;
             Mods = _Mods;
             MVM = model;
+
+            EventSystem.Subscribe<LibraryItem>(Refresh);
         }
 
         #region Actions
         
-
+        public void Refresh(LibraryItem li)
+        {
+            if(li.ID == LibraryItem.ID)
+            {
+                OnPropertyChanged("LibraryItem");
+            }
+        }
         public void Extract()
         {
 
@@ -644,9 +656,10 @@ namespace Quasar.Controls.Mod.ViewModels
             new FileView(new ModFileManager(LibraryItem, Game).LibraryContentFolderPath, LibraryItem.Name).Show();
         }
 
-        public void LaunchTestWindow()
+        public void UpdateMod()
         {
-            ModFileManager mfm = new ModFileManager(LibraryItem, MVM.MUVM.Games[0]);
+            ActionRequested = "Update";
+            EventSystem.Publish<ModListItemViewModel>(this);
             //new DefinitionsWindow(mfm, "", "", "", "", MVM.GameDatas[0].Categories.ToList(), MVM.InternalModTypes.ToList(), 0).Show();
         }
 

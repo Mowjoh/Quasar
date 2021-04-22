@@ -1,5 +1,5 @@
 ﻿using MediaDevices;
-using Quasar.Controls.Common.Models;
+using Quasar.Common.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Quasar.Controls.Build.Models
+namespace Quasar.Build.Models
 {
     public class USBDrive : ObservableObject
     {

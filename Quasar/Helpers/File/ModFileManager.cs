@@ -159,6 +159,20 @@ namespace Quasar.FileSystem
             }
         }
 
+        public void ImportFolder(string FolderPath)
+        {
+            //Creating destination
+            if (!Directory.Exists(LibraryContentFolderPath))
+            {
+                Directory.CreateDirectory(LibraryContentFolderPath);
+            }
+            //Emptying it if necessary
+            FileOperation.ClearFolder(LibraryContentFolderPath);
+
+            //Copying mod files
+            FileOperation.CheckCopyFolder(FolderPath, LibraryContentFolderPath);
+        }
+
 
     }
 }
