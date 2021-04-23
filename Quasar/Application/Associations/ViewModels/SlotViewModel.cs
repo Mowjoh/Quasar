@@ -1,6 +1,6 @@
 ﻿using Quasar.Common.Models;
 using Quasar.Data.V2;
-using Quasar.Internal;
+using Quasar.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

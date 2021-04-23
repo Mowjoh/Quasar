@@ -20,6 +20,7 @@ namespace Quasar.Build.Models
         public abstract bool CheckFileExists(string FilePath);
         public abstract bool SendFile(string SourceFilePath, string FilePath);
         public abstract bool DeleteFile(string FilePath);
+        public abstract bool CreateFolder(string FolderPath);
         public abstract bool DeleteFolder(string FolderPath);
         public abstract void GetFile(string Remote, string DestinationFilePath);
         public abstract ObservableCollection<ModFile> GetRemoteFiles(string FolderPath);
@@ -141,6 +142,18 @@ namespace Quasar.Build.Models
                 return false;
             }
         }
+        public override bool CreateFolder(string FolderPath)
+        {
+            try
+            {
+                Client.CreateDirectory(FolderPath);
+                return true;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+        }
         public override bool DeleteFolder(string FolderPath)
         {
             try
@@ -236,6 +249,18 @@ namespace Quasar.Build.Models
             File.Delete(LetterPath + FilePath);
             return true;
         }
+        public override bool CreateFolder(string FolderPath)
+        {
+            try
+            {
+                Directory.CreateDirectory(LetterPath + FolderPath);
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+            return true;
+        }
         public override bool DeleteFolder(string FolderPath)
         {
             try
@@ -328,6 +353,11 @@ namespace Quasar.Build.Models
                 BVM.Log.Error(e.Message);
             }
             
+            return false;
+        }
+        public override bool CreateFolder(string FolderPath)
+        {
+            MediaD.DeleteDirectory("sdcard\\" + FolderPath, true);
             return false;
         }
         public override bool DeleteFolder(string FolderPath)

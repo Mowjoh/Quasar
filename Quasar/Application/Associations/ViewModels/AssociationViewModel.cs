@@ -5,7 +5,7 @@ using Quasar.Associations.Views;
 using Quasar.Common.Models;
 using Quasar.Data.V2;
 using Quasar.Helpers.Json;
-using Quasar.Internal;
+using Quasar.Helpers;
 using Quasar.MainUI.ViewModels;
 using System;
 using System.Collections.Generic;

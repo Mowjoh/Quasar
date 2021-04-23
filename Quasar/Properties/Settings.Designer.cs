@@ -272,27 +272,6 @@ namespace Quasar.Properties {
             }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("f165a49418f0ed6c5f61e9e233889d91")]
-        public string Mada {
-            get {
-                return ((string)(this["Mada"]));
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool EnablePastebin {
-            get {
-                return ((bool)(this["EnablePastebin"]));
-            }
-            set {
-                this["EnablePastebin"] = value;
-            }
-        }
-        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
@@ -422,6 +401,17 @@ namespace Quasar.Properties {
             }
             set {
                 this["ModLoaderSetupState"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.DateTime BackupDate {
+            get {
+                return ((global::System.DateTime)(this["BackupDate"]));
+            }
+            set {
+                this["BackupDate"] = value;
             }
         }
     }

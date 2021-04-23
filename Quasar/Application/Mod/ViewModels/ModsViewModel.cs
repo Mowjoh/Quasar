@@ -1,7 +1,7 @@
 ﻿using Quasar.Common.Models;
 using Quasar.Controls.Mod.Models;
 using Quasar.Controls.Mod.ViewModels;
-using Quasar.Internal;
+using Quasar.Helpers;
 using Quasar.FileSystem;
 using System;
 using System.Collections.Generic;
@@ -18,9 +18,9 @@ using Quasar.Helpers.ModScanning;
 using Quasar.Helpers.Json;
 using Quasar.Helpers.Downloading;
 using Quasar.Helpers.Mod_Scanning;
-using Quasar.Internal.Tools;
+using Quasar.Helpers.Tools;
 using Quasar.MainUI.ViewModels;
-
+using Quasar.Helpers.API;
 
 namespace Quasar.Controls.ModManagement.ViewModels
 {

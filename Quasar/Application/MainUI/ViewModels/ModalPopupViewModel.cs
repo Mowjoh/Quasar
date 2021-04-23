@@ -1,5 +1,5 @@
 ﻿using Quasar.Common.Models;
-using Quasar.Internal;
+using Quasar.Helpers;
 using System.Windows.Input;
 
 namespace Quasar.MainUI.ViewModels

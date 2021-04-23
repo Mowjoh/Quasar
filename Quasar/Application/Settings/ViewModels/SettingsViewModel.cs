@@ -2,7 +2,7 @@
 using Quasar.Common.Models;
 using Quasar.Settings.Views;
 using Quasar.Helpers.Quasar_Management;
-using Quasar.Internal;
+using Quasar.Helpers;
 using System;
 using System.Collections.ObjectModel;
 using System.Text.RegularExpressions;

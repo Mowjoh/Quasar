@@ -1,35 +1,33 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Threading;
-using System.Windows;
-using System.Windows.Controls;
-using System.IO;
-using Quasar.Controls;
-using Quasar.FileSystem;
 using Quasar.Controls.Mod.ViewModels;
 using Quasar.Helpers.FileOperations;
 using Quasar.Controls.Mod.Models;
 
-namespace Quasar
+namespace Quasar.Helpers.Downloading
 {
-     class ModDownloader
+    class ModDownloader
     {
-        //Setting Default Directory Path
+        //Parsing Default Directory Path
         readonly string DefaultDirectoryPath = Properties.Settings.Default["DefaultDir"].ToString();
 
         ModListItemViewModel ModListItemView;
 
+        /// <summary>
+        /// Basic Constructor
+        /// </summary>
+        /// <param name="_MIVM">Mod List Item View Model to update</param>
         public ModDownloader(ModListItemViewModel _MIVM)
         {
             ModListItemView = _MIVM;
         }
 
-        //The big boi, the download Task
+        /// <summary>
+        /// The big boi, the download process
+        /// </summary>
+        /// <param name="_QuasarDownload">Quasar Download item to process</param>
+        /// <returns></returns>
         public async Task<bool> DownloadArchiveAsync(QuasarDownload _QuasarDownload)
         {
             //Getting info from Quasar URL
@@ -63,6 +61,12 @@ namespace Quasar
             return true;
         }
 
+        /// <summary>
+        /// Async Download Task
+        /// </summary>
+        /// <param name="_URL">File URL</param>
+        /// <param name="_Destination">Destination file path</param>
+        /// <returns></returns>
         public static async Task<bool> DownloadFile(string _URL, string _Destination)
         {
             //File Download

@@ -1,4 +1,4 @@
-﻿using Quasar.Compression;
+﻿using Quasar.Helpers.Compression;
 using Quasar.Controls;
 using Quasar.Common.Models;
 using Quasar.Controls.Mod.Models;
@@ -10,18 +10,38 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Quasar.MainUI.ViewModels;
+using Quasar.Helpers.API;
 
 namespace Quasar.Helpers.Downloading
 {
     public class ModManager : ObservableObject
     {
-        #region Private properties
+        #region Data
+        public QuasarDownload QuasarURL { get; set; }
+        public LibraryItem LibraryItem { get; set; }
+        public APIMod APIMod { get; set; }
+        public ModListItem ModListItem { get; set; }
+        public ModFileManager ModFileManager { get; set; }
+        public ObservableCollection<ContentItem> ScannedContents { get; set; }
+        #endregion
+
+        #region Paths
+
+        public string DownloadDestinationFilePath { get; set; }
+        public string ArchiveContentFolderPath { get; set; }
+        public string LibraryContentFolderPath { get; set; }
+
+        #endregion
+
+        #region Work Status
+
+        #region Private
         private bool _DownloadNeeded { get; set; }
         private bool _UpdateNeeded { get; set; }
         private bool _ScanNeeded { get; set; }
         #endregion
 
-        #region Working references
+        #region Public
         public bool DownloadNeeded
         {
             get => _DownloadNeeded;
@@ -57,25 +77,25 @@ namespace Quasar.Helpers.Downloading
                 return (DownloadNeeded || UpdateNeeded || ScanNeeded);
             }
         }
-
-        public string DownloadDestinationFilePath { get; set; }
-        public string ArchiveContentFolderPath { get; set; }
-        public string LibraryContentFolderPath { get; set; }
-
-        public QuasarDownload QuasarURL { get; set; }
-        public LibraryItem LibraryItem { get; set; }
-        public APIMod APIMod { get; set; }
-        public ModListItem ModListItem {get; set;}
-        public ModFileManager ModFileManager { get; set; }
-        public ObservableCollection<ContentItem> ScannedContents { get; set; }
         #endregion
 
+        #endregion
+
+        /// <summary>
+        /// Basic Constructor
+        /// </summary>
+        /// <param name="_QuasarURL"></param>
         public ModManager(string _QuasarURL)
         {
             QuasarURL = new QuasarDownload() { QuasarURL = _QuasarURL };
         }
 
         #region Evaluation
+        /// <summary>
+        /// Evaluates if the mod needs to be downloaded or updated
+        /// </summary>
+        /// <param name="MUVM"></param>
+        /// <returns>Success State</returns>
         public async Task<bool> EvaluateActionNeeded(MainUIViewModel MUVM)
         {
             try
@@ -134,14 +154,23 @@ namespace Quasar.Helpers.Downloading
                 return false;
             }
         }
+
+        /// <summary>
+        /// Parses information from Gamebanana's API about this mod
+        /// </summary>
+        /// <returns></returns>
         public async Task<bool> GetAPIModInformation()
         {
-            APIMod = await APIRequest.GetAPIMod(QuasarURL.APICategoryName, QuasarURL.LibraryItemID);
+            APIMod = await APIRequest.GetModInformation(QuasarURL.APICategoryName, QuasarURL.LibraryItemID);
             return true;
         }
         #endregion
 
         #region Actions
+        /// <summary>
+        /// Takes action based on what's needed
+        /// </summary>
+        /// <returns>Success state</returns>
         public async Task<bool> TakeAction()
         {
             bool ProcessAborted = true;
@@ -181,18 +210,33 @@ namespace Quasar.Helpers.Downloading
 
             return false;
         }
+
+        /// <summary>
+        /// Launches the download sequence
+        /// </summary>
+        /// <returns>Success state</returns>
         public async Task<bool> Download()
         {
             ModDownloader modDownloader = new ModDownloader(ModListItem.ModListItemViewModel);
             bool success = await modDownloader.DownloadArchiveAsync(QuasarURL);
             return success;
         }
+
+        /// <summary>
+        /// Launches the update sequence
+        /// </summary>
+        /// <returns>Success state</returns>
         public async Task<bool> Update()
         {
             ModDownloader modDownloader = new ModDownloader(ModListItem.ModListItemViewModel);
             bool success = await modDownloader.DownloadArchiveAsync(QuasarURL);
             return success;
         }
+
+        /// <summary>
+        /// Launches the extraction sequence
+        /// </summary>
+        /// <returns>Success Status</returns>
         public async Task<bool> Extract()
         {
             ModFileManager = new ModFileManager(LibraryItem, ModListItem.ModListItemViewModel.Game, QuasarURL.ModArchiveFormat);
@@ -200,6 +244,11 @@ namespace Quasar.Helpers.Downloading
             bool success = await un.ExtractArchiveAsync(ModFileManager.DownloadDestinationFilePath, ModFileManager.ArchiveContentFolderPath, QuasarURL.ModArchiveFormat) == 0;
             return success;
         }
+
+        /// <summary>
+        /// Moves the download to the library folder
+        /// </summary>
+        /// <returns></returns>
         public async Task<bool> ProcessExtractedFiles()
         {
             bool success = await ModFileManager.MoveDownload() == 0;
@@ -207,6 +256,12 @@ namespace Quasar.Helpers.Downloading
             return success;
         }
 
+        /// <summary>
+        /// Scans the mod files
+        /// </summary>
+        /// <param name="QuasarModTypes"></param>
+        /// <param name="Game"></param>
+        /// <returns>Success Status</returns>
         public async Task<bool> Scan(ObservableCollection<QuasarModType> QuasarModTypes, Game Game)
         {
             ModListItem.ModListItemViewModel.ModStatusValue = "Scanning mod files";

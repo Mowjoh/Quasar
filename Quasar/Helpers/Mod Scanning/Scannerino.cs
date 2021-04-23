@@ -1,5 +1,5 @@
 ﻿using Quasar.Data.V2;
-using Quasar.Internal.Tools;
+using Quasar.Helpers.Tools;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

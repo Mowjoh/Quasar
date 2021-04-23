@@ -15,7 +15,7 @@ using Quasar.Data.V2;
 using Quasar.Helpers.Json;
 using Quasar.Helpers.ModScanning;
 using Quasar.Helpers.Quasar_Management;
-using Quasar.Internal;
+using Quasar.Helpers;
 using Quasar.Internal.Tools;
 using Quasar.NamedPipes;
 using System;
@@ -79,6 +79,7 @@ namespace Quasar.MainUI.ViewModels
         public ObservableCollection<Workspace> Workspaces { get; set; }
         public ObservableCollection<LibraryItem> Library { get; set; }
         public ObservableCollection<ContentItem> ContentItems { get; set; }
+        public bool UserDataLoaded { get; set; }
         #endregion
 
         #region Views
@@ -490,6 +491,7 @@ namespace Quasar.MainUI.ViewModels
                 EventSystem.Subscribe<ModalEvent>(ProcessModalEvent);
 
                 InitialWarnings();
+                BackupRestoreUserData(UserDataLoaded);
 
 
             }
@@ -509,17 +511,25 @@ namespace Quasar.MainUI.ViewModels
         public void LoadData()
         {
             //Loading User Data
-            Workspaces = JSonHelper.GetWorkspaces();
-            if (Workspaces.Count == 0)
+            try
             {
-                InstallManager.CreateBaseWorkspace();
                 Workspaces = JSonHelper.GetWorkspaces();
+                Library = JSonHelper.GetLibrary();
+                ContentItems = JSonHelper.GetContentItems();
+
+                if (Workspaces.Count == 0)
+                {
+                    InstallManager.CreateBaseWorkspace();
+                    Workspaces = JSonHelper.GetWorkspaces();
+                }
+                ActiveWorkspace = Workspaces[0];
+
+                UserDataLoaded = true;
             }
-            ActiveWorkspace = Workspaces[0];
-
-
-            Library = JSonHelper.GetLibrary();
-            ContentItems = JSonHelper.GetContentItems();
+            catch(Exception e)
+            {
+                UserDataLoaded = false;
+            }
 
             //Loading Resource Data
             Games = JSonHelper.GetGames();
@@ -528,6 +538,40 @@ namespace Quasar.MainUI.ViewModels
             ModLoaders = JSonHelper.GetModLoaders();
 
         }
+
+        /// <summary>
+        /// Backs up data or restores it depending on the User Data Load success
+        /// </summary>
+        /// <param name="LoadSuccess">User Data Load success state</param>
+        public void BackupRestoreUserData(bool LoadSuccess)
+        {
+            if (LoadSuccess)
+            {
+                InstallManager.BackupUserData();
+            }
+            else
+            {
+                //Sending modal event to warn the user
+                ModalEvent meuh = new ModalEvent()
+                {
+                    EventName = "LoadTrouble",
+                    Action = "Show",
+                    Type = ModalType.Warning,
+                    Title = "Data Corruption",
+                    Content = String.Format("Quasar could not load your data. \rA backup will be loaded instead \r(Made on : {0})",Properties.Settings.Default.BackupDate.ToLongDateString()),
+                    OkButtonText = "I understand"
+                };
+
+                EventSystem.Publish<ModalEvent>(meuh);
+
+                //Restoring data
+                InstallManager.RestoreUserData();
+
+                //Loading Data
+                LoadData();
+            }
+        }
+
         /// <summary>
         /// Sets up all the Views with their ViewModels
         /// </summary>

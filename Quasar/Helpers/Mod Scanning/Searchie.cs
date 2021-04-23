@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using Quasar.Data.V1;
 using Quasar.FileSystem;
-using Quasar.Internal.Tools;
+using Quasar.Helpers.Tools;
 
 namespace Quasar.Helpers.ModScanning
 {

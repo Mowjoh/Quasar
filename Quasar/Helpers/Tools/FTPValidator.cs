@@ -1,9 +1,6 @@
 ﻿using FluentFTP;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
@@ -11,7 +8,11 @@ namespace Quasar.Helpers.Tools
 {
     static class FTPValidator
     {
-        private static async Task<bool> validateConnection()
+        /// <summary>
+        /// Validates if the provided info can lead to a successful FTP connection
+        /// </summary>
+        /// <returns>Connection status</returns>
+        private static async Task<bool> ValidateFTPConnection()
         {
             string address = Properties.Settings.Default.FTPAddress;
             string username = Properties.Settings.Default.FTPUN;
@@ -46,6 +47,12 @@ namespace Quasar.Helpers.Tools
 
             return true;
         }
+
+        /// <summary>
+        /// Validates an IP with regex
+        /// </summary>
+        /// <param name="IPAddress"></param>
+        /// <returns>Match state</returns>
         private static bool validateIP(string IPAddress)
         {
             Regex IP = new Regex(@"\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}");
@@ -53,6 +60,11 @@ namespace Quasar.Helpers.Tools
             return IP.IsMatch(IPAddress);
         }
 
+        /// <summary>
+        /// Validates a Port value
+        /// </summary>
+        /// <param name="Port"></param>
+        /// <returns>Match state</returns>
         private static bool validatePort(string Port)
         {
             int val;

@@ -102,7 +102,6 @@ namespace Quasar.Build.Models
             await GetLocalFileList();
             ViewModel.Log.Debug("Got Local File List");
 
-
             await GetDistantFileList();
             ViewModel.Log.Debug("Got Distant File List");
 
@@ -133,10 +132,6 @@ namespace Quasar.Build.Models
             }
 
             SaveAndSendIndex();
-
-
-
-            
             
             return false;
         }
@@ -169,7 +164,16 @@ namespace Quasar.Build.Models
         {
             if (ModLoader != 4)
             {
-                ARCropolisHelper.ModifyTouchmARCConfig(WorkspaceName, false);
+                if(ModLoader == 1)
+                {
+                    ARCropolisHelper.ModifyTouchmARCConfig(WorkspaceName);
+                }
+                else
+                {
+                    ARCropolisHelper.ModifyTouchmARCConfig(WorkspaceName);
+                }
+                Writer.SendFile(Properties.Settings.Default.DefaultDir + "\\Library\\arcropolis.toml", "atmosphere\\contents\\01006A800016E000\\romfs\\arcropolis.toml");
+                
             }
             ViewModel.BuildLog("Info", "Finished modloader setup");
         }
@@ -246,6 +250,7 @@ namespace Quasar.Build.Models
             //List files for deletion
             getDeleteFileList();
 
+            SetupWorkspaceFolders();
         }
         public override async Task DeleteDifferences()
         {
@@ -409,6 +414,21 @@ namespace Quasar.Build.Models
             ViewModel.SetTotal(cnt.ToString(), tot.ToString());
         }
 
+        public void SetupWorkspaceFolders()
+        {
+            if (WorkspacePath.Split('/')[WorkspacePath.Split('/').Count() - 2] == "arc")
+            {
+                if (!Writer.CheckFolderExists(WorkspacePath.Substring(0, WorkspacePath.Length - 4) + @"/umm/"))
+                    Writer.CreateFolder(WorkspacePath.Substring(0, WorkspacePath.Length -4) + @"/umm/");
+            }
+
+            if (WorkspacePath.Split('/')[WorkspacePath.Split('/').Count() - 2] == "umm")
+            {
+                if (!Writer.CheckFolderExists(WorkspacePath.Substring(0, WorkspacePath.Length - 4) + @"/arc/"))
+                    Writer.CreateFolder(WorkspacePath.Substring(0, WorkspacePath.Length - 4) + @"/arc/");
+            }
+            
+        }
         
     }
 

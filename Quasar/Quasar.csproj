@@ -171,7 +171,6 @@
     <Compile Include="Data\V2\Game.cs" />
     <Compile Include="Data\V2\Library.cs" />
     <Compile Include="Data\V2\Workspace.cs" />
-    <Compile Include="Helpers\Downloading\ModUpdater.cs" />
     <Compile Include="Helpers\EventSystem.cs" />
     <Compile Include="Helpers\File\ModFileManager.cs" />
     <Compile Include="Helpers\Mod Scanning\Scannerino.cs" />
@@ -343,11 +342,21 @@
     <Content Include="Resources\ModLoaders.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\ModLoaders\ARCropolis\atmosphere\contents\01006A800016E000\manual_html\html-document\contents.htdocs\arcropolis\selector\css\selector.css" />
-    <Content Include="Resources\ModLoaders\ARCropolis\atmosphere\contents\01006A800016E000\manual_html\html-document\contents.htdocs\arcropolis\selector\img\back.svg" />
-    <Content Include="Resources\ModLoaders\ARCropolis\atmosphere\contents\01006A800016E000\manual_html\html-document\contents.htdocs\arcropolis\selector\img\check.svg" />
-    <Content Include="Resources\ModLoaders\ARCropolis\atmosphere\contents\01006A800016E000\manual_html\html-document\contents.htdocs\arcropolis\selector\js\selector.js" />
-    <Content Include="Resources\ModLoaders\ARCropolis\atmosphere\contents\01006A800016E000\manual_html\html-document\contents.htdocs\arcropolis\selector\templates\index.html" />
+    <Content Include="Resources\ModLoaders\ARCropolis\atmosphere\contents\01006A800016E000\manual_html\html-document\contents.htdocs\arcropolis\selector\css\selector.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\ModLoaders\ARCropolis\atmosphere\contents\01006A800016E000\manual_html\html-document\contents.htdocs\arcropolis\selector\img\back.svg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\ModLoaders\ARCropolis\atmosphere\contents\01006A800016E000\manual_html\html-document\contents.htdocs\arcropolis\selector\img\check.svg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\ModLoaders\ARCropolis\atmosphere\contents\01006A800016E000\manual_html\html-document\contents.htdocs\arcropolis\selector\js\selector.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\ModLoaders\ARCropolis\atmosphere\contents\01006A800016E000\manual_html\html-document\contents.htdocs\arcropolis\selector\templates\index.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Resources\ModTypes.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

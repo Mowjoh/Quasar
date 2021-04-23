@@ -1,32 +1,35 @@
-﻿using Quasar.Controls;
-using Quasar.Controls.Mod.ViewModels;
+﻿using Quasar.Controls.Mod.ViewModels;
 using SharpCompress.Archives;
 using SharpCompress.Archives.Rar;
 using SharpCompress.Archives.SevenZip;
 using SharpCompress.Archives.Zip;
 using SharpCompress.Common;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Threading;
 
-namespace Quasar.Compression
+namespace Quasar.Helpers.Compression
 {
     public class Unarchiver
     {
+        //View Model for UI Updates
         ModListItemViewModel ModListItemViewModel;
 
+        /// <summary>
+        /// Basic Constructor
+        /// </summary>
+        /// <param name="mli">Mod List Item View Model</param>
         public Unarchiver(ModListItemViewModel mli)
         {
             ModListItemViewModel = mli;
         }
 
-        //Archive Extraction async process
+        /// <summary>
+        /// Archive Extraction async process
+        /// </summary>
+        /// <param name="_ArchiveSource"></param>
+        /// <param name="ArchiveDestination"></param>
+        /// <param name="_ArchiveType"></param>
+        /// <returns></returns>
         public async Task<int> ExtractArchiveAsync(string _ArchiveSource, string ArchiveDestination, string _ArchiveType)
         {
             //Launching Extraction Task
@@ -35,7 +38,13 @@ namespace Quasar.Compression
             return 0;
         }
 
-        //Archive Extraction Task
+        /// <summary>
+        /// Archive Extraction Task
+        /// </summary>
+        /// <param name="_ArchiveSource">Source file path</param>
+        /// <param name="ArchiveDestination">Destination folder path</param>
+        /// <param name="_ArchiveType">Archive extension</param>
+        /// <returns></returns>
         public Task<int> Extract(string _ArchiveSource, string ArchiveDestination, string _ArchiveType)
         {
             switch (_ArchiveType)

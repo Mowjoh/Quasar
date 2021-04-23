@@ -1,6 +1,6 @@
 ﻿using Quasar.Common.Models;
 using Quasar.Settings.Models;
-using Quasar.Internal;
+using Quasar.Helpers;
 using System;
 using System.Linq;
 using System.Windows.Input;

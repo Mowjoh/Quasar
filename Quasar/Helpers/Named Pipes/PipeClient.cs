@@ -1,20 +1,18 @@
 ﻿using log4net;
 using NamedPipeWrapper;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Quasar.NamedPipes
 {
     static class PipeClient
     {
         
-
+        /// <summary>
+        /// Starts the Pipe Client
+        /// </summary>
+        /// <param name="_PipeName"></param>
+        /// <param name="_Arguments"></param>
+        /// <param name="log"></param>
         public static void StartPipeClient(string _PipeName, string _Arguments, ILog log)
         {
             NamedPipeClient<string> PipeClient;
@@ -55,6 +53,11 @@ namespace Quasar.NamedPipes
             PipeClient.Stop();
         }
 
+        /// <summary>
+        /// Sends a message through the pipe
+        /// </summary>
+        /// <param name="_Arguments"></param>
+        /// <param name="_PipeClient"></param>
         public static void startMessage(string _Arguments, NamedPipeClient<string> _PipeClient)
         {
             _PipeClient.PushMessage(_Arguments);
