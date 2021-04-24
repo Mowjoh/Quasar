@@ -107,6 +107,8 @@ namespace Quasar.MainUI.ViewModels
         private bool _AdvancedMode { get; set; }
         private bool _Updating { get; set; } = false;
         private bool _UpdateFinished { get; set; } = false;
+
+        private bool _TabLocked { get; set; }
         #endregion
 
         #region Public
@@ -127,19 +129,22 @@ namespace Quasar.MainUI.ViewModels
             get => _SelectedTabItem;
             set
             {
-                if (_SelectedTabItem == value)
-                    return;
+                if (!TabLocked)
+                {
+                    if (_SelectedTabItem == value)
+                        return;
 
-                if ((string)value.Header == "Overview")
-                {
-                    MVM.ReloadAllStats();
+                    if ((string)value.Header == "Overview")
+                    {
+                        MVM.ReloadAllStats();
+                    }
+                    if ((string)value.Header == "Management")
+                    {
+                        AVM.RefreshSlotData();
+                    }
+                    _SelectedTabItem = value;
+                    OnPropertyChanged("SelectedTabItem");
                 }
-                if ((string)value.Header == "Management")
-                {
-                    AVM.RefreshSlotData();
-                }
-                _SelectedTabItem = value;
-                OnPropertyChanged("SelectedTabItem");
             }
         }
         public ModsView ModsView
@@ -358,6 +363,15 @@ namespace Quasar.MainUI.ViewModels
             {
                 _UpdateFinished = value;
                 OnPropertyChanged("UpdateFinished");
+            }
+        }
+        public bool TabLocked
+        {
+            get => _TabLocked;
+            set
+            {
+                _TabLocked = value;
+                OnPropertyChanged("TabLocked");
             }
         }
         #endregion
@@ -782,6 +796,10 @@ namespace Quasar.MainUI.ViewModels
         /// <param name="Setting"></param>
         public void SettingChangedEvent(SettingItem Setting)
         {
+            if (Setting.SettingName == "TabLock")
+            {
+                TabLocked = Setting.IsChecked;
+            }
             if (Setting.SettingName == "EnableCreator")
             {
                 CreatorMode = Setting.IsChecked;

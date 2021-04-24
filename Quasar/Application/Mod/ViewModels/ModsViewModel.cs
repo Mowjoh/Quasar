@@ -512,6 +512,15 @@ namespace Quasar.Controls.ModManagement.ViewModels
             //If there is no Mod Manager already doing something for this mod
             if(!ActiveModManagers.Any(m => m.QuasarURL.LibraryItemID == MM.QuasarURL.LibraryItemID))
             {
+                if (ActiveModManagers.Count == 0)
+                {
+                    EventSystem.Publish<SettingItem>(new SettingItem
+                    {
+                        IsChecked = true,
+                        SettingName = "TabLock"
+                    });
+                }
+
                 //Adding it to the active list
                 ActiveModManagers.Add(MM);
 
@@ -571,12 +580,16 @@ namespace Quasar.Controls.ModManagement.ViewModels
                         MLI.ModListItemViewModel.Downloading = false;
                     }
                 }
-                else
-                {
-                    
-                }
                 
                 ActiveModManagers.Remove(MM);
+                if(ActiveModManagers.Count == 0)
+                {
+                    EventSystem.Publish<SettingItem>(new SettingItem
+                    {
+                        IsChecked = false,
+                        SettingName = "TabLock"
+                    });
+                }
             }
 
             return true;

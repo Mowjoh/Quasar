@@ -10,6 +10,7 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Quasar.MainUI.ViewModels;
+using Quasar.Settings.Models;
 
 namespace Quasar.Build.ViewModels
 {
@@ -415,6 +416,13 @@ namespace Quasar.Build.ViewModels
             SetTotal("0" , "0");
             Building = false;
             BuildLog("Info", "Transfer Process End");
+
+            EventSystem.Publish<SettingItem>(new SettingItem
+            {
+                IsChecked = false,
+                SettingName = "TabLock"
+            });
+
         }
         #endregion
 
@@ -424,6 +432,13 @@ namespace Quasar.Build.ViewModels
         /// </summary>
         public async void Build()
         {
+            //Setting Tab Lock ON
+            EventSystem.Publish<SettingItem>(new SettingItem
+            {
+                IsChecked = true,
+                SettingName = "TabLock"
+            });
+
             ResetLogs();
             BuildLog("Info", "Transfer Process Start :");
             bool ok = true;

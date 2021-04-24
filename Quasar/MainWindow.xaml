@@ -3,7 +3,7 @@
         xmlns:Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2" xmlns:controls="clr-namespace:Quasar.Controls" xmlns:fa="http://schemas.fontawesome.io/icons/" xmlns:local="clr-namespace:Quasar" xmlns:p="clr-namespace:Quasar.Properties" xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase" xmlns:views="clr-namespace:Quasar.Build.Views" xmlns:views1="clr-namespace:Quasar.MainUI.Views"
         x:Name="MainWindow1" Title="{x:Static p:Resources.Quasar_WindowTitle}"
         Width="1280" Height="720" MinWidth="1080" MinHeight="720"
-        DataContext="{Binding RelativeSource={RelativeSource Self}}" Icon="Quasar.ico" Loaded="MainWindow1_Loaded" WindowStartupLocation="CenterScreen">
+        Closing="AskQuitQuasar" DataContext="{Binding RelativeSource={RelativeSource Self}}" Icon="Quasar.ico" WindowStartupLocation="CenterScreen">
 
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis" />
@@ -14,10 +14,12 @@
     </Window.TaskbarItemInfo>
 
     <Grid x:Name="QuasarGrid">
+
         <Grid x:Name="OverlayGrid"
               Margin="0,0,0,0" Panel.ZIndex="1000">
             <views1:ModalPopup DataContext="{Binding ModalPopupViewModel}" />
         </Grid>
+
         <Grid x:Name="OnboardingGrid"
               Margin="0,0,0,0" Panel.ZIndex="1000"
               Visibility="{Binding OnboardingVisible, Converter={StaticResource BoolToVis}}">
@@ -105,12 +107,15 @@
                            Margin="1000,380,40,0" HorizontalAlignment="Right" />
             </Grid>
         </Grid>
+
         <Grid x:Name="AppGrid">
+
             <TabControl x:Name="NewTabControl"
                         ItemsSource="{Binding TabItems}" SelectedItem="{Binding SelectedTabItem}"
                         Grid.Column="1"
                         Background="{DynamicResource QD1}"
                         BorderThickness="0">
+
                 <TabControl.Resources>
                     <Style TargetType="{x:Type TabItem}">
                         <Setter Property="Template">
@@ -159,8 +164,11 @@
                         <Setter Property="Background" Value="{DynamicResource QD0}" />
                     </Style>
                 </TabControl.Resources>
+
             </TabControl>
 
         </Grid>
+
     </Grid>
+
 </Window>
