@@ -1,15 +1,14 @@
-﻿using Quasar.Common.Models;
+﻿using log4net;
+using Quasar.Common.Models;
 using Quasar.Controls.ModManagement.ViewModels;
 using Quasar.Data.V2;
 using Quasar.FileSystem;
-using Quasar.Internal;
+using Quasar.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -20,52 +19,24 @@ namespace Quasar.Controls.Mod.ViewModels
 {
     public class ModListItemViewModel : ObservableObject
     {
-        #region Fields
 
         #region Data
         private ObservableCollection<Game> _Games { get; set; }
         private Game _Game { get; set; }
         private LibraryItem _LibraryMod { get; set; }
         private ObservableCollection<LibraryItem> _Mods { get; set; }
-        
+
         private ObservableCollection<Object> _Authors { get; set; }
         private ObservableCollection<Object> _Roles { get; set; }
 
         private string _ActionRequested { get; set; }
 
-        #endregion
-
-        #region Working References
-        private String _ModStatusValue { get; set; }
-        private String _ModStatusTextValue { get; set; }
-        private string _ContentStatText { get; set; }
-        private int _ProgressBarValue { get; set; }
-        private int _ContentStatValue { get; set; }
-        private bool _Downloading { get; set; }
-        private bool _DownloadFailed { get; set; } = false;
-        private bool _CreatorMode { get; set; }
-        private bool _AdvancedMode { get; set; }
-        private bool _Smol { get; set; }
-        private Rect _Rekt { get; set; }
-        private Rect _Rekta { get; set; }
-        private Uri _ImageSource { get; set; }
-        #endregion
-
-        #region Commands
-        private ICommand _UpdateModCommand { get; set; }
-        private ICommand _FileViewCommand { get; set; }
-        private ICommand _DeleteModCommand { get; set; }
-        private ICommand _AddModCommand { get; set; }
-        private ICommand _ShowContentsCommand { get; set; }
-        private ICommand _RetryDownloadCommand { get; set; }
-        private ICommand _BigSmolCommand { get; set; }
-        #endregion
+        public ModsViewModel MVM { get; set; }
+        #region Private
 
         #endregion
 
-        #region Properties
-
-        #region Data
+        #region Public
         public ObservableCollection<Game> Games
         {
             get => _Games;
@@ -143,11 +114,11 @@ namespace Quasar.Controls.Mod.ViewModels
                 }
             }
         }
-        public string APISubCategoryName 
+        public string APISubCategoryName
         {
             get
             {
-                if(LibraryItem != null)
+                if (LibraryItem != null)
                 {
                     if (LibraryItem.ManualMod)
                     {
@@ -160,7 +131,7 @@ namespace Quasar.Controls.Mod.ViewModels
 
                         return scat.APISubCategoryName;
                     }
-                    
+
                 }
                 else
                 {
@@ -168,7 +139,7 @@ namespace Quasar.Controls.Mod.ViewModels
                 }
             }
         }
-        
+
         public ObservableCollection<Object> Authors
         {
             get => _Authors;
@@ -209,7 +180,27 @@ namespace Quasar.Controls.Mod.ViewModels
         }
         #endregion
 
-        #region Working References
+        #endregion
+
+        #region View
+
+        #region Private
+        private String _ModStatusValue { get; set; }
+        private String _ModStatusTextValue { get; set; }
+        private string _ContentStatText { get; set; }
+        private int _ProgressBarValue { get; set; }
+        private int _ContentStatValue { get; set; }
+        private bool _Downloading { get; set; }
+        private bool _DownloadFailed { get; set; } = false;
+        private bool _CreatorMode { get; set; }
+        private bool _AdvancedMode { get; set; }
+        private bool _Smol { get; set; }
+        private Rect _Rekt { get; set; }
+        private Rect _Rekta { get; set; }
+        private Uri _ImageSource { get; set; }
+        #endregion
+
+        #region Public
         public String ModStatusValue
         {
             get
@@ -405,12 +396,23 @@ namespace Quasar.Controls.Mod.ViewModels
                 OnPropertyChanged("ImageSource");
             }
         }
-
-
+        #endregion
 
         #endregion
 
         #region Commands
+
+        #region Private
+        private ICommand _UpdateModCommand { get; set; }
+        private ICommand _FileViewCommand { get; set; }
+        private ICommand _DeleteModCommand { get; set; }
+        private ICommand _AddModCommand { get; set; }
+        private ICommand _ShowContentsCommand { get; set; }
+        private ICommand _RetryDownloadCommand { get; set; }
+        private ICommand _BigSmolCommand { get; set; }
+        #endregion
+
+        #region Public
         public ICommand UpdateModCommand
         {
             get
@@ -451,7 +453,7 @@ namespace Quasar.Controls.Mod.ViewModels
             {
                 if (_AddModCommand == null)
                 {
-                    _AddModCommand = new RelayCommand(param => AddMod());
+                    _AddModCommand = new RelayCommand(param => AddorRemoveFromWorkspace());
                 }
                 return _AddModCommand;
             }
@@ -462,7 +464,7 @@ namespace Quasar.Controls.Mod.ViewModels
             {
                 if (_ShowContentsCommand == null)
                 {
-                    _ShowContentsCommand = new RelayCommand(param => ShowContents());
+                    _ShowContentsCommand = new RelayCommand(param => ShowModContents());
                 }
                 return _ShowContentsCommand;
             }
@@ -493,7 +495,7 @@ namespace Quasar.Controls.Mod.ViewModels
 
         #endregion
 
-        public ModsViewModel MVM { get; set; }
+        ILog QuasarLogger { get; set; }
 
         public ModListItemViewModel()
         {
@@ -503,8 +505,10 @@ namespace Quasar.Controls.Mod.ViewModels
             EventSystem.Subscribe<LibraryItem>(Refresh);
         }
 
-        public ModListItemViewModel(LibraryItem Mod, Game Gamu, ModsViewModel model, bool _Downloading = false)
+        public ModListItemViewModel(LibraryItem Mod, Game Gamu, ModsViewModel model, ILog _QuasarLogger, bool _Downloading = false)
         {
+            QuasarLogger = _QuasarLogger;
+
             Game = Gamu;
             LibraryItem = Mod;
             Downloading = _Downloading;
@@ -519,8 +523,10 @@ namespace Quasar.Controls.Mod.ViewModels
             EventSystem.Subscribe<LibraryItem>(Refresh);
         }
 
-        public ModListItemViewModel(string QuasarURL, ObservableCollection<Game> _Games, ObservableCollection<LibraryItem> _Mods, ModsViewModel model)
+        public ModListItemViewModel(string QuasarURL, ObservableCollection<Game> _Games, ObservableCollection<LibraryItem> _Mods, ModsViewModel model, ILog _QuasarLogger)
         {
+            QuasarLogger = _QuasarLogger;
+
             Downloading = true;
             Smol = true;
             Games = _Games;
@@ -532,6 +538,10 @@ namespace Quasar.Controls.Mod.ViewModels
 
         #region Actions
         
+        /// <summary>
+        /// Refreshes this mods UI with a new Library Item
+        /// </summary>
+        /// <param name="li"></param>
         public void Refresh(LibraryItem li)
         {
             if(li.ID == LibraryItem.ID)
@@ -539,11 +549,11 @@ namespace Quasar.Controls.Mod.ViewModels
                 OnPropertyChanged("LibraryItem");
             }
         }
-        public void Extract()
-        {
 
-        }
-
+        /// <summary>
+        /// Triggers an Image source change
+        /// </summary>
+        /// <param name="_Smol"></param>
         public void LoadImage(bool _Smol)
         {
             if (!_Smol)
@@ -575,6 +585,10 @@ namespace Quasar.Controls.Mod.ViewModels
             }
             
         }
+
+        /// <summary>
+        /// Calculates workspace presence
+        /// </summary>
         public void LoadStats()
         {
             if(MVM != null)
@@ -598,6 +612,9 @@ namespace Quasar.Controls.Mod.ViewModels
             
         }
 
+        /// <summary>
+        /// Refreshes the Authors UI panel
+        /// </summary>
         public void GetAuthors()
         {
             Authors = new ObservableCollection<object>();
@@ -644,25 +661,42 @@ namespace Quasar.Controls.Mod.ViewModels
 
         }
 
+        #endregion
+
+        #region User Actions
+
+        /// <summary>
+        /// Redirects the user to the author's gamebanana page
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         public void link_click(Object sender, RoutedEventArgs e)
         {
-            
+
             Hyperlink Link = (Hyperlink)sender;
             Process.Start(Link.NavigateUri.ToString());
         }
 
+        /// <summary>
+        /// Triggers the file view window
+        /// </summary>
         public void ShowFileView()
         {
             new FileView(new ModFileManager(LibraryItem, Game).LibraryContentFolderPath, LibraryItem.Name).Show();
         }
 
+        /// <summary>
+        /// Triggers this mod's update process
+        /// </summary>
         public void UpdateMod()
         {
             ActionRequested = "Update";
             EventSystem.Publish<ModListItemViewModel>(this);
-            //new DefinitionsWindow(mfm, "", "", "", "", MVM.GameDatas[0].Categories.ToList(), MVM.InternalModTypes.ToList(), 0).Show();
         }
 
+        /// <summary>
+        /// Triggers this mod's deletion
+        /// </summary>
         public void DeleteMod()
         {
             ActionRequested = "Delete";
@@ -670,9 +704,13 @@ namespace Quasar.Controls.Mod.ViewModels
 
         }
 
-        public void AddMod()
+        /// <summary>
+        /// If the mod is present in the workspace, it will remove every association
+        /// If not, it slots everything automatically
+        /// </summary>
+        public void AddorRemoveFromWorkspace()
         {
-            if(ContentStatValue == 0)
+            if (ContentStatValue == 0)
             {
                 ActionRequested = "Add";
             }
@@ -680,22 +718,31 @@ namespace Quasar.Controls.Mod.ViewModels
             {
                 ActionRequested = "Remove";
             }
-            
+
             EventSystem.Publish<ModListItemViewModel>(this);
         }
 
+        /// <summary>
+        /// Launches a download retry
+        /// </summary>
         public void RetryDownload()
         {
             ActionRequested = "RetryDownload";
             EventSystem.Publish<ModListItemViewModel>(this);
         }
 
-        public void ShowContents()
+        /// <summary>
+        /// Shows this mod's contents in the Contents tab
+        /// </summary>
+        public void ShowModContents()
         {
             ActionRequested = "ShowContents";
             EventSystem.Publish<ModListItemViewModel>(this);
         }
 
+        /// <summary>
+        /// Triggers the big or small view
+        /// </summary>
         public void BigSmol()
         {
             if (!Smol)
@@ -706,32 +753,7 @@ namespace Quasar.Controls.Mod.ViewModels
             {
                 Smol = false;
             }
-                
-        }
 
-        private async void CheckUpdates(object sender, RoutedEventArgs e)
-        {
-            /*
-            ModListItem element = (ModListItem)ManagementModListView.SelectedItem;
-            if (element != null)
-            {
-                //Getting local Mod
-                LibraryMod mod = Mods.Find(mm => mm.ID == element.LocalMod.ID && mm.TypeID == element.LocalMod.TypeID);
-                Game game = Games.Find(g => g.ID == mod.GameID);
-                GameModType mt = game.GameModTypes.Find(g => g.ID == mod.TypeID);
-                //Parsing mod info from API
-                APIMod newAPIMod = await APIRequest.GetAPIMod(mt.APIName, element.LocalMod.ID.ToString());
-
-                //Create Mod from API information
-                LibraryMod newmod = GetLibraryMod(newAPIMod, game);
-
-                if (mod.Updates < newmod.Updates)
-                {
-                    string[] newDL = await APIRequest.GetDownloadFileName(mt.APIName, element.LocalMod.ID.ToString());
-                    string quasarURL = APIRequest.GetQuasarDownloadURL(newDL[0], newDL[1], mt.APIName, element.LocalMod.ID.ToString());
-                    LaunchDownload(quasarURL);
-                }
-            }*/
         }
         #endregion
     }

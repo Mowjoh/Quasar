@@ -1,5 +1,5 @@
 ﻿using Quasar.Data.V2;
-using Quasar.Internal.Tools;
+using Quasar.Helpers.Tools;
 using System;
 using System.IO;
 using System.Collections.ObjectModel;
@@ -7,14 +7,25 @@ using Quasar.Helpers.Json;
 using System.Globalization;
 using Quasar.Helpers.FileOperations;
 using System.Windows.Forms;
-using Quasar.Internal;
+using Quasar.Helpers;
 using Quasar.Common.Models;
 
 namespace Quasar.Helpers.Quasar_Management
 {
     public static class InstallManager
     {
-        //Verifies needed folders for execution
+        #region Static paths
+        static string LibraryPath = @"\Library\Library.json";
+        static string LibraryBackupPath = @"\Backup\Library.json";
+        static string ContentItemsPath = @"\Library\ContentItems.json";
+        static string ContentItemsBackupPath = @"\Backup\ContentItems.json";
+        static string WorkspacesPath = @"\Library\Workspaces.json";
+        static string WorkspacesBackupPath = @"\Backup\Workspaces.json";
+        #endregion
+
+        /// <summary>
+        /// Verifies needed folders for execution
+        /// </summary>
         public static void CreateBaseFolders()
         {
             //Setting Paths
@@ -37,7 +48,9 @@ namespace Quasar.Helpers.Quasar_Management
             
         }
 
-        //Forcing references files and base Internal Mod Types to be refreshed in the user folder
+        /// <summary>
+        /// Forcing references files and base Quasar Mod Types to be refreshed in the user folder
+        /// </summary>
         public static void UpdateInstallation()
         {
             String ResourcePath = Properties.Settings.Default.DefaultDir + "\\Resources\\";
@@ -46,6 +59,10 @@ namespace Quasar.Helpers.Quasar_Management
             FileOperation.CheckCopyFolder(AppPath, ResourcePath, true,true);
         }
 
+        /// <summary>
+        /// Defines basic User settings
+        /// </summary>
+        /// <param name="ExternalPath">Install location</param>
         public static void CreateBaseUserSettings(string ExternalPath = "")
         {
             //Getting system language
@@ -70,6 +87,9 @@ namespace Quasar.Helpers.Quasar_Management
 
         }
 
+        /// <summary>
+        /// Creates a default Workspace
+        /// </summary>
         public static void CreateBaseWorkspace()
         {
             String AssociationsPath = Properties.Settings.Default.DefaultDir + @"\Library\Workspaces.json";
@@ -84,6 +104,10 @@ namespace Quasar.Helpers.Quasar_Management
             }
         }
 
+        /// <summary>
+        /// Displays a Folder Browser to pick a new installation location
+        /// Then saves the new default path
+        /// </summary>
         public static void ChangeInstallLocationSetting()
         {
             using (var fbd = new FolderBrowserDialog())
@@ -105,6 +129,10 @@ namespace Quasar.Helpers.Quasar_Management
             }
         }
 
+        /// <summary>
+        /// Moves the installation files to a new location
+        /// </summary>
+        /// <param name="newPath">New install folder path</param>
         public static void ChangeInstallLocation(string newPath)
         {
             string SourcePath = Properties.Settings.Default.DefaultDir;
@@ -162,6 +190,33 @@ namespace Quasar.Helpers.Quasar_Management
             
 
             
+        }
+
+        /// <summary>
+        /// Backs up User data
+        /// </summary>
+        public static void BackupUserData()
+        {
+            string Base = Properties.Settings.Default.DefaultDir;
+
+            FileOperation.CheckCopyFile(Base + LibraryPath, Base + LibraryBackupPath);
+            FileOperation.CheckCopyFile(Base + ContentItemsPath, Base + ContentItemsBackupPath);
+            FileOperation.CheckCopyFile(Base + WorkspacesPath, Base + WorkspacesBackupPath);
+
+            Properties.Settings.Default.BackupDate = DateTime.Now;
+            Properties.Settings.Default.Save();
+        }
+
+        /// <summary>
+        /// Restores User data
+        /// </summary>
+        public static void RestoreUserData()
+        {
+            string Base = Properties.Settings.Default.DefaultDir;
+
+            FileOperation.CheckCopyFile(Base + LibraryBackupPath, Base + LibraryPath);
+            FileOperation.CheckCopyFile(Base + ContentItemsBackupPath, Base + ContentItemsPath);
+            FileOperation.CheckCopyFile(Base + WorkspacesBackupPath, Base + WorkspacesPath);
         }
     }
 }

@@ -3,7 +3,7 @@ using Quasar.Data.V2;
 using Quasar.FileSystem;
 using Quasar.Helpers.Json;
 using Quasar.Helpers.ModScanning;
-using Quasar.Internal;
+using Quasar.Helpers;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;

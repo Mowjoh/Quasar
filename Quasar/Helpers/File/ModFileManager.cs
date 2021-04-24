@@ -3,10 +3,8 @@ using log4net.Appender;
 using Quasar.Data.V2;
 using Quasar.Helpers.FileOperations;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Quasar.FileSystem
@@ -167,7 +165,7 @@ namespace Quasar.FileSystem
                 Directory.CreateDirectory(LibraryContentFolderPath);
             }
             //Emptying it if necessary
-            FileOperation.ClearFolder(LibraryContentFolderPath);
+            FileOperation.RecreateFolder(LibraryContentFolderPath);
 
             //Copying mod files
             FileOperation.CheckCopyFolder(FolderPath, LibraryContentFolderPath);

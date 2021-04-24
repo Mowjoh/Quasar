@@ -15,7 +15,7 @@ using Quasar.Data.V2;
 using Quasar.Helpers.Json;
 using Quasar.Helpers.ModScanning;
 using Quasar.Helpers.Quasar_Management;
-using Quasar.Internal;
+using Quasar.Helpers;
 using Quasar.Internal.Tools;
 using Quasar.NamedPipes;
 using System;
@@ -62,7 +62,7 @@ namespace Quasar.MainUI.ViewModels
         /// Mutex that serves to know if a Quasar instance is already running
         /// </summary>
         public Mutex serverMutex;
-        public ILog log { get; set; }
+        public ILog QuasarLogger { get; set; }
         #endregion
 
         #endregion
@@ -79,6 +79,7 @@ namespace Quasar.MainUI.ViewModels
         public ObservableCollection<Workspace> Workspaces { get; set; }
         public ObservableCollection<LibraryItem> Library { get; set; }
         public ObservableCollection<ContentItem> ContentItems { get; set; }
+        public bool UserDataLoaded { get; set; }
         #endregion
 
         #region Views
@@ -471,16 +472,16 @@ namespace Quasar.MainUI.ViewModels
 
             try
             {
-                log.Info("Update Process Started");
+                QuasarLogger.Info("Update Process Started");
                 SetupClientOrServer();
 
-                log.Info("Update Process Started");
+                QuasarLogger.Info("Update Process Started");
                 Updater.CheckExecuteUpdate();
 
-                log.Info("Loading References");
+                QuasarLogger.Info("Loading References");
                 LoadData();
 
-                log.Info("Loading Views");
+                QuasarLogger.Info("Loading Views");
                 SetupViews();
 
                 AdvancedMode = false;
@@ -490,13 +491,14 @@ namespace Quasar.MainUI.ViewModels
                 EventSystem.Subscribe<ModalEvent>(ProcessModalEvent);
 
                 InitialWarnings();
+                BackupRestoreUserData(UserDataLoaded);
 
 
             }
             catch (Exception e)
             {
-                log.Info(e.Message);
-                log.Info(e.StackTrace);
+                QuasarLogger.Info(e.Message);
+                QuasarLogger.Info(e.StackTrace);
             }
         }
 
@@ -509,17 +511,25 @@ namespace Quasar.MainUI.ViewModels
         public void LoadData()
         {
             //Loading User Data
-            Workspaces = JSonHelper.GetWorkspaces();
-            if (Workspaces.Count == 0)
+            try
             {
-                InstallManager.CreateBaseWorkspace();
                 Workspaces = JSonHelper.GetWorkspaces();
+                Library = JSonHelper.GetLibrary();
+                ContentItems = JSonHelper.GetContentItems();
+
+                if (Workspaces.Count == 0)
+                {
+                    InstallManager.CreateBaseWorkspace();
+                    Workspaces = JSonHelper.GetWorkspaces();
+                }
+                ActiveWorkspace = Workspaces[0];
+
+                UserDataLoaded = true;
             }
-            ActiveWorkspace = Workspaces[0];
-
-
-            Library = JSonHelper.GetLibrary();
-            ContentItems = JSonHelper.GetContentItems();
+            catch(Exception e)
+            {
+                UserDataLoaded = false;
+            }
 
             //Loading Resource Data
             Games = JSonHelper.GetGames();
@@ -528,6 +538,40 @@ namespace Quasar.MainUI.ViewModels
             ModLoaders = JSonHelper.GetModLoaders();
 
         }
+
+        /// <summary>
+        /// Backs up data or restores it depending on the User Data Load success
+        /// </summary>
+        /// <param name="LoadSuccess">User Data Load success state</param>
+        public void BackupRestoreUserData(bool LoadSuccess)
+        {
+            if (LoadSuccess)
+            {
+                InstallManager.BackupUserData();
+            }
+            else
+            {
+                //Sending modal event to warn the user
+                ModalEvent meuh = new ModalEvent()
+                {
+                    EventName = "LoadTrouble",
+                    Action = "Show",
+                    Type = ModalType.Warning,
+                    Title = "Data Corruption",
+                    Content = String.Format("Quasar could not load your data. \rA backup will be loaded instead \r(Made on : {0})",Properties.Settings.Default.BackupDate.ToLongDateString()),
+                    OkButtonText = "I understand"
+                };
+
+                EventSystem.Publish<ModalEvent>(meuh);
+
+                //Restoring data
+                InstallManager.RestoreUserData();
+
+                //Loading Data
+                LoadData();
+            }
+        }
+
         /// <summary>
         /// Sets up all the Views with their ViewModels
         /// </summary>
@@ -539,7 +583,7 @@ namespace Quasar.MainUI.ViewModels
             TabItems = new ObservableCollection<TabItem>();
 
             ModsView = new ModsView();
-            MVM = new ModsViewModel(this, log);
+            MVM = new ModsViewModel(this, QuasarLogger);
             ModsView.DataContext = MVM;
             TabItems.Add(new TabItem() { Content = ModsView, Header = Properties.Resources.MainUI_OverviewTabHeader, Foreground = new SolidColorBrush() { Color = Colors.White } });
 
@@ -549,15 +593,14 @@ namespace Quasar.MainUI.ViewModels
             TabItems.Add(new TabItem() { Content = ContentView, Header = Properties.Resources.MainUI_ContentsTabHeader, Foreground = new SolidColorBrush() { Color = Colors.White } });
 
 
-            AVM = new AssociationViewModel(this);
-            AVM.Log = log;
+            AVM = new AssociationViewModel(this, QuasarLogger);
             AssociationView = new AssociationView() { AssociationViewModel = AVM };
             AssociationView.DataContext = AVM;
             TabItems.Add(new TabItem() { Content = AssociationView, Header = Properties.Resources.MainUI_ManagementTabHeader, Foreground = new SolidColorBrush() { Color = Colors.White } });
 
             BuildView = new BuildView();
-            BVM = new BuildViewModel(this);
-            BVM.Log = log;
+            BVM = new BuildViewModel(this, QuasarLogger);
+            BVM.QuasarLogger = QuasarLogger;
             BuildView.DataContext = BVM;
             TabItems.Add(new TabItem() { Content = BuildView, Header = Properties.Resources.MainUI_FileTransferTabHeader, Foreground = new SolidColorBrush() { Color = Colors.White } });
 
@@ -565,11 +608,11 @@ namespace Quasar.MainUI.ViewModels
             TabItems.Add(new TabItem() { Content = SettingsView, Header = Properties.Resources.MainUI_SettingsTabHeader, Foreground = new SolidColorBrush() { Color = Colors.White } });
 
             WorkspaceView = new WorkspaceView();
-            WVM = new WorkspaceViewModel(this, log);
+            WVM = new WorkspaceViewModel(this, QuasarLogger);
             WorkspaceView.DataContext = WVM;
             TabItems.Add(new TabItem() { Content = WorkspaceView, Header = Properties.Resources.MainUI_WorkspacesTabHeader, Foreground = new SolidColorBrush() { Color = Colors.White }, Visibility = Properties.Settings.Default.EnableWorkspaces ? Visibility.Visible : Visibility.Collapsed });
 
-            ModalPopupViewModel = new ModalPopupViewModel();
+            ModalPopupViewModel = new ModalPopupViewModel(QuasarLogger);
 
             SettingsView.Load();
         }
@@ -580,7 +623,7 @@ namespace Quasar.MainUI.ViewModels
         /// </summary>
         public void SetupClientOrServer()
         {
-            serverMutex = PipeHelper.CheckExecuteInstance(serverMutex, log);
+            serverMutex = PipeHelper.CheckExecuteInstance(serverMutex, QuasarLogger);
         }
 
         /// <summary>
@@ -746,7 +789,6 @@ namespace Quasar.MainUI.ViewModels
             if (Setting.SettingName == "EnableAdvanced")
             {
                 AdvancedMode = Setting.IsChecked;
-                ChangeLogger(Setting.IsChecked);
             }
             if (Setting.SettingName == "EnableWorkspaces")
             {
@@ -761,43 +803,18 @@ namespace Quasar.MainUI.ViewModels
         /// </summary>
         public void SetupLogger()
         {
-            log = LogManager.GetLogger("QuasarAppender");
-            FileAppender appender = (FileAppender)log.Logger.Repository.GetAppenders()[0];
+            QuasarLogger = LogManager.GetLogger("QuasarAppender");
+            FileAppender appender = (FileAppender)QuasarLogger.Logger.Repository.GetAppenders()[0];
             appender.File = Properties.Settings.Default.DefaultDir + "\\Quasar.log";
-            if (Properties.Settings.Default.EnableAdvanced)
-            {
-                appender.Threshold = log4net.Core.Level.Debug;
-            }
-            else
-            {
-                appender.Threshold = log4net.Core.Level.Info;
-            }
+            appender.Threshold = log4net.Core.Level.Debug;
 
             appender.ActivateOptions();
 
-            log.Info("------------------------------");
-            log.Warn("Quasar Start");
-            log.Info("------------------------------");
+            QuasarLogger.Info("------------------------------");
+            QuasarLogger.Warn("Quasar Start");
+            QuasarLogger.Info("------------------------------");
         }
 
-        /// <summary>
-        /// Changes the logger's configuration
-        /// </summary>
-        /// <param name="debug"></param>
-        public void ChangeLogger(bool debug)
-        {
-            FileAppender appender = (FileAppender)log.Logger.Repository.GetAppenders()[0];
-            appender.Threshold = log4net.Core.Level.Debug;
-            if (debug)
-            {
-                appender.Threshold = log4net.Core.Level.Debug;
-            }
-            else
-            {
-                appender.Threshold = log4net.Core.Level.Info;
-            }
-
-        }
         #endregion
     }
 }

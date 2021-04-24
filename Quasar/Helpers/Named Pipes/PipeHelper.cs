@@ -1,26 +1,17 @@
-﻿using Quasar.NamedPipes;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Globalization;
-using System.Linq;
-using System.Text;
+﻿using System;
 using System.Threading;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Deployment;
-using System.Deployment.Application;
-using System.Reflection;
-using System.IO;
-using Quasar.Internal.Tools;
 using log4net;
-using Quasar.Helpers.XML;
-using Quasar.Data.V1;
 
 namespace Quasar.NamedPipes
 {
     public static class PipeHelper
     {
+        /// <summary>
+        /// Sets up Quasar as a client or as a Server
+        /// </summary>
+        /// <param name="_serverMutex"></param>
+        /// <param name="log"></param>
+        /// <returns></returns>
         public static Mutex CheckExecuteInstance(Mutex _serverMutex, ILog log)
         {
             string[] Args = Environment.GetCommandLineArgs();
@@ -31,6 +22,7 @@ namespace Quasar.NamedPipes
                 //Client
                 if (Args.Length == 2)
                 {
+                    //Sending arguments
                     PipeClient.StartPipeClient("Quasarite", Args[1], log);
                 }
                 mt.Close();
@@ -43,10 +35,12 @@ namespace Quasar.NamedPipes
                 _serverMutex = new Mutex(true, "Quasarite");
                 if (Args.Length == 2)
                 {
+                    //Starting with arguments
                     new PipeServer("Quasarite", Args[1],log);
                 }
                 else
                 {
+                    //Starting without arguments
                     new PipeServer("Quasarite", "", log);
                 }
 

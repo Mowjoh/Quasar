@@ -17,7 +17,10 @@ namespace Quasar.Internal.Tools
 {
     public static class Updater
     {
-        //Updater Actions
+        /// <summary>
+        /// Runs checks and updates if necessary
+        /// </summary>
+        /// <returns></returns>
         public static bool CheckExecuteUpdate()
         {
             bool UpdateSuccessful = false;
@@ -55,18 +58,21 @@ namespace Quasar.Internal.Tools
             return UpdateSuccessful;
         }
 
+        /// <summary>
+        /// Verifies if the install folders need cleaning
+        /// </summary>
         public static void CheckCleanInstallation()
         {
 
         }
 
-        //Updater Checks
+        /// <summary>
+        /// Verifies if the app needs to run an update process
+        /// </summary>
+        /// <returns></returns>
         public static bool NeedsUpdate()
         {
-            
-
             bool Update = Properties.Settings.Default.UpgradeRequired;
-
 
             if (Update)
             {
@@ -74,20 +80,37 @@ namespace Quasar.Internal.Tools
             }
             return Update;
         }
+
+        /// <summary>
+        /// Verifies if the app needs to clean it's folders
+        /// </summary>
+        /// <returns></returns>
         public static bool NeedsCleaning()
         {
             return true;
         }
+
+        /// <summary>
+        /// Verifies if it's the first startup
+        /// </summary>
+        /// <returns></returns>
         public static bool NeedsInitialSetup()
         {
             return Properties.Settings.Default.AppVersion == "0000";
         }
+
+        /// <summary>
+        /// Verifies if the mods need scanning
+        /// </summary>
+        /// <returns></returns>
         public static bool NeedsScanning()
         {
             return false;
         }
 
-        //Setting File Action
+        /// <summary>
+        /// Upgrades the settings file to it's new version
+        /// </summary>
         public static void UpgradeSettingFile()
         {
             string executionVersion = GetExecutionVersion();
@@ -99,6 +122,11 @@ namespace Quasar.Internal.Tools
             Properties.Settings.Default.PreviousVersion = previous;
             Properties.Settings.Default.Save();
         }
+
+        /// <summary>
+        /// Returns the app's version number
+        /// </summary>
+        /// <returns></returns>
         public static string GetExecutionVersion()
         {
             try

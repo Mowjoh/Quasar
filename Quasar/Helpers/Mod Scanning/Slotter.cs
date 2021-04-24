@@ -16,6 +16,13 @@ namespace Quasar.Helpers.Mod_Scanning
             return ContentItems;
         }
 
+        /// <summary>
+        /// Slots Content Items automatically in a Workspace
+        /// </summary>
+        /// <param name="ContentItems"></param>
+        /// <param name="Workspace"></param>
+        /// <param name="QuasarModTypes"></param>
+        /// <returns></returns>
         public static Workspace AutomaticSlot(List<ContentItem> ContentItems, Workspace Workspace, ObservableCollection<QuasarModType> QuasarModTypes)
         {
             foreach (ContentItem ci in ContentItems)

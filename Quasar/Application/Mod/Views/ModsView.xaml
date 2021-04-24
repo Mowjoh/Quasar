@@ -1,99 +1,196 @@
 ﻿<UserControl x:Class="Quasar.Controls.ModManagement.Views.ModsView"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:Quasar.Controls.ModManagement.Views"
-             mc:Ignorable="d" 
-             d:DesignHeight="620" d:DesignWidth="1120">
-    <Grid x:Name="ManagementGrid" Background="{DynamicResource QD1}">
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:Quasar.Controls.ModManagement.Views">
+
+    <Grid x:Name="ManagementGrid"
+          Background="{DynamicResource QD1}">
+
         <Grid.RowDefinitions>
-            <RowDefinition Height="64"/>
-            <RowDefinition Height="64"/>
-            <RowDefinition/>
+            <RowDefinition Height="64" />
+            <RowDefinition Height="64" />
+            <RowDefinition />
         </Grid.RowDefinitions>
-        
-        <!-- Download Warning-->
+
+        <!--  Download Warning  -->
         <Grid Grid.Row="2">
             <Grid.Style>
                 <Style TargetType="{x:Type Grid}">
-                    <Setter Property="Visibility" Value="Collapsed"/>
+                    <Setter Property="Visibility" Value="Collapsed" />
                     <Style.Triggers>
-                        <DataTrigger Binding="{Binding Mods.Count}" Value="0">
-                            <Setter Property="Visibility" Value="Visible"/>
+                        <DataTrigger Binding="{Binding Mods.Count}"
+                                     Value="0">
+                            <Setter Property="Visibility" Value="Visible" />
                         </DataTrigger>
                     </Style.Triggers>
                 </Style>
             </Grid.Style>
-            <Label Content="Please download some mods from Gamebanana using the Quasar Download Button" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Wheat" FontFamily="{StaticResource PoppinsBold}" FontSize="20"/>
+            <Label Content="Please download some mods from Gamebanana using the Quasar Download Button"
+                   FontSize="20" FontFamily="{StaticResource PoppinsBold}" Foreground="Wheat"
+                   HorizontalAlignment="Center" VerticalAlignment="Center" />
         </Grid>
 
-        <!-- Top Section-->
-        <ComboBox HorizontalAlignment="Left" Margin="16,32,0,0" Height="32" Width="200" VerticalAlignment="Top" Style="{StaticResource ComboBoxFlatStyle}" ItemsSource="{Binding Path=MUVM.Games[0].GameAPICategories}" SelectedItem="{Binding SelectedGameAPICategory}" DisplayMemberPath="Name"/>
-        <Button Command="{Binding Path=ResetFilters}" Template="{StaticResource ActionTestModButton}" ToolTip="Reset the filters" Margin="223,0,0,5" Width="24" VerticalAlignment="Bottom" HorizontalAlignment="Left"  />
-        <TextBox HorizontalAlignment="Left" Margin="254,32,0,0" Height="32" Width="200" VerticalAlignment="Top" Style="{StaticResource CutieTextBoxStyle}" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" />
+        <!--#region  Top Section-->
+        <ComboBox ItemsSource="{Binding Path=MUVM.Games[0].GameAPICategories}" SelectedItem="{Binding SelectedGameAPICategory}"
+                  Style="{StaticResource ComboBoxFlatStyle}"
+                  Width="200" Height="32"
+                  Margin="16,32,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
+                  DisplayMemberPath="Name" />
 
-        <Button Template="{StaticResource CutieSmallButtonTemplate}" Command="{Binding Path=AddManual}" Width="200" Content="Add mod manually" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="500,32,0,0" Visibility="{Binding CreatorMode,Converter={StaticResource BoolVisi}}"/>
+        <Button Command="{Binding Path=ResetFilters}"
+                Template="{StaticResource ActionTestModButton}"
+                Width="24"
+                Margin="223,0,0,5" HorizontalAlignment="Left" VerticalAlignment="Bottom"
+                ToolTip="Reset the filters" />
 
-        <TextBlock Style="{StaticResource CutieTextBlockStyle}" Height="20"  Text="Filter Not included" Margin="0,7,35,0" VerticalAlignment="Top" HorizontalAlignment="Right"/>
-        <TextBlock Style="{StaticResource CutieTextBlockStyle}" Height="20"  Text="Filter Partially included" Margin="0,32,35,0" VerticalAlignment="Top" HorizontalAlignment="Right"/>
-        <TextBlock Style="{StaticResource CutieTextBlockStyle}" Height="20"  Text="Filter included" Margin="0,57,35,0" VerticalAlignment="Top" HorizontalAlignment="Right" Grid.RowSpan="2"/>
-        <TextBlock Style="{StaticResource CutieTextBlockStyle}" Height="20"  Text="Filter No Content Found" Margin="0,82,35,0" VerticalAlignment="Top" HorizontalAlignment="Right" Grid.RowSpan="2"/>
-        <CheckBox IsChecked="{Binding RedChecked}" Margin="0,5,10,0" VerticalAlignment="Top" Template="{StaticResource CutieCheckBoxRed}" HorizontalAlignment="Right"  />
-        <CheckBox IsChecked="{Binding OrangeChecked}" Margin="0,30,10,0" VerticalAlignment="Top" Template="{StaticResource CutieCheckBoxOrange}" BorderBrush="orange" HorizontalAlignment="Right" />
-        <CheckBox IsChecked="{Binding GreenChecked}" VerticalAlignment="Top" Template="{StaticResource CutieCheckBoxGreen}" BorderBrush="green" HorizontalAlignment="Right" Margin="0,55,10,0" Grid.RowSpan="2"  />
-        <CheckBox IsChecked="{Binding PurpleChecked}" VerticalAlignment="Top" Template="{StaticResource CutieCheckBoxPurple}" BorderBrush="#9e168e" HorizontalAlignment="Right" Margin="0,80,10,0" Grid.RowSpan="2"  />
+        <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+                 Style="{StaticResource CutieTextBoxStyle}"
+                 Width="200" Height="32"
+                 Margin="254,32,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
 
-        <!-- Headers-->
-        <Grid Grid.Row="1" Margin="35,34,70,0" Background="Transparent">
+        <Button Command="{Binding Path=AddManual}" Content="Add mod manually"
+                Template="{StaticResource CutieSmallButtonTemplate}"
+                Width="200"
+                Margin="500,32,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
+                Visibility="{Binding CreatorMode, Converter={StaticResource BoolVisi}}" />
+        <!--#endregion-->
+
+        <!--#region Filter Check Boxes-->
+        <TextBlock Text="Filter Not included"
+                   Style="{StaticResource CutieTextBlockStyle}"
+                   Height="20"
+                   Margin="0,7,35,0" HorizontalAlignment="Right" VerticalAlignment="Top" />
+
+        <TextBlock Text="Filter Partially included"
+                   Style="{StaticResource CutieTextBlockStyle}"
+                   Height="20"
+                   Margin="0,32,35,0" HorizontalAlignment="Right" VerticalAlignment="Top" />
+
+        <TextBlock Text="Filter included"
+                   Grid.RowSpan="2"
+                   Style="{StaticResource CutieTextBlockStyle}"
+                   Height="20"
+                   Margin="0,57,35,0" HorizontalAlignment="Right" VerticalAlignment="Top" />
+
+        <TextBlock Text="Filter No Content Found"
+                   Grid.RowSpan="2"
+                   Style="{StaticResource CutieTextBlockStyle}"
+                   Height="20"
+                   Margin="0,82,35,0" HorizontalAlignment="Right" VerticalAlignment="Top" />
+
+        <CheckBox Template="{StaticResource CutieCheckBoxRed}"
+                  Margin="0,5,10,0" HorizontalAlignment="Right" VerticalAlignment="Top"
+                  IsChecked="{Binding RedChecked}" />
+
+        <CheckBox Template="{StaticResource CutieCheckBoxOrange}"
+                  Margin="0,30,10,0" HorizontalAlignment="Right" VerticalAlignment="Top"
+                  BorderBrush="orange" IsChecked="{Binding OrangeChecked}" />
+
+        <CheckBox Grid.RowSpan="2"
+                  Template="{StaticResource CutieCheckBoxGreen}"
+                  Margin="0,55,10,0" HorizontalAlignment="Right" VerticalAlignment="Top"
+                  BorderBrush="green" IsChecked="{Binding GreenChecked}" />
+
+        <CheckBox Grid.RowSpan="2"
+                  Template="{StaticResource CutieCheckBoxPurple}"
+                  Margin="0,80,10,0" HorizontalAlignment="Right" VerticalAlignment="Top"
+                  BorderBrush="#9e168e" IsChecked="{Binding PurpleChecked}" />
+        <!--#endregion-->
+
+        <!--  Headers  -->
+        <Grid Grid.Row="1"
+              Background="Transparent"
+              Margin="35,34,70,0">
+
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="30"/>
-                <ColumnDefinition Width="30*"/>
-                <ColumnDefinition Width="20*"/>
-                <ColumnDefinition Width="20*"/>
-                <ColumnDefinition Width="20*"/>
-                <ColumnDefinition Width="15*"/>
+                <ColumnDefinition Width="30" />
+                <ColumnDefinition Width="30*" />
+                <ColumnDefinition Width="20*" />
+                <ColumnDefinition Width="20*" />
+                <ColumnDefinition Width="20*" />
+                <ColumnDefinition Width="15*" />
             </Grid.ColumnDefinitions>
 
-            <Label Content="Mod Name" Grid.Column="1" HorizontalAlignment="Left" Style="{StaticResource CutieLabelStyle}" FontFamily="{StaticResource PoppinsItalic}" FontSize="14" />
-            <Label Content="Type" Grid.Column="2" HorizontalAlignment="Left" Style="{StaticResource CutieLabelStyle}" FontFamily="{StaticResource PoppinsItalic}" FontSize="14" Margin="20,0"  />
-            <CheckBox Grid.Column="2" Template="{StaticResource CutieAZ}" IsChecked="{Binding TypeFilterSelected}" HorizontalAlignment="Left" Margin="0,0,0,0" Foreground="{DynamicResource QuasarTextColor}"/>
+            <!--  Label Headers  -->
+            <Label Content="Mod Name"
+                   Grid.Column="1"
+                   FontSize="14" FontFamily="{StaticResource PoppinsItalic}" Style="{StaticResource CutieLabelStyle}"
+                   HorizontalAlignment="Left" />
 
-            <Label Content="Category" Grid.Column="3" HorizontalAlignment="Left" Style="{StaticResource CutieLabelStyle}" FontFamily="{StaticResource PoppinsItalic}" FontSize="14" Margin="20,0"  />
-            <CheckBox Grid.Column="3" Template="{StaticResource CutieAZ}" IsChecked="{Binding CategoryFilterSelected}"  HorizontalAlignment="Left" Margin="0,0,0,0" Foreground="{DynamicResource QuasarTextColor}"/>
+            <Label Content="Type"
+                   Grid.Column="2"
+                   FontSize="14" FontFamily="{StaticResource PoppinsItalic}" Style="{StaticResource CutieLabelStyle}"
+                   Margin="20,0" HorizontalAlignment="Left" />
 
-            
-            <Label Content="Mod Game" Grid.Column="4" HorizontalAlignment="Left" Style="{StaticResource CutieLabelStyle}" FontFamily="{StaticResource PoppinsItalic}" FontSize="14"  />
-            <Label Content="Actions" Grid.Column="5" HorizontalAlignment="Center" Style="{StaticResource CutieLabelStyle}" FontFamily="{StaticResource PoppinsItalic}" FontSize="14"  />
+            <CheckBox Grid.Column="2"
+                      Template="{StaticResource CutieAZ}" Foreground="{DynamicResource QuasarTextColor}"
+                      Margin="0,0,0,0" HorizontalAlignment="Left"
+                      IsChecked="{Binding TypeFilterSelected}" />
+
+            <Label Content="Category"
+                   Grid.Column="3"
+                   FontSize="14" FontFamily="{StaticResource PoppinsItalic}" Style="{StaticResource CutieLabelStyle}"
+                   Margin="20,0" HorizontalAlignment="Left" />
+
+            <CheckBox Grid.Column="3"
+                      Template="{StaticResource CutieAZ}" Foreground="{DynamicResource QuasarTextColor}"
+                      Margin="0,0,0,0" HorizontalAlignment="Left"
+                      IsChecked="{Binding CategoryFilterSelected}" />
+
+            <Label Content="Mod Game"
+                   Grid.Column="4"
+                   FontSize="14" FontFamily="{StaticResource PoppinsItalic}" Style="{StaticResource CutieLabelStyle}"
+                   HorizontalAlignment="Left" />
+
+            <Label Content="Actions"
+                   Grid.Column="5"
+                   FontSize="14" FontFamily="{StaticResource PoppinsItalic}" Style="{StaticResource CutieLabelStyle}"
+                   HorizontalAlignment="Center" />
 
         </Grid>
 
-        <!-- ListView-->
-        <ListView x:Name="ManagementModListView"  ScrollViewer.HorizontalScrollBarVisibility="Hidden" ItemsSource="{Binding CollectionViewSource.View}" SelectedItem="{Binding SelectedModListItem}" Background="Transparent" Margin="16,0,16,16" Grid.Row="2" BorderThickness="0">
+        <!--  ListView  -->
+        <ListView x:Name="ManagementModListView"
+                  ItemsSource="{Binding CollectionViewSource.View}" SelectedItem="{Binding SelectedModListItem}"
+                  Grid.Row="2"
+                  Background="Transparent"
+                  Margin="16,0,16,16"
+                  BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Hidden">
+
             <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <WrapPanel Width="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBox}},Path=ActualWidth}" />
+                    <WrapPanel Width="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBox}}, Path=ActualWidth}" />
                 </ItemsPanelTemplate>
             </ListView.ItemsPanel>
+
             <ListView.ItemContainerStyle>
+
                 <Style TargetType="{x:Type ListViewItem}">
+
                     <Setter Property="Background" Value="Transparent" />
-                    <Setter Property="BorderBrush" Value="Transparent"/>
-                    <Setter Property="VerticalContentAlignment" Value="Center"/>
+                    <Setter Property="BorderBrush" Value="Transparent" />
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate TargetType="{x:Type ListViewItem}">
-                                <Border Name="Border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}">
-                                    <ContentPresenter Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" Margin="{TemplateBinding Padding}" />
+                                <Border Name="Border"
+                                        Background="{TemplateBinding Background}"
+                                        BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+                                    <ContentPresenter Content="{TemplateBinding Content}"
+                                                      Margin="{TemplateBinding Padding}"
+                                                      ContentTemplate="{TemplateBinding ContentTemplate}" />
                                 </Border>
                             </ControlTemplate>
                         </Setter.Value>
                     </Setter>
-                </Style>
-            </ListView.ItemContainerStyle>
-        </ListView>
-        
+                    <Setter Property="VerticalContentAlignment" Value="Center" />
 
-        
+                </Style>
+
+            </ListView.ItemContainerStyle>
+
+        </ListView>
+
+
+
     </Grid>
+
 </UserControl>

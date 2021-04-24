@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Quasar.Data.V2;
 using Quasar.Workspaces.Models;
@@ -308,6 +305,12 @@ namespace Quasar.Helpers.Json
         }
         #endregion
 
+        /// <summary>
+        /// Saves a collection to a JSon File
+        /// </summary>
+        /// <param name="_Fullpath">Destination file path</param>
+        /// <param name="_Source">Source collection</param>
+        /// <param name="_ExternalPath">Override Destination file path</param>
         private static void SaveJSonFile(string _Fullpath, Object _Source, string _ExternalPath = "")
         {
 

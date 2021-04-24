@@ -1,48 +1,59 @@
 ﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using Quasar.Data.V2;
+using Quasar.Helpers.Downloading;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading;
 using System.Threading.Tasks;
 
-namespace Quasar
+namespace Quasar.Helpers.API
 {
+    /// <summary>
+    /// Represents a Query String entry for an HTTP URL
+    /// </summary>
     public class QueryStringItem
     {
+
         public string Name { get; set; }
         public string Value { get; set; }
-
+        public string Output()
+        {
+            string outie = Name + "=" + Value;
+            return outie;
+        }
 
         public QueryStringItem(string _Name, string _Value)
         {
             this.Name = _Name;
             this.Value = _Value;
         }
-
-        public string Output()
-        {
-            string outie = Name + "=" + Value;
-            return outie;
-        }
+        
     }
 
+    /// <summary>
+    /// Represents a Gamebanana API Request
+    /// </summary>
     public class APIRequest
     {
+        //Gamebanana's Endpoint
         static readonly string HTTPUrl = "https://api.gamebanana.com/";
 
+        //Default Parameters
         static readonly QueryStringItem jsonFormat = new QueryStringItem("format", "json_min");
         static readonly QueryStringItem jsonObject = new QueryStringItem("return_keys", "1");
 
         static List<QueryStringItem> queryParameters;
 
-        #region Mod Actions
-        public static async Task<APIMod> GetAPIMod(string _ItemType, string _ItemID)
+        #region API Actions
+        /// <summary>
+        /// Gets Mod information from Gamebanana's API
+        /// </summary>
+        /// <param name="_ItemType">Gamebanana's Mod Type</param>
+        /// <param name="_ItemID">Gamebanana's Mod ID</param>
+        /// <returns>an APIMod object with all info</returns>
+        public static async Task<APIMod> GetModInformation(string _ItemType, string _ItemID)
         {
             
             APIMod DownloadedAPIMod = null;
@@ -77,6 +88,106 @@ namespace Quasar
 
             return DownloadedAPIMod;
         }
+
+        /// <summary>
+        /// Gets the download link for a specific Mod
+        /// </summary>
+        /// <param name="_ItemType">Gamebanana's Mod Type</param>
+        /// <param name="_ItemID">Gamebanana's Mod ID</param>
+        /// <returns>Download link informations</returns>
+        public static async Task<string[]> GetDownloadFileName(string _ItemType, string _ItemID)
+        {
+            string filename = "";
+            string downloadURL = "";
+
+            queryParameters = GetDefaultParameters();
+            queryParameters.Add(new QueryStringItem("itemid", _ItemID));
+            queryParameters.Add(new QueryStringItem("itemtype", _ItemType)); 
+            queryParameters.Add(new QueryStringItem("fields", "Files().aFiles()"));
+
+            string queryURL = FormatAPIRequest("Core/Item/Data", queryParameters);
+
+            using (HttpClient webClient = new HttpClient())
+            {
+                HttpResponseMessage response = await webClient.GetAsync(queryURL);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    string responseText = await response.Content.ReadAsStringAsync();
+
+                    Regex fileMatch = new Regex("\"_sFile\":\"(.*?)\"");
+                    Match match = fileMatch.Match(responseText);
+
+                    Regex downloadRegex = new Regex("\"_sDownloadUrl\":\"(.*?)\"");
+                    Match downloadMatch = downloadRegex.Match(responseText);
+
+
+                    filename = match.Value;
+                    filename = filename.Split('"')[3];
+
+                    downloadURL = downloadMatch.Value;
+                    downloadURL = downloadURL.Split('"')[3];
+                    downloadURL = downloadURL.Replace("\\/", "/");
+                }
+            }
+
+            return new string[]{ filename, downloadURL };
+        }
+
+        /// <summary>
+        /// Gets the screenshot from Gamebanana's API
+        /// </summary>
+        /// <param name="_ItemType">Gamebanana's Mod Type</param>
+        /// <param name="_ItemID">Gamebanana's Mod ID</param>
+        /// <param name="_GameID">Gamebanana's Game ID</param>
+        /// <param name="_TypeID">Gamebanana's Category ID</param>
+        /// <returns></returns>
+        public static async Task<int> GetScreenshot(string _ItemType, string _ItemID, string _GameID, string _TypeID)
+        {
+            string downloadURL = "";
+
+            queryParameters = GetDefaultParameters();
+            queryParameters.Add(new QueryStringItem("itemid", _ItemID));
+            queryParameters.Add(new QueryStringItem("itemtype", _ItemType));
+            queryParameters.Add(new QueryStringItem("fields", "Preview().sSubFeedImageUrl()"));
+
+
+            string queryURL = FormatAPIRequest("Core/Item/Data", queryParameters);
+            try
+            {
+                using (HttpClient webClient = new HttpClient())
+                {
+                    HttpResponseMessage response = await webClient.GetAsync(queryURL);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        string responseText = await response.Content.ReadAsStringAsync();
+
+                        Regex fileMatch = new Regex("sSubFeedImageUrl\\(\\)\":\"(.*?)\"");
+                        Match match = fileMatch.Match(responseText);
+
+                        downloadURL = match.Value;
+                        downloadURL = downloadURL.Split('"')[2];
+                        downloadURL = downloadURL.Replace("\\/", "/");
+
+                        string downloadextension = downloadURL.Split('.')[downloadURL.Split('.').Length - 1];
+
+                        string imageSource = Properties.Settings.Default.DefaultDir + @"\Library\Screenshots\" + _GameID + "_" + _TypeID + "_" + _ItemID + "." + downloadextension;
+
+                        await ModDownloader.DownloadFile(downloadURL, imageSource);
+                    }
+                }
+            }
+            catch(Exception e)
+            {
+                Console.Write("fak");
+            }
+
+            return 0;
+        }
+
+
+        //Bullshit function
         public static async Task<List<APIMod>> GetAPIModUpdates(ObservableCollection<LibraryItem> Library)
         {
             bool abort = false;
@@ -139,95 +250,18 @@ namespace Quasar
             {
                 return ElementCollection;
             }
-            
-        }
 
-        public static async Task<string[]> GetDownloadFileName(string _ItemType, string _ItemID)
-        {
-            string filename = "";
-            string downloadURL = "";
-
-            queryParameters = GetDefaultParameters();
-            queryParameters.Add(new QueryStringItem("itemid", _ItemID));
-            queryParameters.Add(new QueryStringItem("itemtype", _ItemType)); 
-            queryParameters.Add(new QueryStringItem("fields", "Files().aFiles()"));
-
-            string queryURL = FormatAPIRequest("Core/Item/Data", queryParameters);
-
-            using (HttpClient webClient = new HttpClient())
-            {
-                HttpResponseMessage response = await webClient.GetAsync(queryURL);
-
-                if (response.IsSuccessStatusCode)
-                {
-                    string responseText = await response.Content.ReadAsStringAsync();
-
-                    Regex fileMatch = new Regex("\"_sFile\":\"(.*?)\"");
-                    Match match = fileMatch.Match(responseText);
-
-                    Regex downloadRegex = new Regex("\"_sDownloadUrl\":\"(.*?)\"");
-                    Match downloadMatch = downloadRegex.Match(responseText);
-
-
-                    filename = match.Value;
-                    filename = filename.Split('"')[3];
-
-                    downloadURL = downloadMatch.Value;
-                    downloadURL = downloadURL.Split('"')[3];
-                    downloadURL = downloadURL.Replace("\\/", "/");
-                }
-            }
-
-            return new string[]{ filename, downloadURL };
-        }
-
-        public static async Task<int> GetScreenshot(string _ItemType, string _ItemID, string _GameID, string _TypeID)
-        {
-            string downloadURL = "";
-
-            queryParameters = GetDefaultParameters();
-            queryParameters.Add(new QueryStringItem("itemid", _ItemID));
-            queryParameters.Add(new QueryStringItem("itemtype", _ItemType));
-            queryParameters.Add(new QueryStringItem("fields", "Preview().sSubFeedImageUrl()"));
-
-
-            string queryURL = FormatAPIRequest("Core/Item/Data", queryParameters);
-            try
-            {
-                using (HttpClient webClient = new HttpClient())
-                {
-                    HttpResponseMessage response = await webClient.GetAsync(queryURL);
-
-                    if (response.IsSuccessStatusCode)
-                    {
-                        string responseText = await response.Content.ReadAsStringAsync();
-
-                        Regex fileMatch = new Regex("sSubFeedImageUrl\\(\\)\":\"(.*?)\"");
-                        Match match = fileMatch.Match(responseText);
-
-                        downloadURL = match.Value;
-                        downloadURL = downloadURL.Split('"')[2];
-                        downloadURL = downloadURL.Replace("\\/", "/");
-
-                        string downloadextension = downloadURL.Split('.')[downloadURL.Split('.').Length - 1];
-
-                        string imageSource = Properties.Settings.Default.DefaultDir + @"\Library\Screenshots\" + _GameID + "_" + _TypeID + "_" + _ItemID + "." + downloadextension;
-
-                        await ModDownloader.DownloadFile(downloadURL, imageSource);
-                    }
-                }
-            }
-            catch(Exception e)
-            {
-                Console.Write("fak");
-            }
-
-            return 0;
         }
         #endregion
 
         #region API Formatting
 
+        /// <summary>
+        /// Formats the full URL to contact
+        /// </summary>
+        /// <param name="path">API Endpoint</param>
+        /// <param name="_Parameters">List of Query String Parameters</param>
+        /// <returns>The full URL</returns>
         public static string FormatAPIRequest(string path, List<QueryStringItem> _Parameters)
         {
             string formattedURL = HTTPUrl + path + "?";
@@ -242,33 +276,26 @@ namespace Quasar
             return formattedURL;
         }
 
+        /// <summary>
+        /// Sets up the default Parameter List
+        /// </summary>
+        /// <returns>the default Parameter List</returns>
         public static List<QueryStringItem> GetDefaultParameters()
         {
             return new List<QueryStringItem>{jsonFormat,jsonObject}; 
         }
 
-        #endregion
-
+        /// <summary>
+        /// Returns a formatted Quasar URL
+        /// </summary>
+        /// <param name="_Filename"></param>
+        /// <param name="_ResourceURL"></param>
+        /// <param name="_APITypeName"></param>
+        /// <param name="_ModID"></param>
+        /// <returns></returns>
         public static string GetQuasarDownloadURL(string _Filename, string _ResourceURL, string _APITypeName, string _ModID)
         {
-            string filename = "";
-            string resource = "";
-            string extension = "";
-            if (_Filename == "")
-            {
-                string[] downloadinfo = GetDownloadFileName(_APITypeName, _ModID).Result;
-
-                filename = downloadinfo[0];
-                extension = filename.Split('.')[1];
-                resource = downloadinfo[1];
-
-            }
-            else
-            {
-                filename = _Filename;
-                extension = filename.Split('.')[1];
-                resource = _ResourceURL;
-            }
+            string extension = _Filename.Split('.')[1];
 
             string url = "quasar:";
             url += _ResourceURL;
@@ -279,9 +306,8 @@ namespace Quasar
 
             return url;
         }
+        #endregion
 
     }
-
-
 
 }

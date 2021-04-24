@@ -1,46 +1,48 @@
-﻿using FluentFTP;
-using log4net;
+﻿using log4net;
 using log4net.Appender;
 using Nett;
 using Quasar.Build.Models;
-using Quasar.FileSystem;
 using Quasar.Helpers.FileOperations;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web.UI.WebControls;
 
 namespace Quasar.Helpers.Tools
 {
     public static class ARCropolisHelper
     {
-        public static void SendTouchmARC(FileWriter Writer, string WorkspaceName, bool DefaultConfig = false,bool NativeARCFolder = false, bool ARC = false, bool UMM = false)
+        /// <summary>
+        /// Sends ARCropolis and an updated TOML
+        /// </summary>
+        /// <param name="Writer">The used Filewriter</param>
+        /// <param name="WorkspaceName">Name of the workspace to send</param>
+        public static void SendTouchmARC(FileWriter Writer, string WorkspaceName)
         {
+            //Logging setup
             ILog log = LogManager.GetLogger("QuasarAppender");
             FileAppender appender = (FileAppender)log.Logger.Repository.GetAppenders()[0];
             appender.File = Properties.Settings.Default.DefaultDir + "\\Quasar.log";
             appender.Threshold = log4net.Core.Level.Debug;
             appender.ActivateOptions();
 
-            string basepath = "";
-            if (typeof(SDWriter).Equals(Writer.GetType()))
-            {
-                SDWriter wrote = (SDWriter)Writer;
-                basepath = wrote.LetterPath;
-            }
-
-            sendTouchmARC(Writer, log);
-            GetLocalConfig(log);
-            ModifyTouchmARCConfig(WorkspaceName, DefaultConfig, NativeARCFolder, ARC, UMM);
-            sendRemoteFile(Writer, log);
+            //Sending install
+            SendTouchmARCInstall(Writer, log);
+            
+            //Getting default config file
+            GetLocalConfigFile(log);
+            
+            //Editing and sending the generated config
+            ModifyTouchmARCConfig(WorkspaceName);
+            SendLocalConfigFile(Writer, log);
 
         }
 
-        public static void ModifyTouchmARCConfig(string WorkspacePath, bool DefaultConfig, bool NativeARCFolder = false, bool ARC = false, bool UMM = false)
+        /// <summary>
+        /// Modifies the local ARCropolis TOML File to match the desired workspace name
+        /// </summary>
+        /// <param name="WorkspacePath"></param>
+        public static void ModifyTouchmARCConfig(string WorkspacePath)
         {
+            //Logging setup
             ILog log = LogManager.GetLogger("QuasarAppender");
             FileAppender appender = (FileAppender)log.Logger.Repository.GetAppenders()[0];
             appender.File = Properties.Settings.Default.DefaultDir + "\\Quasar.log";
@@ -48,85 +50,31 @@ namespace Quasar.Helpers.Tools
             appender.ActivateOptions();
 
             string path = Properties.Settings.Default.DefaultDir + "\\Library\\arcropolis.toml";
-            ARCropolisConfiguration config = Toml.ReadFile<ARCropolisConfiguration>(path);
-            if (DefaultConfig)
+            try
             {
-                log.Debug("default arc sent");
-                if (NativeARCFolder)
-                {
+                ARCropolisConfiguration config = Toml.ReadFile<ARCropolisConfiguration>(path);
+                log.Debug("arc set to " + @"sd:/ultimate/" + WorkspacePath + "/arc");
+                config.paths.arc = @"sd:/ultimate/" + WorkspacePath + "/arc";
+                log.Debug("umm set to " + @"sd:/ultimate/" + WorkspacePath + "/umm");
+                config.paths.umm = @"sd:/ultimate/" + WorkspacePath + "/umm";
 
-                }
-                else
-                {
-                    config.paths.arc = @"rom:/arc/" + WorkspacePath;
-                }
-                
+
+                Toml.WriteFile<ARCropolisConfiguration>(config, path);
             }
-            else
+            catch(Exception e)
             {
-                log.Debug("arc set to " + @"sd:/Quasar/" + WorkspacePath+"/arc");
-                if (NativeARCFolder)
-                {
-                    if (ARC)
-                    {
-                        config.paths.arc = @"rom:/arcropolis/workspaces/" + WorkspacePath + "/arc";
-                    }
-                    if (UMM)
-                    {
-                        config.paths.umm = @"rom:/arcropolis/workspaces/" + WorkspacePath + "/umm";
-                    }
-                }
-                else
-                {
-                    if (ARC)
-                    {
-                        config.paths.arc = @"sd:/Quasar/" + WorkspacePath + "/arc";
-                    }
-                    if (UMM)
-                    {
-                        config.paths.umm = @"sd:/Quasar/" + WorkspacePath + "/Mods";
-                    }
-                    
-                }
-               
+                log.Error(e.Message);
             }
             
-
-            Toml.WriteFile<ARCropolisConfiguration>(config, path);
         }
 
-        public static void GetLocalConfig(ILog log)
+        /// <summary>
+        /// Retreives the remote ARCropolis TOML File
+        /// </summary>
+        /// <param name="Writer"></param>
+        /// <param name="log"></param>
+        public static void GetRemoteConfigFile(FileWriter Writer, ILog log)
         {
-            string source = Properties.Settings.Default.DefaultDir + "\\Resources\\ModLoaders\\ARCropolis\\arcropolis.toml";
-            string path = Properties.Settings.Default.DefaultDir + "\\Library\\arcropolis.toml";
-            FileOperation.CheckCopyFile(source, path);
-            log.Debug("Copied file to " + path);
-        }
-        public static bool LocalNewer(ILog log)
-        {
-            bool test = false;
-
-            string source = Properties.Settings.Default.DefaultDir + "\\Resources\\ModLoaders\\ARCropolis\\arcropolis.toml";
-            string path = Properties.Settings.Default.DefaultDir + "\\Library\\arcropolis.toml";
-
-            ARCropolisConfiguration RemoteConfig = Toml.ReadFile<ARCropolisConfiguration>(path);
-            ARCropolisConfiguration LocalConfig = Toml.ReadFile<ARCropolisConfiguration>(source);
-            string remotever = RemoteConfig.infos.version.Replace(".", "");
-            string localver = LocalConfig.infos.version.Replace(".", "");
-            int r = int.Parse(remotever);
-            int l = int.Parse(localver);
-            if (l > r)
-            {
-                test = true;
-            }
-            log.Debug("test is " + test + " local = "+localver+" remote = "+remotever);
-
-            return test;
-        }
-
-        public static void getRemoteFile(FileWriter Writer, ILog log)
-        {
-            
             try
             {
                 Writer.GetFile("atmosphere\\contents\\01006A800016E000\\romfs\\arcropolis.toml", Properties.Settings.Default.DefaultDir + "\\Library\\arcropolis.toml");
@@ -137,7 +85,25 @@ namespace Quasar.Helpers.Tools
                 log.Error(e.Message);
             }
         }
-        public static void sendRemoteFile(FileWriter Writer, ILog log)
+
+        /// <summary>
+        /// Retreives the default ARCropolis TOML File
+        /// </summary>
+        /// <param name="log"></param>
+        public static void GetLocalConfigFile(ILog log)
+        {
+            string source = Properties.Settings.Default.DefaultDir + "\\Resources\\ModLoaders\\ARCropolis\\arcropolis.toml";
+            string path = Properties.Settings.Default.DefaultDir + "\\Library\\arcropolis.toml";
+            FileOperation.CheckCopyFile(source, path);
+            log.Debug("Copied file to " + path);
+        }
+
+        /// <summary>
+        /// Sends the local ARCropolis TOML File to the device
+        /// </summary>
+        /// <param name="Writer"></param>
+        /// <param name="log"></param>
+        public static void SendLocalConfigFile(FileWriter Writer, ILog log)
         {
             try
             {
@@ -150,28 +116,30 @@ namespace Quasar.Helpers.Tools
             }
             
         }
-        public static void sendTouchmARC(FileWriter Writer, ILog log)
-        {
-            string[] Paths = new string[]
-            {
-                "atmosphere\\contents\\01006A800016E000\\exefs\\main.npdm",
-                "atmosphere\\contents\\01006A800016E000\\exefs\\subsdk9",
-                "atmosphere\\contents\\01006A800016E000\\romfs\\skyline\\plugins\\libarcropolis.nro"
-            };
 
-            foreach (string s in Paths)
+        /// <summary>
+        /// Sends ARCropolis' install files to the device
+        /// </summary>
+        /// <param name="Writer"></param>
+        /// <param name="log"></param>
+        public static void SendTouchmARCInstall(FileWriter Writer, ILog log)
+        {
+            string BasePath = Properties.Settings.Default.DefaultDir + "\\Resources\\ModLoaders\\ARCropolis";
+            foreach (string FilePath in Directory.GetFiles(BasePath, "*",SearchOption.AllDirectories))
             {
+                string destination = FilePath.Replace(BasePath + "\\", "");
                 try
                 {
-                    string source = Properties.Settings.Default.DefaultDir + "\\Resources\\ModLoaders\\ARCropolis\\" + s;
-                    Writer.SendFile(source, s);
-                    log.Debug("sent file " + s);
+                    if(destination != "arcropolis.toml")
+                    {
+                        Writer.SendFile(FilePath, destination);
+                        log.Debug("sent file " + destination);
+                    }
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     log.Error(e.Message);
                 }
-                
             }
         }
     }
@@ -193,6 +161,7 @@ namespace Quasar.Helpers.Tools
     {
         public string arc { get; set; }
         public string umm { get; set; }
+        public string[] extra_paths { get; set; }
     }
     public class updater
     {
@@ -206,5 +175,6 @@ namespace Quasar.Helpers.Tools
     public class misc
     {
         public bool debug { get; set; }
+        public string region { get; set; }
     }
 }

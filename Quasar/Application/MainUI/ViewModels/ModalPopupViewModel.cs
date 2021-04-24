@@ -1,5 +1,6 @@
-﻿using Quasar.Common.Models;
-using Quasar.Internal;
+﻿using log4net;
+using Quasar.Common.Models;
+using Quasar.Helpers;
 using System.Windows.Input;
 
 namespace Quasar.MainUI.ViewModels
@@ -114,7 +115,7 @@ namespace Quasar.MainUI.ViewModels
         /// <summary>
         /// Modal Popup Constructor
         /// </summary>
-        public ModalPopupViewModel()
+        public ModalPopupViewModel(ILog log)
         {
             EventSystem.Subscribe<ModalEvent>(ProcessModalEvent);
         }

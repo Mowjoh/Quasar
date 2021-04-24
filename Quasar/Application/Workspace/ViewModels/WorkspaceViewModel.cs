@@ -2,8 +2,8 @@
 using Quasar.Common.Models;
 using Quasar.Data.V2;
 using Quasar.Helpers.Json;
-using Quasar.Internal;
-using Quasar.Internal.Tools;
+using Quasar.Helpers;
+using Quasar.Helpers.Tools;
 using Quasar.Workspaces.Models;
 using System;
 using System.Collections.ObjectModel;

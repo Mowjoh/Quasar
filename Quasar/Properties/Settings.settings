@@ -65,12 +65,6 @@
     <Setting Name="PreviousVersion" Type="System.String" Scope="User">
       <Value Profile="(Default)">0000</Value>
     </Setting>
-    <Setting Name="Mada" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">f165a49418f0ed6c5f61e9e233889d91</Value>
-    </Setting>
-    <Setting Name="EnablePastebin" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
-    </Setting>
     <Setting Name="FTPAddress" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
@@ -103,6 +97,9 @@
     </Setting>
     <Setting Name="ModLoaderSetupState" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="BackupDate" Type="System.DateTime" Scope="User">
+      <Value Profile="(Default)" />
     </Setting>
   </Settings>
 </SettingsFile>
