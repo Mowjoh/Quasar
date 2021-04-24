@@ -425,68 +425,34 @@ namespace Quasar.Controls.ModManagement.ViewModels
         /// <param name="e"></param>
         public void ModTypeFilter(object sender, FilterEventArgs e)
         {
+            //Getting Item
             ModListItem mli = e.Item as ModListItem;
-            if(SelectedGameAPICategory != null)
-            {
-                if (mli.ModListItemViewModel.LibraryItem.APICategoryName == SelectedGameAPICategory.APICategoryName || SelectedGameAPICategory.ID == -1)
-                {
-                    if ((RedChecked && mli.ModListItemViewModel.ContentStatValue == 0) || (OrangeChecked && mli.ModListItemViewModel.ContentStatValue == 1) || (GreenChecked && mli.ModListItemViewModel.ContentStatValue == 2) || (PurpleChecked && mli.ModListItemViewModel.ContentStatValue == 3))
-                    {
-                        if (SearchText != "")
-                        {
-                            if (mli.ModListItemViewModel.APISubCategoryName.ToLower().Contains(SearchText.ToLower()))
-                            {
-                                e.Accepted = true;
-                            }
-                            else
-                            {
-                                e.Accepted = false;
-                            }
-                        }
-                        else
-                        {
-                            e.Accepted = true;
-                        }
 
-                    }
-                    else
-                    {
-                        e.Accepted = false;
-                    }
-                }
-                else
-                {
-                    e.Accepted = false;
-                }
+            //Getting Color Match Status
+            int ColorValue = mli.ModListItemViewModel.ContentStatValue;
+            bool MatchingCheckBox = (RedChecked && ColorValue == 0)
+                 || (OrangeChecked && ColorValue == 1)
+                 || (GreenChecked && ColorValue == 2)
+                 || (PurpleChecked && ColorValue == 3);
+
+            //Getting Type Select Match
+            bool MatchingSelectedType = mli.ModListItemViewModel.LibraryItem.APICategoryName == SelectedGameAPICategory?.APICategoryName;
+            bool NoSelectedType = SelectedGameAPICategory == null;
+
+            //Getting Filter Text Match
+            bool EmptyText = SearchText.Length == 0;
+            bool MatchingName = mli.ModListItemViewModel.LibraryItem.Name.Contains(SearchText.ToLower()) && !EmptyText;
+            bool MatchingCategory = mli.ModListItemViewModel.APISubCategoryName.ToLower().Contains(SearchText.ToLower()) && !EmptyText;
+
+            //Match status
+            if (MatchingCheckBox && (MatchingSelectedType || NoSelectedType) && (MatchingName || MatchingCategory || EmptyText))
+            {
+                e.Accepted = true;
             }
             else
             {
-                if ((RedChecked && mli.ModListItemViewModel.ContentStatValue == 0) || (OrangeChecked && mli.ModListItemViewModel.ContentStatValue == 1) || (GreenChecked && mli.ModListItemViewModel.ContentStatValue == 2) || (PurpleChecked && mli.ModListItemViewModel.ContentStatValue == 3))
-                {
-                    if (SearchText != "")
-                    {
-                        if (mli.ModListItemViewModel.APISubCategoryName.ToLower().Contains(SearchText.ToLower()))
-                        {
-                            e.Accepted = true;
-                        }
-                        else
-                        {
-                            e.Accepted = false;
-                        }
-                    }
-                    else
-                    {
-                        e.Accepted = true;
-                    }
-                    
-                }
-                else
-                {
-                    e.Accepted = false;
-                }
-                
+                e.Accepted = false;
             }
-            
         }
 
         /// <summary>
@@ -753,10 +719,10 @@ namespace Quasar.Controls.ModManagement.ViewModels
         /// <param name="item"></param>
         public void AskDeleteMod(ModListItem item)
         {
+            mliToDelete = item;
+
             if (!Properties.Settings.Default.SupressModDeletion)
             {
-                mliToDelete = item;
-
                 ModalEvent meuh = new ModalEvent()
                 {
                     EventName = "DeleteMod",
@@ -768,7 +734,12 @@ namespace Quasar.Controls.ModManagement.ViewModels
                     CancelButtonText = "Cancel"
 
                 };
+
                 EventSystem.Publish<ModalEvent>(meuh);
+            }
+            else
+            {
+                DeleteMod(mliToDelete);
             }
         }
 

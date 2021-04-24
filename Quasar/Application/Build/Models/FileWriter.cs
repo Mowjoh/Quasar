@@ -106,7 +106,7 @@ namespace Quasar.Build.Models
                 }
                 catch (Exception e)
                 {
-
+                    Log.Error(e.Message);
                 }
             });
             

@@ -34,6 +34,8 @@ namespace Quasar.Helpers.Tools
             ModifyTouchmARCConfig(WorkspaceName);
             SendLocalConfigFile(Writer, log);
 
+            File.Delete(Properties.Settings.Default.DefaultDir + "\\Library\\arcropolis.toml");
+
         }
 
         /// <summary>
