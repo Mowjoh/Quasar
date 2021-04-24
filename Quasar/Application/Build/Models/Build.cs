@@ -164,6 +164,8 @@ namespace Quasar.Build.Models
         {
             if (ModLoader != 4)
             {
+                File.Copy(Properties.Settings.Default.DefaultDir + "\\Resources\\ModLoaders\\ARCropolis\\arcropolis.toml", Properties.Settings.Default.DefaultDir + "\\Library\\arcropolis.toml", true);
+                
                 if(ModLoader == 1)
                 {
                     ARCropolisHelper.ModifyTouchmARCConfig(WorkspaceName);
@@ -172,8 +174,10 @@ namespace Quasar.Build.Models
                 {
                     ARCropolisHelper.ModifyTouchmARCConfig(WorkspaceName);
                 }
+
                 Writer.SendFile(Properties.Settings.Default.DefaultDir + "\\Library\\arcropolis.toml", "atmosphere\\contents\\01006A800016E000\\romfs\\arcropolis.toml");
-                
+
+                File.Delete(Properties.Settings.Default.DefaultDir + "\\Library\\arcropolis.toml");
             }
             ViewModel.BuildLog("Info", "Finished modloader setup");
         }

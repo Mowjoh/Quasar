@@ -1055,6 +1055,7 @@ namespace Quasar.Associations.ViewModels
         #endregion
 
         #region Events
+
         /// <summary>
         /// Responds to a trigger from a Slot View Model
         /// </summary>
@@ -1066,6 +1067,7 @@ namespace Quasar.Associations.ViewModels
                 RemoveAllSlotAssociations(svm);
             }
         }
+
         /// <summary>
         /// Removes all associations for a specific slot
         /// </summary>
@@ -1095,6 +1097,7 @@ namespace Quasar.Associations.ViewModels
         {
             RefreshSlotData();
         }
+
         #endregion
 
     }

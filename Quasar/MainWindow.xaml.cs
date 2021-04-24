@@ -41,7 +41,7 @@ namespace Quasar
                     Action = "Show",
                     EventName = "QuasarClose",
                     Title = "Are you sure you want to Exit ?",
-                    Content = "Doing so will probably result in some errors later on",
+                    Content = "Quasar is currently active.\rExiting now will probably result in some errors later on",
                     OkButtonText = "I'm sure",
                     CancelButtonText = "Nope",
                     Type = ModalType.OkCancel

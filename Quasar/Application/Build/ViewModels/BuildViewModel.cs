@@ -460,74 +460,109 @@ namespace Quasar.Build.ViewModels
             }
             else
             {
-                if (SelectedDrive.MediaD != null)
+                if(SelectedDrive == null)
                 {
-                    FW = new MTPWriter(this) { MediaD = SelectedDrive.MediaD };
+                    BuildLog("Error", "No SD selected");
+                    ok = false;
+                    FW = null;
                 }
                 else
                 {
-                    FW = new SDWriter(this) { LetterPath = SelectedDrive.Info.Name, Log = QuasarLogger };
+                    if (SelectedDrive.MediaD != null)
+                    {
+                        FW = new MTPWriter(this) { MediaD = SelectedDrive.MediaD };
+                    }
+                    else
+                    {
+                        FW = new SDWriter(this) { LetterPath = SelectedDrive.Info.Name, Log = QuasarLogger };
+                    }
                 }
-
             }
+
             if (ok)
             {
-                SB = new SmashBuilder(FW, SelectedModLoader.ID, CleanSelected, OverwriteSelected, this);
-
-                await Task.Run(() => {
-                    SB.StartBuild();
-                });
-            }
-
-            SB.CheckModLoader(SelectedModLoader.ID);
-            if (!SB.ModLoaderInstalled)
-            {
-                SetStep("ModLoader Configuration");
-                ModalEvent meuh = new ModalEvent()
+                bool proceed = false;
+                try
                 {
-                    Type = ModalType.OkCancel,
-                    Action = "Show",
-                    EventName = "AskModLoaderInstall",
-                    Title = "ARCropolis setup",
-                    Content = "Arcropolis is not detected on your Switch\rIt's required to load mods\rDo you want Quasar to install and setup ARCRopolis for you?",
-                    OkButtonText = "Yes please",
-                    CancelButtonText = "No, I want to do it myself"
-                };
+                    SB = new SmashBuilder(FW, SelectedModLoader.ID, CleanSelected, OverwriteSelected, this);
+                    proceed = true;
+                }
+                catch(Exception e)
+                {
+                    QuasarLogger.Error(e.Message);
+                }
 
-                EventSystem.Publish<ModalEvent>(meuh);
+                if (proceed)
+                {
+                    await Task.Run(() => {
+                        SB.StartBuild();
+                    });
+
+                    SB.CheckModLoader(SelectedModLoader.ID);
+                    if (!SB.ModLoaderInstalled)
+                    {
+                        SetStep("ModLoader Configuration");
+                        ModalEvent meuh = new ModalEvent()
+                        {
+                            Type = ModalType.OkCancel,
+                            Action = "Show",
+                            EventName = "AskModLoaderInstall",
+                            Title = "ARCropolis setup",
+                            Content = "Arcropolis is not detected on your Switch\rIt's required to load mods\rDo you want Quasar to install and setup ARCRopolis for you?",
+                            OkButtonText = "Yes please",
+                            CancelButtonText = "No, I want to do it myself"
+                        };
+
+                        EventSystem.Publish<ModalEvent>(meuh);
+                    }
+                    else
+                    {
+                        if (!Properties.Settings.Default.ModLoaderSetup)
+                        {
+                            SetStep("ModLoader Configuration");
+                            ModalEvent meuh = new ModalEvent()
+                            {
+                                Type = ModalType.OkCancel,
+                                Action = "Show",
+                                EventName = "AskModLoaderSetup",
+                                Title = "ARCropolis setup",
+                                Content = "Do you want Quasar to change ARCRopolis'\ractive workspace to this one ?",
+                                OkButtonText = "Yes please",
+                                CancelButtonText = "No"
+                            };
+
+                            EventSystem.Publish<ModalEvent>(meuh);
+                        }
+                        else
+                        {
+                            if (Properties.Settings.Default.ModLoaderSetupState)
+                            {
+                                await Task.Run(() => {
+
+                                    SB.SetupModLoader(SelectedModLoader.ID, MUVM.ActiveWorkspace.Name);
+                                });
+
+                            }
+
+                            EndBuildProcess();
+
+                        }
+                    }
+                }
+                else
+                {
+                    BuildLog("Error", "Could not launch build");
+                    EndBuildProcess();
+                   
+                }
             }
             else
             {
-                if (!Properties.Settings.Default.ModLoaderSetup)
-                {
-                    SetStep("ModLoader Configuration");
-                    ModalEvent meuh = new ModalEvent()
-                    {
-                        Type = ModalType.OkCancel,
-                        Action = "Show",
-                        EventName = "AskModLoaderSetup",
-                        Title = "ARCropolis setup",
-                        Content = "Do you want Quasar to change ARCRopolis'\ractive workspace to this one ?",
-                        OkButtonText = "Yes please",
-                        CancelButtonText = "No"
-                    };
-
-                    EventSystem.Publish<ModalEvent>(meuh);
-                }
-                else
-                {
-                    if (Properties.Settings.Default.ModLoaderSetupState)
-                    {
-                        await Task.Run(() => {
-                            SB.SetupModLoader(SelectedModLoader.ID, MUVM.ActiveWorkspace.Name);
-                        });
-
-                    }
-
-                    EndBuildProcess();
-
-                }
+                BuildLog("Error", "Could not launch build");
+                EndBuildProcess();
             }
+
+            
         }
 
         #endregion
