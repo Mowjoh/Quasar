@@ -350,7 +350,7 @@ namespace Quasar.Build.Models
             }
             catch(Exception e)
             {
-                BVM.Log.Error(e.Message);
+                BVM.QuasarLogger.Error(e.Message);
             }
             
             return false;

@@ -193,7 +193,6 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
-    <Compile Include="Helpers\Mod Scanning\Searchie.cs" />
     <Compile Include="Helpers\Named Pipes\PipeClient.cs" />
     <Compile Include="Helpers\Named Pipes\PipeServer.cs" />
     <Compile Include="Helpers\Downloading\ModDownloader.cs" />

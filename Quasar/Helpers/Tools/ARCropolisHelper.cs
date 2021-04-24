@@ -10,7 +10,12 @@ namespace Quasar.Helpers.Tools
 {
     public static class ARCropolisHelper
     {
-        public static void SendTouchmARC(FileWriter Writer, string WorkspaceName, bool DefaultConfig = false,bool NativeARCFolder = false, bool ARC = false, bool UMM = false)
+        /// <summary>
+        /// Sends ARCropolis and an updated TOML
+        /// </summary>
+        /// <param name="Writer">The used Filewriter</param>
+        /// <param name="WorkspaceName">Name of the workspace to send</param>
+        public static void SendTouchmARC(FileWriter Writer, string WorkspaceName)
         {
             //Logging setup
             ILog log = LogManager.GetLogger("QuasarAppender");
@@ -31,6 +36,10 @@ namespace Quasar.Helpers.Tools
 
         }
 
+        /// <summary>
+        /// Modifies the local ARCropolis TOML File to match the desired workspace name
+        /// </summary>
+        /// <param name="WorkspacePath"></param>
         public static void ModifyTouchmARCConfig(string WorkspacePath)
         {
             //Logging setup
@@ -41,17 +50,29 @@ namespace Quasar.Helpers.Tools
             appender.ActivateOptions();
 
             string path = Properties.Settings.Default.DefaultDir + "\\Library\\arcropolis.toml";
-            ARCropolisConfiguration config = Toml.ReadFile<ARCropolisConfiguration>(path);
+            try
+            {
+                ARCropolisConfiguration config = Toml.ReadFile<ARCropolisConfiguration>(path);
+                log.Debug("arc set to " + @"sd:/ultimate/" + WorkspacePath + "/arc");
+                config.paths.arc = @"sd:/ultimate/" + WorkspacePath + "/arc";
+                log.Debug("umm set to " + @"sd:/ultimate/" + WorkspacePath + "/umm");
+                config.paths.umm = @"sd:/ultimate/" + WorkspacePath + "/umm";
 
-            log.Debug("arc set to " + @"sd:/ultimate/" + WorkspacePath + "/arc");
-            config.paths.arc = @"sd:/ultimate/" + WorkspacePath + "/arc";
-            log.Debug("umm set to " + @"sd:/ultimate/" + WorkspacePath + "/umm");
-            config.paths.umm = @"sd:/ultimate/" + WorkspacePath + "/umm";
 
-
-            Toml.WriteFile<ARCropolisConfiguration>(config, path);
+                Toml.WriteFile<ARCropolisConfiguration>(config, path);
+            }
+            catch(Exception e)
+            {
+                log.Error(e.Message);
+            }
+            
         }
 
+        /// <summary>
+        /// Retreives the remote ARCropolis TOML File
+        /// </summary>
+        /// <param name="Writer"></param>
+        /// <param name="log"></param>
         public static void GetRemoteConfigFile(FileWriter Writer, ILog log)
         {
             try
@@ -64,6 +85,11 @@ namespace Quasar.Helpers.Tools
                 log.Error(e.Message);
             }
         }
+
+        /// <summary>
+        /// Retreives the default ARCropolis TOML File
+        /// </summary>
+        /// <param name="log"></param>
         public static void GetLocalConfigFile(ILog log)
         {
             string source = Properties.Settings.Default.DefaultDir + "\\Resources\\ModLoaders\\ARCropolis\\arcropolis.toml";
@@ -71,6 +97,12 @@ namespace Quasar.Helpers.Tools
             FileOperation.CheckCopyFile(source, path);
             log.Debug("Copied file to " + path);
         }
+
+        /// <summary>
+        /// Sends the local ARCropolis TOML File to the device
+        /// </summary>
+        /// <param name="Writer"></param>
+        /// <param name="log"></param>
         public static void SendLocalConfigFile(FileWriter Writer, ILog log)
         {
             try
@@ -84,6 +116,12 @@ namespace Quasar.Helpers.Tools
             }
             
         }
+
+        /// <summary>
+        /// Sends ARCropolis' install files to the device
+        /// </summary>
+        /// <param name="Writer"></param>
+        /// <param name="log"></param>
         public static void SendTouchmARCInstall(FileWriter Writer, ILog log)
         {
             string BasePath = Properties.Settings.Default.DefaultDir + "\\Resources\\ModLoaders\\ARCropolis";
@@ -123,7 +161,7 @@ namespace Quasar.Helpers.Tools
     {
         public string arc { get; set; }
         public string umm { get; set; }
-        public string extra_paths { get; set; }
+        public string[] extra_paths { get; set; }
     }
     public class updater
     {

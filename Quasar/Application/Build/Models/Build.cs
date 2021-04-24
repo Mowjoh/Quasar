@@ -93,20 +93,20 @@ namespace Quasar.Build.Models
         public override async Task<bool> StartBuild()
         {
             ViewModel.Building = true;
-            ViewModel.Log.Debug("Building set to true");
+            ViewModel.QuasarLogger.Debug("Building set to true");
 
             //Base Operations
             await StartCheck();
-            ViewModel.Log.Debug("Start Check Finished");
+            ViewModel.QuasarLogger.Debug("Start Check Finished");
 
             await GetLocalFileList();
-            ViewModel.Log.Debug("Got Local File List");
+            ViewModel.QuasarLogger.Debug("Got Local File List");
 
             await GetDistantFileList();
-            ViewModel.Log.Debug("Got Distant File List");
+            ViewModel.QuasarLogger.Debug("Got Distant File List");
 
             await ProcessTransferList();
-            ViewModel.Log.Debug("Finished processing transfer list");
+            ViewModel.QuasarLogger.Debug("Finished processing transfer list");
 
 
             //File Operations
@@ -118,7 +118,7 @@ namespace Quasar.Build.Models
             else
             {
                 ViewModel.BuildLog("Info", "No files to delete");
-                ViewModel.Log.Debug("No files to delete");
+                ViewModel.QuasarLogger.Debug("No files to delete");
             }
             if (WorkspaceFilesToCopy.Count != 0)
             {
@@ -128,7 +128,7 @@ namespace Quasar.Build.Models
             else
             {
                 ViewModel.BuildLog("Info", "No files to copy");
-                ViewModel.Log.Debug("No files to copy");
+                ViewModel.QuasarLogger.Debug("No files to copy");
             }
 
             SaveAndSendIndex();
@@ -137,7 +137,7 @@ namespace Quasar.Build.Models
         }
         public override async Task CheckModLoader(int ModLoader)
         {
-            ViewModel.Log.Debug("Checking Mod Loader existence");
+            ViewModel.QuasarLogger.Debug("Checking Mod Loader existence");
             if (ModLoader != 4)
             {
                 string tomlfile = "atmosphere\\contents\\01006A800016E000\\romfs\\arcropolis\\arcropolis.toml";
@@ -198,7 +198,7 @@ namespace Quasar.Build.Models
         {
             //UI Setup
             ViewModel.SetStep("Listing Local Files");
-            ViewModel.Log.Debug("Listing Local Files");
+            ViewModel.QuasarLogger.Debug("Listing Local Files");
             WorkspaceIndex = new ObservableCollection<ModFile>();
 
             foreach (Association ass in ViewModel.MUVM.ActiveWorkspace.Associations)
@@ -221,7 +221,7 @@ namespace Quasar.Build.Models
             try
             {
                 //UI Setup
-                ViewModel.Log.Debug("Starting to list distant files");
+                ViewModel.QuasarLogger.Debug("Starting to list distant files");
                 ViewModel.SetStep("Listing Distant Files, please wait as it might take a while");
                 ViewModel.SetProgressionStyle(true);
 
@@ -239,7 +239,7 @@ namespace Quasar.Build.Models
             }
             catch(Exception e)
             {
-                ViewModel.Log.Error(e.Message);
+                ViewModel.QuasarLogger.Error(e.Message);
             }
         }
         public override async Task ProcessTransferList()
@@ -259,14 +259,14 @@ namespace Quasar.Build.Models
                 ViewModel.SetStep("Deleting Differences");
                 foreach (ModFile reference in WorkspaceFilesToDelete)
                 {
-                    ViewModel.Log.Debug("Deleting " + reference.DestinationFilePath);
+                    ViewModel.QuasarLogger.Debug("Deleting " + reference.DestinationFilePath);
                     Writer.DeleteFile(WorkspacePath + reference.DestinationFilePath);
                 }
 
             }
             catch(Exception e)
             {
-                ViewModel.Log.Error(e.Message);
+                ViewModel.QuasarLogger.Error(e.Message);
             }
             
         }
@@ -290,12 +290,12 @@ namespace Quasar.Build.Models
                         Writer.SendFile(Ferb.SourceFilePath, WorkspacePath + Ferb.DestinationFilePath);
                         WorkspaceFilesToCopy.Remove(Ferb);
                     }
-                    ViewModel.Log.Info(String.Format("Finished copying files for {0}", ItemName));
+                    ViewModel.QuasarLogger.Info(String.Format("Finished copying files for {0}", ItemName));
                     ViewModel.BuildLog("Mod", String.Format("Finished copying files for {0}", ItemName));
                 }
                 catch (Exception e)
                 {
-                    ViewModel.Log.Error(e.Message);
+                    ViewModel.QuasarLogger.Error(e.Message);
                 }
                 
             }
@@ -308,7 +308,7 @@ namespace Quasar.Build.Models
             ViewModel.SetStep("Cleaning Workspace");
             ViewModel.SetProgressionStyle(true);
             Writer.DeleteFolder(WorkspacePath);
-            ViewModel.Log.Debug("Workspace Cleaned");
+            ViewModel.QuasarLogger.Debug("Workspace Cleaned");
             ViewModel.BuildLog("Info", "Workspace Cleaned");
 
         }
@@ -322,19 +322,19 @@ namespace Quasar.Build.Models
             if (Writer.CheckFileExists(DistantWorkspacePath + @"Files.json"))
             {
                 Writer.GetFile(DistantWorkspacePath + @"Files.json", localHashFilePath);
-                ViewModel.Log.Debug(String.Format("Distant Hash File Exists : {0}", DistantWorkspacePath + @"Files.json"));
+                ViewModel.QuasarLogger.Debug(String.Format("Distant Hash File Exists : {0}", DistantWorkspacePath + @"Files.json"));
             }
 
             //Loading distant Workspace Hashes if found
             if (File.Exists(localHashFilePath))
             {
-                ViewModel.Log.Debug("File Exists, Loading Hashes");
+                ViewModel.QuasarLogger.Debug("File Exists, Loading Hashes");
                 DistantIndex = JSonHelper.GetModFiles();
             }
             else
             {
-                ViewModel.Log.Debug("No Remote Hash File");
-                ViewModel.Log.Debug("Hash List Created");
+                ViewModel.QuasarLogger.Debug("No Remote Hash File");
+                ViewModel.QuasarLogger.Debug("Hash List Created");
                 DistantIndex = new ObservableCollection<ModFile>();
             }
         }
@@ -399,14 +399,14 @@ namespace Quasar.Build.Models
                 mf.SourceFilePath = "";
             }
             JSonHelper.SaveModFiles(WorkspaceIndex);
-           ViewModel.Log.Debug("Saved Index");
+           ViewModel.QuasarLogger.Debug("Saved Index");
 
            //Sending Hash Files
            Writer.SendFile(LocalIndexFilePath, WorkspacePath + @"Files.json");
 
-           ViewModel.Log.Debug("Sent Index");
+           ViewModel.QuasarLogger.Debug("Sent Index");
            File.Delete(LocalIndexFilePath);
-           ViewModel.Log.Debug("Deleted Index");
+           ViewModel.QuasarLogger.Debug("Deleted Index");
         }
         public void SetProgression(int cnt, int tot)
         {

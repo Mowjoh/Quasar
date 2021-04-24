@@ -13,7 +13,10 @@ namespace Quasar.Helpers.ModScanning
 {
     public static class Scannerino
     {
-        //Mod Scanning
+        /// <summary>
+        /// Does a full scan for every mod in the Library
+        /// </summary>
+        /// <param name="MUVM"></param>
         public static void ScanAllMods(MainUIViewModel MUVM)
         {
             foreach(LibraryItem li in MUVM.Library)
@@ -22,6 +25,12 @@ namespace Quasar.Helpers.ModScanning
             }
         }
 
+        /// <summary>
+        /// Updates all Content Items for a specific Library Mod
+        /// </summary>
+        /// <param name="MUVM"></param>
+        /// <param name="li"></param>
+        /// <param name="ScannedResults"></param>
         public static void UpdateContents(MainUIViewModel MUVM, LibraryItem li, ObservableCollection<ContentItem> ScannedResults = null)
         {
             string ModFolder = GetModFolder(li.ID, li.APICategoryName, MUVM.Games[0], li.ManualMod);
@@ -84,6 +93,15 @@ namespace Quasar.Helpers.ModScanning
 
         }
 
+        /// <summary>
+        /// Scans a Library Mod
+        /// </summary>
+        /// <param name="FolderPath"></param>
+        /// <param name="QuasarModTypes"></param>
+        /// <param name="game"></param>
+        /// <param name="LibraryItem"></param>
+        /// <param name="FileList"></param>
+        /// <returns>The mod's corresponding Content Items</returns>
         public static ObservableCollection<ContentItem> ScanMod(string FolderPath, ObservableCollection<QuasarModType> QuasarModTypes, Game game, LibraryItem LibraryItem, bool FileList = false)
         {
             ObservableCollection<ContentItem> SearchResults = new ObservableCollection<ContentItem>();
@@ -150,6 +168,16 @@ namespace Quasar.Helpers.ModScanning
 
             return SearchResults;
         }
+       
+        /// <summary>
+        /// Scans all files for a specific path
+        /// </summary>
+        /// <param name="FolderPath"></param>
+        /// <param name="QuasarModTypes"></param>
+        /// <param name="game"></param>
+        /// <param name="ModFolder"></param>
+        /// <param name="FileList"></param>
+        /// <returns>The list of all scanned files</returns>
         public static ObservableCollection<ScanFile> GetScanFiles(string FolderPath, ObservableCollection<QuasarModType> QuasarModTypes, Game game,string ModFolder, bool FileList = false)
         {
             ObservableCollection<ScanFile> ScanResults = new ObservableCollection<ScanFile>();
@@ -211,6 +239,16 @@ namespace Quasar.Helpers.ModScanning
 
             return ScanResults;
         }
+       
+        /// <summary>
+        /// Matches all scan files to a game entry
+        /// </summary>
+        /// <param name="FilesToMatch"></param>
+        /// <param name="FileDefinition"></param>
+        /// <param name="qmt"></param>
+        /// <param name="game"></param>
+        /// <param name="ModFolder"></param>
+        /// <returns></returns>
         public static ObservableCollection<ScanFile> MatchFiles(ObservableCollection<ScanFile> FilesToMatch, QuasarModTypeFileDefinition FileDefinition,QuasarModType qmt, Game game, string ModFolder)
         {
             Regex FileRegex = new Regex(PrepareRegex(FileDefinition.SearchFileName));
@@ -285,7 +323,17 @@ namespace Quasar.Helpers.ModScanning
             return FilesToMatch;
         }
 
-        //Mod Outputting
+        /// <summary>
+        /// Outputs a list of Mod Files that can be built
+        /// </summary>
+        /// <param name="qmt"></param>
+        /// <param name="Family"></param>
+        /// <param name="ci"></param>
+        /// <param name="Slot"></param>
+        /// <param name="ModLoader"></param>
+        /// <param name="li"></param>
+        /// <param name="game"></param>
+        /// <returns></returns>
         public static ObservableCollection<ModFile> GetModFiles(QuasarModType qmt, GameElementFamily Family, ContentItem ci, int Slot, int ModLoader, LibraryItem li, Game game)
         {
             string DefaultDir = Properties.Settings.Default.DefaultDir;
@@ -310,6 +358,17 @@ namespace Quasar.Helpers.ModScanning
             return PreparedModFiles;
         }
 
+        /// <summary>
+        /// Processes a Mod File's output path for building
+        /// </summary>
+        /// <param name="SourcePath"></param>
+        /// <param name="FileDefinition"></param>
+        /// <param name="GameElement"></param>
+        /// <param name="Slot"></param>
+        /// <param name="ModLoader"></param>
+        /// <param name="li"></param>
+        /// <param name="ModFolder"></param>
+        /// <returns></returns>
         public static string ProcessOutput(string SourcePath,QuasarModTypeFileDefinition FileDefinition, GameElement GameElement, int Slot, int ModLoader, LibraryItem li, string ModFolder)
         {
             //Setup
@@ -403,7 +462,11 @@ namespace Quasar.Helpers.ModScanning
             return OutputPath+"/"+OutputFile;
         }
 
-        //Common
+        /// <summary>
+        /// Turns a Type config value into a useable Regex
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns>The Regex String</returns>
         public static string PrepareRegex(string input)
         {
             string output = input;
@@ -431,6 +494,15 @@ namespace Quasar.Helpers.ModScanning
 
             return output;
         }
+
+        /// <summary>
+        /// Returns the appropriate Library Mod Folder
+        /// </summary>
+        /// <param name="LibraryModID"></param>
+        /// <param name="APICategoryName"></param>
+        /// <param name="game"></param>
+        /// <param name="Manual"></param>
+        /// <returns>The path to that Folder</returns>
         public static string GetModFolder(int LibraryModID, string APICategoryName, Game game, bool Manual = false)
         {
             

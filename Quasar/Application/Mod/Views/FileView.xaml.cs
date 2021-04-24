@@ -82,15 +82,5 @@ namespace Quasar.Controls
                 }
             }
         }
-
-        private void Expand_Click(object sender, RoutedEventArgs e)
-        {
-            ExpandTree(Trees);
-        }
-
-        private void Minimize_Click(object sender, RoutedEventArgs e)
-        {
-            MinimizeTree(Trees);
-        }
     }
 }

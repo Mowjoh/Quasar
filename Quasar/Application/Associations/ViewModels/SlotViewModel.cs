@@ -1,4 +1,5 @@
-﻿using Quasar.Common.Models;
+﻿using log4net;
+using Quasar.Common.Models;
 using Quasar.Data.V2;
 using Quasar.Helpers;
 using System;
@@ -163,12 +164,14 @@ namespace Quasar.Associations.ViewModels
 
         #endregion
 
+        public ILog QuasarLogger { get; set; }
+
         /// <summary>
         /// Slot View Model Constructor
         /// </summary>
-        public SlotViewModel()
+        public SlotViewModel(ILog _QuasarLogger)
         {
-
+            QuasarLogger = _QuasarLogger;
         }
 
         #region Actions
@@ -198,6 +201,7 @@ namespace Quasar.Associations.ViewModels
         /// </summary>
         public void DeleteAssociations()
         {
+            QuasarLogger.Info(String.Format("Slot {0} asked to be emptied", SlotNumber));
             EventSystem.Publish<SlotViewModel>(this);
         }
         #endregion

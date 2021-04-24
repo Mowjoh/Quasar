@@ -62,7 +62,7 @@ namespace Quasar.MainUI.ViewModels
         /// Mutex that serves to know if a Quasar instance is already running
         /// </summary>
         public Mutex serverMutex;
-        public ILog log { get; set; }
+        public ILog QuasarLogger { get; set; }
         #endregion
 
         #endregion
@@ -472,16 +472,16 @@ namespace Quasar.MainUI.ViewModels
 
             try
             {
-                log.Info("Update Process Started");
+                QuasarLogger.Info("Update Process Started");
                 SetupClientOrServer();
 
-                log.Info("Update Process Started");
+                QuasarLogger.Info("Update Process Started");
                 Updater.CheckExecuteUpdate();
 
-                log.Info("Loading References");
+                QuasarLogger.Info("Loading References");
                 LoadData();
 
-                log.Info("Loading Views");
+                QuasarLogger.Info("Loading Views");
                 SetupViews();
 
                 AdvancedMode = false;
@@ -497,8 +497,8 @@ namespace Quasar.MainUI.ViewModels
             }
             catch (Exception e)
             {
-                log.Info(e.Message);
-                log.Info(e.StackTrace);
+                QuasarLogger.Info(e.Message);
+                QuasarLogger.Info(e.StackTrace);
             }
         }
 
@@ -583,7 +583,7 @@ namespace Quasar.MainUI.ViewModels
             TabItems = new ObservableCollection<TabItem>();
 
             ModsView = new ModsView();
-            MVM = new ModsViewModel(this, log);
+            MVM = new ModsViewModel(this, QuasarLogger);
             ModsView.DataContext = MVM;
             TabItems.Add(new TabItem() { Content = ModsView, Header = Properties.Resources.MainUI_OverviewTabHeader, Foreground = new SolidColorBrush() { Color = Colors.White } });
 
@@ -593,15 +593,14 @@ namespace Quasar.MainUI.ViewModels
             TabItems.Add(new TabItem() { Content = ContentView, Header = Properties.Resources.MainUI_ContentsTabHeader, Foreground = new SolidColorBrush() { Color = Colors.White } });
 
 
-            AVM = new AssociationViewModel(this);
-            AVM.Log = log;
+            AVM = new AssociationViewModel(this, QuasarLogger);
             AssociationView = new AssociationView() { AssociationViewModel = AVM };
             AssociationView.DataContext = AVM;
             TabItems.Add(new TabItem() { Content = AssociationView, Header = Properties.Resources.MainUI_ManagementTabHeader, Foreground = new SolidColorBrush() { Color = Colors.White } });
 
             BuildView = new BuildView();
-            BVM = new BuildViewModel(this);
-            BVM.Log = log;
+            BVM = new BuildViewModel(this, QuasarLogger);
+            BVM.QuasarLogger = QuasarLogger;
             BuildView.DataContext = BVM;
             TabItems.Add(new TabItem() { Content = BuildView, Header = Properties.Resources.MainUI_FileTransferTabHeader, Foreground = new SolidColorBrush() { Color = Colors.White } });
 
@@ -609,11 +608,11 @@ namespace Quasar.MainUI.ViewModels
             TabItems.Add(new TabItem() { Content = SettingsView, Header = Properties.Resources.MainUI_SettingsTabHeader, Foreground = new SolidColorBrush() { Color = Colors.White } });
 
             WorkspaceView = new WorkspaceView();
-            WVM = new WorkspaceViewModel(this, log);
+            WVM = new WorkspaceViewModel(this, QuasarLogger);
             WorkspaceView.DataContext = WVM;
             TabItems.Add(new TabItem() { Content = WorkspaceView, Header = Properties.Resources.MainUI_WorkspacesTabHeader, Foreground = new SolidColorBrush() { Color = Colors.White }, Visibility = Properties.Settings.Default.EnableWorkspaces ? Visibility.Visible : Visibility.Collapsed });
 
-            ModalPopupViewModel = new ModalPopupViewModel();
+            ModalPopupViewModel = new ModalPopupViewModel(QuasarLogger);
 
             SettingsView.Load();
         }
@@ -624,7 +623,7 @@ namespace Quasar.MainUI.ViewModels
         /// </summary>
         public void SetupClientOrServer()
         {
-            serverMutex = PipeHelper.CheckExecuteInstance(serverMutex, log);
+            serverMutex = PipeHelper.CheckExecuteInstance(serverMutex, QuasarLogger);
         }
 
         /// <summary>
@@ -790,7 +789,6 @@ namespace Quasar.MainUI.ViewModels
             if (Setting.SettingName == "EnableAdvanced")
             {
                 AdvancedMode = Setting.IsChecked;
-                ChangeLogger(Setting.IsChecked);
             }
             if (Setting.SettingName == "EnableWorkspaces")
             {
@@ -805,43 +803,18 @@ namespace Quasar.MainUI.ViewModels
         /// </summary>
         public void SetupLogger()
         {
-            log = LogManager.GetLogger("QuasarAppender");
-            FileAppender appender = (FileAppender)log.Logger.Repository.GetAppenders()[0];
+            QuasarLogger = LogManager.GetLogger("QuasarAppender");
+            FileAppender appender = (FileAppender)QuasarLogger.Logger.Repository.GetAppenders()[0];
             appender.File = Properties.Settings.Default.DefaultDir + "\\Quasar.log";
-            if (Properties.Settings.Default.EnableAdvanced)
-            {
-                appender.Threshold = log4net.Core.Level.Debug;
-            }
-            else
-            {
-                appender.Threshold = log4net.Core.Level.Info;
-            }
+            appender.Threshold = log4net.Core.Level.Debug;
 
             appender.ActivateOptions();
 
-            log.Info("------------------------------");
-            log.Warn("Quasar Start");
-            log.Info("------------------------------");
+            QuasarLogger.Info("------------------------------");
+            QuasarLogger.Warn("Quasar Start");
+            QuasarLogger.Info("------------------------------");
         }
 
-        /// <summary>
-        /// Changes the logger's configuration
-        /// </summary>
-        /// <param name="debug"></param>
-        public void ChangeLogger(bool debug)
-        {
-            FileAppender appender = (FileAppender)log.Logger.Repository.GetAppenders()[0];
-            appender.Threshold = log4net.Core.Level.Debug;
-            if (debug)
-            {
-                appender.Threshold = log4net.Core.Level.Debug;
-            }
-            else
-            {
-                appender.Threshold = log4net.Core.Level.Info;
-            }
-
-        }
         #endregion
     }
 }

@@ -1,4 +1,5 @@
-﻿using Quasar.Controls.Mod.ViewModels;
+﻿using log4net;
+using Quasar.Controls.Mod.ViewModels;
 using Quasar.Controls.ModManagement.ViewModels;
 using Quasar.Data.V2;
 using Quasar.FileSystem;
@@ -63,20 +64,22 @@ namespace Quasar.Controls
         }
         #endregion
 
+
+
         public ModListItem()
         {
             InitializeComponent();
         }
 
-        public ModListItem(ModsViewModel model, LibraryItem _LibraryItem = null,  Game _Game = null, bool Downloading = false)
+        public ModListItem(ModsViewModel model,ILog _QuasarLogger, LibraryItem _LibraryItem = null,  Game _Game = null, bool Downloading = false)
         {
-            ModListItemViewModel = new ModListItemViewModel(_LibraryItem,_Game, model, Downloading);
+            ModListItemViewModel = new ModListItemViewModel(_LibraryItem,_Game, model, _QuasarLogger, Downloading);
             InitializeComponent();
             DataContext = ModListItemViewModel;
         }
-        public ModListItem(string QuasarURL, ObservableCollection<Game> Games, ObservableCollection<LibraryItem> Mods, ModsViewModel model)
+        public ModListItem(string QuasarURL, ObservableCollection<Game> Games, ObservableCollection<LibraryItem> Mods, ModsViewModel model, ILog _QuasarLogger)
         {
-            ModListItemViewModel = new ModListItemViewModel(QuasarURL, Games, Mods, model);
+            ModListItemViewModel = new ModListItemViewModel(QuasarURL, Games, Mods, model, _QuasarLogger);
             InitializeComponent();
             DataContext = ModListItemViewModel;
         }

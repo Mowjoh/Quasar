@@ -15,9 +15,9 @@ namespace Quasar.Build.ViewModels
 {
     public class BuildViewModel : ObservableObject
     {
-        #region Fields
+        #region View
 
-        #region Views
+        #region Private
         private Workspace _ActiveWorkspace { get; set; }
         private ObservableCollection<USBDrive> _Drives { get; set; }
         private ModLoader _SelectedModLoader { get; set; }
@@ -40,21 +40,7 @@ namespace Quasar.Build.ViewModels
         private bool _ProgressBarStyle { get; set; } = false;
         #endregion
 
-        #region Data
-        private MainUIViewModel _MUVM { get; set; }
-        private SmashBuilder _SB { get; set; }
-        #endregion
-
-        #region Commands
-        private ICommand _RefreshUSBCommand { get; set; }
-        private ICommand _BuildCommand { get; set; }
-        #endregion
-
-        #endregion
-
-        #region Properties
-
-        #region View
+        #region Public
         public Workspace ActiveWorkspace
         {
             get => _ActiveWorkspace;
@@ -255,7 +241,16 @@ namespace Quasar.Build.ViewModels
         }
         #endregion
 
+        #endregion
+
         #region Data
+
+        #region Private
+        private MainUIViewModel _MUVM { get; set; }
+        private SmashBuilder _SB { get; set; }
+        #endregion
+
+        #region Public
         public MainUIViewModel MUVM
         {
             get => _MUVM;
@@ -276,7 +271,16 @@ namespace Quasar.Build.ViewModels
         }
         #endregion
 
+        #endregion
+
         #region Commands
+
+        #region Private
+        private ICommand _RefreshUSBCommand { get; set; }
+        private ICommand _BuildCommand { get; set; }
+        #endregion
+
+        #region Public
         public ICommand RefreshUSBCommand
         {
             get
@@ -302,11 +306,19 @@ namespace Quasar.Build.ViewModels
         }
         #endregion
 
-        public ILog Log { get; set; }
         #endregion
 
-        public BuildViewModel(MainUIViewModel _MUVM)
+        public ILog QuasarLogger { get; set; }
+
+        /// <summary>
+        /// Basic constructor
+        /// </summary>
+        /// <param name="_MUVM"></param>
+        /// <param name="_QuasarLogger"></param>
+        public BuildViewModel(MainUIViewModel _MUVM, ILog _QuasarLogger)
         {
+            QuasarLogger = _QuasarLogger;
+
             MUVM = _MUVM;
 
             getSDCards();
@@ -315,12 +327,15 @@ namespace Quasar.Build.ViewModels
             LoadUI();
 
             EventSystem.Subscribe<Workspace>(SelectWorkspace);
-            EventSystem.Subscribe<ModalEvent>(ModalEvent);
+            EventSystem.Subscribe<ModalEvent>(ProcessIncomingModalEvent);
 
         }
 
         #region Actions
         
+        /// <summary>
+        /// Sets up the UI with preffered options
+        /// </summary>
         private void LoadUI()
         {
             SelectedModLoader = MUVM.ModLoaders[0];
@@ -348,6 +363,10 @@ namespace Quasar.Build.ViewModels
             }
 
         }
+
+        /// <summary>
+        /// Retreives the list of Flash Drives
+        /// </summary>
         public void getSDCards()
         {
             Drives = new ObservableCollection<USBDrive>();
@@ -370,23 +389,50 @@ namespace Quasar.Build.ViewModels
             }
         }
 
+        /// <summary>
+        /// Retreives the list of connected MTP Drives
+        /// </summary>
         public void getMTPDrives()
         {
             
             
         }
 
+        
+
+        /// <summary>
+        /// Sets UI for the end build process
+        /// </summary>
+        public async void EndBuildProcess()
+        {
+            QuasarLogger.Info("Transfer Finished");
+            SetStep("Finished");
+            SetSubStep("");
+            SetProgression(100);
+            SetProgressionStyle(false);
+            SetSize("");
+            SetSpeed("");
+            SetTotal("0" , "0");
+            Building = false;
+            BuildLog("Info", "Transfer Process End");
+        }
+        #endregion
+
+        #region User Actions
+        /// <summary>
+        /// Launches the build process
+        /// </summary>
         public async void Build()
         {
             ResetLogs();
-            BuildLog("Info","Transfer Process Start :");
+            BuildLog("Info", "Transfer Process Start :");
             bool ok = true;
 
             FileWriter FW;
             if (WirelessSelected)
             {
                 BuildLog("Info", "Attempting to connect to the Switch...");
-                FW = new FTPWriter(this) { Log = Log };
+                FW = new FTPWriter(this) { Log = QuasarLogger };
                 ok = await FW.VerifyOK();
                 if (!ok)
                 {
@@ -399,15 +445,15 @@ namespace Quasar.Build.ViewModels
             }
             else
             {
-                if(SelectedDrive.MediaD != null)
+                if (SelectedDrive.MediaD != null)
                 {
                     FW = new MTPWriter(this) { MediaD = SelectedDrive.MediaD };
                 }
                 else
                 {
-                    FW = new SDWriter(this) { LetterPath = SelectedDrive.Info.Name, Log = Log };
+                    FW = new SDWriter(this) { LetterPath = SelectedDrive.Info.Name, Log = QuasarLogger };
                 }
-                
+
             }
             if (ok)
             {
@@ -460,7 +506,7 @@ namespace Quasar.Build.ViewModels
                         await Task.Run(() => {
                             SB.SetupModLoader(SelectedModLoader.ID, MUVM.ActiveWorkspace.Name);
                         });
-                        
+
                     }
 
                     EndBuildProcess();
@@ -469,32 +515,15 @@ namespace Quasar.Build.ViewModels
             }
         }
 
-        public async void InstallModLoader()
-        {
-
-        }
-
-        public async void ConfigureModLoader()
-        {
-
-        }
-
-        public async void EndBuildProcess()
-        {
-            Log.Info("Transfer Finished");
-            SetStep("Finished");
-            SetSubStep("");
-            SetProgression(100);
-            SetProgressionStyle(false);
-            SetSize("");
-            SetSpeed("");
-            Building = false;
-            BuildLog("Info", "Transfer Process End");
-        }
         #endregion
 
         #region Events
-        public async void ModalEvent(ModalEvent meuh)
+
+        /// <summary>
+        /// Processes all incoming Modal Event responses
+        /// </summary>
+        /// <param name="meuh"></param>
+        public async void ProcessIncomingModalEvent(ModalEvent meuh)
         {
             switch (meuh.EventName)
             {
@@ -528,10 +557,16 @@ namespace Quasar.Build.ViewModels
                     break;
             }
         }
+
+        /// <summary>
+        /// Responds to a workspace change trigger
+        /// </summary>
+        /// <param name="w"></param>
         public void SelectWorkspace(Workspace w)
         {
             ActiveWorkspace = w;
         }
+
         #endregion
 
         #region Async UI Modifiers
