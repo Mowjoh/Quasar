@@ -719,10 +719,10 @@ namespace Quasar.Controls.ModManagement.ViewModels
         /// <param name="item"></param>
         public void AskDeleteMod(ModListItem item)
         {
+            mliToDelete = item;
+
             if (!Properties.Settings.Default.SupressModDeletion)
             {
-                mliToDelete = item;
-
                 ModalEvent meuh = new ModalEvent()
                 {
                     EventName = "DeleteMod",
@@ -734,7 +734,12 @@ namespace Quasar.Controls.ModManagement.ViewModels
                     CancelButtonText = "Cancel"
 
                 };
+
                 EventSystem.Publish<ModalEvent>(meuh);
+            }
+            else
+            {
+                DeleteMod(mliToDelete);
             }
         }
 

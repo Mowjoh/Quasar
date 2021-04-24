@@ -905,7 +905,7 @@ namespace Quasar.Associations.ViewModels
                     foreach (Slot item in items)
                     {
                         //Checking if an item exists with the same Library Item ID
-                        if (item.SlotViewModel.ContentItems.Any(cma => cma.LibraryItemID == ci.LibraryItemID))
+                        if (item.SlotViewModel.ContentItems.Any(cma => cma.LibraryItemID == ci.LibraryItemID && cma.ScanFiles[0].OriginPath == ci.ScanFiles[0].OriginPath))
                         {
                             //Adding the Content Item to that slot
                             item.SlotViewModel.ContentItems.Add(ci);
@@ -916,7 +916,7 @@ namespace Quasar.Associations.ViewModels
                     if (!added)
                     {
                         //Creating a Slot
-                        SlotItems.Add(new Slot()
+                        GroupedContent.Add(new Slot()
                         {
                             SlotViewModel = new SlotViewModel(QuasarLogger)
                             {
