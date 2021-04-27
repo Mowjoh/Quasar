@@ -62,7 +62,7 @@ namespace Quasar.Helpers.API
                 queryParameters = GetDefaultParameters();
                 queryParameters.Add(new QueryStringItem("itemid", _ItemID));
                 queryParameters.Add(new QueryStringItem("itemtype", _ItemType));
-                queryParameters.Add(new QueryStringItem("fields", "name,Credits().aAuthors(),description,downloads,catid,Updates().nGetUpdatesCount(),Game().name"));
+                queryParameters.Add(new QueryStringItem("fields", "name,Credits().aAuthors(),description,Category().name,catid,Updates().nGetUpdatesCount(),Game().name"));
 
                 string queryURL = FormatAPIRequest("Core/Item/Data", queryParameters);
 
@@ -79,7 +79,7 @@ namespace Quasar.Helpers.API
                 }
 
                 DownloadedAPIMod.ID = Int32.Parse(_ItemID);
-                DownloadedAPIMod.ModType = _ItemType;
+                DownloadedAPIMod.GamebananaRootCategoryName = _ItemType;
             }
             catch(Exception e)
             {
@@ -142,7 +142,7 @@ namespace Quasar.Helpers.API
         /// <param name="_GameID">Gamebanana's Game ID</param>
         /// <param name="_TypeID">Gamebanana's Category ID</param>
         /// <returns></returns>
-        public static async Task<int> GetScreenshot(string _ItemType, string _ItemID, string _GameID, string _TypeID)
+        public static async Task<int> GetScreenshot(string _ItemType, string _ItemID, string Guid)
         {
             string downloadURL = "";
 
@@ -172,7 +172,7 @@ namespace Quasar.Helpers.API
 
                         string downloadextension = downloadURL.Split('.')[downloadURL.Split('.').Length - 1];
 
-                        string imageSource = Properties.Settings.Default.DefaultDir + @"\Library\Screenshots\" + _GameID + "_" + _TypeID + "_" + _ItemID + "." + downloadextension;
+                        string imageSource = Properties.Settings.Default.DefaultDir + @"\Library\Screenshots\" + Guid + "." + downloadextension;
 
                         await ModDownloader.DownloadFile(downloadURL, imageSource);
                     }
@@ -186,72 +186,6 @@ namespace Quasar.Helpers.API
             return 0;
         }
 
-
-        //Bullshit function
-        public static async Task<List<APIMod>> GetAPIModUpdates(ObservableCollection<LibraryItem> Library)
-        {
-            bool abort = false;
-
-            List<APIMod> ElementCollection = new List<APIMod>();
-
-            queryParameters = GetDefaultParameters();
-
-            foreach (LibraryItem li in Library)
-            {
-                queryParameters.Add(new QueryStringItem("itemid[]", li.ID.ToString()));
-                queryParameters.Add(new QueryStringItem("itemtype[]", li.APICategoryName));
-                queryParameters.Add(new QueryStringItem("fields[]", "Updates().nGetUpdatesCount()"));
-            }
-
-            try
-            {
-                string queryURL = FormatAPIRequest("Core/Item/Data", queryParameters);
-
-                using (HttpClient webClient = new HttpClient())
-                {
-                    HttpResponseMessage response = await webClient.GetAsync(queryURL);
-
-                    if (response.IsSuccessStatusCode)
-                    {
-                        string responseText = await response.Content.ReadAsStringAsync();
-                        ElementCollection = JsonConvert.DeserializeObject<List<APIMod>>(responseText);
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-            }
-
-
-
-            if (!abort)
-            {
-                try
-                {
-                    int i = 0;
-                    foreach (LibraryItem li in Library)
-                    {
-                        ElementCollection[i].ID = li.ID;
-                        ElementCollection[i].ModType = li.APICategoryName;
-                        i++;
-                    }
-                }
-                catch (Exception e)
-                {
-                    abort = true;
-                }
-            }
-            if (abort)
-            {
-                return null;
-            }
-            else
-            {
-                return ElementCollection;
-            }
-
-        }
         #endregion
 
         #region API Formatting

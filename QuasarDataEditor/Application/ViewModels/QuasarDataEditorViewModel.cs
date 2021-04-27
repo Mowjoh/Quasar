@@ -17,13 +17,14 @@ namespace QuasarDataEditor
     {
         #region Static paths
         //private static string DocumentsFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-        private static string DocumentsFolder = "F:";
-        private static string GameSource = DocumentsFolder + @"\Quasar\Resources\Games.json";
-        private static string LibrarySource = DocumentsFolder + @"\Quasar\Library\Library.json";
-        private static string ContentSource = DocumentsFolder + @"\Quasar\Library\ContentItems.json";
-        private static string WorkspaceSource = DocumentsFolder + @"\Quasar\Library\Workspaces.json";
-        private static string ModLoaderSource = DocumentsFolder + @"\Quasar\Resources\ModLoaders.json";
-        private static string QuasarModTypeSource = DocumentsFolder + @"\Quasar\Resources\ModTypes.json";
+        private static string DocumentsFolder = @"M:\Super Smash Bros Ultimate\Software";
+        private static string GameSource = DocumentsFolder + @"\Quasar Debug\Resources\Games.json";
+        private static string LibrarySource = DocumentsFolder + @"\Quasar Debug\Library\Library.json";
+        private static string ContentSource = DocumentsFolder + @"\Quasar Debug\Library\ContentItems.json";
+        private static string WorkspaceSource = DocumentsFolder + @"\Quasar Debug\Library\Workspaces.json";
+        private static string ModLoaderSource = DocumentsFolder + @"\Quasar Debug\Resources\ModLoaders.json";
+        private static string QuasarModTypeSource = DocumentsFolder + @"\Quasar Debug\Resources\ModTypes.json";
+        private static string APISource = DocumentsFolder + @"\Quasar Debug\Resources\Gamebanana.json";
         #endregion
 
         #region Private Members
@@ -31,10 +32,12 @@ namespace QuasarDataEditor
         private ObservableCollection<Game> _Games { get; set; }
         private Game _SelectedGame { get; set; }
         private GameElementFamily _SelectedGameElementFamily { get; set; }
-        private GameAPICategory _SelectedGameAPICategory { get; set; }
+        private GamebananaAPI _API { get; set; }
+        private GamebananaRootCategory _SelectedGamebananaRootCategory { get; set; }
 
         //Library
         private ObservableCollection<LibraryItem> _Library { get; set; }
+        private LibraryItem _SelectedLibraryItem { get; set; }
 
         //Content
         private ObservableCollection<ContentItem> _ContentItems { get; set; }
@@ -232,15 +235,26 @@ namespace QuasarDataEditor
                 OnPropertyChanged("SelectedGameElementFamily");
             }
         }
-        public GameAPICategory SelectedGameAPICategory
+        public GamebananaAPI API
         {
-            get => _SelectedGameAPICategory;
+            get => _API;
             set
             {
-                _SelectedGameAPICategory = value;
-                OnPropertyChanged("SelectedGameAPICategory");
+                _API = value;
+                OnPropertyChanged("API");
             }
         }
+        public GamebananaRootCategory SelectedGamebananaRootCategory
+        {
+            get => _SelectedGamebananaRootCategory;
+            set
+            {
+                _SelectedGamebananaRootCategory = value;
+                OnPropertyChanged("SelectedGamebananaRootCategory");
+            }
+        }
+
+        
 
         //Library
         public ObservableCollection<LibraryItem> Library
@@ -252,6 +266,22 @@ namespace QuasarDataEditor
                 OnPropertyChanged("Library");
             }
         }
+        public LibraryItem SelectedLibraryItem
+        {
+            get => _SelectedLibraryItem;
+            set
+            {
+                _SelectedLibraryItem = value;
+                AssociatedRootCategory = API.Games[0].RootCategories.Single(c => c.Guid == value.GBItem.RootCategoryGuid);
+                AssociatedSubCategory = AssociatedRootCategory.SubCategories.Single(c => c.Guid == value.GBItem.SubCategoryGuid);
+
+                OnPropertyChanged("SelectedLibraryItem");
+                OnPropertyChanged("AssociatedRootCategory");
+                OnPropertyChanged("AssociatedSubCategory");
+            }
+        }
+        public GamebananaRootCategory AssociatedRootCategory { get; set; }
+        public GamebananaSubCategory AssociatedSubCategory { get; set; }
 
         //Content
         public ObservableCollection<ContentItem> ContentItems
@@ -444,6 +474,8 @@ namespace QuasarDataEditor
             Workspaces = JSonHelper.GetWorkspaces(true, WorkspaceSource);
             ModLoaders = JSonHelper.GetModLoaders(true, ModLoaderSource);
             QuasarModTypes = JSonHelper.GetQuasarModTypes(true, QuasarModTypeSource);
+            API = JSonHelper.GetGamebananaAPI(true, APISource);
+            
         }
 
         public void PickPath()
@@ -469,11 +501,11 @@ namespace QuasarDataEditor
             {
                 ProgressString = "Scanning Files";
                 ProgressValue = 0;
-                ObservableCollection<ContentItem> Scan = Scannerino.ScanMod(pathselected, QuasarModTypes, Games[0], new LibraryItem() { ID = 1, Name = "ScanName" }, true);
+                ObservableCollection<ContentItem> Scan = Scannerino.ScanMod(pathselected, QuasarModTypes, Games[0], new LibraryItem() { Guid = Guid.NewGuid(), Name = "ScanName" }, true);
                 int i = 1;
                 foreach (ContentItem ci in Scan)
                 {
-                    ci.ID = i;
+                    ci.Guid = Guid.NewGuid();
                     i++;
                 }
                 string ModFolder = "";
@@ -528,18 +560,7 @@ namespace QuasarDataEditor
         public async Task<int> TestModAction()
         {
             TestResults = new ObservableCollection<TestResult>();
-            string ModFolder = "";
-            if (SelectedTestLibraryItem.ManualMod)
-            {
-                ModFolder = @"F:\Quasar\Library\Mods\manual\" + SelectedTestLibraryItem.ID + @"\";
-            }
-            else
-            {
-                GameAPICategory Cat = Games[0].GameAPICategories.Single(c => c.APICategoryName == SelectedTestLibraryItem.APICategoryName);
-                ModFolder = @"F:\Quasar\Library\Mods\" + Cat.LibraryFolderName.Replace('/', '\\') + @"\" + SelectedTestLibraryItem.ID + @"\";
-            }
-            
-
+            string ModFolder = String.Format(@"{0}\Library\Mods\{1}\", @"F:\Quasar", SelectedTestLibraryItem.Guid);
 
             ProgressString = "Scanning Files";
             ProgressValue = 0;
@@ -547,7 +568,7 @@ namespace QuasarDataEditor
             int i = 1;
             foreach (ContentItem ci in Scan)
             {
-                ci.ID = i;
+                ci.Guid =Guid.NewGuid();
                 i++;
             }
 
@@ -597,7 +618,7 @@ namespace QuasarDataEditor
             ProgressValue = (count / total) * 100;
             if (TestResults.Count != 0 && SelectedTestModLoader != null)
             {
-                string ModFolder = Scannerino.GetModFolder(SelectedTestLibraryItem.ID, SelectedTestLibraryItem.APICategoryName, Games[0]);
+                string ModFolder = String.Format(@"{0}\Library\Mods\{1}\", @"F:\Quasar", SelectedTestLibraryItem.Guid);
                 foreach (TestResult tr in TestResults)
                 {
                     if (tr.ScanFile.Scanned)

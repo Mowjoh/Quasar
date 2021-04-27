@@ -87,7 +87,7 @@ namespace Quasar.Internal.Tools
         /// <returns></returns>
         public static bool NeedsCleaning()
         {
-            return true;
+            return false;
         }
 
         /// <summary>

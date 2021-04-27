@@ -20,11 +20,8 @@
     <Setting Name="UpgradeRequired" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="ContentID" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">0</Value>
-    </Setting>
-    <Setting Name="LastSelectedWorkspace" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">-1</Value>
+    <Setting Name="LastSelectedWorkspace" Type="System.Guid" Scope="User">
+      <Value Profile="(Default)">00000000-0000-0000-0000-000000000000</Value>
     </Setting>
     <Setting Name="WorkspaceID" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">1</Value>
@@ -37,9 +34,6 @@
     </Setting>
     <Setting Name="EnableIMT" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
-    </Setting>
-    <Setting Name="WorkspaceIdGenerator" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">0</Value>
     </Setting>
     <Setting Name="FTPIP" Type="System.String" Scope="User">
       <Value Profile="(Default)" />

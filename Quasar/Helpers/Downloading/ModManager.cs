@@ -11,6 +11,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Quasar.MainUI.ViewModels;
 using Quasar.Helpers.API;
+using Quasar.Helpers.Json;
 
 namespace Quasar.Helpers.Downloading
 {
@@ -20,6 +21,7 @@ namespace Quasar.Helpers.Downloading
         public QuasarDownload QuasarURL { get; set; }
         public LibraryItem LibraryItem { get; set; }
         public APIMod APIMod { get; set; }
+        public GamebananaItem RequestItem { get; set; }
         public ModListItem ModListItem { get; set; }
         public ModFileManager ModFileManager { get; set; }
         public ObservableCollection<ContentItem> ScannedContents { get; set; }
@@ -101,43 +103,34 @@ namespace Quasar.Helpers.Downloading
             try
             {
                 //If there already exists a mod with this ID
-                if (MUVM.Library.Any(li => li.ID == int.Parse(QuasarURL.LibraryItemID)))
+                if (MUVM.Library.Any(li => li.GBItem.GamebananaItemID == int.Parse(QuasarURL.GamebananaItemID)))
                 {
                     //Comparing Update Count with the API
-                    LibraryItem = MUVM.Library.Single(li => li.ID == int.Parse(QuasarURL.LibraryItemID));
+                    LibraryItem = MUVM.Library.Single(li => li.GBItem.GamebananaItemID == int.Parse(QuasarURL.GamebananaItemID));
                     await GetAPIModInformation();
-                    UpdateNeeded = APIMod.UpdateCount > LibraryItem.UpdateCount;
+                    UpdateNeeded = APIMod.UpdateCount > LibraryItem.GBItem.UpdateCount;
                 }
 
                 //No mod with this ID is present in the Library
                 else
                 {
                     await GetAPIModInformation();
+                    GamebananaItem GBItem = GetGamebananaItem(APIMod, MUVM);
+
                     Game RelatedGame = MUVM.Games.Single(g => g.APIGameName == APIMod.GameName);
-                    GameAPISubCategory RelatedSubCategory = RelatedGame.GameAPICategories.Single(c => c.APICategoryName == APIMod.ModType).GameAPISubCategories.Single(scat => scat.APISubCategoryID == APIMod.CategoryID);
+                    GamebananaGame APIGame = MUVM.API.Games.SingleOrDefault(g => g.Name == APIMod.GameName);
+
+
                     //Generating new LibraryItem
                     LibraryItem = new LibraryItem()
                     {
-                        ID = APIMod.ID,
-                        APICategoryName = APIMod.ModType,
+                        Guid = Guid.NewGuid(),
                         Name = APIMod.Name,
-                        Description = APIMod.Description,
-                        UpdateCount = APIMod.UpdateCount,
-                        GameAPISubCategoryID = RelatedSubCategory.ID,
                         GameID = RelatedGame.ID,
-                        Authors = new ObservableCollection<Author>()
+                        GBItem = GBItem,
+                        Time = DateTime.Now
                     };
 
-                    foreach (string[] val in APIMod.Authors)
-                    {
-                        Author au = new Author()
-                        {
-                            Name = val[0],
-                            Role = val[1],
-                            GamebananaAuthorID = int.Parse(val[2])
-                        };
-                        LibraryItem.Authors.Add(au);
-                    }
                     DownloadNeeded = true;
                 }
 
@@ -161,8 +154,94 @@ namespace Quasar.Helpers.Downloading
         /// <returns></returns>
         public async Task<bool> GetAPIModInformation()
         {
-            APIMod = await APIRequest.GetModInformation(QuasarURL.APICategoryName, QuasarURL.LibraryItemID);
+            APIMod = await APIRequest.GetModInformation(QuasarURL.APICategoryName, QuasarURL.GamebananaItemID);
             return true;
+        }
+
+        public GamebananaItem GetGamebananaItem(APIMod Request, MainUIViewModel MUVM)
+        {
+            //Processing base info
+            GamebananaItem Item = new GamebananaItem()
+            {
+                Name = Request.Name,
+                GamebananaItemID = Request.ID,
+                Authors = new ObservableCollection<Author>(),
+                Description = Request.Description,
+                GameName = Request.GameName,
+                UpdateCount = Request.UpdateCount
+            };
+
+            //Processing Authors
+            foreach (string[] val in Request.Authors)
+            {
+                Author au = new Author()
+                {
+                    Name = val[0],
+                    Role = val[1],
+                    GamebananaAuthorID = int.Parse(val[2])
+                };
+                Item.Authors.Add(au);
+            }
+
+            //Processing API Information
+            GamebananaRootCategory RC = MUVM.API.Games[0].RootCategories.SingleOrDefault(cat => cat.Name == Request.GamebananaRootCategoryName);
+
+            //If no Root Category is found in the database
+            if(RC == null)
+            {
+                RC = new GamebananaRootCategory()
+                {
+                    Guid = Guid.NewGuid(),
+                    Name = Request.GamebananaRootCategoryName,
+                    SubCategories = new ObservableCollection<GamebananaSubCategory>()
+                };
+
+                GamebananaSubCategory SC = new GamebananaSubCategory()
+                {
+                    Guid = Guid.NewGuid(),
+                    Name = Request.GamebananaSubCategoryName,
+                    ID = Request.GamebananaSubCategoryID
+                };
+
+                RC.SubCategories.Add(SC);
+                MUVM.API.Games[0].RootCategories.Add(RC);
+
+                //Saving changes
+                JSonHelper.SaveGamebananaAPI(MUVM.API);
+
+                //Setting API GUID
+                Item.RootCategoryGuid = RC.Guid;
+                Item.SubCategoryGuid = SC.Guid;
+            }
+            else
+            {
+                //Setting Root Cat GUID
+                Item.RootCategoryGuid = RC.Guid;
+
+                //Finding Subcategory
+                GamebananaSubCategory SC = RC.SubCategories.SingleOrDefault(cat => cat.ID == Request.GamebananaSubCategoryID);
+
+                if(SC == null)
+                {
+                    SC = new GamebananaSubCategory()
+                    {
+                        Guid = Guid.NewGuid(),
+                        Name = Request.GamebananaSubCategoryName,
+                        ID = Request.GamebananaSubCategoryID
+                    };
+
+                    RC.SubCategories.Add(SC);
+
+                    //Saving changes
+                    JSonHelper.SaveGamebananaAPI(MUVM.API);
+                }
+
+                //Setting SCat Guid
+                Item.SubCategoryGuid = SC.Guid;
+
+            }
+
+            return Item;
         }
         #endregion
 
@@ -197,7 +276,7 @@ namespace Quasar.Helpers.Downloading
                         if (Processed)
                         {
                             GameAPICategory cat = ModListItem.ModListItemViewModel.Game.GameAPICategories.Single(c => c.APICategoryName == QuasarURL.APICategoryName);
-                            await APIRequest.GetScreenshot(QuasarURL.APICategoryName, QuasarURL.LibraryItemID, LibraryItem.GameID.ToString(), cat.ID.ToString());
+                            await APIRequest.GetScreenshot(QuasarURL.APICategoryName, QuasarURL.GamebananaItemID, LibraryItem.Guid.ToString());
                             ProcessAborted = false;
                         }
                     }
@@ -239,7 +318,7 @@ namespace Quasar.Helpers.Downloading
         /// <returns>Success Status</returns>
         public async Task<bool> Extract()
         {
-            ModFileManager = new ModFileManager(LibraryItem, ModListItem.ModListItemViewModel.Game, QuasarURL.ModArchiveFormat);
+            ModFileManager = new ModFileManager(LibraryItem, QuasarURL.ModArchiveFormat);
             Unarchiver un = new Unarchiver(ModListItem.ModListItemViewModel);
             bool success = await un.ExtractArchiveAsync(ModFileManager.DownloadDestinationFilePath, ModFileManager.ArchiveContentFolderPath, QuasarURL.ModArchiveFormat) == 0;
             return success;

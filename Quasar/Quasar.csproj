@@ -119,6 +119,7 @@
     <Compile Include="Application\Workspace\Models\ShareableWorkspace.cs" />
     <Compile Include="Data\Converter\V1toV2Converter.cs" />
     <Compile Include="Data\V1\QuasarModType.cs" />
+    <Compile Include="Data\V2\Gamebanana.cs" />
     <Compile Include="Data\V2\ModLoader.cs" />
     <Compile Include="Data\V2\QuasarModType.cs" />
     <Compile Include="Helpers\Downloading\ModManager.cs" />
@@ -179,7 +180,6 @@
     <Compile Include="Helpers\Compression\Unarchiver.cs" />
     <Compile Include="Helpers\Named Pipes\PipeHelper.cs" />
     <Compile Include="Helpers\File\FileOperation.cs" />
-    <Compile Include="Helpers\Tools\IDHelper.cs" />
     <Compile Include="Helpers\Tools\ARCropolisHelper.cs" />
     <Compile Include="Data\V1\Library.cs" />
     <Compile Include="Helpers\JSon\JSonHelper.cs" />
@@ -357,6 +357,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\ModTypes.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Gamebanana.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Resource Include="Fonts\Poppins-Black.ttf" />

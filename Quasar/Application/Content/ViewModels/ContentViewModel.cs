@@ -229,12 +229,12 @@ namespace Quasar.Content.ViewModels
             {
                 if(LibraryItem != null)
                 {
-                    if (ci.LibraryItemID == LibraryItem.ID)
+                    if (ci.LibraryItemGuid == LibraryItem.Guid)
                     {
                         QuasarModType qmt = MUVM.QuasarModTypes.Single(i => i.ID == ci.QuasarModTypeID);
 
-                        colorID = modID != LibraryItem.ID ? colorID == 0 ? 1 : 0 : colorID;
-                        modID = modID != LibraryItem.ID ? LibraryItem.ID : modID;
+                        //colorID = modID != LibraryItem.Guid ? colorID == 0 ? 1 : 0 : colorID;
+                        //modID = modID != LibraryItem.Guid ? LibraryItem.ID : modID;
 
                         GameElementFamily Family = MUVM.Games[0].GameElementFamilies.Single(f => f.ID == qmt.GameElementFamilyID);
                         ContentListItem cli = new ContentListItem(ci, LibraryItem, qmt, Family.GameElements.ToList(), colorID);
@@ -254,7 +254,7 @@ namespace Quasar.Content.ViewModels
         /// </summary>
         public void PickModFiles()
         {
-            ModFileManager FileManager = new ModFileManager(LibraryItem, MUVM.Games[0]);
+            ModFileManager FileManager = new ModFileManager(LibraryItem);
 
             var dialog = new System.Windows.Forms.FolderBrowserDialog();
             System.Windows.Forms.DialogResult result = dialog.ShowDialog();

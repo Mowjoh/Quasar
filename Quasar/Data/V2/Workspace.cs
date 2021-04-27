@@ -12,7 +12,7 @@ namespace Quasar.Data.V2
     {
         #region Private properties
         [Newtonsoft.Json.JsonIgnore]
-        private int _ID { get; set; }
+        private Guid _Guid { get; set; }
         [Newtonsoft.Json.JsonIgnore]
         private string _Name { get; set; }
         [Newtonsoft.Json.JsonIgnore]
@@ -20,18 +20,18 @@ namespace Quasar.Data.V2
         [Newtonsoft.Json.JsonIgnore]
         private bool _Shared { get; set; } = false;
         [Newtonsoft.Json.JsonIgnore]
-        private string _UniqueShareID { get; set; }
+        private Guid _UniqueShareID { get; set; }
         [Newtonsoft.Json.JsonIgnore]
         private ObservableCollection<Association> _Associations { get; set; }
         #endregion
 
-        public int ID
+        public Guid Guid
         {
-            get => _ID;
+            get => _Guid;
             set
             {
-                _ID = value;
-                OnPropertyChanged("ID");
+                _Guid = value;
+                OnPropertyChanged("Guid");
             }
         }
         public string Name
@@ -61,7 +61,7 @@ namespace Quasar.Data.V2
                 OnPropertyChanged("Shared");
             }
         }
-        public string UniqueShareID
+        public Guid UniqueShareID
         {
             get => _UniqueShareID;
             set
@@ -85,7 +85,7 @@ namespace Quasar.Data.V2
     {
         #region Private properties
         [Newtonsoft.Json.JsonIgnore]
-        private int _ContentItemID { get; set; }
+        private Guid _ContentItemGuid { get; set; }
         [Newtonsoft.Json.JsonIgnore]
         private int _GameElementID { get; set; }
         [Newtonsoft.Json.JsonIgnore]
@@ -94,13 +94,13 @@ namespace Quasar.Data.V2
         private int _SlotNumber { get; set; } = 0;
         #endregion
 
-        public int ContentItemID
+        public Guid ContentItemGuid
         {
-            get => _ContentItemID;
+            get => _ContentItemGuid;
             set
             {
-                _ContentItemID = value;
-                OnPropertyChanged("ContentItemID");
+                _ContentItemGuid = value;
+                OnPropertyChanged("ContentItemGuid");
             }
         }
         public int GameElementID

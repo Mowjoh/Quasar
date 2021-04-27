@@ -39,7 +39,7 @@ namespace Quasar.Helpers.Mod_Scanning
                         {
                             if (!Workspace.Associations.Any(a => a.QuasarModTypeID == imt.ID && a.SlotNumber == Slot))
                             {
-                                Workspace.Associations.Add(new Association() { ContentItemID = ci.ID, GameElementID = ci.GameElementID, QuasarModTypeID = ci.QuasarModTypeID, SlotNumber = Slot });
+                                Workspace.Associations.Add(new Association() { ContentItemGuid = ci.Guid, GameElementID = ci.GameElementID, QuasarModTypeID = ci.QuasarModTypeID, SlotNumber = Slot });
                                 foundSlot = true;
                             }
                             Slot++;
@@ -52,7 +52,7 @@ namespace Quasar.Helpers.Mod_Scanning
                         {
                             Workspace.Associations.Remove(associations);
                         }
-                        Workspace.Associations.Add(new Association() { ContentItemID = ci.ID, GameElementID = ci.GameElementID, QuasarModTypeID = ci.QuasarModTypeID, SlotNumber = ci.SlotNumber });
+                        Workspace.Associations.Add(new Association() { ContentItemGuid = ci.Guid, GameElementID = ci.GameElementID, QuasarModTypeID = ci.QuasarModTypeID, SlotNumber = ci.SlotNumber });
                     }
                 }
             }

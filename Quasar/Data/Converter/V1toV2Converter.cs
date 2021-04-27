@@ -170,6 +170,7 @@ namespace Quasar.Data.Converter
         #region Update Converters
         public static void ProcessLibrary(ObservableCollection<LibraryMod> V11LibraryMods)
         {
+            /*
             ObservableCollection<LibraryItem> V2Library = new ObservableCollection<LibraryItem>();
 
             foreach(LibraryMod lm in V11LibraryMods)
@@ -180,7 +181,7 @@ namespace Quasar.Data.Converter
                     GameID = lm.GameID,
                     Name = lm.Name,
                     UpdateCount = lm.Updates,
-                    GameAPISubCategoryID = lm.APICategoryID,
+                    GamebananaSubCategoryID = lm.APICategoryID,
                     GamebananaItemID = lm.ID,
                     Authors = new ObservableCollection<Author>()
                 };
@@ -199,18 +200,18 @@ namespace Quasar.Data.Converter
                 V2Library.Add(li);
             }
 
-            JSonHelper.SaveLibrary(V2Library);
+            JSonHelper.SaveLibrary(V2Library);*/
         }
         public static void ProcessWorkspace(ObservableCollection<V1.Workspace> V1Workspaces)
         {
-            ObservableCollection<V2.Workspace> V2Workspaces = new ObservableCollection<V2.Workspace>();
+            /*ObservableCollection<V2.Workspace> V2Workspaces = new ObservableCollection<V2.Workspace>();
 
             foreach(V1.Workspace ws in V1Workspaces)
             {
                 V2.Workspace V2Workspace = new V2.Workspace()
                 {
                     Name = ws.Name,
-                    ID = ws.ID,
+                    Guid = ws.ID,
                     Associations = new ObservableCollection<V2.Association>(),
                     BuildDate = ws.BuildDate
                 };
@@ -219,7 +220,7 @@ namespace Quasar.Data.Converter
                 {
                     V2.Association V2Association = new V2.Association()
                     {
-                        ContentItemID = ass.ContentMappingID,
+                        ContentItemGuid = ass.ContentMappingID,
                         GameElementID = ass.GameDataItemID,
                         SlotNumber = ass.Slot,
                         QuasarModTypeID = ass.InternalModTypeID
@@ -230,18 +231,19 @@ namespace Quasar.Data.Converter
 
                 V2Workspaces.Add(V2Workspace);
             }
-            JSonHelper.SaveWorkspaces(V2Workspaces);
+            JSonHelper.SaveWorkspaces(V2Workspaces);*/
             
         }
         public static void ProcessContent(ObservableCollection<V1.ContentMapping> V1ContentMappings)
         {
+            /*
             ObservableCollection<V2.ContentItem> V2ContentItems = new ObservableCollection<V2.ContentItem>();
             foreach (ContentMapping cm in V1ContentMappings)
             {
                 ContentItem ci = new ContentItem()
                 {
                     ID = cm.ID,
-                    LibraryItemID = cm.ModID,
+                    LibraryItemGuid = cm.ModID,
                     QuasarModTypeID = cm.InternalModType,
                     Name = cm.Name,
                     SlotNumber = cm.Slot,
@@ -250,7 +252,7 @@ namespace Quasar.Data.Converter
                 V2ContentItems.Add(ci);
             }
 
-            JSonHelper.SaveContentItems(V2ContentItems);
+            JSonHelper.SaveContentItems(V2ContentItems);*/
         }
         #endregion
     }

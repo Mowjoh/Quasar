@@ -251,14 +251,6 @@
                                     <Style TargetType="CheckBox">
                                         <Setter Property="Foreground" Value="White" />
                                         <Setter Property="IsEnabled" Value="True" />
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding Path=SelectedGameDataCategory.GameDataCategory.Name}"
-                                                         Value="Others">
-                                                <Setter Property="Foreground" Value="#BBBBBB" />
-                                                <Setter Property="IsChecked" Value="False" />
-                                                <Setter Property="IsEnabled" Value="False" />
-                                            </DataTrigger>
-                                        </Style.Triggers>
                                     </Style>
                                 </CheckBox.Style>
                             </CheckBox>
@@ -505,14 +497,6 @@
                                 <Style TargetType="CheckBox">
                                     <Setter Property="Foreground" Value="White" />
                                     <Setter Property="IsEnabled" Value="True" />
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding Path=SelectedGameDataCategory.GameDataCategory.Name}"
-                                                     Value="Others">
-                                            <Setter Property="Foreground" Value="#BBBBBB" />
-                                            <Setter Property="IsChecked" Value="False" />
-                                            <Setter Property="IsEnabled" Value="False" />
-                                        </DataTrigger>
-                                    </Style.Triggers>
                                 </Style>
                             </CheckBox.Style>
                         </CheckBox>
@@ -587,9 +571,10 @@
                                        Margin="16" VerticalAlignment="Center" />
                             <TextBox Text="{Binding FilterText, UpdateSourceTrigger=PropertyChanged}"
                                      Grid.Row="2" Grid.Column="1"
-                                     Style="{StaticResource CutieTextBoxStyle}" TextWrapping="NoWrap"
+                                     Style="{StaticResource CutieTextBoxStyle}"
                                      Height="32"
-                                     Margin="10,16,25,16" VerticalAlignment="Top" />
+                                     Margin="10,16,25,16" VerticalAlignment="Top"
+                                     TextWrapping="NoWrap" />
 
                         </Grid>
 

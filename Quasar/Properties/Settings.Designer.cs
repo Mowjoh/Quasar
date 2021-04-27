@@ -94,22 +94,10 @@ namespace Quasar.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public int ContentID {
+        [global::System.Configuration.DefaultSettingValueAttribute("00000000-0000-0000-0000-000000000000")]
+        public global::System.Guid LastSelectedWorkspace {
             get {
-                return ((int)(this["ContentID"]));
-            }
-            set {
-                this["ContentID"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("-1")]
-        public int LastSelectedWorkspace {
-            get {
-                return ((int)(this["LastSelectedWorkspace"]));
+                return ((global::System.Guid)(this["LastSelectedWorkspace"]));
             }
             set {
                 this["LastSelectedWorkspace"] = value;
@@ -161,18 +149,6 @@ namespace Quasar.Properties {
             }
             set {
                 this["EnableIMT"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public int WorkspaceIdGenerator {
-            get {
-                return ((int)(this["WorkspaceIdGenerator"]));
-            }
-            set {
-                this["WorkspaceIdGenerator"] = value;
             }
         }
         

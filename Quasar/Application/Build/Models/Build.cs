@@ -207,8 +207,8 @@ namespace Quasar.Build.Models
 
             foreach (Association ass in ViewModel.MUVM.ActiveWorkspace.Associations)
             {
-                ContentItem ci = ViewModel.MUVM.ContentItems.Single(c => c.ID == ass.ContentItemID);
-                LibraryItem li = ViewModel.MUVM.Library.Single(l => l.ID == ci.LibraryItemID);
+                ContentItem ci = ViewModel.MUVM.ContentItems.Single(c => c.Guid == ass.ContentItemGuid);
+                LibraryItem li = ViewModel.MUVM.Library.Single(l => l.Guid == ci.LibraryItemGuid);
                 QuasarModType qmt = ViewModel.MUVM.QuasarModTypes.Single(t => t.ID == ass.QuasarModTypeID);
                 GameElementFamily gef = ViewModel.MUVM.Games[0].GameElementFamilies.Single(f => f.ID == qmt.GameElementFamilyID);
 
@@ -285,8 +285,8 @@ namespace Quasar.Build.Models
                 {
                     ModFile MF = WorkspaceFilesToCopy[0];
                     
-                    List<ModFile> AssociatedFiles = WorkspaceFilesToCopy.Where(r => r.LibraryItemID == MF.LibraryItemID).ToList();
-                    string ItemName = ViewModel.MUVM.Library.Single(li => li.ID == MF.LibraryItemID).Name;
+                    List<ModFile> AssociatedFiles = WorkspaceFilesToCopy.Where(r => r.LibraryItemGuid == MF.LibraryItemGuid).ToList();
+                    string ItemName = ViewModel.MUVM.Library.Single(li => li.Guid == MF.LibraryItemGuid).Name;
                     ViewModel.SetSubStep("Copying files for " + ItemName);
                     foreach (ModFile Ferb in AssociatedFiles)
                     {

@@ -905,7 +905,7 @@ namespace Quasar.Associations.ViewModels
                     foreach (Slot item in items)
                     {
                         //Checking if an item exists with the same Library Item ID
-                        if (item.SlotViewModel.ContentItems.Any(cma => cma.LibraryItemID == ci.LibraryItemID && cma.ScanFiles[0].OriginPath == ci.ScanFiles[0].OriginPath))
+                        if (item.SlotViewModel.ContentItems.Any(cma => cma.LibraryItemGuid == ci.LibraryItemGuid && cma.ScanFiles[0].OriginPath == ci.ScanFiles[0].OriginPath))
                         {
                             //Adding the Content Item to that slot
                             item.SlotViewModel.ContentItems.Add(ci);
@@ -949,7 +949,7 @@ namespace Quasar.Associations.ViewModels
 
                 foreach(Association a in associations)
                 {
-                    contentItems.Add(MUVM.ContentItems.Single(c => c.ID == a.ContentItemID));
+                    contentItems.Add(MUVM.ContentItems.Single(c => c.Guid == a.ContentItemGuid));
                 }
                 switch (i)
                 {
@@ -1006,19 +1006,19 @@ namespace Quasar.Associations.ViewModels
 
                     if (a != null)
                     {
-                        a.ContentItemID = ci.ID;
+                        a.ContentItemGuid = ci.Guid;
                         MUVM.ActiveWorkspace.Associations.Remove(a);
-                        QuasarLogger.Debug(String.Format("Association exists for ContentMapping ID '{0}', slot '{1}', IMT '{2}', GDIID '{3}', removing it", a.ContentItemID, a.SlotNumber, a.QuasarModTypeID, a.GameElementID));
+                        QuasarLogger.Debug(String.Format("Association exists for ContentMapping ID '{0}', slot '{1}', IMT '{2}', GDIID '{3}', removing it", a.ContentItemGuid, a.SlotNumber, a.QuasarModTypeID, a.GameElementID));
                     }
 
                     MUVM.ActiveWorkspace.Associations.Add(new Association()
                     {
-                        ContentItemID = ci.ID,
+                        ContentItemGuid = ci.Guid,
                         GameElementID = SelectedGameElement.ID,
                         QuasarModTypeID = ci.QuasarModTypeID,
                         SlotNumber = Index
                     });
-                    QuasarLogger.Debug(String.Format("Association created for ContentMapping '{0}' ID '{1}', slot '{2}', IMT '{3}', GDIID '{4}'", ci.Name, ci.ID, Index, ci.QuasarModTypeID, ci.GameElementID));
+                    QuasarLogger.Debug(String.Format("Association created for ContentMapping '{0}' ID '{1}', slot '{2}', IMT '{3}', GDIID '{4}'", ci.Name, ci.Guid, Index, ci.QuasarModTypeID, ci.GameElementID));
 
                 }
                 else
@@ -1027,19 +1027,22 @@ namespace Quasar.Associations.ViewModels
                     List<Association> La = MUVM.ActiveWorkspace.Associations.Where(az => az.SlotNumber == Index && az.GameElementID == SourceItem.SlotViewModel.ContentItems[0].GameElementID).ToList();
                     foreach (Association a in La)
                     {
-                        MUVM.ActiveWorkspace.Associations.Remove(a);
-                        QuasarLogger.Debug(String.Format("Association exists for ContentMapping ID '{0}', slot '{1}', IMT '{2}', GDIID '{3}', removing it", a.GameElementID, a.SlotNumber, a.QuasarModTypeID, a.GameElementID));
+                        if(SourceItem.SlotViewModel.ContentItems.Any(item => item.QuasarModTypeID == a.QuasarModTypeID))
+                        {
+                            MUVM.ActiveWorkspace.Associations.Remove(a);
+                            QuasarLogger.Debug(String.Format("Association exists for ContentMapping ID '{0}', slot '{1}', IMT '{2}', GDIID '{3}', removing it", a.GameElementID, a.SlotNumber, a.QuasarModTypeID, a.GameElementID));
+                        }
                     }
                     foreach (ContentItem ci in SourceItem.SlotViewModel.ContentItems)
                     {
                         MUVM.ActiveWorkspace.Associations.Add(new Association()
                         {
-                            ContentItemID = ci.ID,
+                            ContentItemGuid = ci.Guid,
                             GameElementID = SelectedGameElement.ID,
                             QuasarModTypeID = ci.QuasarModTypeID,
                             SlotNumber = Index
                         });
-                        QuasarLogger.Debug(String.Format("Association created for ContentMapping '{0}' ID '{1}', slot '{2}', IMT '{3}', GDIID '{4}'", ci.Name, ci.ID, Index, ci.QuasarModTypeID, ci.GameElementID));
+                        QuasarLogger.Debug(String.Format("Association created for ContentMapping '{0}' ID '{1}', slot '{2}', IMT '{3}', GDIID '{4}'", ci.Name, ci.Guid, Index, ci.QuasarModTypeID, ci.GameElementID));
 
                     }
                 }
@@ -1080,7 +1083,7 @@ namespace Quasar.Associations.ViewModels
                 if (a != null)
                 {
                     MUVM.ActiveWorkspace.Associations.Remove(a);
-                    QuasarLogger.Debug(String.Format("Association exists for ContentMapping ID '{0}', slot '{1}', IMT '{2}', GDIID '{3}', removing it", a.ContentItemID, a.SlotNumber, a.QuasarModTypeID, a.GameElementID));
+                    QuasarLogger.Debug(String.Format("Association exists for ContentMapping ID '{0}', slot '{1}', IMT '{2}', GDIID '{3}', removing it", a.ContentItemGuid, a.SlotNumber, a.QuasarModTypeID, a.GameElementID));
 
                 }
             }

@@ -86,23 +86,23 @@
             <Setter Property="Fill" Value="{StaticResource DefaultColor}" />
             <Setter Property="Stroke" Value="AliceBlue" />
             <Style.Triggers>
-                <DataTrigger Binding="{Binding LibraryItem.APICategoryName}"
+                <DataTrigger Binding="{Binding AssociatedRootCategory.Name}"
                              Value="Skin">
                     <Setter Property="Fill" Value="{StaticResource SkinColor}" />
                 </DataTrigger>
-                <DataTrigger Binding="{Binding LibraryItem.APICategoryName}"
+                <DataTrigger Binding="{Binding AssociatedRootCategory.Name}"
                              Value="Map">
                     <Setter Property="Fill" Value="{StaticResource MapColor}" />
                 </DataTrigger>
-                <DataTrigger Binding="{Binding LibraryItem.APICategoryName}"
+                <DataTrigger Binding="{Binding AssociatedRootCategory.Name}"
                              Value="Sound">
                     <Setter Property="Fill" Value="{StaticResource SoundColor}" />
                 </DataTrigger>
-                <DataTrigger Binding="{Binding LibraryItem.APICategoryName}"
+                <DataTrigger Binding="{Binding AssociatedRootCategory.Name}"
                              Value="Gamefile">
                     <Setter Property="Fill" Value="{StaticResource GamefileColor}" />
                 </DataTrigger>
-                <DataTrigger Binding="{Binding LibraryItem.APICategoryName}"
+                <DataTrigger Binding="{Binding AssociatedRootCategory.Name}"
                              Value="Gui">
                     <Setter Property="Fill" Value="{StaticResource GUIColor}" />
                 </DataTrigger>
@@ -214,7 +214,7 @@
                            VerticalAlignment="Center"
                            Visibility="{Binding Path=Standby, Converter={StaticResource BoolVisi}}" />
 
-                <TextBlock Text="{Binding Path=Game.Name}"
+                <TextBlock Text="{Binding Path=LibraryItem.HumanTime}"
                            Grid.Column="4"
                            Style="{StaticResource CutieTextBlockStyle}"
                            VerticalAlignment="Center"
@@ -317,7 +317,7 @@
                            Style="{StaticResource CutieLabelStyle}"
                            Margin="16,50,0,0" HorizontalAlignment="Left" VerticalAlignment="top" />
 
-                    <Label Content="{Binding LibraryItem.UpdateCount}"
+                    <Label Content="{Binding LibraryItem.GBItem.UpdateCount}"
                            Grid.Column="1"
                            Style="{StaticResource CutieLabelStyle}"
                            Margin="115,50,0,0" HorizontalAlignment="Left" VerticalAlignment="top" />

@@ -72,6 +72,7 @@ namespace Quasar.MainUI.ViewModels
         public Game CurrentGame { get; set; }
         public ObservableCollection<QuasarModType> QuasarModTypes { get; set; }
         public ObservableCollection<ModLoader> ModLoaders { get; set; }
+        public GamebananaAPI API { get; set; }
         #endregion
 
         #region User Data
@@ -507,12 +508,48 @@ namespace Quasar.MainUI.ViewModels
                 InitialWarnings();
                 BackupRestoreUserData(UserDataLoaded);
 
+                /*API = new GamebananaAPI()
+                {
+                    Games = new ObservableCollection<GamebananaGame>(),
+                };
+
+                API.Games.Add(new GamebananaGame(){
+                    Guid = Guid.NewGuid(),
+                    Name = @"Super Smash Bros. Ultimate",
+                    ID = 6498,
+                    RootCategories = new ObservableCollection<GamebananaRootCategory>()
+                });
+
+                foreach(GameAPICategory c in Games[0].GameAPICategories)
+                {
+                    GamebananaRootCategory cat = new GamebananaRootCategory()
+                    {
+                        Guid = Guid.NewGuid(),
+                        Name = c.APICategoryName,
+                        SubCategories = new ObservableCollection<GamebananaSubCategory>()
+                    };
+
+                    foreach(GameAPISubCategory sc in c.GameAPISubCategories)
+                    {
+                        cat.SubCategories.Add(new GamebananaSubCategory()
+                        {
+                            Guid = Guid.NewGuid(),
+                            ID = sc.APISubCategoryID,
+                            Name = sc.APISubCategoryName
+                        });
+                    }
+
+                    API.Games[0].RootCategories.Add(cat);
+                }
+
+                JSonHelper.SaveGamebananaAPI(API);
+                QuasarLogger.Debug("Finished Processing new API file");*/
 
             }
             catch (Exception e)
             {
-                QuasarLogger.Info(e.Message);
-                QuasarLogger.Info(e.StackTrace);
+                QuasarLogger.Error(e.Message);
+                QuasarLogger.Error(e.StackTrace);
             }
         }
 
@@ -530,6 +567,7 @@ namespace Quasar.MainUI.ViewModels
                 Workspaces = JSonHelper.GetWorkspaces();
                 Library = JSonHelper.GetLibrary();
                 ContentItems = JSonHelper.GetContentItems();
+                API = JSonHelper.GetGamebananaAPI();
 
                 if (Workspaces.Count == 0)
                 {
