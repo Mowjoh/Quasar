@@ -838,15 +838,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Quasar"
-        "ProductCode" = "8:{7632E368-F82D-4D7D-8C82-FEA693C9E5BF}"
-        "PackageCode" = "8:{67E89BDE-503C-4040-B222-995FA794A650}"
+        "ProductCode" = "8:{AB67B809-7AEF-4954-8DB8-3CA726B7A227}"
+        "PackageCode" = "8:{42CB4BCC-2F19-4F7C-918C-E9899AC7CEFB}"
         "UpgradeCode" = "8:{33FBFAE5-777F-41E5-9E5C-1629D77AAA77}"
         "AspNetVersion" = "8:2.0.50727.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:2.0.1"
+        "ProductVersion" = "8:2.0.3"
         "Manufacturer" = "8:Mowjoh"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -1538,7 +1538,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_D3F486953354489DB751F2F563B8EBFB"
             {
-            "SourcePath" = "8:..\\Quasar\\obj\\Debug\\Quasar.exe"
+            "SourcePath" = "8:..\\Quasar\\obj\\Debug Admin\\Quasar.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_98530811AAC548198210D459D2DE76BD"
