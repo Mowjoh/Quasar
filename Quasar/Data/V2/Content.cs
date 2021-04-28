@@ -12,12 +12,19 @@ namespace Quasar.Data.V2
 {
     public class ContentItem
     {
-        public int ID { get; set; }
+        [Newtonsoft.Json.JsonProperty]
+        public Guid Guid { get; set; }
+        [Newtonsoft.Json.JsonProperty]
         public string Name { get; set; }
-        public int LibraryItemID { get; set; }
+        [Newtonsoft.Json.JsonProperty]
+        public Guid LibraryItemGuid { get; set; }
+        [Newtonsoft.Json.JsonProperty]
         public int GameElementID { get; set; }
+        [Newtonsoft.Json.JsonProperty]
         public int QuasarModTypeID { get; set; }
+        [Newtonsoft.Json.JsonProperty]
         public int SlotNumber { get; set; }
+        [Newtonsoft.Json.JsonProperty]
         public ObservableCollection<ScanFile> ScanFiles { get; set; }
     }
 
@@ -27,7 +34,7 @@ namespace Quasar.Data.V2
         public string DestinationFilePath { get; set; }
         public string Hash { get; set; }
         [Newtonsoft.Json.JsonIgnore]
-        public int LibraryItemID { get; set; }
+        public Guid LibraryItemGuid { get; set; }
     }
 
     public class Hash : ObservableObject

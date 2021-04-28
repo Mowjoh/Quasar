@@ -15,15 +15,17 @@
                 Width="200" Height="38"
                 Margin="16,0,0,64" HorizontalAlignment="Left" VerticalAlignment="Bottom" />
 
+
         <TextBlock Text="Mod Name :"
                    FontSize="15" Style="{StaticResource CutieTextBlockStyle}"
                    Width="82"
                    Margin="20,0,0,7" HorizontalAlignment="Left" VerticalAlignment="Bottom"
                    FontFamily="{StaticResource PoppinsRegular}" />
         <TextBox Text="{Binding ModName, Mode=TwoWay}"
-                 Style="{StaticResource CutieTextBoxStyle}" TextWrapping="NoWrap"
+                 Style="{StaticResource CutieTextBoxStyle}"
                  Width="550"
-                 Margin="110,0" HorizontalAlignment="Left" VerticalAlignment="Bottom" />
+                 Margin="110,0" HorizontalAlignment="Left" VerticalAlignment="Bottom"
+                 TextWrapping="NoWrap" />
         <Button Command="{Binding Path=SaveModNameCommand}" Content="Save"
                 Template="{StaticResource CutieSmallButtonTemplate}"
                 Width="100" Height="38"

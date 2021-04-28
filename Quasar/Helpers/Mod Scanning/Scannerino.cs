@@ -33,7 +33,7 @@ namespace Quasar.Helpers.ModScanning
         /// <param name="ScannedResults"></param>
         public static void UpdateContents(MainUIViewModel MUVM, LibraryItem li, ObservableCollection<ContentItem> ScannedResults = null)
         {
-            string ModFolder = GetModFolder(li.ID, li.APICategoryName, MUVM.Games[0], li.ManualMod);
+            string ModFolder = String.Format(@"{0}\Library\Mods\{1}\", Properties.Settings.Default.DefaultDir, li.Guid);
 
             //Getting all scanned Content Items
             ObservableCollection<ContentItem> ScanResults;
@@ -47,15 +47,15 @@ namespace Quasar.Helpers.ModScanning
             }
             
             //Getting all stored Content Items with the same Library Item
-            List<ContentItem> ItemsToUpdate = MUVM.ContentItems.Where(c => c.LibraryItemID == li.ID).ToList();
+            List<ContentItem> ItemsToUpdate = MUVM.ContentItems.Where(c => c.LibraryItemGuid == li.Guid).ToList();
             List<ContentItem> UpdatedItems = new List<ContentItem>();
             foreach(ContentItem ScannedItem in ScanResults)
             {
-                List<ContentItem> MatchingContentItems = MUVM.ContentItems.Where(ci => ci.LibraryItemID == ScannedItem.LibraryItemID && ci.GameElementID == ScannedItem.GameElementID && ci.SlotNumber == ScannedItem.SlotNumber && ci.QuasarModTypeID == ScannedItem.QuasarModTypeID).ToList();
+                List<ContentItem> MatchingContentItems = MUVM.ContentItems.Where(ci => ci.LibraryItemGuid == ScannedItem.LibraryItemGuid && ci.GameElementID == ScannedItem.GameElementID && ci.SlotNumber == ScannedItem.SlotNumber && ci.QuasarModTypeID == ScannedItem.QuasarModTypeID).ToList();
                 if (MatchingContentItems.Count < 1)
                 {
                     //If there are no Content Items matching the Scanned Item
-                    ScannedItem.ID = IDHelper.getNewContentID();
+                    ScannedItem.Guid = Guid.NewGuid();
                     MUVM.ContentItems.Add(ScannedItem);
                 }
                 else
@@ -75,7 +75,7 @@ namespace Quasar.Helpers.ModScanning
                     if (!Matched)
                     {
                         //If there are no Content Items matching the Scanned Item
-                        ScannedItem.ID = IDHelper.getNewContentID();
+                        ScannedItem.Guid = Guid.NewGuid();
                         MUVM.ContentItems.Add(ScannedItem);
                     }
                 }
@@ -107,7 +107,7 @@ namespace Quasar.Helpers.ModScanning
             ObservableCollection<ContentItem> SearchResults = new ObservableCollection<ContentItem>();
 
             ObservableCollection<ScanFile> ScannedFiles = new ObservableCollection<ScanFile>();
-            string ModFolder = GetModFolder(LibraryItem.ID, LibraryItem.APICategoryName, game, LibraryItem.ManualMod);
+            string ModFolder = String.Format(@"{0}\Library\Mods\{1}\", Properties.Settings.Default.DefaultDir, LibraryItem.Guid);
             ScannedFiles = GetScanFiles(FolderPath, QuasarModTypes, game, ModFolder, FileList);
 
             //Processing Search Results into ContentMappings
@@ -124,7 +124,7 @@ namespace Quasar.Helpers.ModScanning
                             GameElementID = sf.GameElementID,
                             QuasarModTypeID = sf.QuasarModTypeID,
                             SlotNumber = int.Parse(sf.Slot),
-                            LibraryItemID = LibraryItem.ID,
+                            LibraryItemGuid = LibraryItem.Guid,
                             Name = LibraryItem.Name,
                             ScanFiles = new ObservableCollection<ScanFile>()
                         {
@@ -153,7 +153,7 @@ namespace Quasar.Helpers.ModScanning
                                 GameElementID = sf.GameElementID,
                                 QuasarModTypeID = sf.QuasarModTypeID,
                                 SlotNumber = int.Parse(sf.Slot),
-                                LibraryItemID = LibraryItem.ID,
+                                LibraryItemGuid = LibraryItem.Guid,
                                 Name = LibraryItem.Name + " #" + (SearchList.Count + 1).ToString(),
                                 ScanFiles = new ObservableCollection<ScanFile>()
                                 {
@@ -273,7 +273,7 @@ namespace Quasar.Helpers.ModScanning
                     {
                         Group GameData = folderMatch.Groups["GameData"];
                         string FolderGameData = GameData.Value;
-                        RecognisedFolderGameData = Family.GameElements.SingleOrDefault(ge => ge.GameFolderName == FolderGameData);
+                        RecognisedFolderGameData = Family.GameElements.SingleOrDefault(ge => (ge.GameFolderName == FolderGameData.ToLower()) || (ge.GameFolderName.Contains(";") ? ge.GameFolderName.Split(';').Contains(FolderGameData.ToLower()) : false));
 
                         Group Slot = folderMatch.Groups["Slot"];
                         FolderSlot = Slot.Value;
@@ -282,39 +282,32 @@ namespace Quasar.Helpers.ModScanning
                     {
                         Group GameData = fileMatch.Groups["GameData"];
                         string FileGameData = GameData.Value;
-                        RecognisedFileGameData = Family.GameElements.SingleOrDefault(ge => ge.GameFolderName == FileGameData);
+                        RecognisedFileGameData = Family.GameElements.SingleOrDefault(ge => (ge.GameFolderName == FileGameData.ToLower()) || (ge.GameFolderName.Contains(";") ? ge.GameFolderName.Split(';').Contains(FileGameData.ToLower()) : false));
 
                         Group Slot = fileMatch.Groups["Slot"];
                         FileSlot = Slot.Value;
                     }
 
                     //Match Validation
-                    if (qmt.IgnoreGameElementFamily)
+                    if ((RecognisedFileGameData != null || RecognisedFolderGameData != null) && (FileDefinition.SearchPath == "" || folderMatch.Success) && fileMatch.Success)
                     {
+                        FileToMatch.QuasarModTypeID = qmt.ID;
+                        FileToMatch.QuasarModTypeFileDefinitionID = FileDefinition.ID;
+                        FileToMatch.GameElementID = RecognisedFolderGameData != null ? RecognisedFolderGameData.ID : RecognisedFileGameData.ID;
+                        FileToMatch.Slot = FolderSlot != "" ? FolderSlot : FileSlot != "" ? FileSlot : "00";
 
-                    }
-                    else
-                    {
-                        if((RecognisedFileGameData != null || RecognisedFolderGameData != null) && (FileDefinition.SearchPath == "" || folderMatch.Success) && fileMatch.Success)
+                        //Processing paths
+                        FileToMatch.SourcePath = FileToMatch.SourcePath.Replace('/', '\\').Replace(ModFolder, "");
+                        if (folderMatch.Value == "")
                         {
-                            FileToMatch.QuasarModTypeID = qmt.ID;
-                            FileToMatch.QuasarModTypeFileDefinitionID = FileDefinition.ID;
-                            FileToMatch.GameElementID = RecognisedFolderGameData != null ? RecognisedFolderGameData.ID : RecognisedFileGameData.ID;
-                            FileToMatch.Slot = FolderSlot != "" ? FolderSlot : FileSlot != "" ? FileSlot : "00";
-
-                            //Processing paths
-                            FileToMatch.SourcePath = FileToMatch.SourcePath.Replace('/', '\\').Replace(ModFolder,"");
-                            if(folderMatch.Value == "")
-                            {
-                                FileToMatch.OriginPath = FileToMatch.SourcePath;
-                            }
-                            else
-                            {
-                                FileToMatch.OriginPath = FileToMatch.SourcePath.Replace("\\" + folderMatch.Value.Replace('/', '\\'), "");
-                            }
-                            FileToMatch.OriginPath = FileToMatch.OriginPath.Replace(fileMatch.Value, "");
-                            FileToMatch.Scanned = true;
+                            FileToMatch.OriginPath = FileToMatch.SourcePath;
                         }
+                        else
+                        {
+                            FileToMatch.OriginPath = FileToMatch.SourcePath.Replace("\\" + folderMatch.Value.Replace('/', '\\'), "");
+                        }
+                        FileToMatch.OriginPath = FileToMatch.OriginPath.Replace(fileMatch.Value, "");
+                        FileToMatch.Scanned = true;
                     }
 
                 }
@@ -343,13 +336,13 @@ namespace Quasar.Helpers.ModScanning
             {
                 QuasarModTypeFileDefinition FileDefinition = qmt.QuasarModTypeFileDefinitions.Single(def => def.ID == sf.QuasarModTypeFileDefinitionID);
                 GameElement ge = Family.GameElements.Single(e => e.ID == sf.GameElementID);
-                string ModFolder = GetModFolder(li.ID, li.APICategoryName, game,li.ManualMod);
+                string ModFolder = Properties.Settings.Default.DefaultDir + @"\Library\Mods\" + li.Guid + @"\";
 
                 ModFile mf = new ModFile()
                 {
                     SourceFilePath = ModFolder + sf.SourcePath,
                     DestinationFilePath = ProcessOutput(ModFolder + sf.SourcePath, FileDefinition, ge, Slot, ModLoader,li, ModFolder),
-                    LibraryItemID = ci.LibraryItemID
+                    LibraryItemGuid = ci.LibraryItemGuid
                 };
 
                 PreparedModFiles.Add(mf);
@@ -418,7 +411,26 @@ namespace Quasar.Helpers.ModScanning
                 }
             }
 
-            OutputFile = GameDataReplacinator.Replace(OutputFile, GameElement.GameFolderName, 1);
+            if (GameElement.GameFolderName.Contains(';'))
+            {
+                string ProperGameFolder = "";
+
+                //Match Data Processing
+                if (fileMatch.Success)
+                {
+                    Group GameData = fileMatch.Groups["GameData"];
+                    if (GameData.Value != "")
+                        ProperGameFolder = GameData.Value;
+                    OutputFile = GameDataReplacinator.Replace(OutputFile, ProperGameFolder, 1);
+                }
+                
+            }
+            else
+            {
+                OutputFile = GameDataReplacinator.Replace(OutputFile, GameElement.GameFolderName, 1);
+            }
+
+            
 
             OutputFile = SlotReplacinatorSingle.Replace(OutputFile, Slot.ToString("0"), 1);
             OutputFile = SlotReplacinatorDouble.Replace(OutputFile, Slot.ToString("00"), 1);
@@ -448,7 +460,24 @@ namespace Quasar.Helpers.ModScanning
                 }
             }
 
-            OutputPath = GameDataReplacinator.Replace(OutputPath, GameElement.GameFolderName, 1);
+            if (GameElement.GameFolderName.Contains(';'))
+            {
+                string ProperGameFolder = "";
+
+                //Match Data Processing
+                if (folderMatch.Success)
+                {
+                    Group GameData = folderMatch.Groups["GameData"];
+                    if (GameData.Value != "")
+                        ProperGameFolder = GameData.Value;
+                    OutputPath = GameDataReplacinator.Replace(OutputPath, ProperGameFolder, 1);
+                }
+            }
+            else
+            {
+                OutputPath = GameDataReplacinator.Replace(OutputPath, GameElement.GameFolderName, 1);
+            }
+            
 
             OutputPath = SlotReplacinatorSingle.Replace(OutputPath, Slot.ToString("0"), 1);
             OutputPath = SlotReplacinatorDouble.Replace(OutputPath, Slot.ToString("00"), 1);
@@ -475,6 +504,7 @@ namespace Quasar.Helpers.ModScanning
             //output = output.Replace(@"_", "\\_");
 
             //Replacing the tags
+            output = output.Replace(@"{Empty}", @"");
             output = output.Replace(@"{Folder}", @"(?'Folder'[^\\\/]*)");
             output = output.Replace(@"{Part}", @"(?'Part'[a-zA-Z0-9]*)");
             output = output.Replace(@"{AnyFile}", @"(?'AnyFile'[a-zA-Z0-9\_]*)");
@@ -495,30 +525,6 @@ namespace Quasar.Helpers.ModScanning
             return output;
         }
 
-        /// <summary>
-        /// Returns the appropriate Library Mod Folder
-        /// </summary>
-        /// <param name="LibraryModID"></param>
-        /// <param name="APICategoryName"></param>
-        /// <param name="game"></param>
-        /// <param name="Manual"></param>
-        /// <returns>The path to that Folder</returns>
-        public static string GetModFolder(int LibraryModID, string APICategoryName, Game game, bool Manual = false)
-        {
-            
-            if (Manual)
-            {
-                return Properties.Settings.Default.DefaultDir + @"\Library\Mods\manual\" + LibraryModID + @"\";
-            }
-            else
-            {
-                GameAPICategory Cat = game.GameAPICategories.Single(c => c.APICategoryName == APICategoryName);
-                //Default Dir + Mods + CategoryFolder + ModID
-                string ModFolder = Properties.Settings.Default.DefaultDir + @"\Library\Mods\" + Cat.LibraryFolderName.Replace('/', '\\') + @"\" + LibraryModID + @"\";
-                return ModFolder;
-            }
-           
-        }
     }
 
     public class ScanFile

@@ -33,7 +33,7 @@ namespace Quasar.Helpers.Downloading
             //Getting info from Quasar URL
             var DownloadURL = new Uri(_QuasarDownload.DownloadURL);
             var DestinationFolderPath = DefaultDirectoryPath + "\\Library\\Downloads\\";
-            var DestinationFilePath = DestinationFolderPath + _QuasarDownload.LibraryItemID + "." + _QuasarDownload.ModArchiveFormat;
+            var DestinationFilePath = DestinationFolderPath + ModListItemView.LibraryItem.Guid + "." + _QuasarDownload.ModArchiveFormat;
             FileOperation.CheckCreate(DestinationFolderPath);
 
             //Setting up Progress actions

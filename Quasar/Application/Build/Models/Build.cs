@@ -204,13 +204,35 @@ namespace Quasar.Build.Models
             ViewModel.SetStep("Listing Local Files");
             ViewModel.QuasarLogger.Debug("Listing Local Files");
             WorkspaceIndex = new ObservableCollection<ModFile>();
+            ObservableCollection<BasicInfoData> InfoData = new ObservableCollection<BasicInfoData>();
 
             foreach (Association ass in ViewModel.MUVM.ActiveWorkspace.Associations)
             {
-                ContentItem ci = ViewModel.MUVM.ContentItems.Single(c => c.ID == ass.ContentItemID);
-                LibraryItem li = ViewModel.MUVM.Library.Single(l => l.ID == ci.LibraryItemID);
+                ContentItem ci = ViewModel.MUVM.ContentItems.Single(c => c.Guid == ass.ContentItemGuid);
+                LibraryItem li = ViewModel.MUVM.Library.Single(l => l.Guid == ci.LibraryItemGuid);
                 QuasarModType qmt = ViewModel.MUVM.QuasarModTypes.Single(t => t.ID == ass.QuasarModTypeID);
                 GameElementFamily gef = ViewModel.MUVM.Games[0].GameElementFamilies.Single(f => f.ID == qmt.GameElementFamilyID);
+
+                if (ModLoader == 2)
+                {
+                    if(InfoData.Any(d => d.LibraryItem.Guid == li.Guid))
+                    {
+                        BasicInfoData data = InfoData.Single(d => d.LibraryItem.Guid == li.Guid);
+                        data.Description += String.Format("Slot #{0} - {1} - {2}\r\n", (ci.SlotNumber + 1).ToString(), qmt.Name, ci.Name);
+                    }
+                    else
+                    {
+                        BasicInfoData data = new BasicInfoData()
+                        {
+                            LibraryItem = li,
+                            Description = "Contains : \r\n"
+                        };
+                        data.Description += String.Format("Slot #{0} - {1} - {2}\r\n", (ci.SlotNumber + 1).ToString(), qmt.Name, ci.Name);
+
+                        InfoData.Add(data);
+                    }
+
+                }
 
                 foreach (ModFile mf in Scannerino.GetModFiles(qmt, gef, ci, ass.SlotNumber, ModLoader, li, ViewModel.MUVM.Games[0]))
                 {
@@ -218,7 +240,13 @@ namespace Quasar.Build.Models
                     WorkspaceIndex.Add(mf);
                 }
             }
+
+            foreach(BasicInfoData d in InfoData)
+            {
+                ARCropolisHelper.CreateInfoFile(d.LibraryItem, d.Description);
+            }
             
+
         }
         public override async Task GetDistantFileList()
         {
@@ -284,18 +312,40 @@ namespace Quasar.Build.Models
                 try
                 {
                     ModFile MF = WorkspaceFilesToCopy[0];
-                    
-                    List<ModFile> AssociatedFiles = WorkspaceFilesToCopy.Where(r => r.LibraryItemID == MF.LibraryItemID).ToList();
-                    string ItemName = ViewModel.MUVM.Library.Single(li => li.ID == MF.LibraryItemID).Name;
-                    ViewModel.SetSubStep("Copying files for " + ItemName);
+                    string description = "Contains :\r\n";
+                    List<ModFile> AssociatedFiles = WorkspaceFilesToCopy.Where(r => r.LibraryItemGuid == MF.LibraryItemGuid).ToList();
+                    LibraryItem Item = ViewModel.MUVM.Library.Single(li => li.Guid == MF.LibraryItemGuid);
+                    GamebananaRootCategory RCat = ViewModel.MUVM.API.Games[0].RootCategories.SingleOrDefault(c => c.Guid == Item.GBItem?.RootCategoryGuid);
+                    ViewModel.SetSubStep("Copying files for " + Item.Name);
                     foreach (ModFile Ferb in AssociatedFiles)
                     {
                         SetProgression((TotalFiles - WorkspaceFilesToCopy.Count), TotalFiles);
                         Writer.SendFile(Ferb.SourceFilePath, WorkspacePath + Ferb.DestinationFilePath);
                         WorkspaceFilesToCopy.Remove(Ferb);
                     }
-                    ViewModel.QuasarLogger.Info(String.Format("Finished copying files for {0}", ItemName));
-                    ViewModel.BuildLog("Mod", String.Format("Finished copying files for {0}", ItemName));
+                    //Sending ARCadia files
+                    if(ModLoader == 2)
+                    {
+                        string ModConfigInputPath = String.Format(@"{0}\Library\Mods\{1}\info.toml", Properties.Settings.Default.DefaultDir, Item.Guid);
+                        string ModConfigOutputPath = String.Format(@"{0}\{1}\info.toml", WorkspacePath, Item.Name.Replace(".", ""));
+                        string ModScreenInputPath = String.Format(@"{0}\Library\Screenshots\{1}.webp", Properties.Settings.Default.DefaultDir, Item.Guid);
+                        string ModDefaultScreenInputPath = String.Format(@"{0}\Resources\images\NoScreenshot.webp", Properties.Settings.Default.DefaultDir);
+                        string ModScreenOutputPath = String.Format(@"{0}\{1}\preview.webp", WorkspacePath, Item.Name.Replace(".",""));
+
+                        Writer.SendFile(ModConfigInputPath, ModConfigOutputPath);
+
+                        if (File.Exists(ModScreenInputPath))
+                        {
+                            Writer.SendFile(ModScreenInputPath, ModScreenOutputPath);
+                        }
+                        else
+                        {
+                            Writer.SendFile(ModDefaultScreenInputPath, ModScreenOutputPath);
+                        }
+                            
+                    }
+                    ViewModel.QuasarLogger.Info(String.Format("Finished copying files for {0}", Item.Name));
+                    ViewModel.BuildLog("Mod", String.Format("Finished copying files for {0}", Item.Name));
                 }
                 catch (Exception e)
                 {
@@ -523,6 +573,12 @@ namespace Quasar.Build.Models
         public string SourceFilePath { get; set; }
         public string OutputFilePath { get; set; }
         public bool OutsideFile { get; set; }
+    }
+
+    public class BasicInfoData
+    {
+        public LibraryItem LibraryItem { get; set; }
+        public string Description { get; set; }
     }
 
     

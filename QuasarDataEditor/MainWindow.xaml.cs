@@ -33,9 +33,6 @@ namespace QuasarDataEditor
 
             InitializeComponent();
 
-            #if DEBUG
-            MaximizeToSecondaryMonitor();
-            #endif
         }
         public void MaximizeToSecondaryMonitor()
         {

@@ -10,7 +10,7 @@ namespace Quasar.Data.V2
     public class APIMod
     {
         public int ID { get; set; }
-        public string ModType { get; set; }
+        public string GamebananaRootCategoryName { get; set; }
 
         [JsonProperty("name")]
         public string Name { get; set; }
@@ -21,11 +21,11 @@ namespace Quasar.Data.V2
         [JsonProperty("description")]
         public string Description { get; set; }
 
-        [JsonProperty("downloads")]
-        public int Downloads { get; set; }
+        [JsonProperty("Category().name")]
+        public string GamebananaSubCategoryName { get; set; }
 
         [JsonProperty("catid")]
-        public int CategoryID { get; set; }
+        public int GamebananaSubCategoryID { get; set; }
 
         [JsonProperty("Game().name")]
         public string GameName { get; set; }

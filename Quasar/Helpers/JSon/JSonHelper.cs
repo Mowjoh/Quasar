@@ -48,17 +48,29 @@ namespace Quasar.Helpers.Json
                 SaveJSonFile(@"\Resources\ModLoaders.json", _ModLoaders.OrderBy(i => i.ID));
             }
         }
+        public static void SaveGamebananaAPI(GamebananaAPI _API, string _ExternalPath = "")
+        {
+
+            if (_ExternalPath != "")
+            {
+                SaveJSonFile(@"\Resources\Gamebanana.json", _API, _ExternalPath);
+            }
+            else
+            {
+                SaveJSonFile(@"\Resources\Gamebanana.json", _API);
+            }
+        }
 
         //User Saves
         public static void SaveLibrary(ObservableCollection<LibraryItem> _LibraryItems, string _ExternalPath = "")
         {
             if (_ExternalPath != "")
             {
-                SaveJSonFile(@"\Library\Library.json", _LibraryItems.OrderBy(i => i.ID), _ExternalPath);
+                SaveJSonFile(@"\Library\Library.json", _LibraryItems, _ExternalPath, true);
             }
             else
             {
-                SaveJSonFile(@"\Library\Library.json", _LibraryItems.OrderBy(i => i.ID));
+                SaveJSonFile(@"\Library\Library.json", _LibraryItems, "" , true);
             }
             
         }
@@ -67,11 +79,11 @@ namespace Quasar.Helpers.Json
             
             if (_ExternalPath != "")
             {
-                SaveJSonFile(@"\Library\Workspaces.json", _Workspaces.OrderBy(i => i.ID), _ExternalPath);
+                SaveJSonFile(@"\Library\Workspaces.json", _Workspaces.OrderBy(i => i.Guid), _ExternalPath, true);
             }
             else
             {
-                SaveJSonFile(@"\Library\Workspaces.json", _Workspaces.OrderBy(i => i.ID));
+                SaveJSonFile(@"\Library\Workspaces.json", _Workspaces.OrderBy(i => i.Guid), "", true);
             }
         }
         public static void SaveSharedWorkspaces(ShareableWorkspace SW, string _ExternalPath = "")
@@ -79,23 +91,23 @@ namespace Quasar.Helpers.Json
 
             if (_ExternalPath != "")
             {
-                SaveJSonFile(@"\SharedWorkspace.json", SW, _ExternalPath);
+                SaveJSonFile(@"\SharedWorkspace.json", SW, _ExternalPath, true);
             }
             else
             {
                 
-                SaveJSonFile(@"\SharedWorkspace.json", SW);
+                SaveJSonFile(@"\SharedWorkspace.json", SW, "", true);
             }
         }
         public static void SaveContentItems(ObservableCollection<ContentItem> _ContentItems, string _ExternalPath = "")
         {
             if (_ExternalPath != "")
             {
-                SaveJSonFile(@"\Library\ContentItems.json", _ContentItems.OrderBy(i => i.ID),_ExternalPath);
+                SaveJSonFile(@"\Library\ContentItems.json", _ContentItems.OrderBy(i => i.Guid),_ExternalPath, true);
             }
             else
             {
-                SaveJSonFile(@"\Library\ContentItems.json", _ContentItems.OrderBy(i => i.ID));
+                SaveJSonFile(@"\Library\ContentItems.json", _ContentItems.OrderBy(i => i.Guid), "", true);
             }
         }
         public static void SaveModFiles(ObservableCollection<ModFile> _ModFiles, string _ExternalPath = "")
@@ -177,6 +189,28 @@ namespace Quasar.Helpers.Json
 
 
             return ModLoaders;
+        }
+        public static GamebananaAPI GetGamebananaAPI(bool External = false, string ExternalPath = "")
+        {
+            GamebananaAPI API = new GamebananaAPI();
+            string Path;
+            if (!External)
+            {
+                Path = Properties.Settings.Default.DefaultDir + @"\Resources\Gamebanana.json";
+            }
+            else
+            {
+                Path = ExternalPath;
+            }
+
+            using (StreamReader file = File.OpenText(Path))
+            {
+                JsonSerializer serializer = new JsonSerializer();
+                API = (GamebananaAPI)serializer.Deserialize(file, typeof(GamebananaAPI));
+            }
+
+
+            return API;
         }
 
         //User Loads
@@ -311,7 +345,7 @@ namespace Quasar.Helpers.Json
         /// <param name="_Fullpath">Destination file path</param>
         /// <param name="_Source">Source collection</param>
         /// <param name="_ExternalPath">Override Destination file path</param>
-        private static void SaveJSonFile(string _Fullpath, Object _Source, string _ExternalPath = "")
+        private static void SaveJSonFile(string _Fullpath, Object _Source, string _ExternalPath = "", bool Headless = false)
         {
 
             string Path;
@@ -327,6 +361,8 @@ namespace Quasar.Helpers.Json
             using (StreamWriter file = File.CreateText(Path))
             {
                 JsonSerializer serializer = new JsonSerializer();
+                if (Headless)
+                    serializer.TypeNameHandling = TypeNameHandling.None;
                 serializer.Serialize(file, _Source);
             }
         }

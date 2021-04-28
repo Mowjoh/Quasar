@@ -95,11 +95,11 @@ namespace Quasar.Helpers.Quasar_Management
             String AssociationsPath = Properties.Settings.Default.DefaultDir + @"\Library\Workspaces.json";
             if (!File.Exists(AssociationsPath))
             {
-                Workspace defaultWorkspace = new Workspace() { Name = "Default", ID = IDHelper.getNewWorkspaceID(), Associations = new ObservableCollection<Association>(), BuildDate = "" };
+                Workspace defaultWorkspace = new Workspace() { Name = "Default", Guid = Guid.NewGuid(), Associations = new ObservableCollection<Association>(), BuildDate = "" };
                 ObservableCollection<Workspace> DefaultFile = new ObservableCollection<Workspace>() { defaultWorkspace };
                 JSonHelper.SaveWorkspaces(DefaultFile);
 
-                Properties.Settings.Default.LastSelectedWorkspace = defaultWorkspace.ID;
+                Properties.Settings.Default.LastSelectedWorkspace = defaultWorkspace.Guid;
                 Properties.Settings.Default.Save();
             }
         }

@@ -17,7 +17,7 @@
                 <Style TargetType="{x:Type Grid}">
                     <Setter Property="Visibility" Value="Collapsed" />
                     <Style.Triggers>
-                        <DataTrigger Binding="{Binding Mods.Count}"
+                        <DataTrigger Binding="{Binding ModListItems.Count}"
                                      Value="0">
                             <Setter Property="Visibility" Value="Visible" />
                         </DataTrigger>
@@ -25,12 +25,13 @@
                 </Style>
             </Grid.Style>
             <Label Content="Please download some mods from Gamebanana using the Quasar Download Button"
-                   FontSize="20" FontFamily="{StaticResource PoppinsBold}" Foreground="Wheat"
-                   HorizontalAlignment="Center" VerticalAlignment="Center" />
+                   FontSize="20" Foreground="Wheat"
+                   HorizontalAlignment="Center" VerticalAlignment="Center"
+                   FontFamily="{StaticResource PoppinsBold}" />
         </Grid>
 
         <!--#region  Top Section-->
-        <ComboBox ItemsSource="{Binding Path=MUVM.Games[0].GameAPICategories}" SelectedItem="{Binding SelectedGameAPICategory}"
+        <ComboBox ItemsSource="{Binding Path=MUVM.API.Games[0].RootCategories}" SelectedItem="{Binding SelectedGamebananaRootCategory}"
                   Style="{StaticResource ComboBoxFlatStyle}"
                   Width="200" Height="32"
                   Margin="16,32,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
@@ -113,13 +114,15 @@
             <!--  Label Headers  -->
             <Label Content="Mod Name"
                    Grid.Column="1"
-                   FontSize="14" FontFamily="{StaticResource PoppinsItalic}" Style="{StaticResource CutieLabelStyle}"
-                   HorizontalAlignment="Left" />
+                   FontSize="14" Style="{StaticResource CutieLabelStyle}"
+                   HorizontalAlignment="Left"
+                   FontFamily="{StaticResource PoppinsItalic}" />
 
             <Label Content="Type"
                    Grid.Column="2"
-                   FontSize="14" FontFamily="{StaticResource PoppinsItalic}" Style="{StaticResource CutieLabelStyle}"
-                   Margin="20,0" HorizontalAlignment="Left" />
+                   FontSize="14" Style="{StaticResource CutieLabelStyle}"
+                   Margin="20,0" HorizontalAlignment="Left"
+                   FontFamily="{StaticResource PoppinsItalic}" />
 
             <CheckBox Grid.Column="2"
                       Template="{StaticResource CutieAZ}" Foreground="{DynamicResource QuasarTextColor}"
@@ -128,23 +131,31 @@
 
             <Label Content="Category"
                    Grid.Column="3"
-                   FontSize="14" FontFamily="{StaticResource PoppinsItalic}" Style="{StaticResource CutieLabelStyle}"
-                   Margin="20,0" HorizontalAlignment="Left" />
+                   FontSize="14" Style="{StaticResource CutieLabelStyle}"
+                   Margin="20,0" HorizontalAlignment="Left"
+                   FontFamily="{StaticResource PoppinsItalic}" />
 
             <CheckBox Grid.Column="3"
                       Template="{StaticResource CutieAZ}" Foreground="{DynamicResource QuasarTextColor}"
                       Margin="0,0,0,0" HorizontalAlignment="Left"
                       IsChecked="{Binding CategoryFilterSelected}" />
 
-            <Label Content="Mod Game"
+            <Label Content="Last modification"
                    Grid.Column="4"
-                   FontSize="14" FontFamily="{StaticResource PoppinsItalic}" Style="{StaticResource CutieLabelStyle}"
-                   HorizontalAlignment="Left" />
+                   FontSize="14" Style="{StaticResource CutieLabelStyle}"
+                   Margin="15,0,0,0" HorizontalAlignment="Left"
+                   FontFamily="{StaticResource PoppinsItalic}" />
+
+            <CheckBox Grid.Column="4"
+                      Template="{StaticResource CutieAZ}" Foreground="{DynamicResource QuasarTextColor}"
+                      Margin="-5,0,0,0" HorizontalAlignment="Left"
+                      IsChecked="{Binding TimeFilterSelected}" />
 
             <Label Content="Actions"
                    Grid.Column="5"
-                   FontSize="14" FontFamily="{StaticResource PoppinsItalic}" Style="{StaticResource CutieLabelStyle}"
-                   HorizontalAlignment="Center" />
+                   FontSize="14" Style="{StaticResource CutieLabelStyle}"
+                   HorizontalAlignment="Center"
+                   FontFamily="{StaticResource PoppinsItalic}" />
 
         </Grid>
 

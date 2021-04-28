@@ -2,6 +2,7 @@
 using log4net.Appender;
 using Nett;
 using Quasar.Build.Models;
+using Quasar.Data.V2;
 using Quasar.Helpers.FileOperations;
 using System;
 using System.IO;
@@ -144,6 +145,41 @@ namespace Quasar.Helpers.Tools
                 }
             }
         }
+
+        public static void CreateInfoFile(LibraryItem Item,string Decription, string CategoryName = "")
+        {
+            ARCadiaModInfo info;
+            string output = String.Format(@"{0}\Library\Mods\{1}\info.toml",Properties.Settings.Default.DefaultDir, Item.Guid);
+            if (!Item.ManualMod)
+            {
+                info = new ARCadiaModInfo()
+                {
+                    display_name = Item.Name,
+                    description = Decription,
+                    category = CategoryName,
+                    version = Item.GBItem.UpdateCount.ToString()
+                };
+            }
+            else
+            {
+                info = new ARCadiaModInfo()
+                {
+                    display_name = Item.Name,
+                    description = Decription,
+                    category = "Unknown",
+                    version = "1.0"
+                };
+            }
+
+            Toml.WriteFile<ARCadiaModInfo>(info, output);
+
+        }
+
+        public static void DeleteInfoFile()
+        {
+            if (File.Exists(String.Format(@"{0}\Library\info.toml", Properties.Settings.Default.DefaultDir)))
+                File.Delete(String.Format(@"{0}\Library\info.toml", Properties.Settings.Default.DefaultDir));
+        }
     }
 
 
@@ -178,5 +214,16 @@ namespace Quasar.Helpers.Tools
     {
         public bool debug { get; set; }
         public string region { get; set; }
+    }
+
+
+    public class ARCadiaModInfo
+    {
+        public string display_name { get; set; }
+        public string description { get; set; }
+        public string version { get; set; }
+        public string category { get; set; }
+
+        
     }
 }

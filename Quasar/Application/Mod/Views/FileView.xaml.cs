@@ -29,20 +29,22 @@ namespace Quasar.Controls
 
         public FileView(String path, String ModName)
         {
-
-            InitializeComponent();
-
-            Trees.Items.Clear();
-
-            foreach (string s in Directory.GetDirectories(path))
+            if (Directory.Exists(path))
             {
-                var rootDirectory = new DirectoryInfo(s);
-                Trees.Items.Add(CreateDirectoryNode(rootDirectory));
+                InitializeComponent();
+
+                Trees.Items.Clear();
+
+                foreach (string s in Directory.GetDirectories(path))
+                {
+                    var rootDirectory = new DirectoryInfo(s);
+                    Trees.Items.Add(CreateDirectoryNode(rootDirectory));
+                }
+
+                ModNameLabel.Content = ModName;
+
+                ExpandTree(Trees);
             }
-
-            ModNameLabel.Content = ModName;
-
-            ExpandTree(Trees);
         }
 
         private static TreeViewItem CreateDirectoryNode(DirectoryInfo directoryInfo)

@@ -81,29 +81,11 @@ namespace Quasar.FileSystem
         }
 
         //Sets up default paths from the Library Mod
-        public ModFileManager(LibraryItem _mod, Game _Game, string ModArchiveFormat = "")
-        {
-            ModID = _mod.ID.ToString();
-            ModTypeID = _mod.GameAPISubCategoryID.ToString();
-
-            if (_mod.ManualMod)
-            {
-                ModTypeFolderName = "manual";
-            }
-            else
-            {
-                GameAPICategory mt = _Game.GameAPICategories.Single(m => m.APICategoryName == _mod.APICategoryName);
-                ModTypeFolderName = mt.LibraryFolderName;
-            }
-            
-
-            DownloadDestinationFilePath = Properties.Settings.Default.DefaultDir + "\\Library\\Downloads\\" + ModID + "." + ModArchiveFormat;
-            LibraryContentFolderPath = Properties.Settings.Default.DefaultDir + "\\Library\\Mods\\" + ModTypeFolderName.Replace(@"/",@"\") + "\\" + ModID + "\\";
-            ArchiveContentFolderPath = Properties.Settings.Default.DefaultDir + "\\Library\\Downloads\\" + ModID + "\\";
-            if (!Directory.Exists(Properties.Settings.Default.DefaultDir + "\\Library\\Mods\\" + ModTypeFolderName.Replace(@"/", @"\")))
-            {
-                Directory.CreateDirectory(Properties.Settings.Default.DefaultDir + "\\Library\\Mods\\" + ModTypeFolderName.Replace(@"/", @"\"));
-            }
+        public ModFileManager(LibraryItem _mod, string ModArchiveFormat = "")
+        {        
+            DownloadDestinationFilePath = Properties.Settings.Default.DefaultDir + "\\Library\\Downloads\\" + _mod.Guid + "." + ModArchiveFormat;
+            LibraryContentFolderPath = Properties.Settings.Default.DefaultDir + "\\Library\\Mods\\" + _mod.Guid + "\\";
+            ArchiveContentFolderPath = Properties.Settings.Default.DefaultDir + "\\Library\\Downloads\\" + _mod.Guid + "\\";
         }
 
         public void CheckOldFolderPath()

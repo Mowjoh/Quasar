@@ -228,7 +228,7 @@ namespace Quasar.Workspaces.ViewModels
         {
             if (ActiveWorkspace != null)
             {
-                if (ActiveWorkspace.ID != 0)
+                if (Workspaces.Count > 1)
                 {
                     ModalEvent meuh = new ModalEvent()
                     {
@@ -279,7 +279,7 @@ namespace Quasar.Workspaces.ViewModels
         /// </summary>
         public void AddWorkspace()
         {
-            Workspace newWorkspace = new Workspace() { Name = "New Workspace", ID = IDHelper.getNewWorkspaceID(), Associations = new ObservableCollection<Association>(), BuildDate = "" };
+            Workspace newWorkspace = new Workspace() { Name = "New Workspace", Guid = Guid.NewGuid(), Associations = new ObservableCollection<Association>(), BuildDate = "" };
             Workspaces.Add(newWorkspace);
             JSonHelper.SaveWorkspaces(Workspaces);
         }
@@ -308,7 +308,7 @@ namespace Quasar.Workspaces.ViewModels
         /// </summary>
         public void DuplicateWorkspace()
         {
-            Workspace Clone = new Workspace() { Name = String.Format("{0} - Copy", ActiveWorkspace.Name), ID = IDHelper.getNewWorkspaceID(), Associations = ActiveWorkspace.Associations, BuildDate = "" };
+            Workspace Clone = new Workspace() { Name = String.Format("{0} - Copy", ActiveWorkspace.Name), Guid = Guid.NewGuid(), Associations = ActiveWorkspace.Associations, BuildDate = "" };
             Workspaces.Add(Clone);
             JSonHelper.SaveWorkspaces(Workspaces);
         }
@@ -321,7 +321,7 @@ namespace Quasar.Workspaces.ViewModels
             if (!ActiveWorkspace.Shared)
             {
                 ActiveWorkspace.Shared = true;
-                ActiveWorkspace.UniqueShareID = IDHelper.getWorkspaceUniqueID();
+                ActiveWorkspace.UniqueShareID = Guid.NewGuid();
                 JSonHelper.SaveWorkspaces(MUVM.Workspaces);
             }
             
@@ -330,13 +330,13 @@ namespace Quasar.Workspaces.ViewModels
 
             foreach(Association ass in ActiveWorkspace.Associations)
             {
-                if(!WorkspaceContentItems.Any(c => c.ID == ass.ContentItemID))
+                if(!WorkspaceContentItems.Any(c => c.Guid == ass.ContentItemGuid))
                 {
-                    ContentItem cit = MUVM.ContentItems.Single(ci => ci.ID == ass.ContentItemID);
+                    ContentItem cit = MUVM.ContentItems.Single(ci => ci.Guid == ass.ContentItemGuid);
                     WorkspaceContentItems.Add(cit);
-                    if (!WorkspaceLibraryItems.Any(c => c.ID == cit.LibraryItemID))
+                    if (!WorkspaceLibraryItems.Any(c => c.Guid == cit.LibraryItemGuid))
                     {
-                        WorkspaceLibraryItems.Add(MUVM.Library.Single(li => li.ID == cit.LibraryItemID));
+                        WorkspaceLibraryItems.Add(MUVM.Library.Single(li => li.Guid == cit.LibraryItemGuid));
                     }
                 }
             }
@@ -385,7 +385,7 @@ namespace Quasar.Workspaces.ViewModels
                         ObservableCollection<LibraryItem> UpdateList = new ObservableCollection<LibraryItem>();
                         foreach(LibraryItem SharedLibraryItem in SW.LibraryItems)
                         {
-                            LibraryItem Search = MUVM.Library.SingleOrDefault(s => s.ID == SharedLibraryItem.ID);
+                            LibraryItem Search = MUVM.Library.SingleOrDefault(s => s.Guid == SharedLibraryItem.Guid);
                             if(Search == null)
                             {
                                 DownloadList.Add(SharedLibraryItem);
