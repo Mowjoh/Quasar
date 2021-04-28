@@ -501,6 +501,23 @@
                             </CheckBox.Style>
                         </CheckBox>
 
+
+                        <TextBlock Text="Elements with stuff"
+                                   Grid.Row="2" Grid.Column="2"
+                                   FontSize="16" Style="{StaticResource CutieTextBlockStyle}"
+                                   Margin="50,0,0,0" VerticalAlignment="Center" />
+                        <CheckBox Grid.Row="2" Grid.Column="2"
+                                  Template="{StaticResource CutieCheckBox}"
+                                  Width="20"
+                                  Margin="20,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center"
+                                  IsChecked="{Binding ItemsWithStuff, Mode=TwoWay}">
+                            <CheckBox.Style>
+                                <Style TargetType="CheckBox">
+                                    <Setter Property="Foreground" Value="White" />
+                                    <Setter Property="IsEnabled" Value="True" />
+                                </Style>
+                            </CheckBox.Style>
+                        </CheckBox>
                     </Grid>
 
                 </Grid>

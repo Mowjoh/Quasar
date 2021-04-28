@@ -273,7 +273,7 @@ namespace Quasar.Helpers.ModScanning
                     {
                         Group GameData = folderMatch.Groups["GameData"];
                         string FolderGameData = GameData.Value;
-                        RecognisedFolderGameData = Family.GameElements.SingleOrDefault(ge => ge.GameFolderName == FolderGameData);
+                        RecognisedFolderGameData = Family.GameElements.SingleOrDefault(ge => (ge.GameFolderName == FolderGameData.ToLower()) || (ge.GameFolderName.Contains(";") ? ge.GameFolderName.Split(';').Contains(FolderGameData.ToLower()) : false));
 
                         Group Slot = folderMatch.Groups["Slot"];
                         FolderSlot = Slot.Value;
@@ -282,39 +282,32 @@ namespace Quasar.Helpers.ModScanning
                     {
                         Group GameData = fileMatch.Groups["GameData"];
                         string FileGameData = GameData.Value;
-                        RecognisedFileGameData = Family.GameElements.SingleOrDefault(ge => ge.GameFolderName == FileGameData);
+                        RecognisedFileGameData = Family.GameElements.SingleOrDefault(ge => (ge.GameFolderName == FileGameData.ToLower()) || (ge.GameFolderName.Contains(";") ? ge.GameFolderName.Split(';').Contains(FileGameData.ToLower()) : false));
 
                         Group Slot = fileMatch.Groups["Slot"];
                         FileSlot = Slot.Value;
                     }
 
                     //Match Validation
-                    if (qmt.IgnoreGameElementFamily)
+                    if ((RecognisedFileGameData != null || RecognisedFolderGameData != null) && (FileDefinition.SearchPath == "" || folderMatch.Success) && fileMatch.Success)
                     {
+                        FileToMatch.QuasarModTypeID = qmt.ID;
+                        FileToMatch.QuasarModTypeFileDefinitionID = FileDefinition.ID;
+                        FileToMatch.GameElementID = RecognisedFolderGameData != null ? RecognisedFolderGameData.ID : RecognisedFileGameData.ID;
+                        FileToMatch.Slot = FolderSlot != "" ? FolderSlot : FileSlot != "" ? FileSlot : "00";
 
-                    }
-                    else
-                    {
-                        if((RecognisedFileGameData != null || RecognisedFolderGameData != null) && (FileDefinition.SearchPath == "" || folderMatch.Success) && fileMatch.Success)
+                        //Processing paths
+                        FileToMatch.SourcePath = FileToMatch.SourcePath.Replace('/', '\\').Replace(ModFolder, "");
+                        if (folderMatch.Value == "")
                         {
-                            FileToMatch.QuasarModTypeID = qmt.ID;
-                            FileToMatch.QuasarModTypeFileDefinitionID = FileDefinition.ID;
-                            FileToMatch.GameElementID = RecognisedFolderGameData != null ? RecognisedFolderGameData.ID : RecognisedFileGameData.ID;
-                            FileToMatch.Slot = FolderSlot != "" ? FolderSlot : FileSlot != "" ? FileSlot : "00";
-
-                            //Processing paths
-                            FileToMatch.SourcePath = FileToMatch.SourcePath.Replace('/', '\\').Replace(ModFolder,"");
-                            if(folderMatch.Value == "")
-                            {
-                                FileToMatch.OriginPath = FileToMatch.SourcePath;
-                            }
-                            else
-                            {
-                                FileToMatch.OriginPath = FileToMatch.SourcePath.Replace("\\" + folderMatch.Value.Replace('/', '\\'), "");
-                            }
-                            FileToMatch.OriginPath = FileToMatch.OriginPath.Replace(fileMatch.Value, "");
-                            FileToMatch.Scanned = true;
+                            FileToMatch.OriginPath = FileToMatch.SourcePath;
                         }
+                        else
+                        {
+                            FileToMatch.OriginPath = FileToMatch.SourcePath.Replace("\\" + folderMatch.Value.Replace('/', '\\'), "");
+                        }
+                        FileToMatch.OriginPath = FileToMatch.OriginPath.Replace(fileMatch.Value, "");
+                        FileToMatch.Scanned = true;
                     }
 
                 }
@@ -418,7 +411,26 @@ namespace Quasar.Helpers.ModScanning
                 }
             }
 
-            OutputFile = GameDataReplacinator.Replace(OutputFile, GameElement.GameFolderName, 1);
+            if (GameElement.GameFolderName.Contains(';'))
+            {
+                string ProperGameFolder = "";
+
+                //Match Data Processing
+                if (fileMatch.Success)
+                {
+                    Group GameData = fileMatch.Groups["GameData"];
+                    if (GameData.Value != "")
+                        ProperGameFolder = GameData.Value;
+                    OutputFile = GameDataReplacinator.Replace(OutputFile, ProperGameFolder, 1);
+                }
+                
+            }
+            else
+            {
+                OutputFile = GameDataReplacinator.Replace(OutputFile, GameElement.GameFolderName, 1);
+            }
+
+            
 
             OutputFile = SlotReplacinatorSingle.Replace(OutputFile, Slot.ToString("0"), 1);
             OutputFile = SlotReplacinatorDouble.Replace(OutputFile, Slot.ToString("00"), 1);
@@ -448,7 +460,24 @@ namespace Quasar.Helpers.ModScanning
                 }
             }
 
-            OutputPath = GameDataReplacinator.Replace(OutputPath, GameElement.GameFolderName, 1);
+            if (GameElement.GameFolderName.Contains(';'))
+            {
+                string ProperGameFolder = "";
+
+                //Match Data Processing
+                if (folderMatch.Success)
+                {
+                    Group GameData = folderMatch.Groups["GameData"];
+                    if (GameData.Value != "")
+                        ProperGameFolder = GameData.Value;
+                    OutputPath = GameDataReplacinator.Replace(OutputPath, ProperGameFolder, 1);
+                }
+            }
+            else
+            {
+                OutputPath = GameDataReplacinator.Replace(OutputPath, GameElement.GameFolderName, 1);
+            }
+            
 
             OutputPath = SlotReplacinatorSingle.Replace(OutputPath, Slot.ToString("0"), 1);
             OutputPath = SlotReplacinatorDouble.Replace(OutputPath, Slot.ToString("00"), 1);
@@ -475,6 +504,7 @@ namespace Quasar.Helpers.ModScanning
             //output = output.Replace(@"_", "\\_");
 
             //Replacing the tags
+            output = output.Replace(@"{Empty}", @"");
             output = output.Replace(@"{Folder}", @"(?'Folder'[^\\\/]*)");
             output = output.Replace(@"{Part}", @"(?'Part'[a-zA-Z0-9]*)");
             output = output.Replace(@"{AnyFile}", @"(?'AnyFile'[a-zA-Z0-9\_]*)");

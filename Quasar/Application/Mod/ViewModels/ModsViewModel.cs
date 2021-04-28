@@ -613,6 +613,7 @@ namespace Quasar.Controls.ModManagement.ViewModels
                 Name = "Manually added mod",
                 GameID = 1,
                 Guid = Guid.NewGuid(),
+                Time = DateTime.Now
             };
 
             ModListItem mli = new ModListItem(this, QuasarLogger, li, MUVM.Games[0]);

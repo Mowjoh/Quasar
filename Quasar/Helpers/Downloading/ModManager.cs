@@ -103,7 +103,7 @@ namespace Quasar.Helpers.Downloading
             try
             {
                 //If there already exists a mod with this ID
-                if (MUVM.Library.Any(li => li.GBItem.GamebananaItemID == int.Parse(QuasarURL.GamebananaItemID)))
+                if (MUVM.Library.Any(li => li.GBItem?.GamebananaItemID == int.Parse(QuasarURL.GamebananaItemID)))
                 {
                     //Comparing Update Count with the API
                     LibraryItem = MUVM.Library.Single(li => li.GBItem.GamebananaItemID == int.Parse(QuasarURL.GamebananaItemID));

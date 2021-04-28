@@ -9,6 +9,7 @@ using System.Linq;
 using System.Windows.Input;
 using Quasar.MainUI.ViewModels;
 using Quasar.Content.Views;
+using Ookii.Dialogs.Wpf;
 
 namespace Quasar.Content.ViewModels
 {
@@ -256,22 +257,23 @@ namespace Quasar.Content.ViewModels
         {
             ModFileManager FileManager = new ModFileManager(LibraryItem);
 
-            var dialog = new System.Windows.Forms.FolderBrowserDialog();
-            System.Windows.Forms.DialogResult result = dialog.ShowDialog();
-            if (result == System.Windows.Forms.DialogResult.OK)
-            {
-                //Importing files
-                string NewInstallPath = dialog.SelectedPath;
-                FileManager.ImportFolder(NewInstallPath);
+            VistaFolderBrowserDialog newDialog = new VistaFolderBrowserDialog();
+            newDialog.ShowDialog();
 
-                //Launching scan
-                Scannerino.UpdateContents(MUVM, LibraryItem, Scannerino.ScanMod(FileManager.LibraryContentFolderPath, MUVM.QuasarModTypes, MUVM.Games[0], LibraryItem));
+            if (newDialog.SelectedPath == "")
+                return;
 
-                //Saving Contents
-                JSonHelper.SaveContentItems(MUVM.ContentItems);
+            //Importing files
+            string NewInstallPath = newDialog.SelectedPath;
+            FileManager.ImportFolder(NewInstallPath);
 
-                GetContentListItems();
-            }
+            //Launching scan
+            Scannerino.UpdateContents(MUVM, LibraryItem, Scannerino.ScanMod(FileManager.LibraryContentFolderPath, MUVM.QuasarModTypes, MUVM.Games[0], LibraryItem));
+
+            //Saving Contents
+            JSonHelper.SaveContentItems(MUVM.ContentItems);
+
+            GetContentListItems();
         }
 
         /// <summary>

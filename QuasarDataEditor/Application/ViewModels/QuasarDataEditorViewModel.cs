@@ -8,6 +8,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Data;
 using System.Windows.Forms;
 using System.Windows.Input;
 
@@ -441,6 +442,8 @@ namespace QuasarDataEditor
                 OnPropertyChanged("TestResults");
             }
         }
+
+        public CollectionViewSource CVS { get; set; }
         public double ProgressValue
         {
             get => _ProgressValue;
@@ -560,7 +563,7 @@ namespace QuasarDataEditor
         public async Task<int> TestModAction()
         {
             TestResults = new ObservableCollection<TestResult>();
-            string ModFolder = String.Format(@"{0}\Library\Mods\{1}\", @"F:\Quasar", SelectedTestLibraryItem.Guid);
+            string ModFolder = String.Format(@"{0}\Library\Mods\{1}\", @"M:\Super Smash Bros Ultimate\Software\Quasar Debug", SelectedTestLibraryItem.Guid);
 
             ProgressString = "Scanning Files";
             ProgressValue = 0;

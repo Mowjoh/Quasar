@@ -216,6 +216,7 @@
             </TabItem>
             <TabItem Header="Scanning Test">
                 <Grid Background="#FFE5E5E5">
+
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="180" />
                         <ColumnDefinition />
@@ -246,7 +247,7 @@
                               Grid.Column="1"
                               Background="#9B000000"
                               Margin="0,0,0,50"
-                              AutoGenerateColumns="False">
+                              AutoGenerateColumns="False" CanUserSortColumns="True">
                         <DataGrid.Resources>
                             <Style x:Key="GameElementCell"
                                    TargetType="DataGridCell">
@@ -300,7 +301,7 @@
                         <DataGrid.Columns>
                             <DataGridTextColumn Binding="{Binding ScanFile.SourcePath}" CellStyle="{StaticResource PathCell}" Header="Source Path" />
                             <DataGridTextColumn Binding="{Binding GameElement.Name}" CellStyle="{StaticResource GameElementCell}" Header="Game Element" />
-                            <DataGridTextColumn Binding="{Binding ContentItem.ID}" Header="CIID" />
+                            <DataGridTextColumn Binding="{Binding ContentItem.Guid}" Header="Guid" />
                             <DataGridTextColumn Binding="{Binding ScanFile.Slot}" Header="Slot" />
                             <DataGridTextColumn Binding="{Binding QuasarModType.Name}" Header="Quasar Mod Type" />
                             <DataGridTextColumn Binding="{Binding QuasarModTypeFileDefinition.ID}" Header="QMTFID" />
@@ -309,7 +310,6 @@
                             <DataGridTextColumn Binding="{Binding ScanFile.OriginPath}" Header="ScanFile Origin" />
                             <DataGridTextColumn Binding="{Binding Output}" Header="Output" />
                         </DataGrid.Columns>
-
 
                     </DataGrid>
 

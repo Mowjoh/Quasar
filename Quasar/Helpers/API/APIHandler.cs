@@ -1,9 +1,14 @@
-﻿using Newtonsoft.Json;
+﻿using ImageProcessor;
+using ImageProcessor.Plugins.WebP.Imaging.Formats;
+using Imazen.WebP;
+using Newtonsoft.Json;
 using Quasar.Data.V2;
 using Quasar.Helpers.Downloading;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Drawing;
+using System.IO;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -173,8 +178,43 @@ namespace Quasar.Helpers.API
                         string downloadextension = downloadURL.Split('.')[downloadURL.Split('.').Length - 1];
 
                         string imageSource = Properties.Settings.Default.DefaultDir + @"\Library\Screenshots\" + Guid + "." + downloadextension;
+                        string wimageSource = Properties.Settings.Default.DefaultDir + @"\Library\Screenshots\" + Guid + ".webp" ;
 
                         await ModDownloader.DownloadFile(downloadURL, imageSource);
+
+                        if(downloadextension != "webp")
+                        {
+                            try
+                            {
+                                using (FileStream fsSource = new FileStream(imageSource, FileMode.Open, FileAccess.Read))
+                                {
+                                    byte[] ImageData = new byte[fsSource.Length];
+                                    fsSource.Read(ImageData, 0, ImageData.Length);
+
+                                    using (var webPFileStream = new FileStream(wimageSource, FileMode.Create))
+                                    {
+                                        using (ImageFactory imageFactory = new ImageFactory(preserveExifData: false))
+                                        {
+
+                                            imageFactory.Load(ImageData)
+                                                        .Format(new WebPFormat())
+                                                        .Quality(100)
+                                                        .Save(webPFileStream);
+                                        }
+                                    }
+                                }
+                                    
+
+
+                                if (File.Exists(wimageSource))
+                                    File.Delete(imageSource);
+                            }
+                            catch(Exception e)
+                            {
+                                Console.WriteLine(e.Message);
+                            }
+                            
+                        }
                     }
                 }
             }
