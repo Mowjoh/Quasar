@@ -1,6 +1,5 @@
 ﻿using ImageProcessor;
 using ImageProcessor.Plugins.WebP.Imaging.Formats;
-using Imazen.WebP;
 using Newtonsoft.Json;
 using Quasar.Data.V2;
 using Quasar.Helpers.Downloading;

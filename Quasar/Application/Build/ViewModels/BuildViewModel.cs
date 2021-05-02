@@ -11,6 +11,8 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Quasar.MainUI.ViewModels;
 using Quasar.Settings.Models;
+using Microsoft.WindowsAPICodePack.Taskbar;
+using System.Diagnostics;
 
 namespace Quasar.Build.ViewModels
 {
@@ -414,6 +416,7 @@ namespace Quasar.Build.ViewModels
             SetSize("");
             SetSpeed("");
             SetTotal("0" , "0");
+            TaskbarManager.Instance.SetProgressValue(100, 100, Process.GetCurrentProcess().MainWindowHandle);
             Building = false;
             BuildLog("Info", "Transfer Process End");
 
@@ -494,59 +497,72 @@ namespace Quasar.Build.ViewModels
 
                 if (proceed)
                 {
+                    bool BuildSuccess = false;
                     await Task.Run(() => {
-                        SB.StartBuild();
+                       BuildSuccess = SB.StartBuild().Result;
                     });
 
-                    SB.CheckModLoader(SelectedModLoader.ID);
-                    if (!SB.ModLoaderInstalled)
+                    if (BuildSuccess)
                     {
-                        SetStep("ModLoader Configuration");
-                        ModalEvent meuh = new ModalEvent()
+                        //Mod Loader presence detection
+                        SB.CheckModLoader(SelectedModLoader.ID);
+                        if (!SB.ModLoaderInstalled)
                         {
-                            Type = ModalType.OkCancel,
-                            Action = "Show",
-                            EventName = "AskModLoaderInstall",
-                            Title = "ARCropolis setup",
-                            Content = "Arcropolis is not detected on your Switch\rIt's required to load mods\rDo you want Quasar to install and setup ARCRopolis for you?",
-                            OkButtonText = "Yes please",
-                            CancelButtonText = "No, I want to do it myself"
-                        };
-
-                        EventSystem.Publish<ModalEvent>(meuh);
-                    }
-                    else
-                    {
-                        if (!Properties.Settings.Default.ModLoaderSetup)
-                        {
+                            //Not Installed
                             SetStep("ModLoader Configuration");
                             ModalEvent meuh = new ModalEvent()
                             {
                                 Type = ModalType.OkCancel,
                                 Action = "Show",
-                                EventName = "AskModLoaderSetup",
+                                EventName = "AskModLoaderInstall",
                                 Title = "ARCropolis setup",
-                                Content = "Do you want Quasar to change ARCRopolis'\ractive workspace to this one ?",
+                                Content = "Arcropolis is not detected on your Switch\rIt's required to load mods\rDo you want Quasar to install and setup ARCRopolis for you?",
                                 OkButtonText = "Yes please",
-                                CancelButtonText = "No"
+                                CancelButtonText = "No, I want to do it myself"
                             };
 
                             EventSystem.Publish<ModalEvent>(meuh);
                         }
+                        //Mod Loader is present
                         else
                         {
-                            if (Properties.Settings.Default.ModLoaderSetupState)
+                            //Autoconfig Check / Proposal
+                            if (!Properties.Settings.Default.ModLoaderSetup)
                             {
-                                await Task.Run(() => {
+                                SetStep("ModLoader Configuration");
+                                ModalEvent meuh = new ModalEvent()
+                                {
+                                    Type = ModalType.OkCancel,
+                                    Action = "Show",
+                                    EventName = "AskModLoaderSetup",
+                                    Title = "ARCropolis setup",
+                                    Content = "Do you want Quasar to change ARCRopolis'\ractive workspace to this one ?",
+                                    OkButtonText = "Yes please",
+                                    CancelButtonText = "No"
+                                };
 
-                                    SB.SetupModLoader(SelectedModLoader.ID, MUVM.ActiveWorkspace.Name);
-                                });
+                                EventSystem.Publish<ModalEvent>(meuh);
+                            }
+                            else
+                            {
+                                if (Properties.Settings.Default.ModLoaderSetupState)
+                                {
+                                    await Task.Run(() => {
+
+                                        SB.SetupModLoader(SelectedModLoader.ID, MUVM.ActiveWorkspace.Name);
+                                    });
+
+                                }
+
+                                EndBuildProcess();
 
                             }
-
-                            EndBuildProcess();
-
                         }
+                    }
+                    else
+                    {
+                        BuildLog("Error", "Something went wrong");
+                        EndBuildProcess();
                     }
                 }
                 else
@@ -637,6 +653,13 @@ namespace Quasar.Build.ViewModels
         {
             System.Windows.Application.Current.Dispatcher.Invoke((Action)(() => {
                 Total = String.Format("{0}/{1} Files", current, total);
+
+                int cur = int.Parse(current);
+                int tot = int.Parse(total);
+                if(cur >=0 && tot >= 0)
+                {
+                    TaskbarManager.Instance.SetProgressValue(cur, tot, Process.GetCurrentProcess().MainWindowHandle);
+                }
             }));
         }
         public void SetProgression(double value)
