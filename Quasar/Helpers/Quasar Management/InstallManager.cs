@@ -9,6 +9,15 @@ using Quasar.Helpers.FileOperations;
 using System.Windows.Forms;
 using Quasar.Helpers;
 using Quasar.Common.Models;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
+using ImageProcessor;
+using ImageProcessor.Plugins.WebP.Imaging.Formats;
+using Quasar.MainUI.ViewModels;
+using Quasar.Helpers.ModScanning;
+using log4net;
+using Quasar.Helpers.Mod_Scanning;
 
 namespace Quasar.Helpers.Quasar_Management
 {
@@ -217,6 +226,215 @@ namespace Quasar.Helpers.Quasar_Management
             FileOperation.CheckCopyFile(Base + LibraryBackupPath, Base + LibraryPath);
             FileOperation.CheckCopyFile(Base + ContentItemsBackupPath, Base + ContentItemsPath);
             FileOperation.CheckCopyFile(Base + WorkspacesBackupPath, Base + WorkspacesPath);
+        }
+
+        /// <summary>
+        /// Launches the update process from 1.5 to 2.1
+        /// </summary>
+        /// <param name="MUVM"></param>
+        public static void LaunchUltraCleaning(MainUIViewModel MUVM)
+        {
+            try
+            {
+                MUVM.QuasarLogger.Info("Starting Ultra Clean");
+                MUVM.QuasarLogger.Info("Creating base Folders");
+                CreateBaseFolders();
+                MUVM.QuasarLogger.Info("Creating base Workspace");
+                CreateBaseWorkspace();
+                MUVM.QuasarLogger.Info("Moving Old Library");
+                GetMoveOldLibrary(MUVM.QuasarLogger);
+
+
+                MUVM.LoadData();
+                Scannerino.ScanAllMods(MUVM);
+                JSonHelper.SaveContentItems(MUVM.ContentItems);
+
+                LastCleanup();
+
+                EventSystem.Publish<ModalEvent>(new ModalEvent()
+                {
+                    Action = "LoadOK",
+                    EventName = "UltraCleaning"
+                });
+            }
+            catch(Exception e)
+            {
+                MUVM.QuasarLogger.Error("Error While processing old files");
+                MUVM.QuasarLogger.Error(e.Message);
+                MUVM.QuasarLogger.Error(e.StackTrace);
+            }
+            
+        }
+
+        public static void GetMoveOldLibrary(ILog QuasarLogger)
+        {
+            QuasarLogger.Debug("Loading Old Library");
+            List<Data.V1.LibraryMod> OldLibrary =   Quasar.Helpers.XML.XMLHelper.GetLibraryModList();
+            ObservableCollection<LibraryItem> NewLibrary = new ObservableCollection<LibraryItem>();
+            QuasarLogger.Debug("Loading API");
+            GamebananaAPI API = JSonHelper.GetGamebananaAPI();
+
+
+            foreach(Data.V1.LibraryMod lm in OldLibrary)
+            {
+                QuasarLogger.Debug(String.Format("Processing Mod #{0}", lm.ID));
+                //Creating new item based on old one
+                LibraryItem li = new LibraryItem()
+                {
+                    GameID = lm.GameID,
+                    Guid = Guid.NewGuid(),
+                    Time = DateTime.Now,
+                    Name = lm.Name,
+                };
+
+                //Finding corresponding data
+                GamebananaRootCategory rc = API.Games[0].RootCategories.Single(c => c.Name == lm.TypeLabel);
+                GamebananaSubCategory sc = rc.SubCategories.Single(c => c.Name == lm.APICategoryName);
+
+                GamebananaItem item = new GamebananaItem()
+                {
+                    Description = "",
+                    GamebananaItemID = lm.ID,
+                    Name = lm.Name,
+                    UpdateCount = lm.Updates,
+                    RootCategoryGuid = rc.Guid,
+                    SubCategoryGuid = sc.Guid,
+                    Authors = new ObservableCollection<Author>()
+
+                };
+
+                //Processing Authors
+                foreach (string[] val in lm.Authors)
+                {
+                    Author au = new Author()
+                    {
+                        Name = val[0],
+                        Role = val[1],
+                        GamebananaAuthorID = int.Parse(val[2])
+                    };
+                    item.Authors.Add(au);
+                }
+
+                //Assigning GBItem to the LibraryItem
+                li.GBItem = item;
+
+                //Assigning item to the new Library
+                NewLibrary.Add(li);
+
+                QuasarLogger.Debug(String.Format("Processed Mod #{0}", lm.ID));
+            }
+
+            QuasarLogger.Debug("Transferring Mods");
+            //Moving mods to new path
+            TransferMods(NewLibrary, QuasarLogger);
+
+
+            JSonHelper.SaveLibrary(NewLibrary);
+        }
+
+        public static void TransferMods(ObservableCollection<LibraryItem> Library, ILog QuasarLogger)
+        {
+            //Source path
+            string ModPath = String.Format(@"{0}\Library\Mods\SmashUltimate", Properties.Settings.Default.DefaultDir);
+
+            //Foreach possible old mod folder
+            foreach (string d in Directory.GetDirectories(ModPath))
+            {
+                foreach (string PreviousModFolder in Directory.GetDirectories(d, "*", SearchOption.AllDirectories))
+                {
+                    string ModFolder = Path.GetFileName(PreviousModFolder);
+                    int GamebananaItemID = 0;
+                    int.TryParse(ModFolder, out GamebananaItemID);
+
+                    if (GamebananaItemID != 0)
+                    {
+                        //Trying to match to a parsed Library Item
+                        LibraryItem li = Library.SingleOrDefault(l => l.GBItem.GamebananaItemID == GamebananaItemID);
+                        if (li != null)
+                        {
+                            string NewModFolder = String.Format(@"{0}\Library\Mods\{1}", Properties.Settings.Default.DefaultDir, li.Guid);
+                            string NewScreenFilePath = String.Format(@"{0}\Library\Screenshots\{1}.webp", Properties.Settings.Default.DefaultDir, li.Guid);
+                            
+                            //Copying Files
+                            FileOperation.CopyFolder(PreviousModFolder, NewModFolder, true);
+
+                            string[] Screenshots = Directory.GetFiles(String.Format(@"{0}\Library\Screenshots\", Properties.Settings.Default.DefaultDir), "*");
+                            string PreviousScreenFilePath = Screenshots.SingleOrDefault(s => s.Contains(ModFolder));
+
+                            //Converting screenshot
+                            ConvertScreenshot(PreviousScreenFilePath, NewScreenFilePath);
+                        }
+                    }
+                }
+            }
+
+            Directory.Delete(ModPath, true);
+        }
+
+        public static void ConvertScreenshot(string Source, string Destination)
+        {
+            if (Source != "")
+            {
+                try
+                {
+                    using (FileStream fsSource = new FileStream(Source, FileMode.Open, FileAccess.Read))
+                    {
+                        byte[] ImageData = new byte[fsSource.Length];
+                        fsSource.Read(ImageData, 0, ImageData.Length);
+
+                        using (var webPFileStream = new FileStream(Destination, FileMode.Create))
+                        {
+                            using (ImageFactory imageFactory = new ImageFactory(preserveExifData: false))
+                            {
+
+                                imageFactory.Load(ImageData)
+                                            .Format(new WebPFormat())
+                                            .Quality(100)
+                                            .Save(webPFileStream);
+                            }
+                        }
+                    }
+
+                    if (File.Exists(Destination))
+                        File.Delete(Source);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                }
+            }
+        }
+
+        public static void LastCleanup()
+        {
+            File.Delete(String.Format(@"{0}\Library\Library.xml", Properties.Settings.Default.DefaultDir));
+            File.Delete(String.Format(@"{0}\Library\ContentMapping.xml", Properties.Settings.Default.DefaultDir));
+            File.Delete(String.Format(@"{0}\Library\Workspaces.xml", Properties.Settings.Default.DefaultDir));
+            Directory.Delete(String.Format(@"{0}\References", Properties.Settings.Default.DefaultDir),true);
+        }
+
+        public static void Rescan(MainUIViewModel MUVM)
+        {
+            MUVM.ActiveWorkspace.Associations = new ObservableCollection<Association>();
+            MUVM.ContentItems = new ObservableCollection<ContentItem>();
+
+            Scannerino.ScanAllMods(MUVM);
+            JSonHelper.SaveContentItems(MUVM.ContentItems);
+
+            foreach(LibraryItem li in MUVM.Library)
+            {
+                List<ContentItem> contentItems = MUVM.ContentItems.Where(ci => ci.LibraryItemGuid == li.Guid).ToList();
+                MUVM.ActiveWorkspace = Slotter.AutomaticSlot(contentItems, MUVM.ActiveWorkspace, MUVM.QuasarModTypes);
+            }
+            
+            JSonHelper.SaveWorkspaces(MUVM.Workspaces);
+
+            EventSystem.Publish<ModalEvent>(new ModalEvent()
+            {
+                Action = "LoadOK",
+                EventName = "UltraScanning"
+            });
+
         }
     }
 }

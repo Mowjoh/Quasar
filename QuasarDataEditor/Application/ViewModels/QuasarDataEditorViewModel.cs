@@ -368,6 +368,8 @@ namespace QuasarDataEditor
                             QuasarModTypeBuilderDefinitions = new ObservableCollection<QuasarModTypeBuilderDefinition>(),
                         });
                     }
+
+                    
                 }
 
                 

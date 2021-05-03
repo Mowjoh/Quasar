@@ -159,7 +159,9 @@
                     <DataGrid ItemsSource="{Binding QuasarModTypes}" SelectedItem="{Binding SelectedQuasarModType}"
                               Grid.Row="0" Grid.ColumnSpan="2"
                               Margin="15,15,15,50" />
-                    <DataGrid ItemsSource="{Binding SelectedQuasarModType.QuasarModTypeFileDefinitions}" SelectedItem="{Binding SelectedQuasarModTypeFileDefinition}"
+
+                    <DataGrid x:Name="FilesDataGrid"
+                              ItemsSource="{Binding SelectedQuasarModType.QuasarModTypeFileDefinitions}" SelectedItem="{Binding SelectedQuasarModTypeFileDefinition}"
                               Grid.Row="1" Grid.Column="0"
                               Margin="15,15,15,50" />
                     <DataGrid ItemsSource="{Binding SelectedQuasarModTypeFileDefinition.QuasarModTypeBuilderDefinitions}"

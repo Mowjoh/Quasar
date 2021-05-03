@@ -477,7 +477,6 @@ namespace Quasar.Controls.ModManagement.ViewModels
         /// <param name="download"></param>
         public void Download(QuasarDownload download)
         {
-
             Application.Current.Dispatcher.Invoke((Action)delegate {
                 Task.Run(() => DownloadMod(download.QuasarURL));
             });
@@ -513,51 +512,70 @@ namespace Quasar.Controls.ModManagement.ViewModels
                     if (MM.ActionNeeded)
                     {
                         ModListItem MLI = null;
-                        if (MM.DownloadNeeded)
+                        try
                         {
-                            //Creating new Mod List Item
-                            Application.Current.Dispatcher.Invoke((Action)delegate {
-                                MLI = new ModListItem(this, QuasarLogger, MM.LibraryItem, MUVM.Games[0], true);
-                                ModListItems.Add(MLI);
-                            });
+                            if (MM.DownloadNeeded)
+                            {
+                                QuasarLogger.Debug("New Item");
+                                //Creating new Mod List Item
+                                Application.Current.Dispatcher.Invoke((Action)delegate {
+                                    MLI = new ModListItem(this, QuasarLogger, MM.LibraryItem, MUVM.Games[0], true);
+                                    ModListItems.Add(MLI);
+                                });
 
+                            }
+                            else
+                            {
+                                QuasarLogger.Debug("Existing Item");
+                                //Parsing Existing Mod List Item
+                                MLI = ModListItems.Single(i => i.ModListItemViewModel.LibraryItem.GBItem.GamebananaItemID.ToString() == MM.QuasarURL.GamebananaItemID);
+                            }
+                            MM.ModListItem = MLI;
+
+                            //Executing tasks for this mod
+                            await MM.TakeAction(QuasarLogger);
+
+                            //Updating Library
+                            if (MM.DownloadNeeded)
+                            {
+                                QuasarLogger.Debug("Adding to Library");
+                                //If the mod is new and downloaded
+                                MUVM.Library.Add(MM.LibraryItem);
+                                JSonHelper.SaveLibrary(MUVM.Library);
+                            }
+                            else
+                            {
+                                QuasarLogger.Debug("Editing Library");
+                                //If the mod is updated
+                                LibraryItem li = MUVM.Library.Single(i => i.Guid == MM.LibraryItem.Guid);
+                                li = MM.LibraryItem;
+                                JSonHelper.SaveLibrary(MUVM.Library);
+                            }
+
+                            QuasarLogger.Debug("Scanning Mod");
+                            //Launching scan
+                            await MM.Scan(MUVM.QuasarModTypes, MUVM.Games[0]);
+                            Scannerino.UpdateContents(MUVM, MM.LibraryItem, MM.ScannedContents);
+
+                            QuasarLogger.Debug("Saving Contents");
+                            //Saving Contents
+                            JSonHelper.SaveContentItems(MUVM.ContentItems);
+
+                            QuasarLogger.Debug("Slotting Contents and Saving Workspace");
+                            //Slotting Contents
+                            MUVM.ActiveWorkspace = Slotter.AutomaticSlot(MM.ScannedContents.ToList(), MUVM.ActiveWorkspace, MUVM.QuasarModTypes);
+                            JSonHelper.SaveWorkspaces(MUVM.Workspaces);
+                            ReloadAllStats();
                         }
-                        else
+                        catch(Exception e)
                         {
-                            //Parsing Existing Mod List Item
-                            MLI = ModListItems.Single(i => i.ModListItemViewModel.LibraryItem.GBItem.GamebananaItemID.ToString() == MM.QuasarURL.GamebananaItemID);
+                            MLI.ModListItemViewModel.DownloadFailed = true;
+
+                            QuasarLogger.Error("Could not download mod");
+                            QuasarLogger.Error(e.Message);
+                            QuasarLogger.Error(e.StackTrace);
                         }
-                        MM.ModListItem = MLI;
-
-                        //Executing tasks for this mod
-                        await MM.TakeAction();
-
-                        //Updating Library
-                        if (MM.DownloadNeeded)
-                        {
-                            //If the mod is new and downloaded
-                            MUVM.Library.Add(MM.LibraryItem);
-                            JSonHelper.SaveLibrary(MUVM.Library);
-                        }
-                        else
-                        {
-                            //If the mod is updated
-                            LibraryItem li = MUVM.Library.Single(i => i.Guid == MM.LibraryItem.Guid);
-                            li = MM.LibraryItem;
-                            JSonHelper.SaveLibrary(MUVM.Library);
-                        }
-
-                        //Launching scan
-                        await MM.Scan(MUVM.QuasarModTypes, MUVM.Games[0]);
-                        Scannerino.UpdateContents(MUVM, MM.LibraryItem, MM.ScannedContents);
-
-                        //Saving Contents
-                        JSonHelper.SaveContentItems(MUVM.ContentItems);
-
-                        //Slotting Contents
-                        MUVM.ActiveWorkspace = Slotter.AutomaticSlot(MM.ScannedContents.ToList(), MUVM.ActiveWorkspace, MUVM.QuasarModTypes);
-                        JSonHelper.SaveWorkspaces(MUVM.Workspaces);
-                        ReloadAllStats();
+                        
 
                         MLI.ModListItemViewModel.Downloading = false;
                     }

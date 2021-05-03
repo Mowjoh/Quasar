@@ -12,52 +12,79 @@ namespace Quasar.Data.V2
         public int ID { get; set; }
         public string GamebananaRootCategoryName { get; set; }
 
-        [JsonProperty("name")]
+        [JsonProperty("_sName")]
         public string Name { get; set; }
 
-        [JsonProperty("Credits().aAuthors()")]
-        public string[][] Authors { get; set; }
+        [JsonProperty("_aCredits")]
+        public APIAuthors Authors { get; set; }
 
         [JsonProperty("description")]
         public string Description { get; set; }
 
-        [JsonProperty("Category().name")]
-        public string GamebananaSubCategoryName { get; set; }
-
-        [JsonProperty("catid")]
-        public int GamebananaSubCategoryID { get; set; }
-
-        [JsonProperty("Game().name")]
-        public string GameName { get; set; }
+        [JsonProperty("_aGame")]
+        public APIGame Game { get; set; }
 
         [JsonProperty("Updates().nGetUpdatesCount()")]
         public int UpdateCount { get; set; }
+        [JsonProperty("_aCategory")]
+        public APISubCategory SubCategory { get; set; }
+
+        [JsonProperty("_aSuperCategory")]
+        public APISuperCategory SuperCategory { get; set; }
+
+        [JsonProperty("_aModManagerIntegrations")]
+        public APIModManager ModManager { get; set; }
 
     }
 
-    public partial class APIDownload
+    public partial class APISubCategory
     {
-        [JsonProperty("Url().sGetDownloadUrl()")]
-        public Uri DownloadURL { get; set; }
-
-        [JsonProperty("Files().aFiles()")]
-        public Files Files { get; set; }
+        [JsonProperty("_sName")]
+        public string Name { get; set; }
+        [JsonProperty("_idRow")]
+        public int ID{ get; set; }
     }
 
-    public partial class Files
+    public partial class APISuperCategory
     {
-        public ModArchive ModArchive { get; set; }
+        [JsonProperty("_sName")]
+        public string Name { get; set; }
+        [JsonProperty("_idRow")]
+        public int ID { get; set; }
     }
 
-    public partial class ModArchive
+    public partial class APIAuthors
     {
-        [JsonProperty("_sFile")]
-        public string Filename { get; set; }
+        [JsonProperty("Key Authors")]
+        public string[][] KeyAuthors { get; set; }
+        [JsonProperty("Authors")]
+        public string[][] Authors { get; set; }
+    }
 
-        [JsonProperty("_nFilesize")]
-        public long Filesize { get; set; }
+    public partial class APIGame
+    {
+        [JsonProperty("_sName")]
+        public string Name { get; set; }
+        [JsonProperty("_idRow")]
+        public int ID { get; set; }
+    }
 
+    public partial class APIModManager
+    {
+        [JsonProperty()]
+        APIManager[] Integrations { get; set; }
+    }
+
+    public partial class APIManager
+    {
+        [JsonProperty("_sInstallerName")]
+        public string InstallerName { get; set; }
+        [JsonProperty("_sInstallerUrl")]
+        public string InstallerURL { get; set; }
+        [JsonProperty("_sIconClasses")]
+        public string IconClass { get; set; }
         [JsonProperty("_sDownloadUrl")]
-        public Uri DownloadURL { get; set; }
+        public string DownloadURL { get; set; }
     }
+
 }

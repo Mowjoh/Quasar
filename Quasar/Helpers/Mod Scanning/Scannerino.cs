@@ -89,8 +89,6 @@ namespace Quasar.Helpers.ModScanning
                 }
             }
 
-            
-
         }
 
         /// <summary>
@@ -211,7 +209,7 @@ namespace Quasar.Helpers.ModScanning
             //Scanning Files
             foreach (QuasarModType qmt in QuasarModTypes.OrderBy(i => i.TypePriority))
             {
-                foreach (QuasarModTypeFileDefinition FileDefinition in qmt.QuasarModTypeFileDefinitions)
+                foreach (QuasarModTypeFileDefinition FileDefinition in qmt.QuasarModTypeFileDefinitions.OrderBy(o => o.FilePriority).ToList())
                 {
                     if (FilesToScan.Count > 0)
                     {
@@ -306,7 +304,8 @@ namespace Quasar.Helpers.ModScanning
                         {
                             FileToMatch.OriginPath = FileToMatch.SourcePath.Replace("\\" + folderMatch.Value.Replace('/', '\\'), "");
                         }
-                        FileToMatch.OriginPath = FileToMatch.OriginPath.Replace(fileMatch.Value, "");
+                        FileToMatch.OriginPath = FileToMatch.OriginPath.Replace(fileMatch.Value, "|");
+                        FileToMatch.OriginPath = FileToMatch.OriginPath.Split('|')[0];
                         FileToMatch.Scanned = true;
                     }
 

@@ -1,4 +1,5 @@
-﻿using Quasar.FileSystem;
+﻿using log4net;
+using Quasar.FileSystem;
 using Quasar.Helpers.Quasar_Management;
 using Quasar.NamedPipes;
 using System;
@@ -21,12 +22,24 @@ namespace Quasar.Internal.Tools
         /// Runs checks and updates if necessary
         /// </summary>
         /// <returns></returns>
-        public static bool CheckExecuteUpdate()
+        public static bool CheckExecuteUpdate(ILog QuasarLogger)
         {
             bool UpdateSuccessful = false;
-            if (NeedsUpdate())
+
+            //If the loaded conf file is a new update file
+            if (Properties.Settings.Default.UpgradeRequired)
             {
-                if(NeedsInitialSetup()){
+                NeedsUpdate = true;
+                QuasarLogger.Debug("Updating");
+                
+
+                //If it's Quasar's first launch
+                if (NeedsInitialSetup())
+                {
+                    //Making file up to date with previous data
+                    UpgradeSettingFile();
+
+                    QuasarLogger.Debug("Initial Setup");
                     InstallManager.CreateBaseUserSettings();
 
                     MessageBoxResult result = System.Windows.MessageBox.Show("Hi ! It seems it's Quasar's first launch. Do you want to change where Quasar is gonna store mods?", "First Launch Warning", MessageBoxButton.YesNo);
@@ -42,18 +55,30 @@ namespace Quasar.Internal.Tools
                     }             
                     InstallManager.CreateBaseFolders();
                 }
-                UpgradeSettingFile();
+                //If it's just a regular update
+                else
+                {
+                    //Making file up to date with previous data
+                    UpgradeSettingFile();
+
+                    QuasarLogger.Debug("Tagging for Scan");
+                    NeedsScanning = true;
+                }
+
+                if (NeedsCleaning())
+                {
+                    QuasarLogger.Debug("Ultra Clean Setup");
+                    InstallManager.CreateBaseFolders();
+                }
             }
             else
             {
+                NeedsUpdate = false;
+                QuasarLogger.Debug("No Update");
                 UpdateSuccessful = true;
             }
 
-            if (NeedsCleaning())
-            {
-                InstallManager.CreateBaseFolders();
-                CheckCleanInstallation();
-            }
+            
 
             return UpdateSuccessful;
         }
@@ -70,16 +95,8 @@ namespace Quasar.Internal.Tools
         /// Verifies if the app needs to run an update process
         /// </summary>
         /// <returns></returns>
-        public static bool NeedsUpdate()
-        {
-            bool Update = Properties.Settings.Default.UpgradeRequired;
-
-            if (Update)
-            {
-                Properties.Settings.Default.Upgrade();
-            }
-            return Update;
-        }
+        public static bool NeedsUpdate { get; set; }
+        public static bool UltraCleanState { get; set; }
 
         /// <summary>
         /// Verifies if the app needs to clean it's folders
@@ -87,6 +104,33 @@ namespace Quasar.Internal.Tools
         /// <returns></returns>
         public static bool NeedsCleaning()
         {
+            int curVer = int.Parse(Properties.Settings.Default.AppVersion);
+            int prevVer = int.Parse(Properties.Settings.Default.PreviousVersion);
+            
+            //If updating from a 1.5.X build
+            if (curVer >= 2100 && prevVer < 2040)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Verifies if the app needs to clean it's folders
+        /// </summary>
+        /// <returns></returns>
+        public static bool NeedsUltraCleaning()
+        {
+            int curVer = int.Parse(Properties.Settings.Default.AppVersion);
+            int prevVer = int.Parse(Properties.Settings.Default.PreviousVersion);
+
+            //If updating from a 1.5.X build
+            if (curVer >= 2100 && prevVer > 0000 && prevVer < 2000)
+            {
+                return true;
+            }
+
             return false;
         }
 
@@ -99,14 +143,7 @@ namespace Quasar.Internal.Tools
             return Properties.Settings.Default.AppVersion == "0000";
         }
 
-        /// <summary>
-        /// Verifies if the mods need scanning
-        /// </summary>
-        /// <returns></returns>
-        public static bool NeedsScanning()
-        {
-            return false;
-        }
+        public static bool NeedsScanning { get; set; }
 
         /// <summary>
         /// Upgrades the settings file to it's new version
