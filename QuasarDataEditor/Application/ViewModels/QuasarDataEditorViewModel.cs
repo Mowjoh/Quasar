@@ -275,7 +275,7 @@ namespace QuasarDataEditor
                 _SelectedLibraryItem = value;
                 AssociatedRootCategory = API.Games[0].RootCategories.Single(c => c.Guid == value.GBItem.RootCategoryGuid);
                 AssociatedSubCategory = AssociatedRootCategory.SubCategories.Single(c => c.Guid == value.GBItem.SubCategoryGuid);
-
+                
                 OnPropertyChanged("SelectedLibraryItem");
                 OnPropertyChanged("AssociatedRootCategory");
                 OnPropertyChanged("AssociatedSubCategory");

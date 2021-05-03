@@ -71,7 +71,7 @@
                         <ColumnDefinition Width="80*" />
                         <ColumnDefinition Width="20*" />
                     </Grid.ColumnDefinitions>
-                    <DataGrid ItemsSource="{Binding Library}"
+                    <DataGrid ItemsSource="{Binding Library}" SelectedItem="{Binding SelectedLibraryItem}"
                               Margin="15,15,15,50" />
                     <Button Command="{Binding Path=SaveLibraryCommand}" Content="Save Library File"
                             Grid.ColumnSpan="2"
@@ -81,7 +81,7 @@
                     <TextBlock Grid.Column="2"
                                Margin="15,15,15,0" HorizontalAlignment="Left" VerticalAlignment="Top">
                         <Run Text="API Item ID : " />
-                        <Run Text="{Binding Path=SelectedLibraryItem.GBItem.ID}" />
+                        <Run Text="{Binding Path=SelectedLibraryItem.SelectedLibraryItem.GameID}" />
                     </TextBlock>
                     <TextBlock Grid.Column="2"
                                Margin="15,45,15,0" HorizontalAlignment="Left" VerticalAlignment="Top">
