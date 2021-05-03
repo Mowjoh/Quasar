@@ -1,6 +1,5 @@
 ﻿using ImageProcessor;
 using ImageProcessor.Plugins.WebP.Imaging.Formats;
-using Imazen.WebP;
 using Newtonsoft.Json;
 using Quasar.Data.V2;
 using Quasar.Helpers.Downloading;
@@ -43,7 +42,8 @@ namespace Quasar.Helpers.API
     public class APIRequest
     {
         //Gamebanana's Endpoint
-        static readonly string HTTPUrl = "https://api.gamebanana.com/";
+        static readonly string HTTPUrl = "https://gamebanana.com/apiv3/Mod";
+        static readonly string HTTPTypeUrl = "https://gamebanana.com/apiv3";
 
         //Default Parameters
         static readonly QueryStringItem jsonFormat = new QueryStringItem("format", "json_min");
@@ -64,12 +64,16 @@ namespace Quasar.Helpers.API
             APIMod DownloadedAPIMod = null;
             try
             {
-                queryParameters = GetDefaultParameters();
-                queryParameters.Add(new QueryStringItem("itemid", _ItemID));
-                queryParameters.Add(new QueryStringItem("itemtype", _ItemType));
-                queryParameters.Add(new QueryStringItem("fields", "name,Credits().aAuthors(),description,Category().name,catid,Updates().nGetUpdatesCount(),Game().name"));
+                string queryURL = "";
 
-                string queryURL = FormatAPIRequest("Core/Item/Data", queryParameters);
+                if (_ItemType == "Mod")
+                {
+                    queryURL = String.Format(@"{0}/{1}", HTTPUrl, _ItemID);
+                }
+                else
+                {
+                    queryURL = String.Format(@"{0}/{1}/{2}",HTTPTypeUrl, _ItemType,_ItemID);
+                }
 
                 using (HttpClient webClient = new HttpClient())
                 {
@@ -238,7 +242,7 @@ namespace Quasar.Helpers.API
         /// <returns>The full URL</returns>
         public static string FormatAPIRequest(string path, List<QueryStringItem> _Parameters)
         {
-            string formattedURL = HTTPUrl + path + "?";
+            string formattedURL = "https://api.gamebanana.com/" + path + "?";
 
             bool first = true;
             foreach (QueryStringItem item in _Parameters)

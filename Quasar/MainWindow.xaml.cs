@@ -16,12 +16,12 @@ namespace Quasar
         {
             MUVM = new MainUIViewModel();
             
+            
 
             //Aww, here we go again
             InitializeComponent();
 
             QuasarGrid.DataContext = MUVM;
-
 
             EventSystem.Subscribe<ModalEvent>(ProcessIncomingModalEvent);
             

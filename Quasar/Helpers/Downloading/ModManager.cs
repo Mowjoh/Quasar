@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using Quasar.MainUI.ViewModels;
 using Quasar.Helpers.API;
 using Quasar.Helpers.Json;
+using log4net;
 
 namespace Quasar.Helpers.Downloading
 {
@@ -117,8 +118,8 @@ namespace Quasar.Helpers.Downloading
                     await GetAPIModInformation();
                     GamebananaItem GBItem = GetGamebananaItem(APIMod, MUVM);
 
-                    Game RelatedGame = MUVM.Games.Single(g => g.APIGameName == APIMod.GameName);
-                    GamebananaGame APIGame = MUVM.API.Games.SingleOrDefault(g => g.Name == APIMod.GameName);
+                    Game RelatedGame = MUVM.Games.Single(g => g.APIGameName == APIMod.Game.Name);
+                    GamebananaGame APIGame = MUVM.API.Games.SingleOrDefault(g => g.Name == APIMod.Game.Name);
 
 
                     //Generating new LibraryItem
@@ -167,70 +168,108 @@ namespace Quasar.Helpers.Downloading
                 GamebananaItemID = Request.ID,
                 Authors = new ObservableCollection<Author>(),
                 Description = Request.Description,
-                GameName = Request.GameName,
+                GameName = Request.Game.Name,
                 UpdateCount = Request.UpdateCount
             };
 
             //Processing Authors
-            foreach (string[] val in Request.Authors)
+            if (Request.Authors.KeyAuthors != null)
             {
-                Author au = new Author()
+                foreach (string[] val in Request.Authors.KeyAuthors)
                 {
-                    Name = val[0],
-                    Role = val[1],
-                    GamebananaAuthorID = int.Parse(val[2])
-                };
-                Item.Authors.Add(au);
+                    Author au = new Author()
+                    {
+                        Name = val[0],
+                        Role = val[1],
+                        GamebananaAuthorID = int.Parse(val[2])
+                    };
+                    Item.Authors.Add(au);
+                }
             }
 
-            //Processing API Information
-            GamebananaRootCategory RC = MUVM.API.Games[0].RootCategories.SingleOrDefault(cat => cat.Name == Request.GamebananaRootCategoryName);
+            if (Request.Authors.Authors != null)
+            {
+                foreach (string[] val in Request.Authors.Authors)
+                {
+                    Author au = new Author()
+                    {
+                        Name = val[0],
+                        Role = val[1],
+                        GamebananaAuthorID = int.Parse(val[2])
+                    };
+                    Item.Authors.Add(au);
+                }
+            }
+
+            GamebananaRootCategory RCat = null;
+
+
+            //If Mod is unmoved
+            if (Request.GamebananaRootCategoryName != "Mod")
+            {
+                RCat = MUVM.API.Games[0].RootCategories.SingleOrDefault(cat => cat.Name == Request.GamebananaRootCategoryName);
+            }
+            else
+            {
+                //If there is a Root Category
+                if(Request.SuperCategory == null)
+                {
+                    Request.SuperCategory = new APISuperCategory()
+                    {
+                        ID = Request.SubCategory.ID,
+                        Name = Request.SubCategory.Name
+                    };
+                }
+
+                RCat = MUVM.API.Games[0].RootCategories.SingleOrDefault(cat => cat.Name == Request.SuperCategory.Name);
+            }
+
 
             //If no Root Category is found in the database
-            if(RC == null)
+            if(RCat == null)
             {
-                RC = new GamebananaRootCategory()
+                RCat = new GamebananaRootCategory()
                 {
                     Guid = Guid.NewGuid(),
-                    Name = Request.GamebananaRootCategoryName,
+                    Name = Request.SuperCategory.Name,
                     SubCategories = new ObservableCollection<GamebananaSubCategory>()
                 };
 
                 GamebananaSubCategory SC = new GamebananaSubCategory()
                 {
                     Guid = Guid.NewGuid(),
-                    Name = Request.GamebananaSubCategoryName,
-                    ID = Request.GamebananaSubCategoryID
+                    Name = Request.SubCategory.Name,
+                    ID = Request.SubCategory.ID
                 };
 
-                RC.SubCategories.Add(SC);
-                MUVM.API.Games[0].RootCategories.Add(RC);
+                RCat.SubCategories.Add(SC);
+                MUVM.API.Games[0].RootCategories.Add(RCat);
 
                 //Saving changes
                 JSonHelper.SaveGamebananaAPI(MUVM.API);
 
                 //Setting API GUID
-                Item.RootCategoryGuid = RC.Guid;
+                Item.RootCategoryGuid = RCat.Guid;
                 Item.SubCategoryGuid = SC.Guid;
             }
             else
             {
                 //Setting Root Cat GUID
-                Item.RootCategoryGuid = RC.Guid;
+                Item.RootCategoryGuid = RCat.Guid;
 
                 //Finding Subcategory
-                GamebananaSubCategory SC = RC.SubCategories.SingleOrDefault(cat => cat.ID == Request.GamebananaSubCategoryID);
+                GamebananaSubCategory SC = RCat.SubCategories.SingleOrDefault(cat => cat.ID == Request.SubCategory.ID);
 
                 if(SC == null)
                 {
                     SC = new GamebananaSubCategory()
                     {
                         Guid = Guid.NewGuid(),
-                        Name = Request.GamebananaSubCategoryName,
-                        ID = Request.GamebananaSubCategoryID
+                        Name = Request.SubCategory.Name,
+                        ID = Request.SubCategory.ID
                     };
 
-                    RC.SubCategories.Add(SC);
+                    RCat.SubCategories.Add(SC);
 
                     //Saving changes
                     JSonHelper.SaveGamebananaAPI(MUVM.API);
@@ -238,11 +277,11 @@ namespace Quasar.Helpers.Downloading
 
                 //Setting SCat Guid
                 Item.SubCategoryGuid = SC.Guid;
-
             }
 
             return Item;
         }
+
         #endregion
 
         #region Actions
@@ -250,18 +289,20 @@ namespace Quasar.Helpers.Downloading
         /// Takes action based on what's needed
         /// </summary>
         /// <returns>Success state</returns>
-        public async Task<bool> TakeAction()
+        public async Task<bool> TakeAction(ILog QuasarLogger)
         {
             bool ProcessAborted = true;
 
             if (DownloadNeeded || UpdateNeeded)
             {
+                QuasarLogger.Debug("Launching Download");
                 ModListItem.ModListItemViewModel.ModStatusValue = "Downloading";
                 bool Downloaded = await Download();
                 
                 //Stopping the process if necessary
                 if (Downloaded)
                 {
+                    QuasarLogger.Debug("Launching Extraction");
                     ModListItem.ModListItemViewModel.ModStatusValue = "Extracting";
                     ModListItem.ModListItemViewModel.ModStatusTextValue = "Please wait";
                     
@@ -269,16 +310,21 @@ namespace Quasar.Helpers.Downloading
 
                     if (Extracted)
                     {
+                        QuasarLogger.Debug("Launching File location change");
                         ModListItem.ModListItemViewModel.ModStatusValue = "Processing Files";
                         
                         bool Processed = await ProcessExtractedFiles();
 
                         if (Processed)
                         {
-                            GameAPICategory cat = ModListItem.ModListItemViewModel.Game.GameAPICategories.Single(c => c.APICategoryName == QuasarURL.APICategoryName);
+                            QuasarLogger.Debug("Getting Screenshot");
                             await APIRequest.GetScreenshot(QuasarURL.APICategoryName, QuasarURL.GamebananaItemID, LibraryItem.Guid.ToString());
                             ProcessAborted = false;
                         }
+                    }
+                    else
+                    {
+                        ProcessAborted = true;
                     }
                 }
             }

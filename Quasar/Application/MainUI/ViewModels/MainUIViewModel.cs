@@ -29,6 +29,9 @@ using System.Windows.Media;
 using Quasar.Settings.Views;
 using Quasar.Associations.Views;
 using Quasar.Associations.ViewModels;
+using System.Windows.Shell;
+using ImageProcessor;
+using ImageProcessor.Plugins.WebP.Imaging.Formats;
 
 namespace Quasar.MainUI.ViewModels
 {
@@ -88,6 +91,7 @@ namespace Quasar.MainUI.ViewModels
         #region Private
         private ObservableCollection<TabItem> _TabItems { get; set; }
         private TabItem _SelectedTabItem { get; set; }
+        private int _SelectedTabIndex { get; set; }
         private ModsView _ModsView { get; set; }
         private ModsViewModel _MVM { get; set; }
         private ContentView _ContentView { get; set; }
@@ -110,6 +114,8 @@ namespace Quasar.MainUI.ViewModels
         private bool _UpdateFinished { get; set; } = false;
 
         private bool _TabLocked { get; set; }
+
+        private TaskbarItemProgressState _TaskbarProgressState { get; set; }
         #endregion
 
         #region Public
@@ -135,16 +141,32 @@ namespace Quasar.MainUI.ViewModels
                     if (_SelectedTabItem == value)
                         return;
 
-                    if ((string)value.Header == "Overview")
+                    if(value != null)
                     {
-                        MVM.ReloadAllStats();
+                        if ((string)value.Header == "Overview")
+                        {
+                            MVM.ReloadAllStats();
+                        }
+                        if ((string)value.Header == "Management")
+                        {
+                            AVM.RefreshSlotData();
+                        }
+                        _SelectedTabItem = value;
                     }
-                    if ((string)value.Header == "Management")
-                    {
-                        AVM.RefreshSlotData();
-                    }
-                    _SelectedTabItem = value;
+                    
                     OnPropertyChanged("SelectedTabItem");
+                }
+            }
+        }
+        public int SelectedTabIndex
+        {
+            get => _SelectedTabIndex;
+            set
+            {
+                if (!TabLocked)
+                {
+                    _SelectedTabIndex = value;
+                    OnPropertyChanged("SelectedTabIndex");
                 }
             }
         }
@@ -375,6 +397,16 @@ namespace Quasar.MainUI.ViewModels
                 OnPropertyChanged("TabLocked");
             }
         }
+
+        public TaskbarItemProgressState TaskbarProgressState
+        {
+            get => _TaskbarProgressState;
+            set
+            {
+                _TaskbarProgressState = value;
+                OnPropertyChanged("TaskbarProgressState");
+            }
+        }
         #endregion
 
         #endregion
@@ -482,19 +514,30 @@ namespace Quasar.MainUI.ViewModels
 
         public MainUIViewModel()
         {
-            
+            TaskbarProgressState = TaskbarItemProgressState.None;
+
             SetupLogger();
 
             try
             {
-                QuasarLogger.Info("Update Process Started");
+                QuasarLogger.Info("Tunnel Setup");
                 SetupClientOrServer();
 
                 QuasarLogger.Info("Update Process Started");
-                Updater.CheckExecuteUpdate();
+                Updater.CheckExecuteUpdate(QuasarLogger);
+                SetupLogger();
 
-                QuasarLogger.Info("Loading References");
-                LoadData();
+                if (Updater.NeedsUltraCleaning() && Updater.NeedsUpdate)
+                {
+                    QuasarLogger.Info("Loading References");
+                    LoadData(true);
+                }
+                else
+                {
+                    QuasarLogger.Info("Loading References");
+                    LoadData();
+                }
+                
 
                 QuasarLogger.Info("Loading Views");
                 SetupViews();
@@ -505,45 +548,50 @@ namespace Quasar.MainUI.ViewModels
                 EventSystem.Subscribe<ModListItem>(ModListItemEvent);
                 EventSystem.Subscribe<ModalEvent>(ProcessModalEvent);
 
-                InitialWarnings();
-                BackupRestoreUserData(UserDataLoaded);
-
-                /*API = new GamebananaAPI()
+                if (Updater.NeedsUltraCleaning() && Updater.NeedsUpdate)
                 {
-                    Games = new ObservableCollection<GamebananaGame>(),
-                };
-
-                API.Games.Add(new GamebananaGame(){
-                    Guid = Guid.NewGuid(),
-                    Name = @"Super Smash Bros. Ultimate",
-                    ID = 6498,
-                    RootCategories = new ObservableCollection<GamebananaRootCategory>()
-                });
-
-                foreach(GameAPICategory c in Games[0].GameAPICategories)
-                {
-                    GamebananaRootCategory cat = new GamebananaRootCategory()
+                    ModalEvent meuh = new ModalEvent()
                     {
-                        Guid = Guid.NewGuid(),
-                        Name = c.APICategoryName,
-                        SubCategories = new ObservableCollection<GamebananaSubCategory>()
+                        Action = "Show",
+                        EventName = "UltraCleaning",
+                        Title = "Quasar is updating",
+                        Content = "Please be patient while Quasar updates it's data to the new format",
+                        OkButtonText = "OK",
+                        Type = ModalType.Loader
                     };
 
-                    foreach(GameAPISubCategory sc in c.GameAPISubCategories)
+                    EventSystem.Publish<ModalEvent>(meuh);
+                    Task.Run(() =>
                     {
-                        cat.SubCategories.Add(new GamebananaSubCategory()
-                        {
-                            Guid = Guid.NewGuid(),
-                            ID = sc.APISubCategoryID,
-                            Name = sc.APISubCategoryName
-                        });
-                    }
-
-                    API.Games[0].RootCategories.Add(cat);
+                        InstallManager.LaunchUltraCleaning(this);
+                    });
+                }
+                else
+                {
+                    InitialWarnings();
+                    BackupRestoreUserData(UserDataLoaded);
                 }
 
-                JSonHelper.SaveGamebananaAPI(API);
-                QuasarLogger.Debug("Finished Processing new API file");*/
+                if ((Updater.NeedsScanning && !Updater.NeedsUltraCleaning()) && Updater.NeedsUpdate)
+                {
+                    ModalEvent Meuhdeux = new ModalEvent()
+                    {
+                        Action = "Show",
+                        EventName = "UltraScanning",
+                        Title = "Quasar is scanning",
+                        Content = "Please be patient while Quasar scans all the data",
+                        OkButtonText = "OK",
+                        Type = ModalType.Loader
+                    };
+
+                    EventSystem.Publish<ModalEvent>(Meuhdeux);
+                    Task.Run(() =>
+                    {
+                        InstallManager.Rescan(this);
+                    });
+                }
+                
+
 
             }
             catch (Exception e)
@@ -559,28 +607,40 @@ namespace Quasar.MainUI.ViewModels
         /// <summary>
         /// Loads Reference and User Data
         /// </summary>
-        public void LoadData()
+        public void LoadData(bool ReferenceOnly = false)
         {
-            //Loading User Data
-            try
+            if (!ReferenceOnly)
             {
-                Workspaces = JSonHelper.GetWorkspaces();
-                Library = JSonHelper.GetLibrary();
-                ContentItems = JSonHelper.GetContentItems();
-                API = JSonHelper.GetGamebananaAPI();
-
-                if (Workspaces.Count == 0)
+                //Loading User Data
+                try
                 {
-                    InstallManager.CreateBaseWorkspace();
                     Workspaces = JSonHelper.GetWorkspaces();
+                    Library = JSonHelper.GetLibrary();
+                    ContentItems = JSonHelper.GetContentItems();
+
+                    if (Workspaces.Count == 0)
+                    {
+                        InstallManager.CreateBaseWorkspace();
+                        Workspaces = JSonHelper.GetWorkspaces();
+                    }
+                    ActiveWorkspace = Workspaces[0];
+
+                    UserDataLoaded = true;
                 }
+                catch (Exception e)
+                {
+                    UserDataLoaded = false;
+                }
+            }
+            else
+            {
+                Workspaces = new ObservableCollection<Workspace>();
+                InstallManager.CreateBaseWorkspace();
+                Workspaces = JSonHelper.GetWorkspaces();
                 ActiveWorkspace = Workspaces[0];
 
-                UserDataLoaded = true;
-            }
-            catch(Exception e)
-            {
-                UserDataLoaded = false;
+                Library = new ObservableCollection<LibraryItem>();
+                ContentItems = new ObservableCollection<ContentItem>();
             }
 
             //Loading Resource Data
@@ -588,6 +648,7 @@ namespace Quasar.MainUI.ViewModels
             CurrentGame = Games[0];
             QuasarModTypes = JSonHelper.GetQuasarModTypes();
             ModLoaders = JSonHelper.GetModLoaders();
+            API = JSonHelper.GetGamebananaAPI();
 
         }
 
@@ -729,10 +790,10 @@ namespace Quasar.MainUI.ViewModels
         public async void ShowUpdateModal()
         {
             Application.Current.Dispatcher.Invoke((Action)delegate {
-                Updating = Updater.NeedsScanning();
+                Updating = Updater.NeedsScanning;
             });
 
-            if (Updater.NeedsScanning())
+            if (Updater.NeedsScanning)
             {
                 await Task.Run(() => {
                     Scannerino.ScanAllMods(this);
@@ -809,6 +870,18 @@ namespace Quasar.MainUI.ViewModels
                         Properties.Settings.Default.Save();
                     }
                     break;
+                case "UltraCleaning":
+                    if(me.Action == "OK")
+                    {
+                        SetupViews();
+                    }
+                    break;
+                case "UltraScanning":
+                    if (me.Action == "OK")
+                    {
+                        SetupViews();
+                    }
+                    break;
                 default:
                     break;
             }
@@ -836,6 +909,11 @@ namespace Quasar.MainUI.ViewModels
         {
             if (Setting.SettingName == "TabLock")
             {
+                if(Setting.DisplayValue == "Mod")
+                {
+                    SelectedTabIndex = 0;
+                    SelectedTabItem = TabItems[0];
+                }
                 TabLocked = Setting.IsChecked;
             }
             if (Setting.SettingName == "EnableCreator")
