@@ -1,0 +1,26 @@
+[
+  {
+    "ID": 1,
+    "Name": "ARCropolis",
+    "WorkspacePath": "ultimate/{Workspace}/arc/",
+    "GameID": 1
+  },
+  {
+    "ID": 2,
+    "Name": "ARCadia style",
+    "WorkspacePath": "ultimate/{Workspace}/umm/",
+    "GameID": 1
+  },
+  {
+    "ID": 3,
+    "Name": "ARCadia style (Per Slot)",
+    "WorkspacePath": "ultimate/{Workspace}/umm/",
+    "GameID": 1
+  },
+  {
+    "ID": 4,
+    "Name": "UMM",
+    "WorkspacePath": "UltimateModManager/mods/{Workspace}/",
+    "GameID": 1
+  }
+]

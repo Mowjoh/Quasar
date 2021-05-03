@@ -1,0 +1,38 @@
+﻿<Window x:Class="Quasar.Controls.FileView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:Quasar.Controls"
+        Title="FileView"
+        Width="500" Height="700">
+
+    <Grid Background="{DynamicResource CutieBG02}">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="45" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <!--  Top Labels  -->
+        <Label Content="Browsing Files for :"
+               Foreground="{DynamicResource QuasarTextColor}"
+               Margin="10,10,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+
+        <Label x:Name="ModNameLabel"
+               Content="ModName"
+               Foreground="{DynamicResource QuasarTextColor}"
+               Margin="124,10,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+
+        <!--  File Tree  -->
+        <TreeView x:Name="Trees"
+                  Grid.Row="1"
+                  Background="{StaticResource CutieBG08}" Foreground="{DynamicResource QuasarTextColor}">
+
+            <TreeView.ItemTemplate>
+                <DataTemplate>
+                    <TreeViewItem Foreground="{DynamicResource QuasarTextColor}" />
+                </DataTemplate>
+            </TreeView.ItemTemplate>
+
+        </TreeView>
+
+    </Grid>
+</Window>

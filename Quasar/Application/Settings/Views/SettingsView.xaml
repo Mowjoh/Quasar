@@ -1,0 +1,44 @@
+﻿<UserControl x:Class="Quasar.Settings.Views.SettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             DataContext="{Binding SVM}">
+
+    <Grid Background="{DynamicResource CutieBG01}">
+
+        <!--#region  Quick Actions-->
+        <TextBlock Text="Quick Actions :"
+                   FontSize="16" Style="{StaticResource CutieTextBlockStyle}"
+                   Margin="10,23,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+
+        <Button Command="{Binding Path=ValidateFTPCommand}" Content="Test and Save FTP Info"
+                Template="{StaticResource CutieSmallButtonTemplate}"
+                Width="250" Height="32"
+                Margin="145,20,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+
+        <Button Command="{Binding Path=MoveInstallCommand}" Content="Move Installation Folder"
+                Template="{StaticResource CutieSmallButtonTemplate}"
+                Width="250" Height="32"
+                Margin="450,20,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+
+        <Button Command="{Binding Path=OnboardingCommand}" Content="Demo Mode"
+                Template="{StaticResource CutieSmallButtonTemplate}"
+                Width="250" Height="32"
+                Margin="50,20,32,0" HorizontalAlignment="Right" VerticalAlignment="Top"
+                Visibility="Hidden" />
+        <!--#endregion-->
+
+        <!--  Settings Panel  -->
+        <ItemsControl ItemsSource="{Binding SettingItems}"
+                      Background="{DynamicResource CutieBG01}"
+                      Margin="15,75,15,15">
+
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Vertical" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+
+        </ItemsControl>
+
+    </Grid>
+
+</UserControl>

@@ -12,7 +12,7 @@ namespace Quasar.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.7.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.8.1.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -94,46 +94,10 @@ namespace Quasar.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool MeaningfulSetting {
+        [global::System.Configuration.DefaultSettingValueAttribute("00000000-0000-0000-0000-000000000000")]
+        public global::System.Guid LastSelectedWorkspace {
             get {
-                return ((bool)(this["MeaningfulSetting"]));
-            }
-            set {
-                this["MeaningfulSetting"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("-1")]
-        public int LastSelectedGame {
-            get {
-                return ((int)(this["LastSelectedGame"]));
-            }
-            set {
-                this["LastSelectedGame"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public int ContentID {
-            get {
-                return ((int)(this["ContentID"]));
-            }
-            set {
-                this["ContentID"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("-1")]
-        public int LastSelectedWorkspace {
-            get {
-                return ((int)(this["LastSelectedWorkspace"]));
+                return ((global::System.Guid)(this["LastSelectedWorkspace"]));
             }
             set {
                 this["LastSelectedWorkspace"] = value;
@@ -185,18 +149,6 @@ namespace Quasar.Properties {
             }
             set {
                 this["EnableIMT"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public int WorkspaceIdGenerator {
-            get {
-                return ((int)(this["WorkspaceIdGenerator"]));
-            }
-            set {
-                this["WorkspaceIdGenerator"] = value;
             }
         }
         
@@ -296,27 +248,6 @@ namespace Quasar.Properties {
             }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("f165a49418f0ed6c5f61e9e233889d91")]
-        public string Mada {
-            get {
-                return ((string)(this["Mada"]));
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool EnablePastebin {
-            get {
-                return ((bool)(this["EnablePastebin"]));
-            }
-            set {
-                this["EnablePastebin"] = value;
-            }
-        }
-        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
@@ -386,6 +317,77 @@ namespace Quasar.Properties {
             }
             set {
                 this["EnableWorkspaces"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int LibraryID {
+            get {
+                return ((int)(this["LibraryID"]));
+            }
+            set {
+                this["LibraryID"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool CFWAcknowledged {
+            get {
+                return ((bool)(this["CFWAcknowledged"]));
+            }
+            set {
+                this["CFWAcknowledged"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool Onboarded {
+            get {
+                return ((bool)(this["Onboarded"]));
+            }
+            set {
+                this["Onboarded"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ModLoaderSetup {
+            get {
+                return ((bool)(this["ModLoaderSetup"]));
+            }
+            set {
+                this["ModLoaderSetup"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ModLoaderSetupState {
+            get {
+                return ((bool)(this["ModLoaderSetupState"]));
+            }
+            set {
+                this["ModLoaderSetupState"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.DateTime BackupDate {
+            get {
+                return ((global::System.DateTime)(this["BackupDate"]));
+            }
+            set {
+                this["BackupDate"] = value;
             }
         }
     }

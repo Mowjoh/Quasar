@@ -117,64 +117,31 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AddPackageTabHeader" xml:space="preserve">
-    <value>Add &amp; Package</value>
+  <data name="MainUI_ContentsTabHeader" xml:space="preserve">
+    <value>Contents</value>
   </data>
-  <data name="AssignmentTabHeader" xml:space="preserve">
-    <value>Mod Assignment</value>
+  <data name="MainUI_FileTransferTabHeader" xml:space="preserve">
+    <value>File Transfer</value>
   </data>
-  <data name="CheckModUpdateButton" xml:space="preserve">
-    <value>Check for updates</value>
+  <data name="MainUI_InternalModTypesTabHeader" xml:space="preserve">
+    <value>Types</value>
   </data>
-  <data name="ClearQuasarFolderButton" xml:space="preserve">
-    <value>Clean Folders</value>
+  <data name="MainUI_ManagementTabHeader" xml:space="preserve">
+    <value>Management</value>
   </data>
-  <data name="FileBrowserHeader" xml:space="preserve">
-    <value>File Browser</value>
+  <data name="MainUI_OverviewTabHeader" xml:space="preserve">
+    <value>Overview</value>
   </data>
-  <data name="InternalModTypesHeader" xml:space="preserve">
-    <value>Internal Mod Types</value>
-  </data>
-  <data name="ManagementTabHeader" xml:space="preserve">
-    <value>Mod Management</value>
-  </data>
-  <data name="ModAuthor" xml:space="preserve">
-    <value>Author(s) :</value>
-  </data>
-  <data name="ModCategory" xml:space="preserve">
-    <value>Category :</value>
-  </data>
-  <data name="ModFilterSelectText" xml:space="preserve">
-    <value>You can filter things here</value>
-  </data>
-  <data name="ModInformationHeader" xml:space="preserve">
-    <value>Mod Information</value>
-  </data>
-  <data name="ModName" xml:space="preserve">
-    <value>Name :</value>
-  </data>
-  <data name="ModStatus" xml:space="preserve">
-    <value>Status :</value>
-  </data>
-  <data name="ModTypeName" xml:space="preserve">
-    <value>Type</value>
-  </data>
-  <data name="ModTypeSelectText" xml:space="preserve">
-    <value>Select a mod type</value>
-  </data>
-  <data name="ModVersion" xml:space="preserve">
-    <value>Version :</value>
-  </data>
-  <data name="SettingsTabHeader" xml:space="preserve">
+  <data name="MainUI_SettingsTabHeader" xml:space="preserve">
     <value>Settings</value>
   </data>
-  <data name="StartButton" xml:space="preserve">
-    <value>Start Test Download</value>
+  <data name="MainUI_WorkspacesTabHeader" xml:space="preserve">
+    <value>Workspaces</value>
   </data>
-  <data name="Title" xml:space="preserve">
-    <value>Quasar Mod Manager</value>
+  <data name="ModListItem_DeleteModAction" xml:space="preserve">
+    <value>Delete this mod</value>
   </data>
-  <data name="VersionInformationHeader" xml:space="preserve">
-    <value>Version Control</value>
+  <data name="Quasar_WindowTitle" xml:space="preserve">
+    <value>Quasar</value>
   </data>
 </root>

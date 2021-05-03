@@ -20,17 +20,8 @@
     <Setting Name="UpgradeRequired" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="MeaningfulSetting" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
-    </Setting>
-    <Setting Name="LastSelectedGame" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">-1</Value>
-    </Setting>
-    <Setting Name="ContentID" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">0</Value>
-    </Setting>
-    <Setting Name="LastSelectedWorkspace" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">-1</Value>
+    <Setting Name="LastSelectedWorkspace" Type="System.Guid" Scope="User">
+      <Value Profile="(Default)">00000000-0000-0000-0000-000000000000</Value>
     </Setting>
     <Setting Name="WorkspaceID" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">1</Value>
@@ -43,9 +34,6 @@
     </Setting>
     <Setting Name="EnableIMT" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
-    </Setting>
-    <Setting Name="WorkspaceIdGenerator" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">0</Value>
     </Setting>
     <Setting Name="FTPIP" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
@@ -71,12 +59,6 @@
     <Setting Name="PreviousVersion" Type="System.String" Scope="User">
       <Value Profile="(Default)">0000</Value>
     </Setting>
-    <Setting Name="Mada" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">f165a49418f0ed6c5f61e9e233889d91</Value>
-    </Setting>
-    <Setting Name="EnablePastebin" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
-    </Setting>
     <Setting Name="FTPAddress" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
@@ -94,6 +76,24 @@
     </Setting>
     <Setting Name="EnableWorkspaces" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="LibraryID" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="CFWAcknowledged" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="Onboarded" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="ModLoaderSetup" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="ModLoaderSetupState" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="BackupDate" Type="System.DateTime" Scope="User">
+      <Value Profile="(Default)" />
     </Setting>
   </Settings>
 </SettingsFile>

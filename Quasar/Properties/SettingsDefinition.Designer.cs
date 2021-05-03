@@ -12,7 +12,7 @@ namespace Quasar.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.7.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.8.1.0")]
     internal sealed partial class SettingsDefinition : global::System.Configuration.ApplicationSettingsBase {
         
         private static SettingsDefinition defaultInstance = ((SettingsDefinition)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new SettingsDefinition())));
@@ -402,6 +402,80 @@ namespace Quasar.Properties {
             }
             set {
                 this["EnableWorkspacesComment"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Suppress ModLoader Warning")]
+        public string ModLoaderSetupName {
+            get {
+                return ((string)(this["ModLoaderSetupName"]));
+            }
+            set {
+                this["ModLoaderSetupName"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string ModLoaderSetupValues {
+            get {
+                return ((string)(this["ModLoaderSetupValues"]));
+            }
+            set {
+                this["ModLoaderSetupValues"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Enable this to suppress the warning at the end of build. If enabled, the setting " +
+            "below will be the automatic answer")]
+        public string ModLoaderSetupComment {
+            get {
+                return ((string)(this["ModLoaderSetupComment"]));
+            }
+            set {
+                this["ModLoaderSetupComment"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Mod Loader autosetup")]
+        public string ModLoaderSetupStateName {
+            get {
+                return ((string)(this["ModLoaderSetupStateName"]));
+            }
+            set {
+                this["ModLoaderSetupStateName"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string ModLoaderSetupStateValues {
+            get {
+                return ((string)(this["ModLoaderSetupStateValues"]));
+            }
+            set {
+                this["ModLoaderSetupStateValues"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Enable this if you want Quasar to automatically change ARCropolis\' active workspa" +
+            "ce")]
+        public string ModLoaderSetupStateComment {
+            get {
+                return ((string)(this["ModLoaderSetupStateComment"]));
+            }
+            set {
+                this["ModLoaderSetupStateComment"] = value;
             }
         }
     }

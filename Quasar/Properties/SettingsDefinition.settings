@@ -101,5 +101,23 @@
     <Setting Name="EnableWorkspacesComment" Type="System.String" Scope="User">
       <Value Profile="(Default)">This enables the Workspace tab if you want to add more workspaces</Value>
     </Setting>
+    <Setting Name="ModLoaderSetupName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Suppress ModLoader Warning</Value>
+    </Setting>
+    <Setting Name="ModLoaderSetupValues" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="ModLoaderSetupComment" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Enable this to suppress the warning at the end of build. If enabled, the setting below will be the automatic answer</Value>
+    </Setting>
+    <Setting Name="ModLoaderSetupStateName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Mod Loader autosetup</Value>
+    </Setting>
+    <Setting Name="ModLoaderSetupStateValues" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="ModLoaderSetupStateComment" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Enable this if you want Quasar to automatically change ARCropolis' active workspace</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
