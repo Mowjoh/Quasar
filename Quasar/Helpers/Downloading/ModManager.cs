@@ -279,6 +279,9 @@ namespace Quasar.Helpers.Downloading
                 Item.SubCategoryGuid = SC.Guid;
             }
 
+            //Saving changes
+            JSonHelper.SaveGamebananaAPI(MUVM.API);
+
             return Item;
         }
 
