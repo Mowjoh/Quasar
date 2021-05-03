@@ -914,9 +914,7 @@ namespace Quasar.Associations.ViewModels
                         {
                             //Checking if an item exists with the same Origin Parent
                             if (item.SlotViewModel.ContentItems.Any(
-                                cma => cma.LibraryItemGuid == ci.LibraryItemGuid
-                                && cma.ScanFiles[0].OriginPath.Split('\\')[cma.ScanFiles[0].OriginPath.Split('\\').Length - 3] == ci.ScanFiles[0].OriginPath.Split('\\')[ci.ScanFiles[0].OriginPath.Split('\\').Length - 3]
-                                ))
+                                cma => cma.LibraryItemGuid == ci.LibraryItemGuid && MatchOrigin(cma.ScanFiles[0].OriginPath, ci.ScanFiles[0].OriginPath)))
                             {
                                 //Adding the Content Item to that slot
                                 item.SlotViewModel.ContentItems.Add(ci);
@@ -949,7 +947,7 @@ namespace Quasar.Associations.ViewModels
                                 SlotNumber = ci.SlotNumber + 1,
                                 SlotNumberName = ci.SlotNumber > 10 ? (ci.SlotNumber + 1 % 10).ToString() : (ci.SlotNumber + 1).ToString(),
                                 EmptySlot = false,
-                                TypeName = qmt.GroupName+"add",
+                                TypeName = qmt.GroupName,
                                 ContentItems = new List<ContentItem>()
                                 {
                                     ci
@@ -961,6 +959,17 @@ namespace Quasar.Associations.ViewModels
             }
 
             return GroupedContent;
+        }
+
+        public bool MatchOrigin(string Source, string Destination)
+        {
+            string ParentSource = Source.Substring(0, Source.LastIndexOf('\\'));
+            if (ParentSource.LastIndexOf('\\') == -1)
+                return false;
+            ParentSource = ParentSource.Substring(0, ParentSource.LastIndexOf('\\'));
+            string ParentDestination = Destination.Substring(0, Destination.LastIndexOf('\\'));
+            ParentDestination = ParentDestination.Substring(0, ParentDestination.LastIndexOf('\\'));
+            return ParentDestination == ParentSource;
         }
 
         /// <summary>

@@ -29,6 +29,9 @@ using System.Windows.Media;
 using Quasar.Settings.Views;
 using Quasar.Associations.Views;
 using Quasar.Associations.ViewModels;
+using System.Windows.Shell;
+using ImageProcessor;
+using ImageProcessor.Plugins.WebP.Imaging.Formats;
 
 namespace Quasar.MainUI.ViewModels
 {
@@ -88,6 +91,7 @@ namespace Quasar.MainUI.ViewModels
         #region Private
         private ObservableCollection<TabItem> _TabItems { get; set; }
         private TabItem _SelectedTabItem { get; set; }
+        private int _SelectedTabIndex { get; set; }
         private ModsView _ModsView { get; set; }
         private ModsViewModel _MVM { get; set; }
         private ContentView _ContentView { get; set; }
@@ -110,6 +114,8 @@ namespace Quasar.MainUI.ViewModels
         private bool _UpdateFinished { get; set; } = false;
 
         private bool _TabLocked { get; set; }
+
+        private TaskbarItemProgressState _TaskbarProgressState { get; set; }
         #endregion
 
         #region Public
@@ -149,6 +155,18 @@ namespace Quasar.MainUI.ViewModels
                     }
                     
                     OnPropertyChanged("SelectedTabItem");
+                }
+            }
+        }
+        public int SelectedTabIndex
+        {
+            get => _SelectedTabIndex;
+            set
+            {
+                if (!TabLocked)
+                {
+                    _SelectedTabIndex = value;
+                    OnPropertyChanged("SelectedTabIndex");
                 }
             }
         }
@@ -379,6 +397,16 @@ namespace Quasar.MainUI.ViewModels
                 OnPropertyChanged("TabLocked");
             }
         }
+
+        public TaskbarItemProgressState TaskbarProgressState
+        {
+            get => _TaskbarProgressState;
+            set
+            {
+                _TaskbarProgressState = value;
+                OnPropertyChanged("TaskbarProgressState");
+            }
+        }
         #endregion
 
         #endregion
@@ -486,7 +514,8 @@ namespace Quasar.MainUI.ViewModels
 
         public MainUIViewModel()
         {
-            
+            TaskbarProgressState = TaskbarItemProgressState.None;
+
             SetupLogger();
 
             try
@@ -496,6 +525,7 @@ namespace Quasar.MainUI.ViewModels
 
                 QuasarLogger.Info("Update Process Started");
                 Updater.CheckExecuteUpdate(QuasarLogger);
+                SetupLogger();
 
                 if (Updater.NeedsUltraCleaning() && Updater.NeedsUpdate)
                 {
@@ -542,8 +572,7 @@ namespace Quasar.MainUI.ViewModels
                     BackupRestoreUserData(UserDataLoaded);
                 }
 
-                bool reset = false;
-                if (reset)
+                if ((Updater.NeedsScanning && !Updater.NeedsUltraCleaning()) && Updater.NeedsUpdate)
                 {
                     ModalEvent Meuhdeux = new ModalEvent()
                     {
@@ -880,6 +909,11 @@ namespace Quasar.MainUI.ViewModels
         {
             if (Setting.SettingName == "TabLock")
             {
+                if(Setting.DisplayValue == "Mod")
+                {
+                    SelectedTabIndex = 0;
+                    SelectedTabItem = TabItems[0];
+                }
                 TabLocked = Setting.IsChecked;
             }
             if (Setting.SettingName == "EnableCreator")

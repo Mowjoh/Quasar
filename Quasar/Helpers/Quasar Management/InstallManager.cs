@@ -32,6 +32,19 @@ namespace Quasar.Helpers.Quasar_Management
         static string WorkspacesBackupPath = @"\Backup\Workspaces.json";
         #endregion
 
+        public static void CopyBaseResources()
+        {
+            if (!Directory.Exists(String.Format(@"{0}\Resources", Properties.Settings.Default.DefaultDir)))
+                Directory.CreateDirectory(String.Format(@"{0}\Resources", Properties.Settings.Default.DefaultDir));
+
+            File.Copy(String.Format(@"{0}\Resources\{1}", Properties.Settings.Default.AppPath,"Games.json"), String.Format(@"{0}\Resources\{1}", Properties.Settings.Default.DefaultDir, "Games.json"),true);
+            File.Copy(String.Format(@"{0}\Resources\{1}", Properties.Settings.Default.AppPath, "ModLoaders.json"), String.Format(@"{0}\Resources\{1}", Properties.Settings.Default.DefaultDir, "ModLoaders.json"), true);
+            File.Copy(String.Format(@"{0}\Resources\{1}", Properties.Settings.Default.AppPath, "ModTypes.json"), String.Format(@"{0}\Resources\{1}", Properties.Settings.Default.DefaultDir, "ModTypes.json"), true);
+
+            if(!File.Exists(String.Format(@"{0}\Resources\{1}", Properties.Settings.Default.DefaultDir, "Gamebanana.json")))
+                File.Copy(String.Format(@"{0}\Resources\{1}", Properties.Settings.Default.AppPath, "Gamebanana.json"), String.Format(@"{0}\Resources\{1}", Properties.Settings.Default.DefaultDir, "Gamebanana.json"), true);
+        }
+
         /// <summary>
         /// Verifies needed folders for execution
         /// </summary>
@@ -352,17 +365,18 @@ namespace Quasar.Helpers.Quasar_Management
                         LibraryItem li = Library.SingleOrDefault(l => l.GBItem.GamebananaItemID == GamebananaItemID);
                         if (li != null)
                         {
+
                             string NewModFolder = String.Format(@"{0}\Library\Mods\{1}", Properties.Settings.Default.DefaultDir, li.Guid);
-                            string NewScreenFilePath = String.Format(@"{0}\Library\Screenshots\{1}.webp", Properties.Settings.Default.DefaultDir, li.Guid);
-                            
                             //Copying Files
                             FileOperation.CopyFolder(PreviousModFolder, NewModFolder, true);
 
                             string[] Screenshots = Directory.GetFiles(String.Format(@"{0}\Library\Screenshots\", Properties.Settings.Default.DefaultDir), "*");
                             string PreviousScreenFilePath = Screenshots.SingleOrDefault(s => s.Contains(ModFolder));
+                            FileInfo fi = new FileInfo(PreviousScreenFilePath);
+                            string NewScreenFilePath = String.Format(@"{0}\Library\Screenshots\{1}.{2}", Properties.Settings.Default.DefaultDir, li.Guid,fi.Extension);
 
                             //Converting screenshot
-                            ConvertScreenshot(PreviousScreenFilePath, NewScreenFilePath);
+                            ConvertScreenshot(PreviousScreenFilePath, NewScreenFilePath, QuasarLogger);
                         }
                     }
                 }
@@ -371,36 +385,23 @@ namespace Quasar.Helpers.Quasar_Management
             Directory.Delete(ModPath, true);
         }
 
-        public static void ConvertScreenshot(string Source, string Destination)
+        public static void ConvertScreenshot(string Source, string Destination, ILog QuasarLogger)
         {
             if (Source != "")
             {
+
                 try
                 {
-                    using (FileStream fsSource = new FileStream(Source, FileMode.Open, FileAccess.Read))
-                    {
-                        byte[] ImageData = new byte[fsSource.Length];
-                        fsSource.Read(ImageData, 0, ImageData.Length);
+                    QuasarLogger.Debug(String.Format("Copying '{0}' to {1}", Source, Destination));
 
-                        using (var webPFileStream = new FileStream(Destination, FileMode.Create))
-                        {
-                            using (ImageFactory imageFactory = new ImageFactory(preserveExifData: false))
-                            {
+                    File.Copy(Source, Destination,true);
 
-                                imageFactory.Load(ImageData)
-                                            .Format(new WebPFormat())
-                                            .Quality(100)
-                                            .Save(webPFileStream);
-                            }
-                        }
-                    }
 
-                    if (File.Exists(Destination))
-                        File.Delete(Source);
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(e.Message);
+                    QuasarLogger.Error(String.Format(e.Message));
+                    QuasarLogger.Error(String.Format(e.StackTrace));
                 }
             }
         }

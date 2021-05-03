@@ -21,6 +21,8 @@ using Quasar.Helpers.Mod_Scanning;
 using Quasar.Helpers.Tools;
 using Quasar.MainUI.ViewModels;
 using Quasar.Helpers.API;
+using Microsoft.WindowsAPICodePack.Taskbar;
+using System.Diagnostics;
 
 namespace Quasar.Controls.ModManagement.ViewModels
 {
@@ -478,6 +480,8 @@ namespace Quasar.Controls.ModManagement.ViewModels
         public void Download(QuasarDownload download)
         {
             Application.Current.Dispatcher.Invoke((Action)delegate {
+                
+                Task.Run(() => Flash());
                 Task.Run(() => DownloadMod(download.QuasarURL));
             });
         }
@@ -489,6 +493,7 @@ namespace Quasar.Controls.ModManagement.ViewModels
         /// <returns></returns>
         public async Task<bool> DownloadMod(string QuasarURL)
         {
+            
             ModManager MM = new ModManager(QuasarURL);
             //If there is no Mod Manager already doing something for this mod
             if(!ActiveModManagers.Any(m => m.QuasarURL.GamebananaItemID == MM.QuasarURL.GamebananaItemID))
@@ -498,7 +503,8 @@ namespace Quasar.Controls.ModManagement.ViewModels
                     EventSystem.Publish<SettingItem>(new SettingItem
                     {
                         IsChecked = true,
-                        SettingName = "TabLock"
+                        SettingName = "TabLock",
+                        DisplayValue = "Mod"
                     });
                 }
 
@@ -595,6 +601,12 @@ namespace Quasar.Controls.ModManagement.ViewModels
             return true;
         }
 
+        public void Flash()
+        {
+            TaskbarManager.Instance.SetProgressValue(100, 100, Process.GetCurrentProcess().MainWindowHandle);
+            System.Threading.Thread.Sleep(500);
+            TaskbarManager.Instance.SetProgressValue(0, 100, Process.GetCurrentProcess().MainWindowHandle);
+        }
         /// <summary>
         /// Reloads the workspace presence status for all list items
         /// </summary>

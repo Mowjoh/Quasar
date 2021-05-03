@@ -1,5 +1,7 @@
 ﻿using log4net;
+using log4net.Appender;
 using Quasar.FileSystem;
+using Quasar.Helpers.FileOperations;
 using Quasar.Helpers.Quasar_Management;
 using Quasar.NamedPipes;
 using System;
@@ -26,20 +28,18 @@ namespace Quasar.Internal.Tools
         {
             bool UpdateSuccessful = false;
 
+            
             //If the loaded conf file is a new update file
             if (Properties.Settings.Default.UpgradeRequired)
             {
                 NeedsUpdate = true;
-                QuasarLogger.Debug("Updating");
-                
+
+                //Making file up to date with previous data
+                UpgradeSettingFile();
 
                 //If it's Quasar's first launch
-                if (NeedsInitialSetup())
+                if (NeedsInitialSetup)
                 {
-                    //Making file up to date with previous data
-                    UpgradeSettingFile();
-
-                    QuasarLogger.Debug("Initial Setup");
                     InstallManager.CreateBaseUserSettings();
 
                     MessageBoxResult result = System.Windows.MessageBox.Show("Hi ! It seems it's Quasar's first launch. Do you want to change where Quasar is gonna store mods?", "First Launch Warning", MessageBoxButton.YesNo);
@@ -58,17 +58,12 @@ namespace Quasar.Internal.Tools
                 //If it's just a regular update
                 else
                 {
-                    //Making file up to date with previous data
-                    UpgradeSettingFile();
+                    InstallManager.CopyBaseResources();
 
+                    SetupLogger(QuasarLogger);
+                    QuasarLogger.Debug("Updating");
                     QuasarLogger.Debug("Tagging for Scan");
                     NeedsScanning = true;
-                }
-
-                if (NeedsCleaning())
-                {
-                    QuasarLogger.Debug("Ultra Clean Setup");
-                    InstallManager.CreateBaseFolders();
                 }
             }
             else
@@ -138,10 +133,7 @@ namespace Quasar.Internal.Tools
         /// Verifies if it's the first startup
         /// </summary>
         /// <returns></returns>
-        public static bool NeedsInitialSetup()
-        {
-            return Properties.Settings.Default.AppVersion == "0000";
-        }
+        public static bool NeedsInitialSetup { get; set; }
 
         public static bool NeedsScanning { get; set; }
 
@@ -158,6 +150,10 @@ namespace Quasar.Internal.Tools
             Properties.Settings.Default.AppVersion = executionVersion;
             Properties.Settings.Default.PreviousVersion = previous;
             Properties.Settings.Default.Save();
+            if (previous == "0000")
+            {
+                NeedsInitialSetup = true;
+            }
         }
 
         /// <summary>
@@ -175,5 +171,21 @@ namespace Quasar.Internal.Tools
                 return Assembly.GetExecutingAssembly().GetName().Version.ToString();
             }
         }
+
+        public static void SetupLogger(ILog QuasarLogger)
+        {
+            QuasarLogger = LogManager.GetLogger("QuasarAppender");
+            FileAppender appender = (FileAppender)QuasarLogger.Logger.Repository.GetAppenders()[0];
+            appender.File = Properties.Settings.Default.DefaultDir + "\\Quasar.log";
+            appender.Threshold = log4net.Core.Level.Debug;
+
+            appender.ActivateOptions();
+
+            QuasarLogger.Info("------------------------------");
+            QuasarLogger.Warn("Quasar Start");
+            QuasarLogger.Info("------------------------------");
+        }
     }
+
+
 }

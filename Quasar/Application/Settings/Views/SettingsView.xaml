@@ -22,7 +22,8 @@
         <Button Command="{Binding Path=OnboardingCommand}" Content="Demo Mode"
                 Template="{StaticResource CutieSmallButtonTemplate}"
                 Width="250" Height="32"
-                Margin="50,20,32,0" HorizontalAlignment="Right" VerticalAlignment="Top" />
+                Margin="50,20,32,0" HorizontalAlignment="Right" VerticalAlignment="Top"
+                Visibility="Hidden" />
         <!--#endregion-->
 
         <!--  Settings Panel  -->

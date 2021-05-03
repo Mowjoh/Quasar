@@ -658,7 +658,9 @@ namespace Quasar.Build.ViewModels
                 int tot = int.Parse(total);
                 if(cur >=0 && tot >= 0)
                 {
+                    
                     TaskbarManager.Instance.SetProgressValue(cur, tot, Process.GetCurrentProcess().MainWindowHandle);
+                    
                 }
             }));
         }
