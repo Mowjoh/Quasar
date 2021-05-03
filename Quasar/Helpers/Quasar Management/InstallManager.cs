@@ -37,11 +37,11 @@ namespace Quasar.Helpers.Quasar_Management
             if (!Directory.Exists(String.Format(@"{0}\Resources", Properties.Settings.Default.DefaultDir)))
                 Directory.CreateDirectory(String.Format(@"{0}\Resources", Properties.Settings.Default.DefaultDir));
 
-            File.Copy(String.Format(@"{0}\Resources\{1}", Properties.Settings.Default.AppPath,"Games.json"), String.Format(@"{0}\Resources\{1}", Properties.Settings.Default.DefaultDir, "Games.json"),true);
+            File.Copy(String.Format(@"{0}\Resources\{1}", Properties.Settings.Default.AppPath, "Games.json"), String.Format(@"{0}\Resources\{1}", Properties.Settings.Default.DefaultDir, "Games.json"), true);
             File.Copy(String.Format(@"{0}\Resources\{1}", Properties.Settings.Default.AppPath, "ModLoaders.json"), String.Format(@"{0}\Resources\{1}", Properties.Settings.Default.DefaultDir, "ModLoaders.json"), true);
             File.Copy(String.Format(@"{0}\Resources\{1}", Properties.Settings.Default.AppPath, "ModTypes.json"), String.Format(@"{0}\Resources\{1}", Properties.Settings.Default.DefaultDir, "ModTypes.json"), true);
 
-            if(!File.Exists(String.Format(@"{0}\Resources\{1}", Properties.Settings.Default.DefaultDir, "Gamebanana.json")))
+            if (!File.Exists(String.Format(@"{0}\Resources\{1}", Properties.Settings.Default.DefaultDir, "Gamebanana.json")))
                 File.Copy(String.Format(@"{0}\Resources\{1}", Properties.Settings.Default.AppPath, "Gamebanana.json"), String.Format(@"{0}\Resources\{1}", Properties.Settings.Default.DefaultDir, "Gamebanana.json"), true);
         }
 
@@ -53,11 +53,11 @@ namespace Quasar.Helpers.Quasar_Management
             //Setting Paths
             String InstallationPath = Properties.Settings.Default.DefaultDir;
             String AppPath = Properties.Settings.Default.AppPath;
-            String LibraryPath =  "\\Library\\";
-            String ModsPath =  "\\Library\\Mods\\";
-            String DownloadsPath =  "\\Library\\Downloads\\";
-            String ScreenshotPath =  "\\Library\\Screenshots\\";
-            String ResourcePath =  "\\Resources\\";
+            String LibraryPath = "\\Library\\";
+            String ModsPath = "\\Library\\Mods\\";
+            String DownloadsPath = "\\Library\\Downloads\\";
+            String ScreenshotPath = "\\Library\\Screenshots\\";
+            String ResourcePath = "\\Resources\\";
 
             FileOperation.CheckCreate(InstallationPath);
             FileOperation.CheckCreate(InstallationPath + LibraryPath);
@@ -66,8 +66,8 @@ namespace Quasar.Helpers.Quasar_Management
             FileOperation.CheckCreate(InstallationPath + ScreenshotPath);
 
             FileOperation.CheckCopyFolder(AppPath + ResourcePath, InstallationPath + ResourcePath);
-                         
-            
+
+
         }
 
         /// <summary>
@@ -78,7 +78,7 @@ namespace Quasar.Helpers.Quasar_Management
             String ResourcePath = Properties.Settings.Default.DefaultDir + "\\Resources\\";
             String AppPath = Properties.Settings.Default.AppPath + "\\Resources\\";
 
-            FileOperation.CheckCopyFolder(AppPath, ResourcePath, true,true);
+            FileOperation.CheckCopyFolder(AppPath, ResourcePath, true, true);
         }
 
         /// <summary>
@@ -91,7 +91,7 @@ namespace Quasar.Helpers.Quasar_Management
             CultureInfo ci = CultureInfo.InstalledUICulture;
             Properties.Settings.Default.Language = (String)ci.Name;
 
-            if(ExternalPath == "")
+            if (ExternalPath == "")
             {
                 //Getting User's Documents folder for storage purposes
                 String DocumentsFolderPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
@@ -166,7 +166,7 @@ namespace Quasar.Helpers.Quasar_Management
 
                 File.Copy(SourcePath + "\\Quasar.log", newPath + "\\Quasar.log", true);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 proceed = false;
             }
@@ -205,13 +205,13 @@ namespace Quasar.Helpers.Quasar_Management
 
                 EventSystem.Publish<ModalEvent>(Meuh);
             }
-            
 
-            
 
-            
 
-            
+
+
+
+
         }
 
         /// <summary>
@@ -270,25 +270,27 @@ namespace Quasar.Helpers.Quasar_Management
                     EventName = "UltraCleaning"
                 });
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 MUVM.QuasarLogger.Error("Error While processing old files");
                 MUVM.QuasarLogger.Error(e.Message);
                 MUVM.QuasarLogger.Error(e.StackTrace);
             }
-            
+
         }
 
         public static void GetMoveOldLibrary(ILog QuasarLogger)
         {
             QuasarLogger.Debug("Loading Old Library");
-            List<Data.V1.LibraryMod> OldLibrary =   Quasar.Helpers.XML.XMLHelper.GetLibraryModList();
+            List<Data.V1.LibraryMod> OldLibrary = Quasar.Helpers.XML.XMLHelper.GetLibraryModList();
             ObservableCollection<LibraryItem> NewLibrary = new ObservableCollection<LibraryItem>();
             QuasarLogger.Debug("Loading API");
             GamebananaAPI API = JSonHelper.GetGamebananaAPI();
 
+            Directory.CreateDirectory(Properties.Settings.Default.DefaultDir + @"\LibraryBackup");
+            FileOperation.CheckCopyFolder(Properties.Settings.Default.DefaultDir + @"\Library", Properties.Settings.Default.DefaultDir + @"\LibraryBackup");
 
-            foreach(Data.V1.LibraryMod lm in OldLibrary)
+            foreach (Data.V1.LibraryMod lm in OldLibrary)
             {
                 QuasarLogger.Debug(String.Format("Processing Mod #{0}", lm.ID));
                 //Creating new item based on old one
@@ -373,7 +375,7 @@ namespace Quasar.Helpers.Quasar_Management
                             string[] Screenshots = Directory.GetFiles(String.Format(@"{0}\Library\Screenshots\", Properties.Settings.Default.DefaultDir), "*");
                             string PreviousScreenFilePath = Screenshots.SingleOrDefault(s => s.Contains(ModFolder));
                             FileInfo fi = new FileInfo(PreviousScreenFilePath);
-                            string NewScreenFilePath = String.Format(@"{0}\Library\Screenshots\{1}.{2}", Properties.Settings.Default.DefaultDir, li.Guid,fi.Extension);
+                            string NewScreenFilePath = String.Format(@"{0}\Library\Screenshots\{1}.{2}", Properties.Settings.Default.DefaultDir, li.Guid, fi.Extension);
 
                             //Converting screenshot
                             ConvertScreenshot(PreviousScreenFilePath, NewScreenFilePath, QuasarLogger);
@@ -394,7 +396,7 @@ namespace Quasar.Helpers.Quasar_Management
                 {
                     QuasarLogger.Debug(String.Format("Copying '{0}' to {1}", Source, Destination));
 
-                    File.Copy(Source, Destination,true);
+                    File.Copy(Source, Destination, true);
 
 
                 }
@@ -411,7 +413,7 @@ namespace Quasar.Helpers.Quasar_Management
             File.Delete(String.Format(@"{0}\Library\Library.xml", Properties.Settings.Default.DefaultDir));
             File.Delete(String.Format(@"{0}\Library\ContentMapping.xml", Properties.Settings.Default.DefaultDir));
             File.Delete(String.Format(@"{0}\Library\Workspaces.xml", Properties.Settings.Default.DefaultDir));
-            Directory.Delete(String.Format(@"{0}\References", Properties.Settings.Default.DefaultDir),true);
+            Directory.Delete(String.Format(@"{0}\References", Properties.Settings.Default.DefaultDir), true);
         }
 
         public static void Rescan(MainUIViewModel MUVM)
@@ -422,12 +424,12 @@ namespace Quasar.Helpers.Quasar_Management
             Scannerino.ScanAllMods(MUVM);
             JSonHelper.SaveContentItems(MUVM.ContentItems);
 
-            foreach(LibraryItem li in MUVM.Library)
+            foreach (LibraryItem li in MUVM.Library)
             {
                 List<ContentItem> contentItems = MUVM.ContentItems.Where(ci => ci.LibraryItemGuid == li.Guid).ToList();
                 MUVM.ActiveWorkspace = Slotter.AutomaticSlot(contentItems, MUVM.ActiveWorkspace, MUVM.QuasarModTypes);
             }
-            
+
             JSonHelper.SaveWorkspaces(MUVM.Workspaces);
 
             EventSystem.Publish<ModalEvent>(new ModalEvent()
