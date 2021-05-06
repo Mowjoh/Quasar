@@ -25,7 +25,7 @@ When you browse the page, it will display a Quasar Download link.
 
 Click it and the mod will be downloaded by Quasar and ready for use.  
 
-If you want additionnal info, please visit the included [wiki](https://github.com/Mowjoh/Quasar/wiki).  
+If you want additional info, please visit the included [wiki](https://github.com/Mowjoh/Quasar/wiki).  
 
 ## Acknowledgments
 
