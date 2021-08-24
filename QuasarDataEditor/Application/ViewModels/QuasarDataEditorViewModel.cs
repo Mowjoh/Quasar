@@ -18,7 +18,7 @@ namespace QuasarDataEditor
     {
         #region Static paths
         //private static string DocumentsFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-        private static string DocumentsFolder = @"M:\Super Smash Bros Ultimate\Software";
+        private static string DocumentsFolder = @"O:\Super Smash Bros Ultimate\Software";
         private static string GameSource = DocumentsFolder + @"\Quasar Debug\Resources\Games.json";
         private static string LibrarySource = DocumentsFolder + @"\Quasar Debug\Library\Library.json";
         private static string ContentSource = DocumentsFolder + @"\Quasar Debug\Library\ContentItems.json";

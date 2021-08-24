@@ -134,7 +134,11 @@ namespace Quasar.Build.Models
             try
             {
                 Log.Debug(String.Format("Deleting File {0}", FilePath));
-                Client.DeleteFile(FilePath);
+                if (CheckFileExists(FilePath))
+                {
+                    Client.DeleteFile(FilePath);
+                }
+                
 
                 return true;
             }catch(Exception e)
@@ -246,7 +250,14 @@ namespace Quasar.Build.Models
         }
         public override bool DeleteFile(string FilePath)
         {
-            File.Delete(LetterPath + FilePath);
+            if (File.Exists(LetterPath + FilePath))
+            {
+                File.Delete(LetterPath + FilePath);
+            }
+            else
+            {
+
+            }
             return true;
         }
         public override bool CreateFolder(string FolderPath)
