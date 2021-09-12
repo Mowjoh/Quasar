@@ -1,5 +1,7 @@
-﻿using Quasar.Common.Models;
-using Quasar.Data.V2;
+﻿using DataModels.Common;
+using DataModels.User;
+using DataModels.Resource;
+using Quasar.Common.Models;
 using System;
 
 namespace Quasar.Associations.Models

@@ -5,7 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Quasar.Data.V1;
-using Quasar.Data.V2;
+using DataModels.Common;
+using DataModels.User;
+using DataModels.Resource;
 using Quasar.Helpers.Json;
 
 namespace Quasar.Data.Converter

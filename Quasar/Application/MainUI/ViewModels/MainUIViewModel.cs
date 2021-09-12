@@ -11,12 +11,14 @@ using Quasar.Controls.ModManagement.Views;
 using Quasar.Settings.Models;
 using Quasar.Workspaces.Views;
 using Quasar.Workspaces.ViewModels;
-using Quasar.Data.V2;
 using Quasar.Helpers.Json;
 using Quasar.Helpers.ModScanning;
 using Quasar.Helpers.Quasar_Management;
 using Quasar.Helpers;
 using Quasar.Internal.Tools;
+using DataModels.Common;
+using DataModels.User;
+using DataModels.Resource;
 using Quasar.NamedPipes;
 using System;
 using System.Collections.ObjectModel;
@@ -32,6 +34,7 @@ using Quasar.Associations.ViewModels;
 using System.Windows.Shell;
 using ImageProcessor;
 using ImageProcessor.Plugins.WebP.Imaging.Formats;
+using Workshop.FileManagement;
 
 namespace Quasar.MainUI.ViewModels
 {
@@ -644,11 +647,11 @@ namespace Quasar.MainUI.ViewModels
             }
 
             //Loading Resource Data
-            Games = JSonHelper.GetGames();
+            Games = ResourceManager.GetGames();
             CurrentGame = Games[0];
-            QuasarModTypes = JSonHelper.GetQuasarModTypes();
-            ModLoaders = JSonHelper.GetModLoaders();
-            API = JSonHelper.GetGamebananaAPI();
+            QuasarModTypes = ResourceManager.GetQuasarModTypes();
+            ModLoaders = ResourceManager.GetModLoaders();
+            API = ResourceManager.GetGamebananaAPI();
 
         }
 

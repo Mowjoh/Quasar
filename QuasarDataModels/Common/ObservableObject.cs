@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.Diagnostics;
 
-namespace Quasar.Common.Models
+namespace DataModels.Common
 {
     public class ObservableObject : INotifyPropertyChanged
     {

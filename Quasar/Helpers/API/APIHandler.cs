@@ -1,7 +1,9 @@
 ﻿using ImageProcessor;
 using ImageProcessor.Plugins.WebP.Imaging.Formats;
 using Newtonsoft.Json;
-using Quasar.Data.V2;
+using DataModels.User;
+using DataModels.Common;
+using DataModels.Resource;
 using Quasar.Helpers.Downloading;
 using System;
 using System.Collections.Generic;

@@ -1,5 +1,8 @@
 ﻿using MediaDevices;
 using Quasar.Common.Models;
+using DataModels.Common;
+using DataModels.User;
+using DataModels.Resource;
 using System;
 using System.Collections.Generic;
 using System.IO;

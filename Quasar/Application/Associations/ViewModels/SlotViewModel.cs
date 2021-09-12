@@ -1,6 +1,8 @@
 ﻿using log4net;
 using Quasar.Common.Models;
-using Quasar.Data.V2;
+using DataModels.Common;
+using DataModels.User;
+using DataModels.Resource;
 using Quasar.Helpers;
 using System;
 using System.Collections.Generic;

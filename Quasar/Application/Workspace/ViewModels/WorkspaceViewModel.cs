@@ -1,6 +1,7 @@
 ﻿using log4net;
-using Quasar.Common.Models;
-using Quasar.Data.V2;
+using DataModels.User;
+using DataModels.Common;
+using DataModels.Resource;
 using Quasar.Helpers.Json;
 using Quasar.Helpers;
 using Quasar.Helpers.Tools;
@@ -11,7 +12,7 @@ using System.Linq;
 using System.Windows.Forms;
 using System.Windows.Input;
 using Quasar.MainUI.ViewModels;
-
+using Quasar.Common.Models;
 
 namespace Quasar.Workspaces.ViewModels
 {

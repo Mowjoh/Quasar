@@ -2,7 +2,9 @@
 using MediaDevices;
 using Quasar.Build.Models;
 using Quasar.Common.Models;
-using Quasar.Data.V2;
+using DataModels.User;
+using DataModels.Common;
+using DataModels.Resource;
 using Quasar.Helpers;
 using System;
 using System.Collections.ObjectModel;

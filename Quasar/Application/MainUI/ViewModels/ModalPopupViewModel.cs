@@ -1,5 +1,8 @@
 ﻿using log4net;
 using Quasar.Common.Models;
+using DataModels.Common;
+using DataModels.User;
+using DataModels.Resource;
 using Quasar.Helpers;
 using System.Windows.Input;
 

@@ -1,8 +1,9 @@
 ﻿using Quasar.Helpers.Compression;
 using Quasar.Controls;
-using Quasar.Common.Models;
 using Quasar.Controls.Mod.Models;
-using Quasar.Data.V2;
+using DataModels.User;
+using DataModels.Resource;
+using DataModels.Common;
 using Quasar.FileSystem;
 using Quasar.Helpers.ModScanning;
 using System;

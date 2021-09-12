@@ -6,7 +6,6 @@ using Quasar.Helpers.Quasar_Management;
 using Quasar.NamedPipes;
 using System;
 using System.Collections.Generic;
-using System.Deployment.Application;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -164,7 +163,9 @@ namespace Quasar.Internal.Tools
         {
             try
             {
-                return ApplicationDeployment.CurrentDeployment.CurrentVersion.ToString();
+                //TODO FIX THIS
+                //return ApplicationDeployment.CurrentDeployment.CurrentVersion.ToString();
+                return "ERROR";
             }
             catch (Exception)
             {

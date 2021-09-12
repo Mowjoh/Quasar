@@ -1,20 +1,7 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{688FC6F7-45E8-4E2D-907D-EB2790A8CF7A}</ProjectGuid>
+    <TargetFramework>net5.0-windows</TargetFramework>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>Quasar</RootNamespace>
-    <AssemblyName>Quasar</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <WarningLevel>4</WarningLevel>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <Deterministic>true</Deterministic>
-    <TargetFrameworkProfile />
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>publish\</PublishUrl>
     <Install>false</Install>
@@ -30,35 +17,15 @@
     <ApplicationVersion>0.7.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <UseWindowsForms>true</UseWindowsForms>
+    <UseWPF>true</UseWPF>
+    <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug Admin|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\Debug Admin\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>Quasar.ico</ApplicationIcon>
@@ -67,304 +34,20 @@
     <StartupObject>Quasar.App</StartupObject>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Resources\Gamebanana.json" />
+    <None Remove="Resources\Games.json" />
+    <None Remove="Resources\images\Delete.png" />
+    <None Remove="Resources\images\drag.png" />
+    <None Remove="Resources\images\NoScreenshot.png" />
+    <None Remove="Resources\images\NoScreenshot.webp" />
+    <None Remove="Resources\ModLoaders.json" />
+    <None Remove="Resources\ModLoaders\UMM\Switch\Ultimate_Mod_Manager.nro" />
+    <None Remove="Resources\ModTypes.json" />
+  </ItemGroup>
+  <ItemGroup>
     <Reference Include="PresentationFramework.Aero2" />
-    <Reference Include="System" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Deployment" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xaml">
-      <RequiredTargetFramework>4.0</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="WindowsBase" />
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <ApplicationDefinition Include="App.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </ApplicationDefinition>
-    <Compile Include="Application\Associations\Models\FilterItem.cs" />
-    <Compile Include="Application\Associations\Models\GameElementFamilySquare.cs" />
-    <Compile Include="Application\Associations\ViewModels\AssociationViewModel.cs" />
-    <Compile Include="Application\Associations\ViewModels\SlotViewModel.cs" />
-    <Compile Include="Application\Associations\Views\AssociationView.xaml.cs">
-      <DependentUpon>AssociationView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Application\Associations\Views\SlotListItem.xaml.cs">
-      <DependentUpon>SlotListItem.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Application\Associations\Views\Slot.xaml.cs">
-      <DependentUpon>Slot.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Application\Build\Models\Build.cs" />
-    <Compile Include="Application\Build\Models\FileWriter.cs" />
-    <Compile Include="Application\Build\Models\USBDrive.cs" />
-    <Compile Include="Application\Build\ViewModels\BuildViewModel.cs" />
-    <Compile Include="Application\Build\Views\BuildView.xaml.cs">
-      <DependentUpon>BuildView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Application\Common\Models\ModalEvent.cs" />
-    <Compile Include="Application\MainUI\ViewModels\ModalPopupViewModel.cs" />
-    <Compile Include="Application\MainUI\Views\ModalPopup.xaml.cs">
-      <DependentUpon>ModalPopup.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Application\Workspace\Models\ShareableWorkspace.cs" />
-    <Compile Include="Data\Converter\V1toV2Converter.cs" />
-    <Compile Include="Data\V1\QuasarModType.cs" />
-    <Compile Include="Data\V2\Gamebanana.cs" />
-    <Compile Include="Data\V2\ModLoader.cs" />
-    <Compile Include="Data\V2\QuasarModType.cs" />
-    <Compile Include="Helpers\Downloading\ModManager.cs" />
-    <Compile Include="Helpers\Mod Scanning\Slotter.cs" />
-    <Compile Include="Helpers\Quasar Management\InstallManager.cs" />
-    <Compile Include="Helpers\Tools\FTPValidator.cs" />
-    <Compile Include="Application\Common\Models\NotifyTaskCompletion.cs" />
-    <Compile Include="Application\Common\Models\ObservableObject.cs" />
-    <Compile Include="Application\Common\Models\RelayCommand.cs" />
-    <Compile Include="Application\Content\ViewModels\ContentListItemViewModel.cs" />
-    <Compile Include="Application\Content\ViewModels\ContentViewModel.cs" />
-    <Compile Include="Application\Content\Views\ContentView.xaml.cs">
-      <DependentUpon>ContentView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Application\Mod\Models\QuasarDownload.cs" />
-    <Compile Include="Application\Mod\ViewModels\ModListItemViewModel.cs" />
-    <Compile Include="Application\Mod\Views\FileView.xaml.cs">
-      <DependentUpon>FileView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Application\Content\Views\ContentListItem.xaml.cs">
-      <DependentUpon>ContentListItem.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Application\MainUI\ViewModels\MainUIViewModel.cs" />
-    <Compile Include="Application\Mod\Views\ModListItem.xaml.cs">
-      <DependentUpon>ModListItem.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Application\Mod\ViewModels\ModsViewModel.cs" />
-    <Compile Include="Application\Mod\Views\ModsView.xaml.cs">
-      <DependentUpon>ModsView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Application\Settings\Models\SettingItem.cs" />
-    <Compile Include="Application\Settings\ViewModels\SettingItemViewModel.cs" />
-    <Compile Include="Application\Settings\ViewModels\SettingsViewModel.cs" />
-    <Compile Include="Application\Settings\Views\SettingItemView.xaml.cs">
-      <DependentUpon>SettingItemView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Application\Settings\Views\SettingsView.xaml.cs">
-      <DependentUpon>SettingsView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Application\Workspace\ViewModels\WorkspaceViewModel.cs" />
-    <Compile Include="Application\Workspace\Views\WorkspaceView.xaml.cs">
-      <DependentUpon>WorkspaceView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Data\V1\API.cs" />
-    <Compile Include="Data\V1\Game.cs" />
-    <Compile Include="Data\V1\ModLoader.cs" />
-    <Compile Include="Data\V1\Workspace.cs" />
-    <Compile Include="Data\V2\API.cs" />
-    <Compile Include="Data\V2\Content.cs" />
-    <Compile Include="Data\V2\Game.cs" />
-    <Compile Include="Data\V2\Library.cs" />
-    <Compile Include="Data\V2\Workspace.cs" />
-    <Compile Include="Helpers\EventSystem.cs" />
-    <Compile Include="Helpers\File\ModFileManager.cs" />
-    <Compile Include="Helpers\Mod Scanning\Scannerino.cs" />
-    <Compile Include="Helpers\Quasar Management\Updater.cs" />
-    <Compile Include="Data\V1\Content.cs" />
-    <Compile Include="Helpers\Compression\Unarchiver.cs" />
-    <Compile Include="Helpers\Named Pipes\PipeHelper.cs" />
-    <Compile Include="Helpers\File\FileOperation.cs" />
-    <Compile Include="Helpers\Tools\ARCropolisHelper.cs" />
-    <Compile Include="Data\V1\Library.cs" />
-    <Compile Include="Helpers\JSon\JSonHelper.cs" />
-    <Compile Include="Properties\Resources.en.Designer.cs">
-      <DependentUpon>Resources.en.resx</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <Compile Include="Properties\Resources.fr.Designer.cs">
-      <DependentUpon>Resources.fr.resx</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <Compile Include="Helpers\Named Pipes\PipeClient.cs" />
-    <Compile Include="Helpers\Named Pipes\PipeServer.cs" />
-    <Compile Include="Helpers\Downloading\ModDownloader.cs" />
-    <Compile Include="Helpers\XML\XMLHelper.cs" />
-    <Compile Include="Properties\SettingsDefinition.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-      <DependentUpon>SettingsDefinition.settings</DependentUpon>
-    </Compile>
-    <Page Include="Application\Associations\Views\AssociationView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Application\Associations\Views\SlotListItem.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Application\Associations\Views\Slot.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Application\Build\Views\BuildView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Application\Content\Views\ContentView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Application\MainUI\Views\ModalPopup.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Application\Mod\Views\FileView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Application\Content\Views\ContentListItem.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Application\Mod\Views\ModListItem.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Application\Mod\Views\ModsView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Application\Settings\Views\SettingItemView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Application\Settings\Views\SettingsView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Application\Workspace\Views\WorkspaceView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="MainWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Helpers\API\APIHandler.cs" />
-    <Compile Include="App.xaml.cs">
-      <DependentUpon>App.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Properties\AssemblyInfo.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
-    <EmbeddedResource Include="Properties\Resources.en.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.en.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <Content Include="Resources\images\Delete.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\images\drag.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\images\Games\SmashUltimate\characters_selected.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\images\Games\SmashUltimate\others.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\images\Games\SmashUltimate\characters.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\images\Games\SmashUltimate\others_selected.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\images\Games\SmashUltimate\items.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\images\Games\SmashUltimate\items_selected.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\images\Games\SmashUltimate\music.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\images\Games\SmashUltimate\music_selected.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\images\Games\SmashUltimate\series.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\images\Games\SmashUltimate\series_selected.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\images\Games\SmashUltimate\stages.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\images\Games\SmashUltimate\stages_selected.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\images\NoScreenshot.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Games.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\ModLoaders.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\ModLoaders\ARCropolis\atmosphere\contents\01006A800016E000\manual_html\html-document\contents.htdocs\arcropolis\selector\css\selector.css">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\ModLoaders\ARCropolis\atmosphere\contents\01006A800016E000\manual_html\html-document\contents.htdocs\arcropolis\selector\img\back.svg">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\ModLoaders\ARCropolis\atmosphere\contents\01006A800016E000\manual_html\html-document\contents.htdocs\arcropolis\selector\img\check.svg">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\ModLoaders\ARCropolis\atmosphere\contents\01006A800016E000\manual_html\html-document\contents.htdocs\arcropolis\selector\js\selector.js">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\ModLoaders\ARCropolis\atmosphere\contents\01006A800016E000\manual_html\html-document\contents.htdocs\arcropolis\selector\templates\index.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\ModTypes.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Gamebanana.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\images\NoScreenshot.webp">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Resource Include="Fonts\Poppins-Black.ttf" />
     <Resource Include="Fonts\Poppins-BlackItalic.ttf" />
     <Resource Include="Fonts\Poppins-Bold.ttf" />
@@ -383,59 +66,37 @@
     <Resource Include="Fonts\Poppins-SemiBoldItalic.ttf" />
     <Resource Include="Fonts\Poppins-Thin.ttf" />
     <Resource Include="Fonts\Poppins-ThinItalic.ttf" />
-    <None Include="Properties\SettingsDefinition.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>SettingsDefinition.Designer.cs</LastGenOutput>
-    </None>
-    <Content Include="Resources\ModLoaders\UMM\Switch\Ultimate_Mod_Manager.nro">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\ModLoaders\ARCropolis\atmosphere\contents\01006A800016E000\exefs\main.npdm">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\ModLoaders\ARCropolis\atmosphere\contents\01006A800016E000\exefs\subsdk9">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\ModLoaders\ARCropolis\arcropolis.toml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\ModLoaders\ARCropolis\atmosphere\contents\01006A800016E000\romfs\skyline\plugins\libarcropolis.nro">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Resource Include="Application\Common\Fonts\sofiapro-light.otf" />
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
     <Resource Include="Quasar.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Resources\images\Games\mk8d.jpg">
+    <Content Include="Resources\Gamebanana.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\images\Games\All.png">
+    <Content Include="Resources\Games.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\images\Games\FETH.jpg">
+    <Content Include="Resources\images\Delete.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\images\Games\home.png">
+    <Content Include="Resources\images\drag.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\images\Games\SmashUltimate.jpg">
+    <Content Include="Resources\images\NoScreenshot.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Properties\Resources.fr.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.fr.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
+    <Content Include="Resources\images\NoScreenshot.webp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\ModLoaders.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\ModLoaders\UMM\Switch\Ultimate_Mod_Manager.nro">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\ModTypes.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">
@@ -451,7 +112,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="FluentFTP">
-      <Version>33.1.8</Version>
+      <Version>35.0.4</Version>
     </PackageReference>
     <PackageReference Include="FontAwesome">
       <Version>4.7.0</Version>
@@ -474,6 +135,7 @@
     <PackageReference Include="Microsoft.AspNet.WebApi.Client">
       <Version>5.2.7</Version>
     </PackageReference>
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="NamedPipeWrapper">
       <Version>1.5.0</Version>
     </PackageReference>
@@ -484,17 +146,21 @@
       <Version>13.0.1</Version>
     </PackageReference>
     <PackageReference Include="Ookii.Dialogs.Wpf">
-      <Version>3.1.0</Version>
+      <Version>4.0.0</Version>
     </PackageReference>
     <PackageReference Include="Prism.Core">
-      <Version>8.0.0.1909</Version>
+      <Version>8.1.97</Version>
     </PackageReference>
     <PackageReference Include="SharpCompress">
-      <Version>0.24.0</Version>
+      <Version>0.29.0</Version>
     </PackageReference>
     <PackageReference Include="WindowsAPICodePack">
-      <Version>1.1.1</Version>
+      <Version>1.1.2</Version>
     </PackageReference>
+    <PackageReference Include="Microsoft.DotNet.UpgradeAssistant.Extensions.Default.Analyzers" Version="0.3.242703">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Windows.Compatibility" Version="5.0.2" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Application\Common\Views\" />
@@ -504,9 +170,8 @@
     <Folder Include="Resources\ModLoaders\ARCropolis\atmosphere\contents\01006A800016E000\romfs\arcropolis\workspaces\Example\arc\" />
     <Folder Include="Resources\ModLoaders\ARCropolis\atmosphere\contents\01006A800016E000\romfs\arcropolis\workspaces\Example\umm\" />
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PreBuildEvent>
-    </PreBuildEvent>
-  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\WorkShoppie\Workshop.csproj" />
+  </ItemGroup>
+  <PropertyGroup />
 </Project>

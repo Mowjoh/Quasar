@@ -3,7 +3,8 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
-using Quasar.Data.V2;
+using DataModels.User;
+using DataModels.Resource;
 using Quasar.Workspaces.Models;
 
 namespace Quasar.Helpers.Json
@@ -124,94 +125,6 @@ namespace Quasar.Helpers.Json
         #endregion
 
         #region Loading
-        //Resource Loads
-        public static ObservableCollection<Game> GetGames(bool External = false, string ExternalPath = "")
-        {
-            ObservableCollection<Game> Games = new ObservableCollection<Game>();
-            string Path;
-            if (!External)
-            {
-                Path = Properties.Settings.Default.DefaultDir + @"\Resources\Games.json";
-            }
-            else
-            {
-                Path = ExternalPath;
-            }
-            
-
-            using (StreamReader file = File.OpenText(Path))
-            {
-                JsonSerializer serializer = new JsonSerializer();
-                Games = (ObservableCollection<Game>)serializer.Deserialize(file, typeof(ObservableCollection<Game>));
-            }
-
-            return Games;
-        }
-        public static ObservableCollection<QuasarModType> GetQuasarModTypes(bool External = false, string ExternalPath = "")
-        {
-            ObservableCollection<QuasarModType> QuasarModTypes = new ObservableCollection<QuasarModType>();
-            string Path;
-            if (!External)
-            {
-                Path = Properties.Settings.Default.DefaultDir + @"\Resources\ModTypes.json";
-            }
-            else
-            {
-                Path = ExternalPath;
-            }
-
-            using (StreamReader file = File.OpenText(Path))
-            {
-                JsonSerializer serializer = new JsonSerializer();
-                QuasarModTypes = (ObservableCollection<QuasarModType>)serializer.Deserialize(file, typeof(ObservableCollection<QuasarModType>));
-            }
-
-            return QuasarModTypes;
-        }
-        public static ObservableCollection<ModLoader> GetModLoaders(bool External = false, string ExternalPath = "")
-        {
-            ObservableCollection<ModLoader> ModLoaders = new ObservableCollection<ModLoader>();
-            string Path;
-            if (!External)
-            {
-                Path = Properties.Settings.Default.DefaultDir + @"\Resources\ModLoaders.json";
-            }
-            else
-            {
-                Path = ExternalPath;
-            }
-
-            using (StreamReader file = File.OpenText(Path))
-            {
-                JsonSerializer serializer = new JsonSerializer();
-                ModLoaders = (ObservableCollection<ModLoader>)serializer.Deserialize(file, typeof(ObservableCollection<ModLoader>));
-            }
-
-
-            return ModLoaders;
-        }
-        public static GamebananaAPI GetGamebananaAPI(bool External = false, string ExternalPath = "")
-        {
-            GamebananaAPI API = new GamebananaAPI();
-            string Path;
-            if (!External)
-            {
-                Path = Properties.Settings.Default.DefaultDir + @"\Resources\Gamebanana.json";
-            }
-            else
-            {
-                Path = ExternalPath;
-            }
-
-            using (StreamReader file = File.OpenText(Path))
-            {
-                JsonSerializer serializer = new JsonSerializer();
-                API = (GamebananaAPI)serializer.Deserialize(file, typeof(GamebananaAPI));
-            }
-
-
-            return API;
-        }
 
         //User Loads
         public static ObservableCollection<LibraryItem> GetLibrary(bool External = false, string ExternalPath = "")

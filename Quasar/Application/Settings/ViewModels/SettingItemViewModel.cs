@@ -1,4 +1,7 @@
 ﻿using Quasar.Common.Models;
+using DataModels.Common;
+using DataModels.User;
+using DataModels.Resource;
 using Quasar.Settings.Models;
 using Quasar.Helpers;
 using System;

@@ -1,5 +1,7 @@
 ﻿using Quasar.Content.ViewModels;
-using Quasar.Data.V2;
+using DataModels.Common;
+using DataModels.User;
+using DataModels.Resource;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;

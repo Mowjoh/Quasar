@@ -3,11 +3,23 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29102.190
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Quasar", "Quasar\Quasar.csproj", "{688FC6F7-45E8-4E2D-907D-EB2790A8CF7A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Quasar", "Quasar\Quasar.csproj", "{688FC6F7-45E8-4E2D-907D-EB2790A8CF7A}"
 EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "QuasarSetup", "QuasarSetup\QuasarSetup.vdproj", "{43477B82-4118-4CE2-9F1E-1A891C38DC8E}"
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Wizard", "QuasarSetup\QuasarSetup.vdproj", "{43477B82-4118-4CE2-9F1E-1A891C38DC8E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuasarDataEditor", "QuasarDataEditor\QuasarDataEditor.csproj", "{BB6F8C41-7155-4337-A61E-6C58678CCA97}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Applications", "Applications", "{791DD3F9-D9BF-4486-82AD-4A1AD43999B1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Unit Testing", "Unit Testing", "{EE8AB64A-19B1-4B1D-AE43-F4ACB00BB01D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{40072382-3FF7-4CD0-8C2C-FD62543FC394}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Validator", "Validator\Validator.csproj", "{909D5995-A63C-425B-91A9-12F3C26CBEEE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Workshop", "WorkShoppie\Workshop.csproj", "{CF8C6D00-D560-4DBC-A307-E4357FB7F685}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataModels", "QuasarDataModels\DataModels.csproj", "{FD8B24D6-B1EF-4066-B4C3-57BC64F50699}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,9 +43,34 @@ Global
 		{BB6F8C41-7155-4337-A61E-6C58678CCA97}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BB6F8C41-7155-4337-A61E-6C58678CCA97}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BB6F8C41-7155-4337-A61E-6C58678CCA97}.Release|Any CPU.Build.0 = Release|Any CPU
+		{909D5995-A63C-425B-91A9-12F3C26CBEEE}.Debug Admin|Any CPU.ActiveCfg = Debug|Any CPU
+		{909D5995-A63C-425B-91A9-12F3C26CBEEE}.Debug Admin|Any CPU.Build.0 = Debug|Any CPU
+		{909D5995-A63C-425B-91A9-12F3C26CBEEE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{909D5995-A63C-425B-91A9-12F3C26CBEEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{909D5995-A63C-425B-91A9-12F3C26CBEEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{909D5995-A63C-425B-91A9-12F3C26CBEEE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CF8C6D00-D560-4DBC-A307-E4357FB7F685}.Debug Admin|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF8C6D00-D560-4DBC-A307-E4357FB7F685}.Debug Admin|Any CPU.Build.0 = Debug|Any CPU
+		{CF8C6D00-D560-4DBC-A307-E4357FB7F685}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF8C6D00-D560-4DBC-A307-E4357FB7F685}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF8C6D00-D560-4DBC-A307-E4357FB7F685}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF8C6D00-D560-4DBC-A307-E4357FB7F685}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FD8B24D6-B1EF-4066-B4C3-57BC64F50699}.Debug Admin|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD8B24D6-B1EF-4066-B4C3-57BC64F50699}.Debug Admin|Any CPU.Build.0 = Debug|Any CPU
+		{FD8B24D6-B1EF-4066-B4C3-57BC64F50699}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD8B24D6-B1EF-4066-B4C3-57BC64F50699}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD8B24D6-B1EF-4066-B4C3-57BC64F50699}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD8B24D6-B1EF-4066-B4C3-57BC64F50699}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{688FC6F7-45E8-4E2D-907D-EB2790A8CF7A} = {791DD3F9-D9BF-4486-82AD-4A1AD43999B1}
+		{BB6F8C41-7155-4337-A61E-6C58678CCA97} = {791DD3F9-D9BF-4486-82AD-4A1AD43999B1}
+		{909D5995-A63C-425B-91A9-12F3C26CBEEE} = {EE8AB64A-19B1-4B1D-AE43-F4ACB00BB01D}
+		{CF8C6D00-D560-4DBC-A307-E4357FB7F685} = {40072382-3FF7-4CD0-8C2C-FD62543FC394}
+		{FD8B24D6-B1EF-4066-B4C3-57BC64F50699} = {40072382-3FF7-4CD0-8C2C-FD62543FC394}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {57BCC8AF-A55F-45F4-9840-DE92480716A0}

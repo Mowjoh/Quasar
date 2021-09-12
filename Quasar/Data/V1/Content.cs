@@ -7,6 +7,9 @@ using System.Xml.Serialization;
 using System.IO;
 using System.Collections;
 using Quasar.Common.Models;
+using DataModels.Common;
+using DataModels.User;
+using DataModels.Resource;
 
 namespace Quasar.Data.V1
 {

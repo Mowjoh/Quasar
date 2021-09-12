@@ -1,4 +1,6 @@
-﻿using Quasar.Data.V2;
+﻿using DataModels.User;
+using DataModels.Common;
+using DataModels.Resource;
 using System.Collections.ObjectModel;
 
 namespace Quasar.Workspaces.Models

@@ -1,4 +1,6 @@
-﻿using Quasar.Data.V2;
+﻿using DataModels.User;
+using DataModels.Common;
+using DataModels.Resource;
 using Quasar.Helpers.Tools;
 using System;
 using System.IO;
@@ -8,7 +10,6 @@ using System.Globalization;
 using Quasar.Helpers.FileOperations;
 using System.Windows.Forms;
 using Quasar.Helpers;
-using Quasar.Common.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -18,6 +19,8 @@ using Quasar.MainUI.ViewModels;
 using Quasar.Helpers.ModScanning;
 using log4net;
 using Quasar.Helpers.Mod_Scanning;
+using Quasar.Common.Models;
+using Workshop.FileManagement;
 
 namespace Quasar.Helpers.Quasar_Management
 {
@@ -285,7 +288,7 @@ namespace Quasar.Helpers.Quasar_Management
             List<Data.V1.LibraryMod> OldLibrary = Quasar.Helpers.XML.XMLHelper.GetLibraryModList();
             ObservableCollection<LibraryItem> NewLibrary = new ObservableCollection<LibraryItem>();
             QuasarLogger.Debug("Loading API");
-            GamebananaAPI API = JSonHelper.GetGamebananaAPI();
+            GamebananaAPI API = ResourceManager.GetGamebananaAPI();
 
             Directory.CreateDirectory(Properties.Settings.Default.DefaultDir + @"\LibraryBackup");
             FileOperation.CheckCopyFolder(Properties.Settings.Default.DefaultDir + @"\Library", Properties.Settings.Default.DefaultDir + @"\LibraryBackup");

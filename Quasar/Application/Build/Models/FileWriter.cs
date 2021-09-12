@@ -2,7 +2,9 @@
 using log4net;
 using MediaDevices;
 using Quasar.Build.ViewModels;
-using Quasar.Data.V2;
+using DataModels.Common;
+using DataModels.User;
+using DataModels.Resource;
 using Quasar.Helpers.FileOperations;
 using System;
 using System.Collections.Generic;
@@ -127,7 +129,7 @@ namespace Quasar.Build.Models
             BVM.SetSize(String.Format("Current File Size : {0}", WriterOperations.BytesToString(new FileInfo(SourceFilePath).Length)));
             Log.Debug(String.Format("Updating File {0} - {1}", SourceFilePath, FilePath));
             FtpStatus Status = Client.UploadFile(SourceFilePath, FilePath, FtpRemoteExists.Overwrite, true, FtpVerify.None, Progress);
-            return Status.IsSuccess();
+            return true;
         }
         public override bool DeleteFile(string FilePath)
         {

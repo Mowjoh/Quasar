@@ -9,6 +9,9 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using DataModels.Common;
+using DataModels.User;
+using DataModels.Resource;
 
 namespace Quasar.Settings.ViewModels
 {

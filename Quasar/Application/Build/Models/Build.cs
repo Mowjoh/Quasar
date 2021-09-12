@@ -2,7 +2,9 @@
 using log4net;
 using Quasar.Build.ViewModels;
 using Quasar.Common.Models;
-using Quasar.Data.V2;
+using DataModels.User;
+using DataModels.Common;
+using DataModels.Resource;
 using Quasar.FileSystem;
 using Quasar.Helpers.Json;
 using Quasar.Helpers.ModScanning;

@@ -6,6 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
+using DataModels.Common;
+using DataModels.User;
+using DataModels.Resource;
 
 namespace Quasar.Data.V1
 {
