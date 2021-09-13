@@ -40,7 +40,7 @@ namespace Quasar.Build.Models
         public Action<FtpProgress> Progress { get; set; }
         BuildViewModel BVM { get; set; }
 
-        public List<Data.V2.Hash> DistantHashes { get; set; }
+        public List<Hash> DistantHashes { get; set; }
 
         ObservableCollection<ModFile> list { get; set; }
         public ILog Log { get; set; }

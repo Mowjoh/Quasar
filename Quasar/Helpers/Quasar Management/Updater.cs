@@ -57,8 +57,6 @@ namespace Quasar.Internal.Tools
                 //If it's just a regular update
                 else
                 {
-                    InstallManager.CopyBaseResources();
-
                     SetupLogger(QuasarLogger);
                     QuasarLogger.Debug("Updating");
                     QuasarLogger.Debug("Tagging for Scan");
@@ -116,6 +114,7 @@ namespace Quasar.Internal.Tools
         /// <returns></returns>
         public static bool NeedsUltraCleaning()
         {
+            /*
             int curVer = int.Parse(Properties.Settings.Default.AppVersion);
             int prevVer = int.Parse(Properties.Settings.Default.PreviousVersion);
 
@@ -124,7 +123,7 @@ namespace Quasar.Internal.Tools
             {
                 return true;
             }
-
+            */
             return false;
         }
 

@@ -9,7 +9,6 @@ using Quasar.FileSystem;
 using Quasar.Helpers.Json;
 using Quasar.Helpers.ModScanning;
 using Quasar.Helpers.Tools;
-using Quasar.Helpers.XML;
 using Quasar.Internal.Tools;
 using System;
 using System.Collections.Generic;

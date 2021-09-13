@@ -60,15 +60,12 @@ namespace Quasar.Helpers.Quasar_Management
             String ModsPath = "\\Library\\Mods\\";
             String DownloadsPath = "\\Library\\Downloads\\";
             String ScreenshotPath = "\\Library\\Screenshots\\";
-            String ResourcePath = "\\Resources\\";
 
             FileOperation.CheckCreate(InstallationPath);
             FileOperation.CheckCreate(InstallationPath + LibraryPath);
             FileOperation.CheckCreate(InstallationPath + ModsPath);
             FileOperation.CheckCreate(InstallationPath + DownloadsPath);
             FileOperation.CheckCreate(InstallationPath + ScreenshotPath);
-
-            FileOperation.CheckCopyFolder(AppPath + ResourcePath, InstallationPath + ResourcePath);
 
 
         }
@@ -258,7 +255,7 @@ namespace Quasar.Helpers.Quasar_Management
                 MUVM.QuasarLogger.Info("Creating base Workspace");
                 CreateBaseWorkspace();
                 MUVM.QuasarLogger.Info("Moving Old Library");
-                GetMoveOldLibrary(MUVM.QuasarLogger);
+                //GetMoveOldLibrary(MUVM.QuasarLogger);
 
 
                 MUVM.LoadData();
@@ -280,74 +277,6 @@ namespace Quasar.Helpers.Quasar_Management
                 MUVM.QuasarLogger.Error(e.StackTrace);
             }
 
-        }
-
-        public static void GetMoveOldLibrary(ILog QuasarLogger)
-        {
-            QuasarLogger.Debug("Loading Old Library");
-            List<Data.V1.LibraryMod> OldLibrary = Quasar.Helpers.XML.XMLHelper.GetLibraryModList();
-            ObservableCollection<LibraryItem> NewLibrary = new ObservableCollection<LibraryItem>();
-            QuasarLogger.Debug("Loading API");
-            GamebananaAPI API = ResourceManager.GetGamebananaAPI();
-
-            Directory.CreateDirectory(Properties.Settings.Default.DefaultDir + @"\LibraryBackup");
-            FileOperation.CheckCopyFolder(Properties.Settings.Default.DefaultDir + @"\Library", Properties.Settings.Default.DefaultDir + @"\LibraryBackup");
-
-            foreach (Data.V1.LibraryMod lm in OldLibrary)
-            {
-                QuasarLogger.Debug(String.Format("Processing Mod #{0}", lm.ID));
-                //Creating new item based on old one
-                LibraryItem li = new LibraryItem()
-                {
-                    GameID = lm.GameID,
-                    Guid = Guid.NewGuid(),
-                    Time = DateTime.Now,
-                    Name = lm.Name,
-                };
-
-                //Finding corresponding data
-                GamebananaRootCategory rc = API.Games[0].RootCategories.Single(c => c.Name == lm.TypeLabel);
-                GamebananaSubCategory sc = rc.SubCategories.Single(c => c.Name == lm.APICategoryName);
-
-                GamebananaItem item = new GamebananaItem()
-                {
-                    Description = "",
-                    GamebananaItemID = lm.ID,
-                    Name = lm.Name,
-                    UpdateCount = lm.Updates,
-                    RootCategoryGuid = rc.Guid,
-                    SubCategoryGuid = sc.Guid,
-                    Authors = new ObservableCollection<Author>()
-
-                };
-
-                //Processing Authors
-                foreach (string[] val in lm.Authors)
-                {
-                    Author au = new Author()
-                    {
-                        Name = val[0],
-                        Role = val[1],
-                        GamebananaAuthorID = int.Parse(val[2])
-                    };
-                    item.Authors.Add(au);
-                }
-
-                //Assigning GBItem to the LibraryItem
-                li.GBItem = item;
-
-                //Assigning item to the new Library
-                NewLibrary.Add(li);
-
-                QuasarLogger.Debug(String.Format("Processed Mod #{0}", lm.ID));
-            }
-
-            QuasarLogger.Debug("Transferring Mods");
-            //Moving mods to new path
-            TransferMods(NewLibrary, QuasarLogger);
-
-
-            JSonHelper.SaveLibrary(NewLibrary);
         }
 
         public static void TransferMods(ObservableCollection<LibraryItem> Library, ILog QuasarLogger)
