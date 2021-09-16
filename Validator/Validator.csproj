@@ -20,8 +20,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\QuasarDataModels\DataModels.csproj" />
-    <ProjectReference Include="..\WorkShoppie\Workshop.csproj" />
+    <ProjectReference Include="..\DataModels\DataModels.csproj" />
+    <ProjectReference Include="..\WorkShop\Workshop.csproj" />
   </ItemGroup>
 
 </Project>

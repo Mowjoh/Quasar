@@ -1,4 +1,5 @@
-﻿using log4net;
+﻿
+using log4net;
 using Quasar.Controls.Mod.ViewModels;
 using SharpCompress.Archives;
 using SharpCompress.Archives.Rar;

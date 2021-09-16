@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\QuasarDataModels\DataModels.csproj" />
+    <ProjectReference Include="..\DataModels\DataModels.csproj" />
   </ItemGroup>
 
 </Project>

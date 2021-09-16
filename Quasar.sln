@@ -5,9 +5,9 @@ VisualStudioVersion = 16.0.29102.190
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Quasar", "Quasar\Quasar.csproj", "{688FC6F7-45E8-4E2D-907D-EB2790A8CF7A}"
 EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Wizard", "QuasarSetup\QuasarSetup.vdproj", "{43477B82-4118-4CE2-9F1E-1A891C38DC8E}"
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Wizard", "Wizard\QuasarSetup.vdproj", "{43477B82-4118-4CE2-9F1E-1A891C38DC8E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuasarDataEditor", "QuasarDataEditor\QuasarDataEditor.csproj", "{BB6F8C41-7155-4337-A61E-6C58678CCA97}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuasarDataEditor", "DataEditor\QuasarDataEditor.csproj", "{BB6F8C41-7155-4337-A61E-6C58678CCA97}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Applications", "Applications", "{791DD3F9-D9BF-4486-82AD-4A1AD43999B1}"
 EndProject
@@ -17,9 +17,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Validator", "Validator\Validator.csproj", "{909D5995-A63C-425B-91A9-12F3C26CBEEE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Workshop", "WorkShoppie\Workshop.csproj", "{CF8C6D00-D560-4DBC-A307-E4357FB7F685}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Workshop", "WorkShop\Workshop.csproj", "{CF8C6D00-D560-4DBC-A307-E4357FB7F685}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataModels", "QuasarDataModels\DataModels.csproj", "{FD8B24D6-B1EF-4066-B4C3-57BC64F50699}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataModels", "DataModels\DataModels.csproj", "{FD8B24D6-B1EF-4066-B4C3-57BC64F50699}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
