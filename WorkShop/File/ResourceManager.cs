@@ -15,6 +15,53 @@ namespace Workshop.FileManagement
     public class ResourceManager
     {
         static string InstallDirectory = @"C:\Program Files (x86)\Quasar";
+        static string AppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\Quasar";
+
+        //Resource Saves
+        public static void SaveGamebananaAPI(GamebananaAPI _API, string _QuasarFolderPath)
+        {
+            if (!Directory.Exists(_QuasarFolderPath + @"\Resources\"))
+                Directory.CreateDirectory(_QuasarFolderPath + @"\Resources\");
+
+            SaveJSonFile(_QuasarFolderPath + @"\Resources\Gamebanana.json", _API);
+        }
+        public static void SaveGamesFile(ObservableCollection<Game> _Games, string _ExternalPath = "")
+        {
+            /*
+            if (_ExternalPath != "")
+            {
+                SaveJSonFile(@"\Resources\Games.json", _Games.OrderBy(i => i.ID), _ExternalPath);
+            }
+            else
+            {
+                SaveJSonFile(@"\Resources\Games.json", _Games.OrderBy(i => i.ID));
+            }*/
+
+        }
+        public static void SaveQuasarModTypes(ObservableCollection<QuasarModType> _QuasarModTypes, string _ExternalPath = "")
+        {
+            /*
+            if (_ExternalPath != "")
+            {
+                SaveJSonFile(@"\Resources\ModTypes.json", _QuasarModTypes.OrderBy(i => i.TypePriority), _ExternalPath);
+            }
+            else
+            {
+                SaveJSonFile(@"\Resources\ModTypes.json", _QuasarModTypes.OrderBy(i => i.TypePriority));
+            }*/
+        }
+        public static void SaveModLoaders(ObservableCollection<ModLoader> _ModLoaders, string _ExternalPath = "")
+        {
+            /*
+            if (_ExternalPath != "")
+            {
+                SaveJSonFile(@"\Resources\ModLoaders.json", _ModLoaders.OrderBy(i => i.ID), _ExternalPath);
+            }
+            else
+            {
+                SaveJSonFile(@"\Resources\ModLoaders.json", _ModLoaders.OrderBy(i => i.ID));
+            }*/
+        }
 
         //Resource Loads
         public static ObservableCollection<Game> GetGames(bool External = false, string ExternalPath = "")
@@ -86,13 +133,13 @@ namespace Workshop.FileManagement
         {
             GamebananaAPI API = new GamebananaAPI();
             string Path;
-            if (!External)
+            if (!File.Exists(AppDataPath + @"\Resources\Gamebanana.json"))
             {
                 Path = InstallDirectory + @"\Resources\Gamebanana.json";
             }
             else
             {
-                Path = ExternalPath;
+                Path = AppDataPath + @"\Resources\Gamebanana.json";
             }
 
             using (StreamReader file = File.OpenText(Path))
@@ -103,6 +150,22 @@ namespace Workshop.FileManagement
 
 
             return API;
+        }
+
+        /// <summary>
+        /// Saves a collection to a JSon File
+        /// </summary>
+        /// <param name="_Fullpath">Destination file path</param>
+        /// <param name="_Source">Source collection</param>
+        private static void SaveJSonFile(string _Fullpath, Object _Source, bool Headless = false)
+        {
+            using (StreamWriter file = File.CreateText(_Fullpath))
+            {
+                JsonSerializer serializer = new JsonSerializer();
+                if (Headless)
+                    serializer.TypeNameHandling = TypeNameHandling.None;
+                serializer.Serialize(file, _Source);
+            }
         }
     }
 }

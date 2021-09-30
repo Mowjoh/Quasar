@@ -1,42 +1,21 @@
-﻿using ImageProcessor;
+﻿using DataModels.Common;
+using ImageProcessor;
 using ImageProcessor.Plugins.WebP.Imaging.Formats;
 using Newtonsoft.Json;
-using DataModels.User;
-using DataModels.Common;
-using DataModels.Resource;
-using Quasar.Helpers.Downloading;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Drawing;
+using System.Net;
 
-namespace Quasar.Helpers.API
+namespace Workshop.Web
 {
-    /// <summary>
-    /// Represents a Query String entry for an HTTP URL
-    /// </summary>
-    public class QueryStringItem
-    {
-
-        public string Name { get; set; }
-        public string Value { get; set; }
-        public string Output()
-        {
-            string outie = Name + "=" + Value;
-            return outie;
-        }
-
-        public QueryStringItem(string _Name, string _Value)
-        {
-            this.Name = _Name;
-            this.Value = _Value;
-        }
-        
-    }
+    
 
     /// <summary>
     /// Represents a Gamebanana API Request
@@ -44,7 +23,7 @@ namespace Quasar.Helpers.API
     public class APIRequest
     {
         //Gamebanana's Endpoint
-        static readonly string HTTPUrl = "https://gamebanana.com/apiv3/Mod";
+        static readonly string HTTPUrl = "https://gamebanana.com/apiv7/Mod";
         static readonly string HTTPTypeUrl = "https://gamebanana.com/apiv3";
 
         //Default Parameters
@@ -53,6 +32,8 @@ namespace Quasar.Helpers.API
 
         static List<QueryStringItem> queryParameters;
 
+        static string DefaultProperties = @"_sName,_aCredits,_aGame,_aCategory,_aSuperCategory,_aModManagerIntegrations,_aSubmitter";
+
         #region API Actions
         /// <summary>
         /// Gets Mod information from Gamebanana's API
@@ -60,24 +41,19 @@ namespace Quasar.Helpers.API
         /// <param name="_ItemType">Gamebanana's Mod Type</param>
         /// <param name="_ItemID">Gamebanana's Mod ID</param>
         /// <returns>an APIMod object with all info</returns>
-        private static async Task<APIMod> GetModInformation(string _ItemType, string _ItemID)
+        public static async Task<APIMod> GetModInformation(string _ItemType, string _ItemID)
         {
-            
-            APIMod DownloadedAPIMod = null;
+
+            APIMod ParsedAPIMod = null;
+
             try
             {
                 string queryURL = "";
 
-                if (_ItemType == "Mod")
-                {
-                    queryURL = String.Format(@"{0}/{1}", HTTPUrl, _ItemID);
-                }
-                else
-                {
-                    queryURL = String.Format(@"{0}/{1}/{2}",HTTPTypeUrl, _ItemType,_ItemID);
-                }
+                queryURL = String.Format(@"{0}/{1}?_csvProperties={2}", HTTPUrl, _ItemID, DefaultProperties);
+                
 
-                using (HttpClient webClient = new HttpClient())
+                using ( HttpClient webClient = new HttpClient())
                 {
                     HttpResponseMessage response = await webClient.GetAsync(queryURL);
 
@@ -85,19 +61,19 @@ namespace Quasar.Helpers.API
                     {
                         string responseText = await response.Content.ReadAsStringAsync();
 
-                        DownloadedAPIMod = JsonConvert.DeserializeObject<APIMod>(responseText);
+                        ParsedAPIMod = JsonConvert.DeserializeObject<APIMod>(responseText);
                     }
                 }
 
-                DownloadedAPIMod.ID = Int32.Parse(_ItemID);
-                DownloadedAPIMod.GamebananaRootCategoryName = _ItemType;
+                ParsedAPIMod.ID = Int32.Parse(_ItemID);
+                ParsedAPIMod.GamebananaRootCategoryName = _ItemType;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
-                
+
             }
 
-            return DownloadedAPIMod;
+            return ParsedAPIMod;
         }
 
         /// <summary>
@@ -113,7 +89,7 @@ namespace Quasar.Helpers.API
 
             queryParameters = GetDefaultParameters();
             queryParameters.Add(new QueryStringItem("itemid", _ItemID));
-            queryParameters.Add(new QueryStringItem("itemtype", _ItemType)); 
+            queryParameters.Add(new QueryStringItem("itemtype", _ItemType));
             queryParameters.Add(new QueryStringItem("fields", "Files().aFiles()"));
 
             string queryURL = FormatAPIRequest("Core/Item/Data", queryParameters);
@@ -142,7 +118,7 @@ namespace Quasar.Helpers.API
                 }
             }
 
-            return new string[]{ filename, downloadURL };
+            return new string[] { filename, downloadURL };
         }
 
         /// <summary>
@@ -153,7 +129,7 @@ namespace Quasar.Helpers.API
         /// <param name="_GameID">Gamebanana's Game ID</param>
         /// <param name="_TypeID">Gamebanana's Category ID</param>
         /// <returns></returns>
-        public static async Task<int> GetScreenshot(string _ItemType, string _ItemID, string Guid)
+        public static async Task<int> GetDownloadScreenshot(string _ItemType, string _ItemID, string Guid, string QuasarModPath)
         {
             string downloadURL = "";
 
@@ -183,12 +159,18 @@ namespace Quasar.Helpers.API
 
                         string downloadextension = downloadURL.Split('.')[downloadURL.Split('.').Length - 1];
 
-                        string imageSource = Properties.Settings.Default.DefaultDir + @"\Library\Screenshots\" + Guid + "." + downloadextension;
-                        string wimageSource = Properties.Settings.Default.DefaultDir + @"\Library\Screenshots\" + Guid + ".webp" ;
+                        string imageSource = QuasarModPath + @"\Library\Screenshots\" + Guid + "." + downloadextension;
+                        string wimageSource = QuasarModPath + @"\Library\Screenshots\" + Guid + ".webp";
 
-                        await ModDownloader.DownloadFile(downloadURL, imageSource);
+                        WebClient client = new WebClient();
 
-                        if(downloadextension != "webp")
+                        using (WebClient cli = new WebClient())
+                        {
+                            await  Task.Run(() => cli.DownloadFile(new Uri(downloadURL), imageSource));
+                        }
+                           
+
+                        if (downloadextension != "webp")
                         {
                             try
                             {
@@ -209,22 +191,22 @@ namespace Quasar.Helpers.API
                                         }
                                     }
                                 }
-                                    
+
 
 
                                 if (File.Exists(wimageSource))
                                     File.Delete(imageSource);
                             }
-                            catch(Exception e)
+                            catch (Exception e)
                             {
                                 Console.WriteLine(e.Message);
                             }
-                            
+
                         }
                     }
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Console.Write("fak");
             }
@@ -262,7 +244,7 @@ namespace Quasar.Helpers.API
         /// <returns>the default Parameter List</returns>
         public static List<QueryStringItem> GetDefaultParameters()
         {
-            return new List<QueryStringItem>{jsonFormat,jsonObject}; 
+            return new List<QueryStringItem> { jsonFormat, jsonObject };
         }
 
         /// <summary>
@@ -287,6 +269,25 @@ namespace Quasar.Helpers.API
             return url;
         }
         #endregion
+
+    }
+
+    public class QueryStringItem
+    {
+
+        public string Name { get; set; }
+        public string Value { get; set; }
+        public string Output()
+        {
+            string outie = Name + "=" + Value;
+            return outie;
+        }
+
+        public QueryStringItem(string _Name, string _Value)
+        {
+            this.Name = _Name;
+            this.Value = _Value;
+        }
 
     }
 

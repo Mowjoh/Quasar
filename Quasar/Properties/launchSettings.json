@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Quasar": {
+      "commandName": "Project",
+      "commandLineArgs": "\"quasar:https://gamebanana.com/mmdl/665900,Mod,318522,zip\""
+    }
+  }
+}

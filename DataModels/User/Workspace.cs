@@ -134,4 +134,12 @@ namespace DataModels.User
         [Newtonsoft.Json.JsonIgnore]
         public int HumanReadableSlotNumber => SlotNumber +1;
     }
+
+    public class ShareableWorkspace
+    {
+        public Workspace Workspace { get; set; }
+        public ObservableCollection<LibraryItem> LibraryItems { get; set; }
+        public ObservableCollection<ContentItem> ContentItems { get; set; }
+
+    }
 }

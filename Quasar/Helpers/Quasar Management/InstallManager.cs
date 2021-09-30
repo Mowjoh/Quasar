@@ -5,7 +5,6 @@ using Quasar.Helpers.Tools;
 using System;
 using System.IO;
 using System.Collections.ObjectModel;
-using Quasar.Helpers.Json;
 using System.Globalization;
 using Quasar.Helpers.FileOperations;
 using System.Windows.Forms;
@@ -27,6 +26,7 @@ namespace Quasar.Helpers.Quasar_Management
     public static class InstallManager
     {
         #region Static paths
+        public static string AppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\Quasar";
         static string LibraryPath = @"\Library\Library.json";
         static string LibraryBackupPath = @"\Backup\Library.json";
         static string ContentItemsPath = @"\Library\ContentItems.json";
@@ -34,19 +34,6 @@ namespace Quasar.Helpers.Quasar_Management
         static string WorkspacesPath = @"\Library\Workspaces.json";
         static string WorkspacesBackupPath = @"\Backup\Workspaces.json";
         #endregion
-
-        public static void CopyBaseResources()
-        {
-            if (!Directory.Exists(String.Format(@"{0}\Resources", Properties.Settings.Default.DefaultDir)))
-                Directory.CreateDirectory(String.Format(@"{0}\Resources", Properties.Settings.Default.DefaultDir));
-
-            File.Copy(String.Format(@"{0}\Resources\{1}", Properties.Settings.Default.AppPath, "Games.json"), String.Format(@"{0}\Resources\{1}", Properties.Settings.Default.DefaultDir, "Games.json"), true);
-            File.Copy(String.Format(@"{0}\Resources\{1}", Properties.Settings.Default.AppPath, "ModLoaders.json"), String.Format(@"{0}\Resources\{1}", Properties.Settings.Default.DefaultDir, "ModLoaders.json"), true);
-            File.Copy(String.Format(@"{0}\Resources\{1}", Properties.Settings.Default.AppPath, "ModTypes.json"), String.Format(@"{0}\Resources\{1}", Properties.Settings.Default.DefaultDir, "ModTypes.json"), true);
-
-            if (!File.Exists(String.Format(@"{0}\Resources\{1}", Properties.Settings.Default.DefaultDir, "Gamebanana.json")))
-                File.Copy(String.Format(@"{0}\Resources\{1}", Properties.Settings.Default.AppPath, "Gamebanana.json"), String.Format(@"{0}\Resources\{1}", Properties.Settings.Default.DefaultDir, "Gamebanana.json"), true);
-        }
 
         /// <summary>
         /// Verifies needed folders for execution
@@ -119,7 +106,7 @@ namespace Quasar.Helpers.Quasar_Management
             {
                 Workspace defaultWorkspace = new Workspace() { Name = "Default", Guid = Guid.NewGuid(), Associations = new ObservableCollection<Association>(), BuildDate = "" };
                 ObservableCollection<Workspace> DefaultFile = new ObservableCollection<Workspace>() { defaultWorkspace };
-                JSonHelper.SaveWorkspaces(DefaultFile);
+                UserDataManager.SaveWorkspaces(DefaultFile, AppDataPath);
 
                 Properties.Settings.Default.LastSelectedWorkspace = defaultWorkspace.Guid;
                 Properties.Settings.Default.Save();
@@ -260,7 +247,7 @@ namespace Quasar.Helpers.Quasar_Management
 
                 MUVM.LoadData();
                 Scannerino.ScanAllMods(MUVM);
-                JSonHelper.SaveContentItems(MUVM.ContentItems);
+                UserDataManager.SaveContentItems(MUVM.ContentItems, AppDataPath);
 
                 LastCleanup();
 
@@ -354,7 +341,7 @@ namespace Quasar.Helpers.Quasar_Management
             MUVM.ContentItems = new ObservableCollection<ContentItem>();
 
             Scannerino.ScanAllMods(MUVM);
-            JSonHelper.SaveContentItems(MUVM.ContentItems);
+            UserDataManager.SaveContentItems(MUVM.ContentItems, AppDataPath);
 
             foreach (LibraryItem li in MUVM.Library)
             {
@@ -362,7 +349,7 @@ namespace Quasar.Helpers.Quasar_Management
                 MUVM.ActiveWorkspace = Slotter.AutomaticSlot(contentItems, MUVM.ActiveWorkspace, MUVM.QuasarModTypes);
             }
 
-            JSonHelper.SaveWorkspaces(MUVM.Workspaces);
+            UserDataManager.SaveWorkspaces(MUVM.Workspaces, AppDataPath);
 
             EventSystem.Publish<ModalEvent>(new ModalEvent()
             {

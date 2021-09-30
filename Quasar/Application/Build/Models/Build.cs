@@ -6,7 +6,6 @@ using DataModels.User;
 using DataModels.Common;
 using DataModels.Resource;
 using Quasar.FileSystem;
-using Quasar.Helpers.Json;
 using Quasar.Helpers.ModScanning;
 using Quasar.Helpers.Tools;
 using Quasar.Internal.Tools;
@@ -22,6 +21,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Threading;
+using Workshop.FileManagement;
 
 namespace Quasar.Build.Models
 {
@@ -519,8 +519,9 @@ namespace Quasar.Build.Models
             //Loading distant Workspace Hashes if found
             if (File.Exists(localHashFilePath))
             {
+                //TODO Edit this
                 ViewModel.QuasarLogger.Debug("File Exists, Loading Hashes");
-                DistantIndex = JSonHelper.GetModFiles();
+                //DistantIndex = UserDataManager.GetModFiles();
             }
             else
             {
@@ -589,8 +590,9 @@ namespace Quasar.Build.Models
             {
                 mf.SourceFilePath = "";
             }
-            JSonHelper.SaveModFiles(WorkspaceIndex);
-           ViewModel.QuasarLogger.Debug("Saved Index");
+            //TODO Edit This
+            UserDataManager.SaveModFiles(WorkspaceIndex, "");
+            ViewModel.QuasarLogger.Debug("Saved Index");
 
            //Sending Hash Files
            Writer.SendFile(LocalIndexFilePath, WorkspacePath + @"Files.json");

@@ -15,11 +15,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Unit Testing", "Unit Testin
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{40072382-3FF7-4CD0-8C2C-FD62543FC394}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Validator", "Validator\Validator.csproj", "{909D5995-A63C-425B-91A9-12F3C26CBEEE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Validator", "Validator\Validator.csproj", "{909D5995-A63C-425B-91A9-12F3C26CBEEE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Workshop", "WorkShop\Workshop.csproj", "{CF8C6D00-D560-4DBC-A307-E4357FB7F685}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Workshop", "WorkShop\Workshop.csproj", "{CF8C6D00-D560-4DBC-A307-E4357FB7F685}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataModels", "DataModels\DataModels.csproj", "{FD8B24D6-B1EF-4066-B4C3-57BC64F50699}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataModels", "DataModels\DataModels.csproj", "{FD8B24D6-B1EF-4066-B4C3-57BC64F50699}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -7,6 +7,8 @@ using SharpCompress.Archives.SevenZip;
 using SharpCompress.Archives.Zip;
 using SharpCompress.Common;
 using System;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -52,9 +54,15 @@ namespace Quasar.Helpers.Compression
         {
             try
             {
+                
+
+                
                 switch (_ArchiveType)
                 {
                     case "rar":
+                        if (!Directory.Exists(ArchiveDestination))
+                            Directory.CreateDirectory(ArchiveDestination);
+
                         using (var archive = RarArchive.Open(_ArchiveSource))
                         {
                             foreach (var entry in archive.Entries.Where(entry => !entry.IsDirectory))
@@ -67,38 +75,18 @@ namespace Quasar.Helpers.Compression
                             }
                         }
                         break;
-                    case "zip":
-                        using (var archive = ZipArchive.Open(_ArchiveSource))
-                        {
-                            foreach (var entry in archive.Entries.Where(entry => !entry.IsDirectory))
-                            {
-                                entry.WriteToDirectory(ArchiveDestination, new ExtractionOptions()
-                                {
-                                    ExtractFullPath = true,
-                                    Overwrite = true
-                                });
-                            }
-                        }
-
-                        break;
-                    case "7z":
-                        using (var archive = SevenZipArchive.Open(_ArchiveSource))
-                        {
-                            var reader = archive.ExtractAllEntries();
-                            while (reader.MoveToNextEntry())
-                            {
-                                if (!reader.Entry.IsDirectory)
-                                {
-                                    SevenZipArchiveEntry entry = (SevenZipArchiveEntry)reader.Entry;
-                                    entry.WriteToDirectory(ArchiveDestination, new ExtractionOptions() { ExtractFullPath = true, Overwrite = true });
-                                }
-                            }
-                        }
-                        break;
                     default:
+                        string zPath = "7za.exe"; //add to proj and set CopyToOuputDir
+                        ProcessStartInfo pro = new ProcessStartInfo();
+                        pro.WindowStyle = ProcessWindowStyle.Hidden;
+                        pro.FileName = zPath;
+                        pro.Arguments = string.Format("x \"{0}\" -y -o\"{1}\"", _ArchiveSource, ArchiveDestination);
+                        Process x = Process.Start(pro);
+                        x.WaitForExit();
 
                         break;
                 }
+                
             }
             catch(Exception e)
             {

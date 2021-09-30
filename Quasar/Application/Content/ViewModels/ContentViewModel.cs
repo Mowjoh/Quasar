@@ -3,7 +3,6 @@ using DataModels.Common;
 using DataModels.User;
 using DataModels.Resource;
 using Quasar.FileSystem;
-using Quasar.Helpers.Json;
 using Quasar.Helpers.ModScanning;
 using Quasar.Helpers;
 using System.Collections.ObjectModel;
@@ -12,12 +11,14 @@ using System.Windows.Input;
 using Quasar.MainUI.ViewModels;
 using Quasar.Content.Views;
 using Ookii.Dialogs.Wpf;
+using Workshop.FileManagement;
 
 namespace Quasar.Content.ViewModels
 {
 
     public class ContentViewModel : ObservableObject
     {
+        public static string AppDataPath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.LocalApplicationData) + @"\Quasar";
 
         #region Data
 
@@ -273,7 +274,7 @@ namespace Quasar.Content.ViewModels
             Scannerino.UpdateContents(MUVM, LibraryItem, Scannerino.ScanMod(FileManager.LibraryContentFolderPath, MUVM.QuasarModTypes, MUVM.Games[0], LibraryItem));
 
             //Saving Contents
-            JSonHelper.SaveContentItems(MUVM.ContentItems);
+            UserDataManager.SaveContentItems(MUVM.ContentItems, AppDataPath);
 
             GetContentListItems();
         }
@@ -286,7 +287,7 @@ namespace Quasar.Content.ViewModels
             LibraryItem.Name = ModName;
             EventSystem.Publish<LibraryItem>(LibraryItem);
             GetContentListItems();
-            JSonHelper.SaveLibrary(MUVM.Library);
+            UserDataManager.SaveLibrary(MUVM.Library, AppDataPath);
         }
 
         #endregion

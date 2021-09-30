@@ -6,7 +6,6 @@ using Quasar.Common.Models;
 using DataModels.User;
 using DataModels.Common;
 using DataModels.Resource;
-using Quasar.Helpers.Json;
 using Quasar.Helpers;
 using Quasar.MainUI.ViewModels;
 using System;
@@ -15,11 +14,14 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Data;
 using System.Windows.Input;
+using Workshop.FileManagement;
 
 namespace Quasar.Associations.ViewModels
 {
     public class AssociationViewModel : ObservableObject
     {
+        public static string AppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\Quasar";
+
         #region View
 
         #region Private
@@ -1094,7 +1096,7 @@ namespace Quasar.Associations.ViewModels
 
                     }
                 }
-                JSonHelper.SaveWorkspaces(MUVM.Workspaces);
+                UserDataManager.SaveWorkspaces(MUVM.Workspaces, AppDataPath);
                 GetSlottedSoloContent();
             }
             catch (Exception e)
@@ -1137,7 +1139,7 @@ namespace Quasar.Associations.ViewModels
             }
 
             GetSlottedSoloContent();
-            JSonHelper.SaveWorkspaces(MUVM.Workspaces);
+            UserDataManager.SaveWorkspaces(MUVM.Workspaces, AppDataPath);
         }
 
         /// <summary>

@@ -2,10 +2,8 @@
 using DataModels.User;
 using DataModels.Common;
 using DataModels.Resource;
-using Quasar.Helpers.Json;
 using Quasar.Helpers;
 using Quasar.Helpers.Tools;
-using Quasar.Workspaces.Models;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -13,11 +11,14 @@ using System.Windows.Forms;
 using System.Windows.Input;
 using Quasar.MainUI.ViewModels;
 using Quasar.Common.Models;
+using Workshop.FileManagement;
 
 namespace Quasar.Workspaces.ViewModels
 {
     public class WorkspaceViewModel : ObservableObject
     {
+        public static string AppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\Quasar";
+
         #region Fields
         ObservableCollection<Workspace> _Workspaces { get; set; }
 
@@ -271,7 +272,7 @@ namespace Quasar.Workspaces.ViewModels
             if (ActiveWorkspace != null)
             {
                 ActiveWorkspace.Name = WorkspaceName;
-                JSonHelper.SaveWorkspaces((Workspaces));
+                UserDataManager.SaveWorkspaces(Workspaces, AppDataPath);
             }
         }
 
@@ -282,7 +283,7 @@ namespace Quasar.Workspaces.ViewModels
         {
             Workspace newWorkspace = new Workspace() { Name = "New Workspace", Guid = Guid.NewGuid(), Associations = new ObservableCollection<Association>(), BuildDate = "" };
             Workspaces.Add(newWorkspace);
-            JSonHelper.SaveWorkspaces(Workspaces);
+            UserDataManager.SaveWorkspaces(Workspaces, AppDataPath);
         }
 
         /// <summary>
@@ -292,7 +293,7 @@ namespace Quasar.Workspaces.ViewModels
         {
             Workspaces.Remove(ActiveWorkspace);
             ActiveWorkspace = Workspaces[0];
-            JSonHelper.SaveWorkspaces(Workspaces);
+            UserDataManager.SaveWorkspaces(Workspaces, AppDataPath);
         }
 
         /// <summary>
@@ -301,7 +302,7 @@ namespace Quasar.Workspaces.ViewModels
         public void EmptyWorkspace()
         {
             ActiveWorkspace.Associations = new ObservableCollection<Association>();
-            JSonHelper.SaveWorkspaces(Workspaces);
+            UserDataManager.SaveWorkspaces(Workspaces, AppDataPath);
         }
 
         /// <summary>
@@ -311,7 +312,7 @@ namespace Quasar.Workspaces.ViewModels
         {
             Workspace Clone = new Workspace() { Name = String.Format("{0} - Copy", ActiveWorkspace.Name), Guid = Guid.NewGuid(), Associations = ActiveWorkspace.Associations, BuildDate = "" };
             Workspaces.Add(Clone);
-            JSonHelper.SaveWorkspaces(Workspaces);
+            UserDataManager.SaveWorkspaces(Workspaces, AppDataPath);
         }
 
         /// <summary>
@@ -319,11 +320,12 @@ namespace Quasar.Workspaces.ViewModels
         /// </summary>
         public void ShareWorkspace()
         {
+            //TODO Edit this
             if (!ActiveWorkspace.Shared)
             {
                 ActiveWorkspace.Shared = true;
                 ActiveWorkspace.UniqueShareID = Guid.NewGuid();
-                JSonHelper.SaveWorkspaces(MUVM.Workspaces);
+                //JSonHelper.SaveWorkspaces(MUVM.Workspaces);
             }
             
             ObservableCollection<ContentItem> WorkspaceContentItems = new ObservableCollection<ContentItem>();
@@ -349,7 +351,7 @@ namespace Quasar.Workspaces.ViewModels
                 LibraryItems = WorkspaceLibraryItems
             };
             string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
-            JSonHelper.SaveSharedWorkspaces(SharedWorkspace, desktopPath+ @"\SharedWorkspace.json");
+            //JSonHelper.SaveSharedWorkspaces(SharedWorkspace, desktopPath+ @"\SharedWorkspace.json");
             System.Windows.MessageBox.Show("A new file has been saved on your Desktop, please share it with a friend for import !");
         }
 
@@ -378,6 +380,8 @@ namespace Quasar.Workspaces.ViewModels
             {
                 try
                 {
+                    //TODO Edit this
+                    /*
                     //Reading file
                     ShareableWorkspace SW = JSonHelper.GetSharedWorkspace(true, pathselected);
                     if(SW != null)
@@ -396,7 +400,7 @@ namespace Quasar.Workspaces.ViewModels
                                 UpdateList.Add(SharedLibraryItem);
                             }
                         }
-                    }
+                    }*/
                 }
                 catch(Exception e)
                 {

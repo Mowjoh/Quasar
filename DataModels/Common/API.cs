@@ -18,9 +18,6 @@ namespace DataModels.Common
         [JsonProperty("_aCredits")]
         public APIAuthors Authors { get; set; }
 
-        [JsonProperty("description")]
-        public string Description { get; set; }
-
         [JsonProperty("_aGame")]
         public APIGame Game { get; set; }
 
@@ -34,6 +31,9 @@ namespace DataModels.Common
 
         [JsonProperty("_aModManagerIntegrations")]
         public APIModManager ModManager { get; set; }
+
+        [JsonProperty("_aSubmitter")]
+        public APISubmitter Submitter { get; set; }
 
     }
 
@@ -85,6 +85,14 @@ namespace DataModels.Common
         public string IconClass { get; set; }
         [JsonProperty("_sDownloadUrl")]
         public string DownloadURL { get; set; }
+    }
+
+    public partial class APISubmitter
+    {
+        [JsonProperty("_sName")]
+        public string Name { get; set; }
+        [JsonProperty("_idRow")]
+        public int ID { get; set; }
     }
 
 }

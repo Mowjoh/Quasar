@@ -11,14 +11,16 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Quasar.MainUI.ViewModels;
-using Quasar.Helpers.API;
-using Quasar.Helpers.Json;
 using log4net;
+using Workshop.FileManagement;
+using Workshop.Web;
 
 namespace Quasar.Helpers.Downloading
 {
     public class ModManager : ObservableObject
     {
+        public static string AppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\Quasar";
+
         #region Data
         public QuasarDownload QuasarURL { get; set; }
         public LibraryItem LibraryItem { get; set; }
@@ -168,7 +170,6 @@ namespace Quasar.Helpers.Downloading
                 Name = Request.Name,
                 GamebananaItemID = Request.ID,
                 Authors = new ObservableCollection<Author>(),
-                Description = Request.Description,
                 GameName = Request.Game.Name,
                 UpdateCount = Request.UpdateCount
             };
@@ -247,7 +248,7 @@ namespace Quasar.Helpers.Downloading
                 MUVM.API.Games[0].RootCategories.Add(RCat);
 
                 //Saving changes
-                JSonHelper.SaveGamebananaAPI(MUVM.API);
+                ResourceManager.SaveGamebananaAPI(MUVM.API, AppDataPath);
 
                 //Setting API GUID
                 Item.RootCategoryGuid = RCat.Guid;
@@ -273,7 +274,7 @@ namespace Quasar.Helpers.Downloading
                     RCat.SubCategories.Add(SC);
 
                     //Saving changes
-                    JSonHelper.SaveGamebananaAPI(MUVM.API);
+                    ResourceManager.SaveGamebananaAPI(MUVM.API, AppDataPath);
                 }
 
                 //Setting SCat Guid
@@ -281,7 +282,7 @@ namespace Quasar.Helpers.Downloading
             }
 
             //Saving changes
-            JSonHelper.SaveGamebananaAPI(MUVM.API);
+            ResourceManager.SaveGamebananaAPI(MUVM.API, AppDataPath);
 
             return Item;
         }
@@ -322,7 +323,7 @@ namespace Quasar.Helpers.Downloading
                         if (Processed)
                         {
                             QuasarLogger.Debug("Getting Screenshot");
-                            await APIRequest.GetScreenshot(QuasarURL.APICategoryName, QuasarURL.GamebananaItemID, LibraryItem.Guid.ToString());
+                            await APIRequest.GetDownloadScreenshot(QuasarURL.APICategoryName, QuasarURL.GamebananaItemID, LibraryItem.Guid.ToString(),Properties.Settings.Default.DefaultDir);
                             ProcessAborted = false;
                         }
                     }

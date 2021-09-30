@@ -17,7 +17,6 @@ using DataModels.Common;
 using DataModels.User;
 using DataModels.Resource;
 using Quasar.Helpers.ModScanning;
-using Quasar.Helpers.Json;
 using Quasar.Helpers.Downloading;
 using Quasar.Helpers.Mod_Scanning;
 using Quasar.Helpers.Tools;
@@ -25,11 +24,15 @@ using Quasar.MainUI.ViewModels;
 using Quasar.Helpers.API;
 using Microsoft.WindowsAPICodePack.Taskbar;
 using System.Diagnostics;
+using Workshop.FileManagement;
 
 namespace Quasar.Controls.ModManagement.ViewModels
 {
     public class ModsViewModel : ObservableObject
     {
+
+        public static string AppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\Quasar";
+
         #region Data
 
         #region Private
@@ -549,7 +552,9 @@ namespace Quasar.Controls.ModManagement.ViewModels
                                 QuasarLogger.Debug("Adding to Library");
                                 //If the mod is new and downloaded
                                 MUVM.Library.Add(MM.LibraryItem);
-                                JSonHelper.SaveLibrary(MUVM.Library);
+                                UserDataManager.SaveLibrary(MUVM.Library, AppDataPath);
+
+                                UserDataManager.SaveModInformation(MM.LibraryItem, Properties.Settings.Default.DefaultDir);
                             }
                             else
                             {
@@ -557,7 +562,9 @@ namespace Quasar.Controls.ModManagement.ViewModels
                                 //If the mod is updated
                                 LibraryItem li = MUVM.Library.Single(i => i.Guid == MM.LibraryItem.Guid);
                                 li = MM.LibraryItem;
-                                JSonHelper.SaveLibrary(MUVM.Library);
+                                UserDataManager.SaveLibrary(MUVM.Library, AppDataPath);
+
+                                UserDataManager.SaveModInformation(li, Properties.Settings.Default.DefaultDir);
                             }
 
                             QuasarLogger.Debug("Scanning Mod");
@@ -567,12 +574,12 @@ namespace Quasar.Controls.ModManagement.ViewModels
 
                             QuasarLogger.Debug("Saving Contents");
                             //Saving Contents
-                            JSonHelper.SaveContentItems(MUVM.ContentItems);
+                            UserDataManager.SaveContentItems(MUVM.ContentItems, AppDataPath);
 
                             QuasarLogger.Debug("Slotting Contents and Saving Workspace");
                             //Slotting Contents
                             MUVM.ActiveWorkspace = Slotter.AutomaticSlot(MM.ScannedContents.ToList(), MUVM.ActiveWorkspace, MUVM.QuasarModTypes);
-                            JSonHelper.SaveWorkspaces(MUVM.Workspaces);
+                            UserDataManager.SaveWorkspaces(MUVM.Workspaces, AppDataPath);
                             ReloadAllStats();
                         }
                         catch(Exception e)
@@ -653,7 +660,7 @@ namespace Quasar.Controls.ModManagement.ViewModels
             MUVM.Library.Add(li);
             ModListItems.Add(mli);
             CollectionViewSource.View.Refresh();
-            JSonHelper.SaveLibrary(MUVM.Library);
+            UserDataManager.SaveLibrary(MUVM.Library, AppDataPath);
 
         }
 
@@ -792,7 +799,7 @@ namespace Quasar.Controls.ModManagement.ViewModels
             //Removing from ContentMappings
             List<ContentItem> relatedMappings = MUVM.ContentItems.Where(i => i.LibraryItemGuid == MLI.ModListItemViewModel.LibraryItem.Guid).ToList();
             MUVM.ActiveWorkspace = Slotter.AutomaticSlot(relatedMappings, MUVM.ActiveWorkspace, MUVM.QuasarModTypes);
-            JSonHelper.SaveWorkspaces(MUVM.Workspaces);
+            UserDataManager.SaveWorkspaces(MUVM.Workspaces, AppDataPath);
             QuasarLogger.Debug("Written changes to Workspaces");
             ReloadAllStats();
             CollectionViewSource.View.Refresh();
@@ -832,7 +839,7 @@ namespace Quasar.Controls.ModManagement.ViewModels
                     }
                 }
             }
-            JSonHelper.SaveWorkspaces(MUVM.Workspaces);
+            UserDataManager.SaveWorkspaces(MUVM.Workspaces, AppDataPath);
             QuasarLogger.Debug("Written changes to Workspaces");
             MLI.ModListItemViewModel.LoadStats();
             CollectionViewSource.View.Refresh();
@@ -925,9 +932,9 @@ namespace Quasar.Controls.ModManagement.ViewModels
             MUVM.Library.Remove(item.ModListItemViewModel.LibraryItem);
 
             //Writing changes
-            JSonHelper.SaveLibrary(MUVM.Library);
-            JSonHelper.SaveContentItems(MUVM.ContentItems);
-            JSonHelper.SaveWorkspaces(MUVM.Workspaces);
+            UserDataManager.SaveLibrary(MUVM.Library, AppDataPath);
+            UserDataManager.SaveContentItems(MUVM.ContentItems, AppDataPath);
+            UserDataManager.SaveWorkspaces(MUVM.Workspaces, AppDataPath);
 
             Application.Current.Dispatcher.Invoke((Action)delegate {
                 EventSystem.Publish<string>("RefreshContents");

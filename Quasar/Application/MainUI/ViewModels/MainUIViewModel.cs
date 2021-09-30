@@ -11,7 +11,6 @@ using Quasar.Controls.ModManagement.Views;
 using Quasar.Settings.Models;
 using Quasar.Workspaces.Views;
 using Quasar.Workspaces.ViewModels;
-using Quasar.Helpers.Json;
 using Quasar.Helpers.ModScanning;
 using Quasar.Helpers.Quasar_Management;
 using Quasar.Helpers;
@@ -19,6 +18,7 @@ using Quasar.Internal.Tools;
 using DataModels.Common;
 using DataModels.User;
 using DataModels.Resource;
+using Workshop.FileManagement;
 using Quasar.NamedPipes;
 using System;
 using System.Collections.ObjectModel;
@@ -34,12 +34,14 @@ using Quasar.Associations.ViewModels;
 using System.Windows.Shell;
 using ImageProcessor;
 using ImageProcessor.Plugins.WebP.Imaging.Formats;
-using Workshop.FileManagement;
+using Helpers.IPC;
 
 namespace Quasar.MainUI.ViewModels
 {
     public class MainUIViewModel : ObservableObject
     {
+        public static string AppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\Quasar";
+
         #region Instance Data
 
         #region Private
@@ -530,17 +532,7 @@ namespace Quasar.MainUI.ViewModels
                 Updater.CheckExecuteUpdate(QuasarLogger);
                 SetupLogger();
 
-                if (Updater.NeedsUltraCleaning() && Updater.NeedsUpdate)
-                {
-                    QuasarLogger.Info("Loading References");
-                    LoadData(true);
-                }
-                else
-                {
-                    QuasarLogger.Info("Loading References");
-                    LoadData();
-                }
-                
+                LoadData();
 
                 QuasarLogger.Info("Loading Views");
                 SetupViews();
@@ -575,6 +567,7 @@ namespace Quasar.MainUI.ViewModels
                     BackupRestoreUserData(UserDataLoaded);
                 }
 
+                 /*
                 if ((Updater.NeedsScanning && !Updater.NeedsUltraCleaning()) && Updater.NeedsUpdate)
                 {
                     ModalEvent Meuhdeux = new ModalEvent()
@@ -593,7 +586,7 @@ namespace Quasar.MainUI.ViewModels
                         InstallManager.Rescan(this);
                     });
                 }
-                
+                */
 
 
             }
@@ -617,14 +610,18 @@ namespace Quasar.MainUI.ViewModels
                 //Loading User Data
                 try
                 {
-                    Workspaces = JSonHelper.GetWorkspaces();
-                    Library = JSonHelper.GetLibrary();
-                    ContentItems = JSonHelper.GetContentItems();
+                    Workspaces = UserDataManager.GetWorkspaces(AppDataPath);
+                    Library = UserDataManager.GetLibrary(AppDataPath);
+                    ContentItems = UserDataManager.GetContentItems(AppDataPath);
 
                     if (Workspaces.Count == 0)
                     {
-                        InstallManager.CreateBaseWorkspace();
-                        Workspaces = JSonHelper.GetWorkspaces();
+                        //Creating the base workspace if it's not there
+                        Guid CreatedWorkspaceGuid = UserDataManager.CreateBaseWorkspace(AppDataPath);
+                        Properties.Settings.Default.LastSelectedWorkspace = CreatedWorkspaceGuid;
+                        Properties.Settings.Default.Save();
+
+                        Workspaces = UserDataManager.GetWorkspaces(AppDataPath);
                     }
                     ActiveWorkspace = Workspaces[0];
 
@@ -637,9 +634,10 @@ namespace Quasar.MainUI.ViewModels
             }
             else
             {
+                //TODO Edit this
                 Workspaces = new ObservableCollection<Workspace>();
                 InstallManager.CreateBaseWorkspace();
-                Workspaces = JSonHelper.GetWorkspaces();
+                //Workspaces = JSonHelper.GetWorkspaces();
                 ActiveWorkspace = Workspaces[0];
 
                 Library = new ObservableCollection<LibraryItem>();
@@ -739,7 +737,8 @@ namespace Quasar.MainUI.ViewModels
         /// </summary>
         public void SetupClientOrServer()
         {
-            serverMutex = PipeHelper.CheckExecuteInstance(serverMutex, QuasarLogger);
+            //serverMutex = PipeHelper.CheckExecuteInstance(serverMutex, QuasarLogger);
+            serverMutex = IPCHandler.CheckExecuteInstance(serverMutex, QuasarLogger);
         }
 
         /// <summary>
@@ -803,8 +802,8 @@ namespace Quasar.MainUI.ViewModels
                 });
             }
 
-            JSonHelper.SaveWorkspaces(Workspaces);
-            JSonHelper.SaveContentItems(ContentItems);
+            UserDataManager.SaveWorkspaces(Workspaces, AppDataPath);
+            UserDataManager.SaveContentItems(ContentItems, AppDataPath);
 
             Application.Current.Dispatcher.Invoke((Action)delegate {
                 UpdateFinished = true;

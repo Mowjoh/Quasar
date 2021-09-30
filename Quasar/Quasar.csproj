@@ -34,6 +34,9 @@
     <StartupObject>Quasar.App</StartupObject>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="7za.dll" />
+    <None Remove="7za.exe" />
+    <None Remove="7zxa.dll" />
     <None Remove="Resources\Gamebanana.json" />
     <None Remove="Resources\Games.json" />
     <None Remove="Resources\images\Delete.png" />
@@ -48,6 +51,15 @@
     <Reference Include="PresentationFramework.Aero2" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="7za.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="7za.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="7zxa.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Resource Include="Fonts\Poppins-Black.ttf" />
     <Resource Include="Fonts\Poppins-BlackItalic.ttf" />
     <Resource Include="Fonts\Poppins-Bold.ttf" />
@@ -120,6 +132,7 @@
     <PackageReference Include="FontAwesome.WPF">
       <Version>4.7.0.9</Version>
     </PackageReference>
+    <PackageReference Include="Grpc" Version="2.40.0" />
     <PackageReference Include="ImageProcessor">
       <Version>2.9.1</Version>
     </PackageReference>
@@ -130,7 +143,7 @@
       <Version>2.0.12</Version>
     </PackageReference>
     <PackageReference Include="MediaDevices">
-      <Version>1.8.0</Version>
+      <Version>1.9.1</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.AspNet.WebApi.Client">
       <Version>5.2.7</Version>
@@ -166,6 +179,7 @@
     <Folder Include="Application\Common\Views\" />
     <Folder Include="Application\Content\Models\" />
     <Folder Include="Application\MainUI\Models\" />
+    <Folder Include="Application\Workspace\Models\" />
     <Folder Include="Resources\images\GameDataCategories\" />
     <Folder Include="Resources\ModLoaders\ARCropolis\atmosphere\contents\01006A800016E000\romfs\arcropolis\workspaces\Example\arc\" />
     <Folder Include="Resources\ModLoaders\ARCropolis\atmosphere\contents\01006A800016E000\romfs\arcropolis\workspaces\Example\umm\" />
