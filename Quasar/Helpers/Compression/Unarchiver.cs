@@ -79,6 +79,7 @@ namespace Quasar.Helpers.Compression
                         string zPath = "7za.exe"; //add to proj and set CopyToOuputDir
                         ProcessStartInfo pro = new ProcessStartInfo();
                         pro.WindowStyle = ProcessWindowStyle.Hidden;
+                        pro.CreateNoWindow = true;
                         pro.FileName = zPath;
                         pro.Arguments = string.Format("x \"{0}\" -y -o\"{1}\"", _ArchiveSource, ArchiveDestination);
                         Process x = Process.Start(pro);

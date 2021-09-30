@@ -126,6 +126,23 @@ namespace Workshop.FileManagement
         }
 
         /// <summary>
+        /// Saves a collection to a JSon File
+        /// </summary>
+        /// <param name="_Fullpath">Destination file path</param>
+        /// <param name="_Source">Source collection</param>
+        /// <param name="_ExternalPath">Override Destination file path</param>
+        private static void SaveJSonFile(string _Fullpath, Object _Source, bool Headless = false)
+        {
+            using (StreamWriter file = File.CreateText(_Fullpath))
+            {
+                JsonSerializer serializer = new JsonSerializer();
+                if (Headless)
+                    serializer.TypeNameHandling = TypeNameHandling.None;
+                serializer.Serialize(file, _Source);
+            }
+        }
+
+        /// <summary>
         /// Creates a default Workspace
         /// </summary>
         public static Guid CreateBaseWorkspace(string _QuasarFolderPath)
@@ -143,23 +160,10 @@ namespace Workshop.FileManagement
         }
 
         /// <summary>
-        /// Saves a collection to a JSon File
+        /// Moves all user data Json files to the proper location
         /// </summary>
-        /// <param name="_Fullpath">Destination file path</param>
-        /// <param name="_Source">Source collection</param>
-        /// <param name="_ExternalPath">Override Destination file path</param>
-        private static void SaveJSonFile(string _Fullpath, Object _Source, bool Headless = false)
-        {
-            using (StreamWriter file = File.CreateText(_Fullpath))
-            {
-                JsonSerializer serializer = new JsonSerializer();
-                if (Headless)
-                    serializer.TypeNameHandling = TypeNameHandling.None;
-                serializer.Serialize(file, _Source);
-            }
-        }
-
-        //Updater Mechanism
+        /// <param name="_OldDataPath">Quasar's Mod folder</param>
+        /// <param name="_NewDataPath">Quasar's App Data Folder</param>
         public static void VerifyUpdateFileLocation(string _OldDataPath, string _NewDataPath)
         {
             string[] OldLibraryFiles = Directory.GetFiles(_OldDataPath + @"\Library", "*", SearchOption.TopDirectoryOnly);
@@ -184,6 +188,46 @@ namespace Workshop.FileManagement
                     File.Delete(LibraryFile);
                 }
             }
+        }
+
+        public static bool BackupUserDataFiles(string AppDataPath)
+        {
+            try
+            {
+                string BackupPath = AppDataPath + @"\Backups\";
+
+                if (Directory.Exists(BackupPath))
+                {
+                    Directory.Delete(BackupPath, true);
+                }
+
+                Directory.CreateDirectory(BackupPath);
+                Directory.CreateDirectory(String.Format(@"{0}\Backups\Library", AppDataPath));
+                Directory.CreateDirectory(String.Format(@"{0}\Backups\Resources", AppDataPath));
+
+
+                foreach (string filepath in Directory.GetFiles(String.Format(@"{0}\Library", AppDataPath)))
+                {
+                    string newfilepath = String.Format(@"{0}\Backups\Library\{1}", AppDataPath, Path.GetFileName(filepath));
+                    File.Copy(filepath, newfilepath);
+                }
+
+                foreach (string filepath in Directory.GetFiles(String.Format(@"{0}\Resources", AppDataPath)))
+                {
+                    string newfilepath = String.Format(@"{0}\Backups\Resources\{1}", AppDataPath, Path.GetFileName(filepath));
+                    File.Copy(filepath, newfilepath);
+                }
+
+                if (Directory.GetFiles(BackupPath, "*.json", SearchOption.AllDirectories).Length == 0)
+                    return false;
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+            
         }
     }
 }

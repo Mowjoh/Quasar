@@ -10,6 +10,7 @@ namespace Validator
     public class ResourceTests
     {
         static string InstallDirectory = @"C:\Program Files (x86)\Quasar";
+        static string AppDataLocalPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\Quasar";
 
         [Fact]
         public void TestResourcePresence()
