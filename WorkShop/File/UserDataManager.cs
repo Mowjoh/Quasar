@@ -1,4 +1,5 @@
-﻿using DataModels.User;
+﻿using DataModels.Resource;
+using DataModels.User;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -19,17 +20,47 @@ namespace Workshop.FileManagement
 
             string Path = _QuasarFolderPath + @"\Library\Library.json";
 
-            if (File.Exists(Path))
+            try
             {
-                using (StreamReader file = File.OpenText(Path))
+                if (File.Exists(Path))
                 {
-                    JsonSerializer serializer = new JsonSerializer();
-                    Library = (ObservableCollection<LibraryItem>)serializer.Deserialize(file, typeof(ObservableCollection<LibraryItem>));
+                    using (StreamReader file = File.OpenText(Path))
+                    {
+                        JsonSerializer serializer = new JsonSerializer();
+                        Library = (ObservableCollection<LibraryItem>)serializer.Deserialize(file, typeof(ObservableCollection<LibraryItem>));
+                    }
                 }
+            }
+            catch(Exception e)
+            {
+                
             }
 
             return Library;
         }
+
+        public static ModInformation GetModInformation(string _ModInformationPath)
+        {
+            ModInformation Item = new ModInformation();
+            try
+            {
+                if (File.Exists(_ModInformationPath))
+                {
+                    using (StreamReader file = File.OpenText(_ModInformationPath))
+                    {
+                        JsonSerializer serializer = new JsonSerializer();
+                        Item = (ModInformation)serializer.Deserialize(file, typeof(ModInformation));
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+
+            }
+
+            return Item;
+        }
+
         public static ObservableCollection<Workspace> GetWorkspaces(string _QuasarFolderPath)
         {
             ObservableCollection<Workspace> Workspaces = new ObservableCollection<Workspace>();
@@ -104,9 +135,9 @@ namespace Workshop.FileManagement
         {
             SaveJSonFile(_QuasarFolderPath + @"\Library\Library.json", _LibraryItems);
         }
-        public static void SaveModInformation(LibraryItem _LibraryItem, string _QuasarModFolder)
+        public static void SaveModInformation(ModInformation _ModInformation, string _QuasarModFolder)
         {
-            SaveJSonFile(_QuasarModFolder + String.Format(@"\Library\Mods\{0}\ModInformation.json",_LibraryItem.Guid), _LibraryItem);
+            SaveJSonFile(_QuasarModFolder + String.Format(@"\Library\Mods\{0}\ModInformation.json",_ModInformation.LibraryItem.Guid), _ModInformation);
         }
         public static void SaveWorkspaces(ObservableCollection<Workspace> _Workspaces, string _QuasarFolderPath)
         {
@@ -228,6 +259,57 @@ namespace Workshop.FileManagement
                 return false;
             }
             
+        }
+
+        public static bool RestoreUserDataFiles(string AppDataPath)
+        {
+            try
+            {
+                string BackupPath = AppDataPath + @"\Backups\";
+
+                foreach (string filepath in Directory.GetFiles(String.Format(@"{0}\Backups\Library", AppDataPath)))
+                {
+                    string newfilepath = String.Format(@"{0}\Library\{1}", AppDataPath, Path.GetFileName(filepath));
+                    File.Copy(filepath, newfilepath,true);
+                }
+
+                foreach (string filepath in Directory.GetFiles(String.Format(@"{0}\Backups\Resources", AppDataPath)))
+                {
+                    string newfilepath = String.Format(@"{0}\Resources\{1}", AppDataPath, Path.GetFileName(filepath));
+                    File.Copy(filepath, newfilepath, true);
+                }
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+
+        }
+
+        public static ObservableCollection<LibraryItem> RecoverMods(string _QuasarFolderPath,string _AppDataPath, ObservableCollection<LibraryItem> Library, GamebananaAPI API)
+        {
+            string[] ModFolders = Directory.GetDirectories(_QuasarFolderPath + @"\Library\Mods\", "*", SearchOption.TopDirectoryOnly);
+
+            foreach(string ModFolder in ModFolders)
+            {
+                string ModInfoPath = ModFolder + @"\ModInformation.json";
+                if (File.Exists(ModInfoPath))
+                {
+                    ModInformation mi = GetModInformation(ModInfoPath);
+                    LibraryItem li = mi.LibraryItem;
+
+                    if(!Library.Any(l => l.GBItem.GamebananaItemID == li.GBItem.GamebananaItemID))
+                    {
+                        Library.Add(li);
+                    }
+                    API = ResourceManager.UpdateGamebananaAPI(mi.GamebananaRootCategory, API);
+                }
+            }
+            ResourceManager.SaveGamebananaAPI(API, _AppDataPath);
+
+            return Library;
         }
     }
 }

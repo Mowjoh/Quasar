@@ -188,5 +188,7 @@
     <ProjectReference Include="..\DataModels\DataModels.csproj" />
     <ProjectReference Include="..\WorkShop\Workshop.csproj" />
   </ItemGroup>
-  <PropertyGroup />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
+  </PropertyGroup>
 </Project>

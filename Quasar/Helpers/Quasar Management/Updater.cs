@@ -3,7 +3,6 @@ using log4net.Appender;
 using Quasar.FileSystem;
 using Quasar.Helpers.FileOperations;
 using Quasar.Helpers.Quasar_Management;
-using Quasar.NamedPipes;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -51,8 +50,10 @@ namespace Quasar.Internal.Tools
                             Properties.Settings.Default.DefaultDir = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\Quasar";
                             Properties.Settings.Default.Save();
                             break;
-                    }             
+                    }  
+                    
                     InstallManager.CreateBaseFolders();
+
                 }
                 //If it's just a regular update
                 else
@@ -140,7 +141,7 @@ namespace Quasar.Internal.Tools
         /// </summary>
         public static void UpgradeSettingFile()
         {
-            string executionVersion = GetExecutionVersion();
+            string executionVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
             executionVersion = executionVersion.Replace(".", "");
             Properties.Settings.Default.Upgrade();
             string previous = Properties.Settings.Default.AppVersion;

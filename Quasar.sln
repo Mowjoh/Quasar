@@ -21,6 +21,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Workshop", "WorkShop\Worksh
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataModels", "DataModels\DataModels.csproj", "{FD8B24D6-B1EF-4066-B4C3-57BC64F50699}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatabaseEditor", "DatabaseEditor\DatabaseEditor.csproj", "{BACA50AD-7714-4362-BECA-61819F13C46D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug Admin|Any CPU = Debug Admin|Any CPU
@@ -61,6 +63,12 @@ Global
 		{FD8B24D6-B1EF-4066-B4C3-57BC64F50699}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FD8B24D6-B1EF-4066-B4C3-57BC64F50699}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FD8B24D6-B1EF-4066-B4C3-57BC64F50699}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BACA50AD-7714-4362-BECA-61819F13C46D}.Debug Admin|Any CPU.ActiveCfg = Debug|Any CPU
+		{BACA50AD-7714-4362-BECA-61819F13C46D}.Debug Admin|Any CPU.Build.0 = Debug|Any CPU
+		{BACA50AD-7714-4362-BECA-61819F13C46D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BACA50AD-7714-4362-BECA-61819F13C46D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BACA50AD-7714-4362-BECA-61819F13C46D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BACA50AD-7714-4362-BECA-61819F13C46D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -71,6 +79,7 @@ Global
 		{909D5995-A63C-425B-91A9-12F3C26CBEEE} = {EE8AB64A-19B1-4B1D-AE43-F4ACB00BB01D}
 		{CF8C6D00-D560-4DBC-A307-E4357FB7F685} = {40072382-3FF7-4CD0-8C2C-FD62543FC394}
 		{FD8B24D6-B1EF-4066-B4C3-57BC64F50699} = {40072382-3FF7-4CD0-8C2C-FD62543FC394}
+		{BACA50AD-7714-4362-BECA-61819F13C46D} = {791DD3F9-D9BF-4486-82AD-4A1AD43999B1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {57BCC8AF-A55F-45F4-9840-DE92480716A0}
