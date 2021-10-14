@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Workshop.Web;
 using Xunit;
 
-namespace Validator
+namespace Testing_Web
 {
 
     public class APITests

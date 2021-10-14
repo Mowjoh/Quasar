@@ -5,7 +5,7 @@ using System.IO;
 using Workshop.FileManagement;
 using Xunit;
 
-namespace Validator
+namespace Testing_Data
 {
     public class ResourceTests
     {
