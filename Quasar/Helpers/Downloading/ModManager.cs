@@ -158,7 +158,7 @@ namespace Quasar.Helpers.Downloading
         /// <returns></returns>
         public async Task<bool> GetAPIModInformation()
         {
-            APIMod = await APIRequest.GetModInformation(QuasarURL.APICategoryName, QuasarURL.GamebananaItemID);
+            APIMod = await APIRequest.GetModInformation(QuasarURL.GamebananaItemID);
             return true;
         }
 
@@ -323,7 +323,7 @@ namespace Quasar.Helpers.Downloading
                         if (Processed)
                         {
                             QuasarLogger.Debug("Getting Screenshot");
-                            await APIRequest.GetDownloadScreenshot(QuasarURL.APICategoryName, QuasarURL.GamebananaItemID, LibraryItem.Guid.ToString(),Properties.Settings.Default.DefaultDir);
+                            await APIRequest.GetDownloadScreenshot(QuasarURL.GamebananaItemID, LibraryItem.Guid.ToString(),Properties.Settings.Default.DefaultDir);
                             ProcessAborted = false;
                         }
                     }

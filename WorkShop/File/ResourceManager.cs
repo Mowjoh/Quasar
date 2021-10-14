@@ -18,12 +18,17 @@ namespace Workshop.FileManagement
         static string AppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\Quasar";
 
         //Resource Saves
-        public static void SaveGamebananaAPI(GamebananaAPI _API, string _QuasarFolderPath)
+        /// <summary>
+        /// Saves the Gamebanana API resource file to the specific path
+        /// </summary>
+        /// <param name="_API">The resource to save</param>
+        /// <param name="_AppDataPath">the user's App Data Path</param>
+        public static void SaveGamebananaAPI(GamebananaAPI _API, string _AppDataPath)
         {
-            if (!Directory.Exists(_QuasarFolderPath + @"\Resources\"))
-                Directory.CreateDirectory(_QuasarFolderPath + @"\Resources\");
+            if (!Directory.Exists(_AppDataPath + @"\Resources\"))
+                Directory.CreateDirectory(_AppDataPath + @"\Resources\");
 
-            SaveJSonFile(_QuasarFolderPath + @"\Resources\Gamebanana.json", _API);
+            SaveJSonFile(_AppDataPath + @"\Resources\Gamebanana.json", _API);
         }
         public static void SaveGamesFile(ObservableCollection<Game> _Games, string _ExternalPath = "")
         {

@@ -9,20 +9,28 @@ using Xunit;
 
 namespace Testing_Web
 {
-
+    /// <summary>
+    /// Aimed at validating interactions with Gamebanana's API
+    /// </summary>
     public class APITests
     {
+        /// <summary>
+        /// Asserts that Gamebanana responds
+        /// </summary>
         [Fact]
         public async void ValidateBasicResponse()
         {
-            APIMod Response = await APIRequest.GetModInformation("Mod", "324701");
+            APIMod Response = await APIRequest.GetModInformation("324701");
             Assert.True(Response != null);
         }
 
+        /// <summary>
+        /// Asserts that all the data from a specific mod are properly parsed and deserialized
+        /// </summary>
         [Fact]
         public async void ValidateRequestDetails()
         {
-            APIMod Response = await APIRequest.GetModInformation("Mod", "322837");
+            APIMod Response = await APIRequest.GetModInformation("322837");
 
             Assert.True((Response.Authors.Authors != null) || (Response.Authors.KeyAuthors != null));
             Assert.Equal(322837, Response.ID);
@@ -38,6 +46,10 @@ namespace Testing_Web
             
         }
 
+        /// <summary>
+        /// Validates necessary data for multiple mods
+        /// </summary>
+        /// <param name="ModID"></param>
         [Theory]
         [InlineData("175268")]
         [InlineData("324106")]
@@ -50,7 +62,7 @@ namespace Testing_Web
         [InlineData("38828")]
         public async void ValidateMultipleRequest(string ModID)
         {
-            APIMod Response = await APIRequest.GetModInformation("Mod", ModID);
+            APIMod Response = await APIRequest.GetModInformation(ModID);
 
             Assert.True((Response.Authors.Authors != null) || (Response.Authors.KeyAuthors != null) || (Response.Submitter != null));
             Assert.True(Response.ID > 0);
