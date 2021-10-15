@@ -41,7 +41,7 @@ namespace Workshop.Web
         /// <param name="_ItemType">Gamebanana's Mod Type</param>
         /// <param name="_ItemID">Gamebanana's Mod ID</param>
         /// <returns>an APIMod object with all info</returns>
-        public static async Task<APIMod> GetModInformation(string _ItemType, string _ItemID)
+        public static async Task<APIMod> GetModInformation(string _ItemID)
         {
 
             APIMod ParsedAPIMod = null;
@@ -66,7 +66,7 @@ namespace Workshop.Web
                 }
 
                 ParsedAPIMod.ID = Int32.Parse(_ItemID);
-                ParsedAPIMod.GamebananaRootCategoryName = _ItemType;
+                ParsedAPIMod.GamebananaRootCategoryName = "Mod";
             }
             catch (Exception e)
             {
@@ -82,14 +82,14 @@ namespace Workshop.Web
         /// <param name="_ItemType">Gamebanana's Mod Type</param>
         /// <param name="_ItemID">Gamebanana's Mod ID</param>
         /// <returns>Download link informations</returns>
-        public static async Task<string[]> GetDownloadFileName(string _ItemType, string _ItemID)
+        public static async Task<string[]> GetDownloadFileName(string _ItemID)
         {
             string filename = "";
             string downloadURL = "";
 
             queryParameters = GetDefaultParameters();
             queryParameters.Add(new QueryStringItem("itemid", _ItemID));
-            queryParameters.Add(new QueryStringItem("itemtype", _ItemType));
+            queryParameters.Add(new QueryStringItem("itemtype", "Mod"));
             queryParameters.Add(new QueryStringItem("fields", "Files().aFiles()"));
 
             string queryURL = FormatAPIRequest("Core/Item/Data", queryParameters);
@@ -129,13 +129,13 @@ namespace Workshop.Web
         /// <param name="_GameID">Gamebanana's Game ID</param>
         /// <param name="_TypeID">Gamebanana's Category ID</param>
         /// <returns></returns>
-        public static async Task<int> GetDownloadScreenshot(string _ItemType, string _ItemID, string Guid, string QuasarModPath)
+        public static async Task<int> GetDownloadScreenshot(string _ItemID, string Guid, string QuasarModPath)
         {
             string downloadURL = "";
 
             queryParameters = GetDefaultParameters();
             queryParameters.Add(new QueryStringItem("itemid", _ItemID));
-            queryParameters.Add(new QueryStringItem("itemtype", _ItemType));
+            queryParameters.Add(new QueryStringItem("itemtype", "Mod"));
             queryParameters.Add(new QueryStringItem("fields", "Preview().sSubFeedImageUrl()"));
 
 

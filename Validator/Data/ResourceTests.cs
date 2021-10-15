@@ -5,13 +5,19 @@ using System.IO;
 using Workshop.FileManagement;
 using Xunit;
 
-namespace Validator
+namespace Testing_Data
 {
+    /// <summary>
+    /// Testing aimed at resource file management
+    /// </summary>
     public class ResourceTests
     {
         static string InstallDirectory = @"C:\Program Files (x86)\Quasar";
         static string AppDataLocalPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\Quasar";
 
+        /// <summary>
+        /// Validates that all resource files are present and properly named
+        /// </summary>
         [Fact]
         public void TestResourcePresence()
         {
@@ -32,6 +38,9 @@ namespace Validator
 
         }
 
+        /// <summary>
+        /// Validates that the Gamebanana deserializes properly and contains data
+        /// </summary>
         [Fact]
         public void ValidateGamebananaFile()
         {
@@ -42,6 +51,9 @@ namespace Validator
             Assert.Equal("Super Smash Bros. Ultimate", Resource.Games[0].Name);
         }
 
+        /// <summary>
+        /// Validates that the Games deserializes properly and contains data
+        /// </summary>
         [Fact]
         public void ValidateGamesFile()
         {
@@ -52,6 +64,9 @@ namespace Validator
             Assert.Equal("Smash Ultimate", Resource[0].Name);
         }
 
+        /// <summary>
+        /// Validates that the Mod Loaders deserializes properly and contains data
+        /// </summary>
         [Fact]
         public void ValidateModLoadersFile()
         {
@@ -64,6 +79,9 @@ namespace Validator
             Assert.Equal("UMM", Resource[2].Name);
         }
 
+        /// <summary>
+        /// Validates that the Mod Types deserializes properly and contains data
+        /// </summary>
         [Fact]
         public void ValidateModTypesFile()
         {

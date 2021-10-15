@@ -9,14 +9,19 @@ using System.Threading.Tasks;
 using Workshop.FileManagement;
 using Xunit;
 
-namespace Validator
+namespace Testing_Data
 {
-    
+    /// <summary>
+    /// Testing aimed at validating User Data
+    /// </summary>
     public class UserDataTests
     {
         static string DocumentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\Quasar";
         static string AppDataLocalPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\Quasar";
 
+        /// <summary>
+        /// Validates that the library file is in the right place and properly read
+        /// </summary>
         [Fact]
         public void TestLibraryLoad()
         {
@@ -36,6 +41,9 @@ namespace Validator
             Assert.True(ContentItems.Count > 0);
         }
 
+        /// <summary>
+        /// Validates the functionnality that moves the library file to the proper location if needed
+        /// </summary>
         [Fact]
         public void ValidateLibraryMovement()
         {
