@@ -25,18 +25,9 @@ namespace Workshop.FileManagement
 
             SaveJSonFile(_QuasarFolderPath + @"\Resources\Gamebanana.json", _API);
         }
-        public static void SaveGamesFile(ObservableCollection<Game> _Games, string _ExternalPath = "")
+        public static void SaveGamesFile(ObservableCollection<Game> _Games, string SpecificFolder)
         {
-            /*
-            if (_ExternalPath != "")
-            {
-                SaveJSonFile(@"\Resources\Games.json", _Games.OrderBy(i => i.ID), _ExternalPath);
-            }
-            else
-            {
-                SaveJSonFile(@"\Resources\Games.json", _Games.OrderBy(i => i.ID));
-            }*/
-
+            SaveJSonFile(SpecificFolder + @"\Games.json", _Games.OrderBy(i => i.ID));
         }
         public static void SaveQuasarModTypes(ObservableCollection<QuasarModType> _QuasarModTypes, string _ExternalPath = "")
         {
@@ -166,6 +157,25 @@ namespace Workshop.FileManagement
                     serializer.TypeNameHandling = TypeNameHandling.None;
                 serializer.Serialize(file, _Source);
             }
+        }
+
+        public static GamebananaAPI UpdateGamebananaAPI(GamebananaRootCategory RootCategory, GamebananaAPI API)
+        {
+            if(!API.Games[0].RootCategories.Any(c => c.Guid == RootCategory.Guid))
+            {
+                API.Games[0].RootCategories.Add(RootCategory);
+            }
+            else
+            {
+                GamebananaRootCategory LocalRC = API.Games[0].RootCategories.Single(c => c.Guid == RootCategory.Guid);
+                if(LocalRC.SubCategories.Any(c => c.Guid == RootCategory.SubCategories[0].Guid))
+                {
+                    API.Games[0].RootCategories.Single(c => c.Guid == RootCategory.Guid).SubCategories.Add(RootCategory.SubCategories[0]);
+                }
+            }
+
+
+            return API;
         }
     }
 }

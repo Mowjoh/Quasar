@@ -1,4 +1,5 @@
-﻿using DataModels.User;
+﻿using DataModels.Resource;
+using DataModels.User;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -19,17 +20,47 @@ namespace Workshop.FileManagement
 
             string Path = _QuasarFolderPath + @"\Library\Library.json";
 
-            if (File.Exists(Path))
+            try
             {
-                using (StreamReader file = File.OpenText(Path))
+                if (File.Exists(Path))
                 {
-                    JsonSerializer serializer = new JsonSerializer();
-                    Library = (ObservableCollection<LibraryItem>)serializer.Deserialize(file, typeof(ObservableCollection<LibraryItem>));
+                    using (StreamReader file = File.OpenText(Path))
+                    {
+                        JsonSerializer serializer = new JsonSerializer();
+                        Library = (ObservableCollection<LibraryItem>)serializer.Deserialize(file, typeof(ObservableCollection<LibraryItem>));
+                    }
                 }
+            }
+            catch(Exception e)
+            {
+                
             }
 
             return Library;
         }
+
+        public static ModInformation GetModInformation(string _ModInformationPath)
+        {
+            ModInformation Item = new ModInformation();
+            try
+            {
+                if (File.Exists(_ModInformationPath))
+                {
+                    using (StreamReader file = File.OpenText(_ModInformationPath))
+                    {
+                        JsonSerializer serializer = new JsonSerializer();
+                        Item = (ModInformation)serializer.Deserialize(file, typeof(ModInformation));
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+
+            }
+
+            return Item;
+        }
+
         public static ObservableCollection<Workspace> GetWorkspaces(string _QuasarFolderPath)
         {
             ObservableCollection<Workspace> Workspaces = new ObservableCollection<Workspace>();
@@ -104,9 +135,9 @@ namespace Workshop.FileManagement
         {
             SaveJSonFile(_QuasarFolderPath + @"\Library\Library.json", _LibraryItems);
         }
-        public static void SaveModInformation(LibraryItem _LibraryItem, string _QuasarModFolder)
+        public static void SaveModInformation(ModInformation _ModInformation, string _QuasarModFolder)
         {
-            SaveJSonFile(_QuasarModFolder + String.Format(@"\Library\Mods\{0}\ModInformation.json",_LibraryItem.Guid), _LibraryItem);
+            SaveJSonFile(_QuasarModFolder + String.Format(@"\Library\Mods\{0}\ModInformation.json",_ModInformation.LibraryItem.Guid), _ModInformation);
         }
         public static void SaveWorkspaces(ObservableCollection<Workspace> _Workspaces, string _QuasarFolderPath)
         {
@@ -123,6 +154,23 @@ namespace Workshop.FileManagement
         public static void SaveSharedWorkspaces(ShareableWorkspace SW, string _DestinationFolderPath)
         {
             SaveJSonFile(_DestinationFolderPath + @"\SharedWorkspace.json", SW);
+        }
+
+        /// <summary>
+        /// Saves a collection to a JSon File
+        /// </summary>
+        /// <param name="_Fullpath">Destination file path</param>
+        /// <param name="_Source">Source collection</param>
+        /// <param name="_ExternalPath">Override Destination file path</param>
+        private static void SaveJSonFile(string _Fullpath, Object _Source, bool Headless = false)
+        {
+            using (StreamWriter file = File.CreateText(_Fullpath))
+            {
+                JsonSerializer serializer = new JsonSerializer();
+                if (Headless)
+                    serializer.TypeNameHandling = TypeNameHandling.None;
+                serializer.Serialize(file, _Source);
+            }
         }
 
         /// <summary>
@@ -143,23 +191,10 @@ namespace Workshop.FileManagement
         }
 
         /// <summary>
-        /// Saves a collection to a JSon File
+        /// Moves all user data Json files to the proper location
         /// </summary>
-        /// <param name="_Fullpath">Destination file path</param>
-        /// <param name="_Source">Source collection</param>
-        /// <param name="_ExternalPath">Override Destination file path</param>
-        private static void SaveJSonFile(string _Fullpath, Object _Source, bool Headless = false)
-        {
-            using (StreamWriter file = File.CreateText(_Fullpath))
-            {
-                JsonSerializer serializer = new JsonSerializer();
-                if (Headless)
-                    serializer.TypeNameHandling = TypeNameHandling.None;
-                serializer.Serialize(file, _Source);
-            }
-        }
-
-        //Updater Mechanism
+        /// <param name="_OldDataPath">Quasar's Mod folder</param>
+        /// <param name="_NewDataPath">Quasar's App Data Folder</param>
         public static void VerifyUpdateFileLocation(string _OldDataPath, string _NewDataPath)
         {
             string[] OldLibraryFiles = Directory.GetFiles(_OldDataPath + @"\Library", "*", SearchOption.TopDirectoryOnly);
@@ -184,6 +219,97 @@ namespace Workshop.FileManagement
                     File.Delete(LibraryFile);
                 }
             }
+        }
+
+        public static bool BackupUserDataFiles(string AppDataPath)
+        {
+            try
+            {
+                string BackupPath = AppDataPath + @"\Backups\";
+
+                if (Directory.Exists(BackupPath))
+                {
+                    Directory.Delete(BackupPath, true);
+                }
+
+                Directory.CreateDirectory(BackupPath);
+                Directory.CreateDirectory(String.Format(@"{0}\Backups\Library", AppDataPath));
+                Directory.CreateDirectory(String.Format(@"{0}\Backups\Resources", AppDataPath));
+
+
+                foreach (string filepath in Directory.GetFiles(String.Format(@"{0}\Library", AppDataPath)))
+                {
+                    string newfilepath = String.Format(@"{0}\Backups\Library\{1}", AppDataPath, Path.GetFileName(filepath));
+                    File.Copy(filepath, newfilepath);
+                }
+
+                foreach (string filepath in Directory.GetFiles(String.Format(@"{0}\Resources", AppDataPath)))
+                {
+                    string newfilepath = String.Format(@"{0}\Backups\Resources\{1}", AppDataPath, Path.GetFileName(filepath));
+                    File.Copy(filepath, newfilepath);
+                }
+
+                if (Directory.GetFiles(BackupPath, "*.json", SearchOption.AllDirectories).Length == 0)
+                    return false;
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+            
+        }
+
+        public static bool RestoreUserDataFiles(string AppDataPath)
+        {
+            try
+            {
+                string BackupPath = AppDataPath + @"\Backups\";
+
+                foreach (string filepath in Directory.GetFiles(String.Format(@"{0}\Backups\Library", AppDataPath)))
+                {
+                    string newfilepath = String.Format(@"{0}\Library\{1}", AppDataPath, Path.GetFileName(filepath));
+                    File.Copy(filepath, newfilepath,true);
+                }
+
+                foreach (string filepath in Directory.GetFiles(String.Format(@"{0}\Backups\Resources", AppDataPath)))
+                {
+                    string newfilepath = String.Format(@"{0}\Resources\{1}", AppDataPath, Path.GetFileName(filepath));
+                    File.Copy(filepath, newfilepath, true);
+                }
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+
+        }
+
+        public static ObservableCollection<LibraryItem> RecoverMods(string _QuasarFolderPath,string _AppDataPath, ObservableCollection<LibraryItem> Library, GamebananaAPI API)
+        {
+            string[] ModFolders = Directory.GetDirectories(_QuasarFolderPath + @"\Library\Mods\", "*", SearchOption.TopDirectoryOnly);
+
+            foreach(string ModFolder in ModFolders)
+            {
+                string ModInfoPath = ModFolder + @"\ModInformation.json";
+                if (File.Exists(ModInfoPath))
+                {
+                    ModInformation mi = GetModInformation(ModInfoPath);
+                    LibraryItem li = mi.LibraryItem;
+
+                    if(!Library.Any(l => l.GBItem.GamebananaItemID == li.GBItem.GamebananaItemID))
+                    {
+                        Library.Add(li);
+                    }
+                    API = ResourceManager.UpdateGamebananaAPI(mi.GamebananaRootCategory, API);
+                }
+            }
+            ResourceManager.SaveGamebananaAPI(API, _AppDataPath);
+
+            return Library;
         }
     }
 }

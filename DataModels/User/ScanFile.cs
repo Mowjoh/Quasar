@@ -22,5 +22,7 @@ namespace DataModels.User
         public int QuasarModTypeFileDefinitionID { get; set; }
         [Newtonsoft.Json.JsonIgnore]
         public bool Scanned { get; set; }
+        [Newtonsoft.Json.JsonIgnore]
+        public bool Ignored { get; set; }
     }
 }

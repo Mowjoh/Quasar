@@ -19,7 +19,6 @@ using DataModels.Common;
 using DataModels.User;
 using DataModels.Resource;
 using Workshop.FileManagement;
-using Quasar.NamedPipes;
 using System;
 using System.Collections.ObjectModel;
 using System.Threading;
@@ -35,6 +34,7 @@ using System.Windows.Shell;
 using ImageProcessor;
 using ImageProcessor.Plugins.WebP.Imaging.Formats;
 using Helpers.IPC;
+using System.IO;
 
 namespace Quasar.MainUI.ViewModels
 {
@@ -530,7 +530,6 @@ namespace Quasar.MainUI.ViewModels
 
                 QuasarLogger.Info("Update Process Started");
                 Updater.CheckExecuteUpdate(QuasarLogger);
-                SetupLogger();
 
                 LoadData();
 
@@ -543,23 +542,46 @@ namespace Quasar.MainUI.ViewModels
                 EventSystem.Subscribe<ModListItem>(ModListItemEvent);
                 EventSystem.Subscribe<ModalEvent>(ProcessModalEvent);
 
-                if (Updater.NeedsUltraCleaning() && Updater.NeedsUpdate)
+                if (Updater.NeedsInitialSetup)
                 {
-                    ModalEvent meuh = new ModalEvent()
-                    {
-                        Action = "Show",
-                        EventName = "UltraCleaning",
-                        Title = "Quasar is updating",
-                        Content = "Please be patient while Quasar updates it's data to the new format",
-                        OkButtonText = "OK",
-                        Type = ModalType.Loader
-                    };
+                    string ModsPath = Properties.Settings.Default.DefaultDir + @"\Library\Mods\";
+                    string[] ModFolders = Directory.GetDirectories(ModsPath, "*", SearchOption.TopDirectoryOnly);
 
-                    EventSystem.Publish<ModalEvent>(meuh);
-                    Task.Run(() =>
+                    bool FoundRecoverableMods = false;
+
+                    if (ModFolders.Length > 0)
                     {
-                        InstallManager.LaunchUltraCleaning(this);
-                    });
+                        
+                        foreach(string ModFolder in ModFolders)
+                        {
+                            if(File.Exists(ModFolder + @"\ModInformation.json"))
+                            {
+                                FoundRecoverableMods = true;
+                            }
+                        }
+                    }
+                    if (FoundRecoverableMods)
+                    {
+                        ModalEvent meuh = new ModalEvent()
+                        {
+                            Action = "Show",
+                            EventName = "RecoverMods",
+                            Title = "Recovery possible",
+                            Content = "Recoverable mods have been found, please wait while Quasar loads them up",
+                            OkButtonText = "OK",
+                            Type = ModalType.Loader
+                        };
+                        EventSystem.Publish<ModalEvent>(meuh);
+                        Library = UserDataManager.RecoverMods(Properties.Settings.Default.DefaultDir,AppDataPath, Library, API);
+
+                        meuh.Action = "LoadOK";
+                        EventSystem.Publish<ModalEvent>(meuh);
+                    }
+                    else
+                    {
+                        InitialWarnings();
+                        BackupRestoreUserData(UserDataLoaded);
+                    }
                 }
                 else
                 {
@@ -567,26 +589,46 @@ namespace Quasar.MainUI.ViewModels
                     BackupRestoreUserData(UserDataLoaded);
                 }
 
-                 /*
-                if ((Updater.NeedsScanning && !Updater.NeedsUltraCleaning()) && Updater.NeedsUpdate)
-                {
-                    ModalEvent Meuhdeux = new ModalEvent()
-                    {
-                        Action = "Show",
-                        EventName = "UltraScanning",
-                        Title = "Quasar is scanning",
-                        Content = "Please be patient while Quasar scans all the data",
-                        OkButtonText = "OK",
-                        Type = ModalType.Loader
-                    };
+                /* if (Updater.NeedsUltraCleaning() && Updater.NeedsUpdate)
+                 {
+                     ModalEvent meuh = new ModalEvent()
+                     {
+                         Action = "Show",
+                         EventName = "UltraCleaning",
+                         Title = "Quasar is updating",
+                         Content = "Please be patient while Quasar updates it's data to the new format",
+                         OkButtonText = "OK",
+                         Type = ModalType.Loader
+                     };
 
-                    EventSystem.Publish<ModalEvent>(Meuhdeux);
-                    Task.Run(() =>
-                    {
-                        InstallManager.Rescan(this);
-                    });
-                }
-                */
+                     EventSystem.Publish<ModalEvent>(meuh);
+                     Task.Run(() =>
+                     {
+                         InstallManager.LaunchUltraCleaning(this);
+                     });
+                 } */
+
+
+                /*
+               if ((Updater.NeedsScanning && !Updater.NeedsUltraCleaning()) && Updater.NeedsUpdate)
+               {
+                   ModalEvent Meuhdeux = new ModalEvent()
+                   {
+                       Action = "Show",
+                       EventName = "UltraScanning",
+                       Title = "Quasar is scanning",
+                       Content = "Please be patient while Quasar scans all the data",
+                       OkButtonText = "OK",
+                       Type = ModalType.Loader
+                   };
+
+                   EventSystem.Publish<ModalEvent>(Meuhdeux);
+                   Task.Run(() =>
+                   {
+                       InstallManager.Rescan(this);
+                   });
+               }
+               */
 
 
             }
@@ -603,45 +645,31 @@ namespace Quasar.MainUI.ViewModels
         /// <summary>
         /// Loads Reference and User Data
         /// </summary>
-        public void LoadData(bool ReferenceOnly = false)
+        public void LoadData()
         {
-            if (!ReferenceOnly)
+            //Loading User Data
+            try
             {
-                //Loading User Data
-                try
+                Workspaces = UserDataManager.GetWorkspaces(AppDataPath);
+                Library = UserDataManager.GetLibrary(AppDataPath);
+                ContentItems = UserDataManager.GetContentItems(AppDataPath);
+
+                if (Workspaces.Count == 0)
                 {
+                    //Creating the base workspace if it's not there
+                    Guid CreatedWorkspaceGuid = UserDataManager.CreateBaseWorkspace(AppDataPath);
+                    Properties.Settings.Default.LastSelectedWorkspace = CreatedWorkspaceGuid;
+                    Properties.Settings.Default.Save();
+
                     Workspaces = UserDataManager.GetWorkspaces(AppDataPath);
-                    Library = UserDataManager.GetLibrary(AppDataPath);
-                    ContentItems = UserDataManager.GetContentItems(AppDataPath);
-
-                    if (Workspaces.Count == 0)
-                    {
-                        //Creating the base workspace if it's not there
-                        Guid CreatedWorkspaceGuid = UserDataManager.CreateBaseWorkspace(AppDataPath);
-                        Properties.Settings.Default.LastSelectedWorkspace = CreatedWorkspaceGuid;
-                        Properties.Settings.Default.Save();
-
-                        Workspaces = UserDataManager.GetWorkspaces(AppDataPath);
-                    }
-                    ActiveWorkspace = Workspaces[0];
-
-                    UserDataLoaded = true;
                 }
-                catch (Exception e)
-                {
-                    UserDataLoaded = false;
-                }
-            }
-            else
-            {
-                //TODO Edit this
-                Workspaces = new ObservableCollection<Workspace>();
-                InstallManager.CreateBaseWorkspace();
-                //Workspaces = JSonHelper.GetWorkspaces();
                 ActiveWorkspace = Workspaces[0];
 
-                Library = new ObservableCollection<LibraryItem>();
-                ContentItems = new ObservableCollection<ContentItem>();
+                UserDataLoaded = true;
+            }
+            catch (Exception e)
+            {
+                UserDataLoaded = false;
             }
 
             //Loading Resource Data
@@ -661,7 +689,9 @@ namespace Quasar.MainUI.ViewModels
         {
             if (LoadSuccess)
             {
-                InstallManager.BackupUserData();
+                UserDataManager.BackupUserDataFiles(AppDataPath);
+                Properties.Settings.Default.BackupDate = DateTime.Now;
+                Properties.Settings.Default.Save();
             }
             else
             {
@@ -679,7 +709,7 @@ namespace Quasar.MainUI.ViewModels
                 EventSystem.Publish<ModalEvent>(meuh);
 
                 //Restoring data
-                InstallManager.RestoreUserData();
+                UserDataManager.RestoreUserDataFiles(AppDataPath);
 
                 //Loading Data
                 LoadData();
@@ -879,6 +909,12 @@ namespace Quasar.MainUI.ViewModels
                     }
                     break;
                 case "UltraScanning":
+                    if (me.Action == "OK")
+                    {
+                        SetupViews();
+                    }
+                    break;
+                case "RecoverMods":
                     if (me.Action == "OK")
                     {
                         SetupViews();

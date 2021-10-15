@@ -1,0 +1,70 @@
+﻿<Application x:Class="DatabaseEditor.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:DatabaseEditor"
+             StartupUri="MainWindow.xaml">
+    <Application.Resources>
+
+        <SolidColorBrush x:Key="CheckedCellColor" Color="#123131" />
+        <SolidColorBrush x:Key="UnCheckedCellColor" Color="#511E1E" />
+        <SolidColorBrush x:Key="AccentGreen" Color="#4F9888" />
+        <SolidColorBrush x:Key="AccentBlue" Color="#57749B" />
+        <SolidColorBrush x:Key="AccentOrange" Color="#ECC17B" />
+        <SolidColorBrush x:Key="AccentRed" Color="#EC7B7B" />
+        <SolidColorBrush x:Key="AccentYellow" Color="#ECE77B" />
+        <SolidColorBrush x:Key="AccentPink" Color="#C26594" />
+        <SolidColorBrush x:Key="AccentGreenish" Color="#B5DA71" />
+        <SolidColorBrush x:Key="AccentPurple" Color="#7F589F" />
+
+
+
+        <!--#region Text-->
+        <Style TargetType="{x:Type Label}">
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="FontSize" Value="14" />
+        </Style>
+        <Style TargetType="{x:Type TextBlock}">
+            <Setter Property="FontSize" Value="14" />
+        </Style>
+        <!--#endregion-->
+
+        <!--#region Tabs-->
+
+        <ControlTemplate x:Key="TabItemControl" TargetType="{x:Type TabItem}">
+            <Grid Name="Panel" Background="#212121">
+                <ContentPresenter x:Name="ContentSite"
+                                  Margin="10,2" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                  ContentSource="Header" />
+
+            </Grid>
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter TargetName="Panel" Property="Background" Value="#414141" />
+                </Trigger>
+                <Trigger Property="IsSelected" Value="False">
+                    <Setter TargetName="Panel" Property="Background" Value="#212121" />
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+
+        <Style TargetType="{x:Type TabItem}">
+            <Setter Property="Template" Value="{StaticResource TabItemControl}" />
+        </Style>
+        <!--#endregion-->
+
+        <!--#region DataGrid-->
+        <Style TargetType="{x:Type DataGrid}">
+            <Setter Property="Background" Value="#212121" />
+        </Style>
+        <Style TargetType="{x:Type DataGridColumnHeader}">
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="Background" Value="#313131" />
+        </Style>
+        <Style TargetType="{x:Type DataGridCell}">
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="Background" Value="#414141" />
+        </Style>
+        <!--#endregion-->
+
+
+    </Application.Resources>
+</Application>

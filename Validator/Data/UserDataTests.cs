@@ -1,5 +1,7 @@
-﻿using System;
+﻿using DataModels.User;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -16,10 +18,22 @@ namespace Validator
         static string AppDataLocalPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\Quasar";
 
         [Fact]
-        public void TestLibraryPresence()
+        public void TestLibraryLoad()
         {
-
-            Assert.True(true);
+            ObservableCollection<LibraryItem> Library = UserDataManager.GetLibrary(AppDataLocalPath);
+            Assert.True(Library.Count > 0);
+        }
+        [Fact]
+        public void TestWorkspaceLoad()
+        {
+            ObservableCollection<Workspace> Workspaces = UserDataManager.GetWorkspaces(AppDataLocalPath);
+            Assert.True(Workspaces.Count > 0);
+        }
+        [Fact]
+        public void TestContentItemLoad()
+        {
+            ObservableCollection<ContentItem> ContentItems = UserDataManager.GetContentItems(AppDataLocalPath);
+            Assert.True(ContentItems.Count > 0);
         }
 
         [Fact]
@@ -32,6 +46,13 @@ namespace Validator
 
             Assert.True(OldLibraryFiles.Length == 0);
             Assert.True(NewLibraryFiles.Length > 0);
+
+        }
+
+        [Fact]
+        public void ValidateUserDataBackup()
+        {
+            Assert.True(UserDataManager.BackupUserDataFiles(AppDataLocalPath));
 
         }
     }

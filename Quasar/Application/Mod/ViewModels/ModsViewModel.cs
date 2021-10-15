@@ -554,7 +554,27 @@ namespace Quasar.Controls.ModManagement.ViewModels
                                 MUVM.Library.Add(MM.LibraryItem);
                                 UserDataManager.SaveLibrary(MUVM.Library, AppDataPath);
 
-                                UserDataManager.SaveModInformation(MM.LibraryItem, Properties.Settings.Default.DefaultDir);
+                                GamebananaRootCategory RC = MUVM.API.Games[0].RootCategories.Single(c => c.Guid == MM.LibraryItem.GBItem.RootCategoryGuid);
+                                GamebananaSubCategory SC = RC.SubCategories.Single(c => c.Guid == MM.LibraryItem.GBItem.SubCategoryGuid);
+                                ModInformation MI = new ModInformation()
+                                {
+                                    LibraryItem = MM.LibraryItem,
+                                    GamebananaRootCategory = new GamebananaRootCategory()
+                                    {
+                                        Guid = RC.Guid,
+                                        Name = RC.Name,
+                                        SubCategories = new ObservableCollection<GamebananaSubCategory>()
+                                        {
+                                            new GamebananaSubCategory()
+                                            {
+                                                Guid = SC.Guid,
+                                                ID = SC.ID,
+                                                Name = SC.Name
+                                            }
+                                        }
+                                    }
+                                };
+                                UserDataManager.SaveModInformation(MI, Properties.Settings.Default.DefaultDir);
                             }
                             else
                             {
@@ -564,7 +584,27 @@ namespace Quasar.Controls.ModManagement.ViewModels
                                 li = MM.LibraryItem;
                                 UserDataManager.SaveLibrary(MUVM.Library, AppDataPath);
 
-                                UserDataManager.SaveModInformation(li, Properties.Settings.Default.DefaultDir);
+                                GamebananaRootCategory RC = MUVM.API.Games[0].RootCategories.Single(c => c.Guid == MM.LibraryItem.GBItem.RootCategoryGuid);
+                                GamebananaSubCategory SC = RC.SubCategories.Single(c => c.Guid == MM.LibraryItem.GBItem.SubCategoryGuid);
+                                ModInformation MI = new ModInformation()
+                                {
+                                    LibraryItem = MM.LibraryItem,
+                                    GamebananaRootCategory = new GamebananaRootCategory()
+                                    {
+                                        Guid = RC.Guid,
+                                        Name = RC.Name,
+                                        SubCategories = new ObservableCollection<GamebananaSubCategory>()
+                                        {
+                                            new GamebananaSubCategory()
+                                            {
+                                                Guid = SC.Guid,
+                                                ID = SC.ID,
+                                                Name = SC.Name
+                                            }
+                                        }
+                                    }
+                                };
+                                UserDataManager.SaveModInformation(MI, Properties.Settings.Default.DefaultDir);
                             }
 
                             QuasarLogger.Debug("Scanning Mod");
