@@ -13,7 +13,7 @@ using System.Windows.Data;
 using System.Windows.Forms;
 using System.Windows.Input;
 using Workshop.FileManagement;
-using Workshop.Scanning;
+using Workshop.Scanners;
 
 namespace DatabaseEditor.ViewModels
 {
@@ -124,7 +124,25 @@ namespace DatabaseEditor.ViewModels
             QuasarModTypes = ResourceManager.GetQuasarModTypes();
             API = ResourceManager.GetGamebananaAPI();
 
+            CollectionViewSource = new CollectionViewSource();
+
+            CollectionViewSource.Source = TestResults;
+            CollectionViewSource.Filter += CollectionViewSource_Filter;
             RepoPath = Properties.Settings.Default.RepoPath;
+        }
+
+        private void CollectionViewSource_Filter(object sender, FilterEventArgs e)
+        {
+            ScanTestResult result = e.Item as ScanTestResult;
+            
+            if (UnrecognizedFilter && result.ScanFile.Scanned == false || !UnrecognizedFilter)
+            {
+                e.Accepted = true;
+            }
+            else
+            {
+                e.Accepted = false;
+            }
         }
 
         #region Private Members
@@ -162,8 +180,10 @@ namespace DatabaseEditor.ViewModels
         private string _ProgressString { get; set; }
 
         //Paths
+        private CollectionViewSource _CollectionViewSource { get; set; }
         private string _RepoPath { get; set; }
         private string _ScanPathText { get; set; }
+        private bool _UnrecognizedFilter { get; set; }
         #endregion
 
         #region View
@@ -424,6 +444,19 @@ namespace DatabaseEditor.ViewModels
             }
         }
 
+        //Scanning
+        public CollectionViewSource CollectionViewSource
+        {
+            get => _CollectionViewSource;
+            set
+            {
+                if (_CollectionViewSource == value)
+                    return;
+
+                _CollectionViewSource = value;
+                OnPropertyChanged("CollectionViewSource");
+            }
+        }
         public string RepoPath
         {
             get => _RepoPath;
@@ -440,6 +473,16 @@ namespace DatabaseEditor.ViewModels
             {
                 _ScanPathText = value;
                 OnPropertyChanged("ScanPathText");
+            }
+        }
+        public bool UnrecognizedFilter
+        {
+            get => _UnrecognizedFilter;
+            set
+            {
+                _UnrecognizedFilter = value;
+                CollectionViewSource.View.Refresh();
+                OnPropertyChanged("UnrecognizedFilter");
             }
         }
         #endregion
@@ -513,20 +556,22 @@ namespace DatabaseEditor.ViewModels
         {
             string DocumentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\Quasar\";
             string ModPath = String.Format(@"{0}\Library\Mods\{1}\", DocumentsPath, SelectedTestLibraryItem.Guid);
-            ObservableCollection<ScanFile> ScanResults = Workshop.Scanning.Scanner.GetScanFiles(ModPath, QuasarModTypes, Games[0], ModPath);
+            ObservableCollection<ScanFile> ScanResults = FileScanner.GetScanFiles(ModPath);
+            ScanResults = FileScanner.FilterIgnoredFiles(ScanResults);
+            ScanResults = FileScanner.MatchScanFiles(ScanResults, QuasarModTypes, Games[0], ModPath);
             ProcessScan(ScanResults);
         }
-
         public void ScanPath()
         {
-            ObservableCollection<ScanFile> ScanResults = Workshop.Scanning.Scanner.GetScanFiles(ScanPathText, QuasarModTypes, Games[0], ScanPathText);
+            ObservableCollection<ScanFile> ScanResults = FileScanner.GetScanFiles(ScanPathText);
+            ScanResults = FileScanner.FilterIgnoredFiles(ScanResults);
+            ScanResults = FileScanner.MatchScanFiles(ScanResults, QuasarModTypes, Games[0], ScanPathText);
             ProcessScan(ScanResults);
+            
         }
 
         public void ProcessScan(ObservableCollection<ScanFile> ScanResults)
         {
-            
-
             TestResults = new ObservableCollection<ScanTestResult>();
             foreach(ScanFile Scan in ScanResults)
             {
@@ -535,6 +580,8 @@ namespace DatabaseEditor.ViewModels
                     ScanFile = Scan
                 });
             }
+            CollectionViewSource.Source = TestResults;
+            CollectionViewSource.View.Refresh();
         }
 
         //Paths Tab

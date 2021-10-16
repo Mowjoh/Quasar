@@ -343,9 +343,11 @@
                                     Command="{Binding ScanModCommand}" Content="Scan Selected Mod" />
                             <Button Width="200" Height="20" Margin="5,0,5,5" HorizontalAlignment="Right" VerticalAlignment="Bottom"
                                     Command="{Binding ScanPathCommand}" Content="Scan Selected Path" />
+                            <CheckBox Margin="250,0,0,5" HorizontalAlignment="Left" VerticalAlignment="Bottom"
+                                      Content="Unrecognized files only" Foreground="White" IsChecked="{Binding UnrecognizedFilter}" />
                         </Grid>
                     </GroupBox>
-                    <DataGrid ItemsSource="{Binding TestResults}"
+                    <DataGrid ItemsSource="{Binding CollectionViewSource.View}"
                               Margin="0,175,0,0"
                               AutoGenerateColumns="False">
                         <DataGrid.Columns>
@@ -394,6 +396,7 @@
                             </Style>
                         </DataGrid.RowStyle>
                     </DataGrid>
+
                 </Grid>
             </TabItem>
             <TabItem Foreground="White" Header="Paths">
