@@ -35,7 +35,7 @@ namespace Workshop.Updates
 
         public static bool CheckForValidData()
         {
-            return true;
+            return false;
         }
 
         /// <summary>

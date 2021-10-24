@@ -11,7 +11,7 @@ namespace Validator.Updates
     public class UpdateTests
     {
         [Fact]
-        public void ValidateUpdateTest()
+        public void Updates_Specific_LibraryFilesAreMoved()
         {
             Assert.True(true);
         }

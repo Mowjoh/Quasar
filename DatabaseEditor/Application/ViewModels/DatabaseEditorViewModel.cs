@@ -22,7 +22,7 @@ namespace DatabaseEditor.ViewModels
         public static string AppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\Quasar";
         public static string InstallDirectory = @"C:\Program Files (x86)\Quasar";
 
-
+        
         
         #region Commands
         //Game Editor Tab
@@ -129,6 +129,8 @@ namespace DatabaseEditor.ViewModels
             CollectionViewSource.Source = TestResults;
             CollectionViewSource.Filter += CollectionViewSource_Filter;
             RepoPath = Properties.Settings.Default.RepoPath;
+
+            IsAdmin = new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator);
         }
 
         private void CollectionViewSource_Filter(object sender, FilterEventArgs e)
@@ -184,6 +186,9 @@ namespace DatabaseEditor.ViewModels
         private string _RepoPath { get; set; }
         private string _ScanPathText { get; set; }
         private bool _UnrecognizedFilter { get; set; }
+
+        //Admin status
+        private bool _IsAdmin { get; set; }
         #endregion
 
         #region View
@@ -483,6 +488,16 @@ namespace DatabaseEditor.ViewModels
                 _UnrecognizedFilter = value;
                 CollectionViewSource.View.Refresh();
                 OnPropertyChanged("UnrecognizedFilter");
+            }
+        }
+
+        public bool IsAdmin
+        {
+            get => _IsAdmin;
+            set
+            {
+                _IsAdmin = value;
+                OnPropertyChanged("IsAdmin");
             }
         }
         #endregion

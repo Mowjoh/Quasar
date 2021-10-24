@@ -37,6 +37,42 @@ namespace DataModels.Common
 
     }
 
+    public class APIScreenshot
+    {
+        [JsonProperty("_aPreviewMedia")]
+        public APIMedia Media { get; set; }
+    }
+
+    public class APIMedia
+    {
+        [JsonProperty("_aImages")]
+        public List<APIImage> Images { get; set; }
+    }
+
+    public class APIImage
+    {
+        [JsonProperty("_sType")]
+        public string Type { get; set; }
+        [JsonProperty("_sFile")]
+        public string File { get; set; }
+    }
+
+    public class APIDownloadInformation
+    {
+        [JsonProperty("_aFiles")]
+        public List<APIFileInformation> Files { get; set; }
+        public string QuasarURL { get; set; }
+    }
+
+    public class APIFileInformation
+    {
+        [JsonProperty("_sFile")]
+        public string File { get; set; }
+        [JsonProperty("_sDownloadUrl")]
+        public string DownloadURL { get; set; }
+    }
+
+
     public partial class APISubCategory
     {
         [JsonProperty("_sName")]
