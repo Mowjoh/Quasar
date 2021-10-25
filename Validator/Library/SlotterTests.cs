@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace Validator.Library
 {
-    class SlotterTests
+    public class SlotterTests
     {
+
     }
 }

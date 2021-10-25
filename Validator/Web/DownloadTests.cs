@@ -12,7 +12,7 @@ namespace Validator.Web
         [Theory]
         [InlineData("123456")]
         [InlineData("123457")]
-        public void Screenshot_Generic_ScreenshotSuccesfulDownload(string ModID)
+        public void Screenshot_ScreenshotSuccesfulDownload(string ModID)
         {
             Assert.True(true);
         }

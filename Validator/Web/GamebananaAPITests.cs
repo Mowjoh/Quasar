@@ -18,7 +18,7 @@ namespace Testing_Web
         /// Asserts that Gamebanana responds
         /// </summary>
         [Fact]
-        public async void API_Server_ServerResponds()
+        public async void Server_ServerResponds()
         {
             APIMod Response = await APIRequest.GetModInformation("324701");
             Assert.NotNull(Response);
@@ -28,7 +28,7 @@ namespace Testing_Web
         /// Asserts that all the data from a specific mod are properly parsed and deserialized
         /// </summary>
         [Fact]
-        public async void API_ModInformation_SpecificDataIsParsed()
+        public async void ModInformation_SpecificDataIsReceivedAndMapped()
         {
             APIMod Response = await APIRequest.GetModInformation("322837");
 
@@ -56,7 +56,7 @@ namespace Testing_Web
         [InlineData("324202")]
         [InlineData("318522")]
         [InlineData("324676")]
-        public async void API_ModInformation_GenericDataIsParsed(string ModID)
+        public async void ModInformation_DataIsReceivedAndMapped(string ModID)
         {
             APIMod Response = await APIRequest.GetModInformation(ModID);
 
@@ -80,7 +80,7 @@ namespace Testing_Web
         [InlineData("310949")]
         [InlineData("321199")]
         [InlineData("38828")]
-        public async void API_DownloadInformation_GenericDataIsParsed(string ModID)
+        public async void DownloadInformation_DataIsReceivedAndMapped(string ModID)
         {
             APIDownloadInformation DownloadInfo = await APIRequest.GetDownloadFileName(ModID);
             Assert.True(DownloadInfo.QuasarURL != "");
@@ -92,7 +92,7 @@ namespace Testing_Web
         [InlineData("310949")]
         [InlineData("321199")]
         [InlineData("38828")]
-        public async void API_ScreenshotInformation_GenericDataIsParsed(string ModID)
+        public async void ScreenshotInformation_DataIsReceivedAndMapped(string ModID)
         {
             APIScreenshot Screenshot = await APIRequest.GetScreenshotInformation(ModID);
             Assert.NotNull(Screenshot.Media);
@@ -108,7 +108,7 @@ namespace Testing_Web
 
         [Theory]
         [InlineData(@"world_of_final_fantasy_sora_c02_.rar", @"https://gamebanana.com/dl/679605", @"330295", @"quasar:https://gamebanana.com/mmdl/679605,Mod,330295,rar")]
-        public void API_QuasarUrl_SpecificURLIsProperlyGenerated(string Filename, string DownloadURL, string ModID, string ExpectedResult)
+        public void QuasarUrl_UrlIsProperlyGenerated(string Filename, string DownloadURL, string ModID, string ExpectedResult)
         {
             string QuasarURL = APIRequest.GetQuasarDownloadURL(Filename, DownloadURL, ModID);
             Assert.Equal(ExpectedResult, QuasarURL);

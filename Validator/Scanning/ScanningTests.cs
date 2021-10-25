@@ -246,7 +246,7 @@ namespace Testing_Scanner
         /// Asserts that the files with an extension specified in IgnoreExtensions gets flagged as ignored and scanned
         /// </summary>
         [Fact]
-        public void Scanning_Filtering_FilesWithSpecificExtensionsAreFiltered()
+        public void Filtering_FilesWithSpecificExtensionsAreFiltered()
         {
             ObservableCollection<ScanFile> TestedFiles = FileScanner.FilterIgnoredFiles(ExtensionTestData);
 
@@ -260,7 +260,7 @@ namespace Testing_Scanner
         /// Asserts that the files with a name specified in IgnoreFiles gets flagged as ignored and scanned
         /// </summary>
         [Fact]
-        public void Scanning_Filtering_FilesWithSpecificFilenamesAreFiltered()
+        public void Filtering_FilesWithSpecificFilenamesAreFiltered()
         {
             ObservableCollection<ScanFile> TestedFiles = FileScanner.FilterIgnoredFiles(FileNameTestData);
 
@@ -275,7 +275,7 @@ namespace Testing_Scanner
         [InlineData(@"{Folder}", @"(?'Folder'[^\\\\\\/]*)")]
         [InlineData(@"{Part}", @"(?'Part'[a-zA-Z0-9]*)")]
         [InlineData(@"{GameData}", @"(?'GameData'[a-zA-Z0-9\\_]*)")]
-        public void Scanning_Regex_FlagsAreProperlyConverted(string flag, string flagOutput)
+        public void Regex_FlagsAreProperlyConverted(string flag, string flagOutput)
         {
             string ProcessedRule = FileScanner.PrepareRegex(flag);
             Assert.Equal(flagOutput, ProcessedRule);
@@ -285,7 +285,7 @@ namespace Testing_Scanner
         [InlineData(@"{S0}", @"(?'Slot'\d{1})")]
         [InlineData(@"{S00}", @"(?'Slot'\d{2})")]
         [InlineData(@"{S000}", @"(?'Slot'\d{3})")]
-        public void Scanning_Regex_SlotFlagsAreProperlyConverted(string flag, string flagOutput)
+        public void Regex_SlotFlagsAreProperlyConverted(string flag, string flagOutput)
         {
             string ProcessedRule = FileScanner.PrepareRegex(flag);
             Assert.Equal(flagOutput, ProcessedRule);
@@ -295,7 +295,7 @@ namespace Testing_Scanner
         [InlineData(@"a+b", @"a\+b")]
         [InlineData(@"filename.extension", @"filename\.extension")]
         [InlineData(@"folder\another", @"folder\\another")]
-        public void Scanning_Regex_ExtrasAreProperlyConverted(string flag, string flagOutput)
+        public void Regex_ExtrasAreProperlyConverted(string flag, string flagOutput)
         {
             string ProcessedRule = FileScanner.PrepareRegex(flag);
             Assert.Equal(flagOutput, ProcessedRule);

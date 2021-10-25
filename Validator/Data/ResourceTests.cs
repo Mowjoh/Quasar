@@ -19,7 +19,7 @@ namespace Testing_Data
         /// Validates that all resource files are present and properly named
         /// </summary>
         [Fact]
-        public void TestResourcePresence()
+        public void Installation_ResourceFilesArePresent()
         {
             //Getting Resources
             string[] Resources = Directory.GetFiles(InstallDirectory + @"\Resources", "*", SearchOption.TopDirectoryOnly);
@@ -42,7 +42,7 @@ namespace Testing_Data
         /// Validates that the Gamebanana deserializes properly and contains data
         /// </summary>
         [Fact]
-        public void ValidateGamebananaFile()
+        public void Loading_GamebananaFileLoadsAndContainsData()
         {
             GamebananaAPI Resource = ResourceManager.GetGamebananaAPI();
 
@@ -55,7 +55,7 @@ namespace Testing_Data
         /// Validates that the Games deserializes properly and contains data
         /// </summary>
         [Fact]
-        public void ValidateGamesFile()
+        public void Loading_GamesFileLoadsAndContainsData()
         {
             ObservableCollection<Game> Resource = ResourceManager.GetGames();
 
@@ -68,7 +68,7 @@ namespace Testing_Data
         /// Validates that the Mod Loaders deserializes properly and contains data
         /// </summary>
         [Fact]
-        public void ValidateModLoadersFile()
+        public void Loading_ModLoadersFileLoadsAndContainsData()
         {
             ObservableCollection<ModLoader> Resource = ResourceManager.GetModLoaders();
 
@@ -83,7 +83,7 @@ namespace Testing_Data
         /// Validates that the Mod Types deserializes properly and contains data
         /// </summary>
         [Fact]
-        public void ValidateModTypesFile()
+        public void Loading_ModTypesFileLoadsAndContainsData()
         {
             ObservableCollection<QuasarModType> Resource = ResourceManager.GetQuasarModTypes();
             
