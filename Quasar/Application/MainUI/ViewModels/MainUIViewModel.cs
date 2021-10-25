@@ -529,7 +529,10 @@ namespace Quasar.MainUI.ViewModels
                 SetupClientOrServer();
 
                 QuasarLogger.Info("Update Process Started");
-                Updater.CheckExecuteUpdate(QuasarLogger);
+                UpdateStatus BootStatus = UpdateCommander.CheckUpdateStatus(QuasarLogger);
+
+                if(BootStatus == UpdateStatus.FirstBoot)
+                    UpdateCommander.LaunchFirstBootSequence();
 
                 LoadData();
 
@@ -542,7 +545,51 @@ namespace Quasar.MainUI.ViewModels
                 EventSystem.Subscribe<ModListItem>(ModListItemEvent);
                 EventSystem.Subscribe<ModalEvent>(ProcessModalEvent);
 
-                if (Updater.NeedsInitialSetup)
+                //Bootup actions based on update status
+                switch (BootStatus)
+                {
+                    case UpdateStatus.ToUpdate:
+                        ModalEvent Meuh = new ModalEvent()
+                        {
+                            Action = "Show",
+                            EventName = "Updating",
+                            Title = "Update Process",
+                            Content = "Please be patient, Quasar is updating",
+                            OkButtonText = "OK",
+                            Type = ModalType.Loader
+                        };
+
+                        EventSystem.Publish<ModalEvent>(Meuh);
+                        Task.Run(() =>
+                        {
+                            UpdateCommander.LaunchUpdateSequence(QuasarLogger);
+                        });
+                        break;
+
+                    case UpdateStatus.PreviouslyInstalled:
+                        ModalEvent Meuhdeux = new ModalEvent()
+                        {
+                            Action = "Show",
+                            EventName = "RecoveringInstallation",
+                            Title = "Recovering Files and Data",
+                            Content = "Please be patient, Quasar is looking for previously installed files",
+                            OkButtonText = "OK",
+                            Type = ModalType.Loader
+                        };
+
+                        EventSystem.Publish<ModalEvent>(Meuhdeux);
+                        Task.Run(() =>
+                        {
+                            UpdateCommander.LaunchInstallRecoverySequence();
+                        });
+                        break;
+                    case UpdateStatus.Regular:
+                        InitialWarnings();
+                        BackupRestoreUserData(UserDataLoaded);
+                        break;
+                }
+                //If a previous install is detected
+                if (BootStatus == UpdateStatus.PreviouslyInstalled)
                 {
                     string ModsPath = Properties.Settings.Default.DefaultDir + @"\Library\Mods\";
                     string[] ModFolders = Directory.GetDirectories(ModsPath, "*", SearchOption.TopDirectoryOnly);
@@ -583,54 +630,6 @@ namespace Quasar.MainUI.ViewModels
                         BackupRestoreUserData(UserDataLoaded);
                     }
                 }
-                else
-                {
-                    InitialWarnings();
-                    BackupRestoreUserData(UserDataLoaded);
-                }
-
-                /* if (Updater.NeedsUltraCleaning() && Updater.NeedsUpdate)
-                 {
-                     ModalEvent meuh = new ModalEvent()
-                     {
-                         Action = "Show",
-                         EventName = "UltraCleaning",
-                         Title = "Quasar is updating",
-                         Content = "Please be patient while Quasar updates it's data to the new format",
-                         OkButtonText = "OK",
-                         Type = ModalType.Loader
-                     };
-
-                     EventSystem.Publish<ModalEvent>(meuh);
-                     Task.Run(() =>
-                     {
-                         InstallManager.LaunchUltraCleaning(this);
-                     });
-                 } */
-
-
-                /*
-               if ((Updater.NeedsScanning && !Updater.NeedsUltraCleaning()) && Updater.NeedsUpdate)
-               {
-                   ModalEvent Meuhdeux = new ModalEvent()
-                   {
-                       Action = "Show",
-                       EventName = "UltraScanning",
-                       Title = "Quasar is scanning",
-                       Content = "Please be patient while Quasar scans all the data",
-                       OkButtonText = "OK",
-                       Type = ModalType.Loader
-                   };
-
-                   EventSystem.Publish<ModalEvent>(Meuhdeux);
-                   Task.Run(() =>
-                   {
-                       InstallManager.Rescan(this);
-                   });
-               }
-               */
-
-
             }
             catch (Exception e)
             {
@@ -822,10 +821,10 @@ namespace Quasar.MainUI.ViewModels
         public async void ShowUpdateModal()
         {
             Application.Current.Dispatcher.Invoke((Action)delegate {
-                Updating = Updater.NeedsScanning;
+                Updating = UpdateCommander.ScanRequested;
             });
 
-            if (Updater.NeedsScanning)
+            if (UpdateCommander.ScanRequested)
             {
                 await Task.Run(() => {
                     Scannerino.ScanAllMods(this);
@@ -838,14 +837,6 @@ namespace Quasar.MainUI.ViewModels
             Application.Current.Dispatcher.Invoke((Action)delegate {
                 UpdateFinished = true;
             });
-        }
-
-        /// <summary>
-        /// Updates Quasar
-        /// </summary>
-        public async void UpdateQuasar()
-        {
-
         }
 
         /// <summary>
@@ -902,13 +893,13 @@ namespace Quasar.MainUI.ViewModels
                         Properties.Settings.Default.Save();
                     }
                     break;
-                case "UltraCleaning":
+                case "Updating":
                     if(me.Action == "OK")
                     {
                         SetupViews();
                     }
                     break;
-                case "UltraScanning":
+                case "RecoveringInstallation":
                     if (me.Action == "OK")
                     {
                         SetupViews();

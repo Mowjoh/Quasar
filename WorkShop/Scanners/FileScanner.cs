@@ -223,6 +223,29 @@ namespace Workshop.Scanners
             return _FilesToMatch;
         }
 
+        public static ScanFile ProcessMatchData(ScanFile FileToProcess, string FileMatchValue, string FolderMatchValue, int QuasarModTypeID, int FileDefinitionID)
+        {
+            //FileToProcess.QuasarModTypeID = QuasarModTypeID;
+            //FileToProcess.QuasarModTypeFileDefinitionID = FileDefinitionID;
+            //FileToProcess.GameElementID = RecognisedFolderGameData != null ? RecognisedFolderGameData.ID : RecognisedFileGameData.ID;
+            //FileToProcess.Slot = FolderSlot != "" ? FolderSlot : FileSlot != "" ? FileSlot : "00";
+
+            ////Processing paths
+            //FileToProcess.SourcePath = FileToProcess.SourcePath.Replace('/', '\\').Replace(_ModFolder, "");
+            //if (FolderMatchValue == "")
+            //{
+            //    FileToProcess.OriginPath = FileToProcess.SourcePath;
+            //}
+            //else
+            //{
+            //    FileToProcess.OriginPath = FileToProcess.SourcePath.Replace("\\" + FolderMatchValue.Replace('/', '\\'), "");
+            //}
+            //FileToProcess.OriginPath = FileToProcess.OriginPath.Replace(FileMatchValue, "|");
+            //FileToProcess.OriginPath = FileToProcess.OriginPath.Split('|')[0];
+            //FileToProcess.Scanned = true;
+            return FileToProcess;
+        }
+
         /// <summary>
         /// Processes ScanFiles into a collection of ContentItems
         /// </summary>

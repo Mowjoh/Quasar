@@ -23,19 +23,19 @@ namespace Testing_Data
         /// Validates that the library file is in the right place and properly read
         /// </summary>
         [Fact]
-        public void TestLibraryLoad()
+        public void Loading_LibraryFileLoadsAndContainsData()
         {
             ObservableCollection<LibraryItem> Library = UserDataManager.GetLibrary(AppDataLocalPath);
             Assert.True(Library.Count > 0);
         }
         [Fact]
-        public void TestWorkspaceLoad()
+        public void Loading_WorkspaceFileLoadsAndContainsData()
         {
             ObservableCollection<Workspace> Workspaces = UserDataManager.GetWorkspaces(AppDataLocalPath);
             Assert.True(Workspaces.Count > 0);
         }
         [Fact]
-        public void TestContentItemLoad()
+        public void Loading_ContentItemsFileLoadsAndContainsData()
         {
             ObservableCollection<ContentItem> ContentItems = UserDataManager.GetContentItems(AppDataLocalPath);
             Assert.True(ContentItems.Count > 0);
@@ -45,7 +45,7 @@ namespace Testing_Data
         /// Validates the functionnality that moves the library file to the proper location if needed
         /// </summary>
         [Fact]
-        public void ValidateLibraryMovement()
+        public void ToMove_Updates_LibraryFilesGetsMoved()
         {
             UserDataManager.VerifyUpdateFileLocation(DocumentsPath, AppDataLocalPath);
 
@@ -58,7 +58,7 @@ namespace Testing_Data
         }
 
         [Fact]
-        public void ValidateUserDataBackup()
+        public void Backup_UserDataIsBackuped()
         {
             Assert.True(UserDataManager.BackupUserDataFiles(AppDataLocalPath));
 

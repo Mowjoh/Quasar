@@ -6,7 +6,6 @@
         mc:Ignorable="d">
     <Grid Background="#212121">
         <TabControl x:Name="ApplicationTabControl">
-
             <TabItem Foreground="White" Header="Workspace Viewer" Template="{StaticResource TabItemControl}">
                 <Grid Background="#212121">
                     <Grid.ColumnDefinitions>
@@ -407,6 +406,21 @@
                              Text="{Binding RepoPath}" />
                     <Button Width="150" Margin="15,115,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
                             Background="#FF931010" Command="{Binding SavePathCommand}" Content="Save" />
+                </Grid>
+            </TabItem>
+
+            <TabItem Foreground="Red" Header="Not ADMIN" Template="{StaticResource TabItemControl}">
+                <TabItem.Style>
+                    <Style TargetType="TabItem">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsAdmin}" Value="true">
+                                <Setter Property="Visibility" Value="Collapsed" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TabItem.Style>
+                <Grid Background="Black">
+                    <Label Foreground="Red" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="44" Content="YOU ARE NOT ADMIN" />
                 </Grid>
             </TabItem>
         </TabControl>

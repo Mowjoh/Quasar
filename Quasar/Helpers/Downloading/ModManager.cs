@@ -323,7 +323,8 @@ namespace Quasar.Helpers.Downloading
                         if (Processed)
                         {
                             QuasarLogger.Debug("Getting Screenshot");
-                            await APIRequest.GetDownloadScreenshot(QuasarURL.GamebananaItemID, LibraryItem.Guid.ToString(),Properties.Settings.Default.DefaultDir);
+                            APIScreenshot ScreenshotInformation = await APIRequest.GetScreenshotInformation(QuasarURL.GamebananaItemID);
+                            await Downloader.DownloadScreenshot(ScreenshotInformation.Media.Images[0].File, LibraryItem.Guid.ToString(), Properties.Settings.Default.DefaultDir);
                             ProcessAborted = false;
                         }
                     }
