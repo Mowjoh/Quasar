@@ -21,10 +21,10 @@ using Quasar.Helpers.Downloading;
 using Quasar.Helpers.Mod_Scanning;
 using Quasar.Helpers.Tools;
 using Quasar.MainUI.ViewModels;
-using Quasar.Helpers.API;
 using Microsoft.WindowsAPICodePack.Taskbar;
 using System.Diagnostics;
 using Workshop.FileManagement;
+using Workshop.Web;
 
 namespace Quasar.Controls.ModManagement.ViewModels
 {
@@ -896,8 +896,7 @@ namespace Quasar.Controls.ModManagement.ViewModels
 
             Application.Current.Dispatcher.Invoke((Action)delegate {
                 Task.Run(() =>
-                
-                DownloadMod(APIRequest.GetQuasarDownloadURL("", "",RCat.Name, MLI.ModListItemViewModel.LibraryItem.GBItem.GamebananaItemID.ToString())));
+                DownloadMod(APIRequest.GetQuasarDownloadURL("",RCat.Name, MLI.ModListItemViewModel.LibraryItem.GBItem.GamebananaItemID.ToString())));;
             });
         }
 

@@ -54,9 +54,6 @@ namespace Quasar.Helpers.Compression
         {
             try
             {
-                
-
-                
                 switch (_ArchiveType)
                 {
                     case "rar":

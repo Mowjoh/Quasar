@@ -58,17 +58,6 @@ namespace Quasar.Helpers.Quasar_Management
         }
 
         /// <summary>
-        /// Forcing references files and base Quasar Mod Types to be refreshed in the user folder
-        /// </summary>
-        public static void UpdateInstallation()
-        {
-            String ResourcePath = Properties.Settings.Default.DefaultDir + "\\Resources\\";
-            String AppPath = Properties.Settings.Default.AppPath + "\\Resources\\";
-
-            FileOperation.CheckCopyFolder(AppPath, ResourcePath, true, true);
-        }
-
-        /// <summary>
         /// Defines basic User settings
         /// </summary>
         /// <param name="ExternalPath">Install location</param>
