@@ -5,12 +5,12 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Workshop.Library;
+using Workshop.Associations;
 using Xunit;
 
-namespace Validator.Library
+namespace Validator.Associations
 {
-    public class SlotterTests
+    public class SlottingTests
     {
         [Fact]
         public void Slotting_ContentItemIsSlottedOnEmptySlot()
