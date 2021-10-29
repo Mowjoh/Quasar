@@ -30,6 +30,7 @@ namespace DataModels.User
     {
         public string SlotName { get; set; }
 
+        public int SlotNumber { get; set; }
         public ObservableCollection<ContentItem> SlotContentItems { get; set; }
     }
 

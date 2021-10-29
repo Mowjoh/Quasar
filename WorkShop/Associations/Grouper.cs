@@ -24,20 +24,20 @@ namespace Workshop.Associations
 
 
             //Adding matching types to the groups
-            foreach(QuasarModType q in AvailableQuasarModTypes.Where(qmt => qmt.GameElementFamilyID == _GameElementFamilyID).ToArray())
+            foreach(QuasarModType Type in AvailableQuasarModTypes.Where(qmt => qmt.GameElementFamilyID == _GameElementFamilyID).ToArray())
             {
-                if(QuasarModTypeGroups.Any(group => group.Name == q.GroupName))
+                if(QuasarModTypeGroups.Any(group => group.Name == Type.GroupName))
                 {
-                    QuasarModTypeGroups.Single(group => group.Name == q.GroupName).QuasarModTypeCollection.Add(q);
+                    QuasarModTypeGroups.Single(group => group.Name == Type.GroupName).QuasarModTypeCollection.Add(Type);
                 }
                 else
                 {
                     QuasarModTypeGroups.Add(new()
                     {
-                        Name = q.GroupName,
+                        Name = Type.GroupName,
                         QuasarModTypeCollection = new()
                         {
-                            q
+                            Type
                         }
                     });
                 }
@@ -57,6 +57,18 @@ namespace Workshop.Associations
         {
             ObservableCollection<SlotContent> Contents = new();
 
+            foreach (ContentItem MatchingContentItem in _ContentItems.Where(ci => ci.GameElementID == _AssociatedElement.ID && ci.QuasarModTypeID == _QuasarModType.ID).ToList())
+            {
+                Contents.Add(new()
+                {
+                    SlotName = MatchingContentItem.Name,
+                    SlotContentItems = new()
+                    {
+                        MatchingContentItem
+                    }
+                });
+            }
+
             return Contents;
         }
 
@@ -70,6 +82,29 @@ namespace Workshop.Associations
         public static ObservableCollection<SlotContent> GetSlotContents(QuasarModTypeGroup _TypesGroup, ObservableCollection<ContentItem> _ContentItems, GameElement _AssociatedElement)
         {
             ObservableCollection<SlotContent> Contents = new();
+
+            //Listing all Content Items that match the QuasarModTypeGroup and Associated Game Element
+            List<ContentItem> MatchingContentItems = _ContentItems.Where(ci => ci.GameElementID == _AssociatedElement.ID && _TypesGroup.QuasarModTypeCollection.Any(t => t.ID == ci.QuasarModTypeID)).ToList();
+            
+            //Processing SlotContents for each slot
+
+            foreach (ContentItem MatchingContentItem in MatchingContentItems)
+            {
+                //If there is a SlotContent with the same Slot Number
+                if(Contents.Any(s => s.SlotNumber == MatchingContentItem.SlotNumber))
+                {
+                    //If the Origin Path is the same
+                    
+                }
+                Contents.Add(new()
+                {
+                    SlotName = MatchingContentItem.Name,
+                    SlotContentItems = new()
+                    {
+                        MatchingContentItem
+                    }
+                });
+            }
 
             return Contents;
         }

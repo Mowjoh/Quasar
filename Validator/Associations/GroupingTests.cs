@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using Workshop.Associations;
 using Xunit;
 
-namespace Validator.Associations
+namespace Testing_Associations
 {
     public class GroupingTests
     {
@@ -109,7 +109,7 @@ namespace Validator.Associations
         }
 
         [Fact]
-        public void Slots_SingleType_SlotContentsAreProperlyGenerated()
+        public void Slots_QuasarModType_SlotContentsAreProperlyGenerated()
         {
             ObservableCollection<ContentItem> TestContentItems = new()
             {
@@ -266,21 +266,6 @@ namespace Validator.Associations
                  }
             };
 
-            QuasarModType TestQuasarModType = new()
-            {
-                GameElementFamilyID = 0,
-                GroupName = "First Group",
-                Name = "First Type",
-                ID = 0,
-                IgnoreGameElementFamily = false,
-                ExternalFolderPath = "",
-                IsExternal = false,
-                NoGameElement = false,
-                SlotCount = 8,
-                QuasarModTypeFileDefinitions = new(),
-                TypePriority = 10
-            };
-
             GameElement TestGameElement = new()
             {
                 FilterValue = "",
@@ -290,7 +275,7 @@ namespace Validator.Associations
                 Name = "A new Challenger"
             };
 
-            ObservableCollection<SlotContent> SlotContents = Grouper.GetSlotContents(TestQuasarModType, TestContentItems, TestGameElement);
+            ObservableCollection<SlotContent> SlotContents = Grouper.GetSlotContents(TestQuasarModTypeGroup, TestContentItems, TestGameElement);
 
             Assert.True(SlotContents.Count == 3);
         }
