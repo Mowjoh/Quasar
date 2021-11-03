@@ -460,7 +460,7 @@ namespace Quasar.Controls.ModManagement.ViewModels
             bool NoSelectedType = SelectedGamebananaRootCategory == null;
             bool MatchingSelectedType = false;
             if(!NoSelectedType)
-                MatchingSelectedType = mli.ModListItemViewModel.LibraryItem.GBItem.RootCategoryGuid == SelectedGamebananaRootCategory.Guid;
+                MatchingSelectedType = mli.ModListItemViewModel.LibraryItem.GBItem?.RootCategoryGuid == SelectedGamebananaRootCategory.Guid;
 
             //Getting Filter Text Match
             bool EmptyText = SearchText.Length == 0;

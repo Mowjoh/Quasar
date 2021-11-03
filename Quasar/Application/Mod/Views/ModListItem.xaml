@@ -75,19 +75,22 @@
             <Setter Property="Fill" Value="{StaticResource DefaultColor}" />
             <Setter Property="Stroke" Value="AliceBlue" />
             <Style.Triggers>
-                <DataTrigger Binding="{Binding AssociatedRootCategory.Name}" Value="Skin">
+                <DataTrigger Binding="{Binding AssociatedRootCategory.Name}" Value="Skins">
                     <Setter Property="Fill" Value="{StaticResource SkinColor}" />
                 </DataTrigger>
-                <DataTrigger Binding="{Binding AssociatedRootCategory.Name}" Value="Map">
+                <DataTrigger Binding="{Binding AssociatedRootCategory.Name}" Value="Stages">
                     <Setter Property="Fill" Value="{StaticResource MapColor}" />
                 </DataTrigger>
                 <DataTrigger Binding="{Binding AssociatedRootCategory.Name}" Value="Sound">
                     <Setter Property="Fill" Value="{StaticResource SoundColor}" />
                 </DataTrigger>
-                <DataTrigger Binding="{Binding AssociatedRootCategory.Name}" Value="Gamefile">
+                <DataTrigger Binding="{Binding AssociatedRootCategory.Name}" Value="Effects">
                     <Setter Property="Fill" Value="{StaticResource GamefileColor}" />
                 </DataTrigger>
-                <DataTrigger Binding="{Binding AssociatedRootCategory.Name}" Value="Gui">
+                <DataTrigger Binding="{Binding AssociatedRootCategory.Name}" Value="UI">
+                    <Setter Property="Fill" Value="{StaticResource GUIColor}" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding AssociatedRootCategory.Name}" Value="Other/Misc">
                     <Setter Property="Fill" Value="{StaticResource GUIColor}" />
                 </DataTrigger>
             </Style.Triggers>

@@ -182,5 +182,52 @@ namespace Workshop.FileManagement
 
             return API;
         }
+        public static GamebananaAPI CleanGamebananaAPIFile(GamebananaAPI API, ObservableCollection<LibraryItem> Library)
+        {
+            GamebananaAPI NewAPI = new()
+            {
+                Games = new()
+                {
+                    new()
+                    {
+                        Guid = API.Games[0].Guid,
+                        ID = API.Games[0].ID,
+                        Name = API.Games[0].Name,
+                        RootCategories = new()
+                    }
+                }
+            };
+
+            foreach(GamebananaRootCategory RC in API.Games[0].RootCategories)
+            {
+                if(Library.Any(li => li.GBItem?.RootCategoryGuid == RC.Guid))
+                {
+                    GamebananaRootCategory NewRootCategory = new()
+                    {
+                        Guid = RC.Guid,
+                        Name = RC.Name,
+                        SubCategories = new()
+                    };
+
+                    foreach(LibraryItem li in Library.Where(l => l.GBItem?.RootCategoryGuid == RC.Guid).ToList())
+                    {
+                        if(!NewRootCategory.SubCategories.Any(SC => SC.Guid == li.GBItem?.SubCategoryGuid))
+                        {
+                            GamebananaSubCategory MatchingSubCat = RC.SubCategories.Single(sc => sc.Guid == li.GBItem?.SubCategoryGuid);
+                            NewRootCategory.SubCategories.Add(new()
+                            {
+                                Guid = MatchingSubCat.Guid,
+                                ID = MatchingSubCat.ID,
+                                Name = MatchingSubCat.Name
+                            });
+                        }
+                    }
+
+                    NewAPI.Games[0].RootCategories.Add(NewRootCategory);
+                }
+            }
+
+            return NewAPI;
+        }
     }
 }
