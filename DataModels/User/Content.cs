@@ -26,6 +26,14 @@ namespace DataModels.User
         public ObservableCollection<ScanFile> ScanFiles { get; set; }
     }
 
+    public class SlotContent
+    {
+        public string SlotName { get; set; }
+
+        public int SlotNumber { get; set; }
+        public ObservableCollection<ContentItem> SlotContentItems { get; set; }
+    }
+
     public class ModFile
     {
         public string SourceFilePath { get; set; }

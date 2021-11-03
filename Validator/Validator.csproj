@@ -24,4 +24,8 @@
     <ProjectReference Include="..\WorkShop\Workshop.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Library\" />
+  </ItemGroup>
+
 </Project>

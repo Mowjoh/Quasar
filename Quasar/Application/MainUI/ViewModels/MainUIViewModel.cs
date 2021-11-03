@@ -678,6 +678,9 @@ namespace Quasar.MainUI.ViewModels
             ModLoaders = ResourceManager.GetModLoaders();
             API = ResourceManager.GetGamebananaAPI();
 
+            API = ResourceManager.CleanGamebananaAPIFile(API, Library);
+            ResourceManager.SaveGamebananaAPI(API, AppDataPath);
+
         }
 
         /// <summary>
