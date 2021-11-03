@@ -81,18 +81,55 @@
                 <DataTrigger Binding="{Binding AssociatedRootCategory.Name}" Value="Stages">
                     <Setter Property="Fill" Value="{StaticResource MapColor}" />
                 </DataTrigger>
-                <DataTrigger Binding="{Binding AssociatedRootCategory.Name}" Value="Sound">
-                    <Setter Property="Fill" Value="{StaticResource SoundColor}" />
+                <DataTrigger Binding="{Binding AssociatedRootCategory.Name}" Value="Other/Misc">
+                    <Setter Property="Fill" Value="{StaticResource OtherColor}" />
                 </DataTrigger>
                 <DataTrigger Binding="{Binding AssociatedRootCategory.Name}" Value="Effects">
-                    <Setter Property="Fill" Value="{StaticResource GamefileColor}" />
+                    <Setter Property="Fill" Value="{StaticResource EffectColor}" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding AssociatedRootCategory.Name}" Value="Skyline">
+                    <Setter Property="Fill" Value="{StaticResource SkylineColor}" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding AssociatedRootCategory.Name}" Value="Animation">
+                    <Setter Property="Fill" Value="{StaticResource AnimationColor}" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding AssociatedRootCategory.Name}" Value="Sound">
+                    <Setter Property="Fill" Value="{StaticResource SoundColor}" />
                 </DataTrigger>
                 <DataTrigger Binding="{Binding AssociatedRootCategory.Name}" Value="UI">
                     <Setter Property="Fill" Value="{StaticResource GUIColor}" />
                 </DataTrigger>
-                <DataTrigger Binding="{Binding AssociatedRootCategory.Name}" Value="Other/Misc">
-                    <Setter Property="Fill" Value="{StaticResource GUIColor}" />
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="ModListItemBackground" TargetType="{x:Type Grid}">
+            <Setter Property="Background" Value="{DynamicResource DefaultDarkColor}" />
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding AssociatedRootCategory.Name}" Value="Skins">
+                    <Setter Property="Background" Value="{StaticResource SkinDarkColor}" />
                 </DataTrigger>
+                <DataTrigger Binding="{Binding AssociatedRootCategory.Name}" Value="Stages">
+                    <Setter Property="Background" Value="{StaticResource MapDarkColor}" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding AssociatedRootCategory.Name}" Value="Other/Misc">
+                    <Setter Property="Background" Value="{StaticResource OtherDarkColor}" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding AssociatedRootCategory.Name}" Value="Effects">
+                    <Setter Property="Background" Value="{StaticResource EffectDarkColor}" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding AssociatedRootCategory.Name}" Value="Skyline">
+                    <Setter Property="Background" Value="{StaticResource SkylineDarkColor}" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding AssociatedRootCategory.Name}" Value="Animation">
+                    <Setter Property="Background" Value="{StaticResource AnimationDarkColor}" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding AssociatedRootCategory.Name}" Value="Sound">
+                    <Setter Property="Background" Value="{StaticResource SoundDarkColor}" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding AssociatedRootCategory.Name}" Value="UI">
+                    <Setter Property="Background" Value="{StaticResource GUIDarkColor}" />
+                </DataTrigger>
+
             </Style.Triggers>
         </Style>
 
@@ -159,7 +196,7 @@
             <!--  Top Grid  -->
             <Grid x:Name="TopGrid"
                   Grid.Row="0" Grid.Column="1"
-                  Background="{DynamicResource CutieBG08}">
+                  Style="{DynamicResource ModListItemBackground}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="30" />
                     <ColumnDefinition Width="30*" />

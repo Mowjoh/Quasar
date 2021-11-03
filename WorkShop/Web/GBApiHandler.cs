@@ -23,7 +23,7 @@ namespace Workshop.Web
     public class APIRequest
     {
         //Gamebanana's Endpoint
-        static readonly string HTTPUrl = "https://gamebanana.com/apiv7/Mod";
+        static readonly string HTTPUrl = "https://gamebanana.com/apiv7";
 
         //Default Parameters
         static readonly QueryStringItem jsonFormat = new QueryStringItem("format", "json_min");
@@ -40,14 +40,14 @@ namespace Workshop.Web
         /// <param name="_ItemType">Gamebanana's Mod Type</param>
         /// <param name="_ItemID">Gamebanana's Mod ID</param>
         /// <returns>an APIMod object with all info</returns>
-        public static async Task<APIMod> GetModInformation(string _ItemID)
+        public static async Task<APIMod> GetModInformation(string _ItemID, string RootCategoryName = "Mod")
         {
 
             APIMod ParsedAPIMod = null;
 
             try
             {
-                string queryURL = String.Format(@"{0}/{1}?_csvProperties={2}", HTTPUrl, _ItemID, ModInformationFields);
+                string queryURL = String.Format(@"{0}/{1}/{2}?_csvProperties={3}", HTTPUrl, RootCategoryName, _ItemID, ModInformationFields);
 
                 using ( HttpClient webClient = new HttpClient())
                 {
@@ -62,7 +62,7 @@ namespace Workshop.Web
                 }
 
                 ParsedAPIMod.ID = Int32.Parse(_ItemID);
-                ParsedAPIMod.GamebananaRootCategoryName = "Mod";
+                ParsedAPIMod.GamebananaRootCategoryName = RootCategoryName;
             }
             catch (Exception e)
             {
@@ -78,11 +78,11 @@ namespace Workshop.Web
         /// <param name="_ItemType">Gamebanana's Mod Type</param>
         /// <param name="_ItemID">Gamebanana's Mod ID</param>
         /// <returns>Download link informations</returns>
-        public static async Task<APIDownloadInformation> GetDownloadFileName(string _ItemID)
+        public static async Task<APIDownloadInformation> GetDownloadFileName(string _ItemID, string RootCategoryName = "Mod")
         {
             APIDownloadInformation DownloadInformation = new();
 
-            string queryURL = String.Format(@"{0}/{1}?_csvProperties={2}", HTTPUrl, _ItemID, DownloadInfoFields);
+            string queryURL = String.Format(@"{0}/{1}/{2}?_csvProperties={3}", HTTPUrl, RootCategoryName, _ItemID, DownloadInfoFields);
 
             using (HttpClient webClient = new HttpClient())
             {
@@ -108,11 +108,11 @@ namespace Workshop.Web
         /// <param name="_GameID">Gamebanana's Game ID</param>
         /// <param name="_TypeID">Gamebanana's Category ID</param>
         /// <returns></returns>
-        public static async Task<APIScreenshot> GetScreenshotInformation(string _ItemID)
+        public static async Task<APIScreenshot> GetScreenshotInformation(string _ItemID, string RootCategoryName = "Mod")
         {
             APIScreenshot ScreenshotInformation = new();
 
-            string queryURL = String.Format(@"{0}/{1}?_csvProperties={2}", HTTPUrl, _ItemID, ScreenshotFields);
+            string queryURL = String.Format(@"{0}/{1}/{2}?_csvProperties={3}", HTTPUrl, RootCategoryName, _ItemID, ScreenshotFields);
 
             try
             {

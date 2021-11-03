@@ -158,7 +158,7 @@ namespace Quasar.Helpers.Downloading
         /// <returns></returns>
         public async Task<bool> GetAPIModInformation()
         {
-            APIMod = await APIRequest.GetModInformation(QuasarURL.GamebananaItemID);
+            APIMod = await APIRequest.GetModInformation(QuasarURL.GamebananaItemID, QuasarURL.APICategoryName);
             return true;
         }
 
@@ -230,10 +230,20 @@ namespace Quasar.Helpers.Downloading
             //If no Root Category is found in the database
             if(RCat == null)
             {
+                string catName = "";
+                if(Request.SuperCategory == null)
+                {
+                    catName = Request.GamebananaRootCategoryName;
+                }
+                else
+                {
+                    catName = Request.SuperCategory.Name;
+                }
+
                 RCat = new GamebananaRootCategory()
                 {
                     Guid = Guid.NewGuid(),
-                    Name = Request.SuperCategory.Name,
+                    Name = catName,
                     SubCategories = new ObservableCollection<GamebananaSubCategory>()
                 };
 
@@ -324,7 +334,7 @@ namespace Quasar.Helpers.Downloading
                         {
                             QuasarLogger.Debug("Getting Screenshot");
                             APIScreenshot ScreenshotInformation = await APIRequest.GetScreenshotInformation(QuasarURL.GamebananaItemID);
-                            await Downloader.DownloadScreenshot(ScreenshotInformation.Media.Images[0].File, LibraryItem.Guid.ToString(), Properties.Settings.Default.DefaultDir);
+                            await Downloader.DownloadScreenshot(@"https://images.gamebanana.com/img/ss/mods/"+ ScreenshotInformation.Media.Images[0].File, LibraryItem.Guid.ToString(), Properties.Settings.Default.DefaultDir);
                             ProcessAborted = false;
                         }
                     }
