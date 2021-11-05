@@ -1,19 +1,19 @@
-using DataModels.Resource;
 using System;
 using System.Collections.ObjectModel;
 using System.IO;
+using DataModels.Resource;
 using Workshop.FileManagement;
 using Xunit;
 
-namespace Testing_Data
+namespace Validator.Data
 {
     /// <summary>
     /// Testing aimed at resource file management
     /// </summary>
     public class ResourceTests
     {
-        static string InstallDirectory = @"C:\Program Files (x86)\Quasar";
-        static string AppDataLocalPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\Quasar";
+        private const string InstallDirectory = @"C:\Program Files (x86)\Quasar";
+        private static string _appDataLocalPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\Quasar";
 
         /// <summary>
         /// Validates that all resource files are present and properly named

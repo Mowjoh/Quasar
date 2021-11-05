@@ -1,23 +1,19 @@
-﻿using DataModels.User;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using DataModels.User;
 using Workshop.FileManagement;
 using Xunit;
 
-namespace Testing_Data
+namespace Validator.Data
 {
     /// <summary>
     /// Testing aimed at validating User Data
     /// </summary>
     public class UserDataTests
     {
-        static string DocumentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\Quasar";
-        static string AppDataLocalPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\Quasar";
+        private static readonly string DocumentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\Quasar";
+        private static readonly string AppDataLocalPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\Quasar";
 
         /// <summary>
         /// Validates that the library file is in the right place and properly read
@@ -25,8 +21,8 @@ namespace Testing_Data
         [Fact]
         public void Loading_LibraryFileLoadsAndContainsData()
         {
-            ObservableCollection<LibraryItem> Library = UserDataManager.GetLibrary(AppDataLocalPath);
-            Assert.True(Library.Count > 0);
+            ObservableCollection<LibraryItem> LibraryItems = UserDataManager.GetLibrary(AppDataLocalPath);
+            Assert.True(LibraryItems.Count > 0);
         }
         [Fact]
         public void Loading_WorkspaceFileLoadsAndContainsData()
@@ -42,7 +38,7 @@ namespace Testing_Data
         }
 
         /// <summary>
-        /// Validates the functionnality that moves the library file to the proper location if needed
+        /// Validates the functionality that moves the library file to the proper location if needed
         /// </summary>
         [Fact]
         public void ToMove_Updates_LibraryFilesGetsMoved()
@@ -58,7 +54,7 @@ namespace Testing_Data
         }
 
         [Fact]
-        public void Backup_UserDataIsBackuped()
+        public void Backup_UserDataBackupComplete()
         {
             Assert.True(UserDataManager.BackupUserDataFiles(AppDataLocalPath));
 
