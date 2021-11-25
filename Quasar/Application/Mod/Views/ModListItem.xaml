@@ -72,32 +72,32 @@
         </Style>
 
         <Style x:Key="ModColor" TargetType="{x:Type Path}">
-            <Setter Property="Fill" Value="{StaticResource DefaultColor}" />
+            <Setter Property="Fill" Value="{StaticResource DefaultDarkColor}" />
             <Setter Property="Stroke" Value="AliceBlue" />
             <Style.Triggers>
                 <DataTrigger Binding="{Binding AssociatedRootCategory.Name}" Value="Skins">
-                    <Setter Property="Fill" Value="{StaticResource SkinColor}" />
+                    <Setter Property="Fill" Value="{StaticResource SkinDarkColor}" />
                 </DataTrigger>
                 <DataTrigger Binding="{Binding AssociatedRootCategory.Name}" Value="Stages">
-                    <Setter Property="Fill" Value="{StaticResource MapColor}" />
+                    <Setter Property="Fill" Value="{StaticResource MapDarkColor}" />
                 </DataTrigger>
                 <DataTrigger Binding="{Binding AssociatedRootCategory.Name}" Value="Other/Misc">
-                    <Setter Property="Fill" Value="{StaticResource OtherColor}" />
+                    <Setter Property="Fill" Value="{StaticResource OtherDarkColor}" />
                 </DataTrigger>
                 <DataTrigger Binding="{Binding AssociatedRootCategory.Name}" Value="Effects">
-                    <Setter Property="Fill" Value="{StaticResource EffectColor}" />
+                    <Setter Property="Fill" Value="{StaticResource EffectDarkColor}" />
                 </DataTrigger>
                 <DataTrigger Binding="{Binding AssociatedRootCategory.Name}" Value="Skyline">
-                    <Setter Property="Fill" Value="{StaticResource SkylineColor}" />
+                    <Setter Property="Fill" Value="{StaticResource SkylineDarkColor}" />
                 </DataTrigger>
                 <DataTrigger Binding="{Binding AssociatedRootCategory.Name}" Value="Animation">
-                    <Setter Property="Fill" Value="{StaticResource AnimationColor}" />
+                    <Setter Property="Fill" Value="{StaticResource AnimationDarkColor}" />
                 </DataTrigger>
                 <DataTrigger Binding="{Binding AssociatedRootCategory.Name}" Value="Sound">
-                    <Setter Property="Fill" Value="{StaticResource SoundColor}" />
+                    <Setter Property="Fill" Value="{StaticResource SoundDarkColor}" />
                 </DataTrigger>
                 <DataTrigger Binding="{Binding AssociatedRootCategory.Name}" Value="UI">
-                    <Setter Property="Fill" Value="{StaticResource GUIColor}" />
+                    <Setter Property="Fill" Value="{StaticResource GUIDarkColor}" />
                 </DataTrigger>
             </Style.Triggers>
         </Style>

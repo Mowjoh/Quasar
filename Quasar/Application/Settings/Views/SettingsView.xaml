@@ -4,40 +4,105 @@
 
     <Grid Background="{DynamicResource CutieBG01}">
 
-        <!--#region  Quick Actions-->
-        <TextBlock Text="Quick Actions :"
-                   FontSize="16" Style="{StaticResource CutieTextBlockStyle}"
-                   Margin="10,23,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
-
-        <Button Command="{Binding Path=ValidateFTPCommand}" Content="Test and Save FTP Info"
-                Template="{StaticResource CutieSmallButtonTemplate}"
-                Width="250" Height="32"
-                Margin="145,20,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
-
-        <Button Command="{Binding Path=MoveInstallCommand}" Content="Move Installation Folder"
-                Template="{StaticResource CutieSmallButtonTemplate}"
-                Width="250" Height="32"
-                Margin="450,20,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
-
-        <Button Command="{Binding Path=OnboardingCommand}" Content="Demo Mode"
-                Template="{StaticResource CutieSmallButtonTemplate}"
-                Width="250" Height="32"
-                Margin="50,20,32,0" HorizontalAlignment="Right" VerticalAlignment="Top"
-                Visibility="Hidden" />
-        <!--#endregion-->
-
         <!--  Settings Panel  -->
-        <ItemsControl ItemsSource="{Binding SettingItems}"
-                      Background="{DynamicResource CutieBG01}"
-                      Margin="15,75,15,15">
+        <Grid Background="{DynamicResource CutieBG01}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="1" />
+                <ColumnDefinition Width="1*" />
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="0"
+                  Margin="15,0,15,15"
+                  Background="{DynamicResource CutieBG01}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="150" />
+                    <RowDefinition Height="1*" />
+                </Grid.RowDefinitions>
 
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <StackPanel Orientation="Vertical" />
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
+                <!--  Application Settings Grid  -->
+                <Grid Grid.Row="0" Background="Transparent">
+                    <Label Margin="0,5,5,0" HorizontalAlignment="Left" VerticalAlignment="Top"
+                           Content="Application :" FontSize="15" Style="{StaticResource CutieLabelStyle}" />
+                    <ItemsControl ItemsSource="{Binding AppSettings}" Margin="0,40,0,0">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Vertical" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ItemsControl>
 
-        </ItemsControl>
+                    <Button Width="250" Height="32" Margin="3,95,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
+                            Command="{Binding Path=MoveInstallCommand}" Content="Move Installation Folder" Template="{StaticResource CutieSmallButtonTemplate}" />
+                    <Path Width="30" Height="30" Margin="270,100,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
+                          Data="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z" Fill="White" Stroke="White" />
+
+                    <!--<Label Margin="0,135,5,0" HorizontalAlignment="Left" VerticalAlignment="Top"
+                           Content="This enables you to move your Quasar Library to another folder" FontSize="13" Style="{StaticResource CutieLabelStyle}" />-->
+                </Grid>
+
+                <!--  FTP Settings Grid  -->
+                <Grid Grid.Row="1" Background="Transparent">
+                    <Label Margin="0,5,5,0" HorizontalAlignment="Left" VerticalAlignment="Top"
+                           Content="FTP Configuration :" FontSize="15" Style="{StaticResource CutieLabelStyle}" />
+                    <ItemsControl ItemsSource="{Binding FTPSettings}" Margin="0,35,0,0">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Vertical" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ItemsControl>
+
+                    <Button Width="250" Height="32" Margin="3,178,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
+                            Command="{Binding Path=ValidateFTPCommand}" Content="Test and Save FTP Info" Template="{StaticResource CutieSmallButtonTemplate}" />
+                    <Path Width="30" Height="30" Margin="270,183,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
+                          Data="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z" Fill="White" Stroke="White" />
+
+                    <!--<Label Margin="270,180,5,0" HorizontalAlignment="Left" VerticalAlignment="Top"
+                           Content="When you've typed your address and authentication info, use this to enable FTP when transferring" FontSize="12" Style="{StaticResource CutieLabelStyle}" />-->
+                </Grid>
+
+
+            </Grid>
+            <Grid Grid.Column="1" Background="{StaticResource CutieBG06}" />
+            <Grid Grid.Column="2"
+                  Margin="15,0,0,0"
+                  Background="{DynamicResource CutieBG01}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="190" />
+                    <RowDefinition Height="1*" />
+                </Grid.RowDefinitions>
+
+                <!--  Toggle Settings Grid  -->
+                <Grid Grid.Row="0" Background="Transparent">
+                    <Label Margin="0,5,5,0" HorizontalAlignment="Left" VerticalAlignment="Top"
+                           Content="Warnings :" FontSize="15" Style="{StaticResource CutieLabelStyle}" />
+                    <ItemsControl ItemsSource="{Binding WarningSettings}" Margin="0,35,0,0">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Vertical" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ItemsControl>
+                </Grid>
+
+
+                <Grid Grid.Row="1" Background="Transparent">
+                    <Label Margin="0,5,5,0" HorizontalAlignment="Left" VerticalAlignment="Top"
+                           Content="Features :" FontSize="15" Style="{StaticResource CutieLabelStyle}" />
+                    <ItemsControl ItemsSource="{Binding ToggleSettings}" Margin="0,35,0,0">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Vertical" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ItemsControl>
+                </Grid>
+            </Grid>
+        </Grid>
+
+
+
+
 
     </Grid>
 

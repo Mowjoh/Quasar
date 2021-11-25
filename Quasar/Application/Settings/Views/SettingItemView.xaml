@@ -7,17 +7,14 @@
                BasedOn="{StaticResource CutieTextBlockStyle}" TargetType="{x:Type TextBlock}">
             <Setter Property="Visibility" Value="Hidden" />
             <Style.Triggers>
-                <DataTrigger Binding="{Binding EnableCheckBox}"
-                             Value="True">
+                <DataTrigger Binding="{Binding EnableCheckBox}" Value="True">
                     <Setter Property="Visibility" Value="Visible" />
                 </DataTrigger>
-                <DataTrigger Binding="{Binding IsChecked}"
-                             Value="True">
+                <DataTrigger Binding="{Binding IsChecked}" Value="True">
                     <Setter Property="Foreground" Value="Green" />
                     <Setter Property="TextBlock.Text" Value="Activated" />
                 </DataTrigger>
-                <DataTrigger Binding="{Binding IsChecked}"
-                             Value="False">
+                <DataTrigger Binding="{Binding IsChecked}" Value="False">
                     <Setter Property="Foreground" Value="Red" />
                     <Setter Property="TextBlock.Text" Value="Disabled" />
                 </DataTrigger>
@@ -27,28 +24,23 @@
                BasedOn="{StaticResource QuasarLabel}" TargetType="{x:Type Label}">
             <Setter Property="Visibility" Value="Hidden" />
             <Style.Triggers>
-                <DataTrigger Binding="{Binding EnableValue}"
-                             Value="True">
+                <DataTrigger Binding="{Binding EnableValue}" Value="True">
                     <Setter Property="Visibility" Value="Visible" />
                 </DataTrigger>
             </Style.Triggers>
         </Style>
-        <Style x:Key="SettingsCheckBox"
-               TargetType="{x:Type CheckBox}">
+        <Style x:Key="SettingsCheckBox" TargetType="{x:Type CheckBox}">
             <Setter Property="Visibility" Value="Hidden" />
             <Style.Triggers>
-                <DataTrigger Binding="{Binding EnableCheckBox}"
-                             Value="True">
+                <DataTrigger Binding="{Binding EnableCheckBox}" Value="True">
                     <Setter Property="Visibility" Value="Visible" />
                 </DataTrigger>
             </Style.Triggers>
         </Style>
-        <Style x:Key="SettingsComboBox"
-               TargetType="{x:Type ComboBox}">
+        <Style x:Key="SettingsComboBox" TargetType="{x:Type ComboBox}">
             <Setter Property="Visibility" Value="Hidden" />
             <Style.Triggers>
-                <DataTrigger Binding="{Binding EnableComboBox}"
-                             Value="True">
+                <DataTrigger Binding="{Binding EnableComboBox}" Value="True">
                     <Setter Property="Visibility" Value="Visible" />
                 </DataTrigger>
             </Style.Triggers>
@@ -57,65 +49,69 @@
                BasedOn="{StaticResource CutieTextBoxStyle}" TargetType="{x:Type TextBox}">
             <Setter Property="Visibility" Value="Hidden" />
             <Style.Triggers>
-                <DataTrigger Binding="{Binding EnableTextBox}"
-                             Value="True">
+                <DataTrigger Binding="{Binding EnableTextBox}" Value="True">
                     <Setter Property="Visibility" Value="Visible" />
                 </DataTrigger>
             </Style.Triggers>
         </Style>
+        <Style x:Key="ItemBorderStyle" TargetType="Border">
+            <Setter Property="Background" Value="{StaticResource CutieBG06}" />
+            <Setter Property="BorderBrush" Value="{StaticResource CutieBG06}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="5" />
+        </Style>
     </UserControl.Resources>
 
-    <Grid Background="Transparent"
-          Height="40"
-          Margin="2" HorizontalAlignment="Stretch">
+    <Grid Height="40" Margin="2" HorizontalAlignment="Stretch"
+          Background="Transparent">
 
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="200" />
-            <ColumnDefinition Width="200" />
+            <ColumnDefinition Width="210" />
+            <ColumnDefinition Width="50" />
             <ColumnDefinition Width="1*" />
         </Grid.ColumnDefinitions>
 
         <Border Grid.Column="0" Grid.ColumnSpan="3"
-                Background="{StaticResource CutieBG06}"
-                BorderBrush="{StaticResource CutieBG06}" BorderThickness="1" CornerRadius="15" />
+                Style="{StaticResource ItemBorderStyle}" />
 
         <!--  Setting Name  -->
-        <TextBlock Text="{Binding SettingItem.DisplayName}"
-                   Grid.Column="0" Style="{StaticResource CutieTextBlockStyle}"
-                   Margin="5,0" VerticalAlignment="Center" />
+        <TextBlock Grid.Column="0"
+                   Margin="5,0" VerticalAlignment="Center"
+                   FontSize="13" Style="{StaticResource CutieTextBlockStyle}" Text="{Binding SettingItem.DisplayName}" />
 
         <!--#region Value Mode-->
-        <TextBlock Text="{Binding SettingItem.DisplayValue}"
-                   Grid.Column="1" Style="{StaticResource CutieTextBlockStyle}"
-                   Margin="5,0" HorizontalAlignment="Left" VerticalAlignment="Center" />
+        <TextBlock Grid.Column="2"
+                   Margin="0,0,15,0" HorizontalAlignment="Left" VerticalAlignment="Center"
+                   Style="{StaticResource CutieTextBlockStyle}" Text="{Binding SettingItem.DisplayValue}" />
         <!--#endregion-->
 
         <!--#region Check Mode-->
-        <TextBlock Grid.Column="1" Style="{StaticResource SettingsTextBlock}"
-                   Margin="5,0" HorizontalAlignment="Left" VerticalAlignment="Center" />
         <CheckBox x:Name="SettingCheckBox"
-                  Grid.Column="1" Style="{StaticResource SettingsCheckBox}" Template="{StaticResource CutieCheckBox}"
-                  Margin="100,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center"
-                  IsChecked="{Binding IsChecked}" />
+                  Grid.Column="2"
+                  Margin="100,0,15,0" HorizontalAlignment="Right" VerticalAlignment="Center"
+                  IsChecked="{Binding IsChecked}" Style="{StaticResource SettingsCheckBox}" Template="{StaticResource CutieToggleButton}" />
         <!--#endregion-->
 
         <!--#region Input Mode-->
-        <TextBox Text="{Binding SettingItem.DisplayValue}"
-                 Grid.Column="1" Style="{StaticResource SettingsTextBox}"
-                 HorizontalAlignment="Stretch" VerticalAlignment="Center" HorizontalContentAlignment="Stretch" />
+        <TextBox Grid.Column="2"
+                 HorizontalAlignment="Stretch" VerticalAlignment="Center" HorizontalContentAlignment="Stretch"
+                 Style="{StaticResource SettingsTextBox}" Text="{Binding SettingItem.DisplayValue}" />
         <!--#endregion-->
 
         <!--#region Choice Mode-->
-        <ComboBox ItemsSource="{Binding SettingItem.Values}"
-                  Grid.Column="1" Style="{StaticResource SettingsComboBox}"
+        <ComboBox ItemsSource="{Binding SettingItem.Values}" DisplayMemberPath="Key"
+                  Grid.Column="2"
                   HorizontalAlignment="Stretch" VerticalAlignment="Center"
-                  DisplayMemberPath="Key" />
+                  Style="{StaticResource SettingsComboBox}" />
         <!--#endregion-->
 
         <!--  Setting comment  -->
-        <TextBlock Text="{Binding SettingItem.DisplayComment}"
-                   Grid.Column="2" Style="{StaticResource CutieTextBlockStyle}"
-                   Margin="20,0,0,0" VerticalAlignment="Center" />
-
+        <!--<TextBlock Grid.Column="1"
+                   Margin="20,0,15,0" VerticalAlignment="Center"
+                   FontSize="12" Style="{StaticResource CutieTextBlockStyle}" Text="{Binding SettingItem.DisplayComment}" />-->
+        <Path Grid.Column="1"
+              Width="30" Height="30" Margin="0,5,0,0" HorizontalAlignment="Left" VerticalAlignment="Center"
+              Data="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z" Fill="White" Stroke="White" />
     </Grid>
+
 </UserControl>

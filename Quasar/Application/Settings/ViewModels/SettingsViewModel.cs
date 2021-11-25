@@ -20,23 +20,62 @@ namespace Quasar.Settings.ViewModels
         #region Data
 
         #region Private
-        ObservableCollection<SettingItemView> _SettingItems { get; set; }
+        ObservableCollection<SettingItemView> _AppSettings { get; set; }
+        ObservableCollection<SettingItemView> _FTPSettings { get; set; }
+        ObservableCollection<SettingItemView> _WarningSettings { get; set; }
+        ObservableCollection<SettingItemView> _ToggleSettings { get; set; }
         #endregion
 
         #region Public
         /// <summary>
         /// List of Setting Items views
         /// </summary>
-        public ObservableCollection<SettingItemView> SettingItems
+        public ObservableCollection<SettingItemView> AppSettings
         {
-            get => _SettingItems;
+            get => _AppSettings;
             set
             {
-                if (_SettingItems == value)
+                if (_AppSettings == value)
                     return;
 
-                _SettingItems = value;
-                OnPropertyChanged("SettingItems");
+                _AppSettings = value;
+                OnPropertyChanged("AppSettings");
+            }
+        }
+public ObservableCollection<SettingItemView> FTPSettings
+        {
+            get => _FTPSettings;
+            set
+            {
+                if (_FTPSettings == value)
+                    return;
+
+                _FTPSettings = value;
+                OnPropertyChanged("FTPSettings");
+            }
+        }
+        public ObservableCollection<SettingItemView> WarningSettings
+        {
+            get => _WarningSettings;
+            set
+            {
+                if (_WarningSettings == value)
+                    return;
+
+                _WarningSettings = value;
+                OnPropertyChanged("WarningSettings");
+            }
+        }
+        public ObservableCollection<SettingItemView> ToggleSettings
+        {
+            get => _ToggleSettings;
+            set
+            {
+                if (_ToggleSettings == value)
+                    return;
+
+                _ToggleSettings = value;
+                OnPropertyChanged("ToggleSettings");
             }
         }
         #endregion
@@ -102,22 +141,28 @@ namespace Quasar.Settings.ViewModels
         /// </summary>
         private void LoadSettings()
         {
-            SettingItems = new ObservableCollection<SettingItemView>();
-            SettingItems.Add(new SettingItemView("AppVersion"));
-            //SettingItems.Add(new SettingItemView("Language"));
-
-            SettingItems.Add(new SettingItemView("FTPAddress"));
-            SettingItems.Add(new SettingItemView("FTPUN"));
-            SettingItems.Add(new SettingItemView("FTPPW"));
-
-            SettingItems.Add(new SettingItemView("SupressModDeletion"));
-
-            SettingItems.Add(new SettingItemView("ModLoaderSetup"));
-            SettingItems.Add(new SettingItemView("ModLoaderSetupState"));
-
-            SettingItems.Add(new SettingItemView("EnableWorkspaces"));
-            SettingItems.Add(new SettingItemView("EnableCreator"));
-            SettingItems.Add(new SettingItemView("EnableAdvanced"));
+            AppSettings = new ObservableCollection<SettingItemView>
+            {
+                new("AppVersion"),
+            };
+            FTPSettings = new ObservableCollection<SettingItemView>
+            {
+                new("FTPAddress"),
+                new("FTPUN"),
+                new("FTPPW"),
+            };
+            WarningSettings = new ObservableCollection<SettingItemView>
+            {
+                new("SupressModDeletion"),
+                new("ModLoaderSetup"),
+                new("ModLoaderSetupState"),
+            };
+            ToggleSettings = new ObservableCollection<SettingItemView>
+            {
+                new("EnableWorkspaces"),
+                new("EnableCreator"),
+                new("EnableAdvanced")
+            };
         }
         #endregion
 
@@ -128,7 +173,7 @@ namespace Quasar.Settings.ViewModels
         public void ValidateFTP()
         {
             //Parsing values
-            foreach(SettingItemView SIV in SettingItems)
+            foreach(SettingItemView SIV in ToggleSettings)
             {
                 switch (SIV.ViewModel.SettingItem.SettingName)
                 {

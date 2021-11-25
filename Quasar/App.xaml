@@ -333,6 +333,23 @@
 
         </ControlTemplate>
 
+        <ControlTemplate x:Key="CutieToggleButton" TargetType="CheckBox">
+            <Grid Background="Transparent">
+                <Path x:Name="path"
+                      Width="40" Height="20"
+                      Data="M17 7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h10c2.76 0 5-2.24 5-5s-2.24-5-5-5zM7 15c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3z" Fill="{StaticResource CutieErrorColor}" Stretch="Fill" Stroke="{StaticResource CutieErrorColor}" StrokeThickness="0" />
+            </Grid>
+
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsChecked" Value="True">
+                    <Setter TargetName="path" Property="Data" Value="M17 7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h10c2.76 0 5-2.24 5-5s-2.24-5-5-5zm0 8c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3z" />
+                    <Setter TargetName="path" Property="Fill" Value="{StaticResource CutieValidationColor}" />
+                    <Setter TargetName="path" Property="Stroke" Value="{StaticResource CutieValidationColor}" />
+                </Trigger>
+            </ControlTemplate.Triggers>
+
+        </ControlTemplate>
+
         <ControlTemplate x:Key="CutieAZ" TargetType="CheckBox">
             <Grid Background="Transparent">
                 <Path x:Name="path"
