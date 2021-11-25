@@ -19,7 +19,7 @@ using System.Windows.Media;
 
 namespace Quasar.Controls.Mod.ViewModels
 {
-    public class ModListItemViewModel : ObservableObject
+    public class ModViewModel : ObservableObject
     {
 
         #region Data
@@ -38,7 +38,7 @@ namespace Quasar.Controls.Mod.ViewModels
 
         private string _ActionRequested { get; set; }
 
-        public ModsViewModel MVM { get; set; }
+        public LibraryViewModel MVM { get; set; }
         #endregion
 
         #region Public
@@ -533,7 +533,7 @@ namespace Quasar.Controls.Mod.ViewModels
 
         ILog QuasarLogger { get; set; }
 
-        public ModListItemViewModel()
+        public ModViewModel()
         {
             Downloading = true;
             Smol = true;
@@ -541,7 +541,7 @@ namespace Quasar.Controls.Mod.ViewModels
             EventSystem.Subscribe<LibraryItem>(Refresh);
         }
 
-        public ModListItemViewModel(LibraryItem Mod, Game Gamu, ModsViewModel model, ILog _QuasarLogger, bool _Downloading = false)
+        public ModViewModel(LibraryItem Mod, Game Gamu, LibraryViewModel model, ILog _QuasarLogger, bool _Downloading = false)
         {
             QuasarLogger = _QuasarLogger;
 
@@ -551,15 +551,13 @@ namespace Quasar.Controls.Mod.ViewModels
             MVM = model;
             LibraryItem = Mod;
 
-            CreatorMode = Properties.Settings.Default.EnableCreator;
-            AdvancedMode = Properties.Settings.Default.EnableAdvanced;
 
             GetAuthors();
 
             EventSystem.Subscribe<LibraryItem>(Refresh);
         }
 
-        public ModListItemViewModel(string QuasarURL, ObservableCollection<Game> _Games, ObservableCollection<LibraryItem> _Mods, ModsViewModel model, ILog _QuasarLogger)
+        public ModViewModel(string QuasarURL, ObservableCollection<Game> _Games, ObservableCollection<LibraryItem> _Mods, LibraryViewModel model, ILog _QuasarLogger)
         {
             QuasarLogger = _QuasarLogger;
 
@@ -740,7 +738,7 @@ namespace Quasar.Controls.Mod.ViewModels
         public void UpdateMod()
         {
             ActionRequested = "Update";
-            EventSystem.Publish<ModListItemViewModel>(this);
+            EventSystem.Publish<ModViewModel>(this);
         }
 
         /// <summary>
@@ -749,7 +747,7 @@ namespace Quasar.Controls.Mod.ViewModels
         public void DeleteMod()
         {
             ActionRequested = "Delete";
-            EventSystem.Publish<ModListItemViewModel>(this);
+            EventSystem.Publish<ModViewModel>(this);
 
         }
 
@@ -768,7 +766,7 @@ namespace Quasar.Controls.Mod.ViewModels
                 ActionRequested = "Remove";
             }
 
-            EventSystem.Publish<ModListItemViewModel>(this);
+            EventSystem.Publish<ModViewModel>(this);
         }
 
         /// <summary>
@@ -777,7 +775,7 @@ namespace Quasar.Controls.Mod.ViewModels
         public void RetryDownload()
         {
             ActionRequested = "RetryDownload";
-            EventSystem.Publish<ModListItemViewModel>(this);
+            EventSystem.Publish<ModViewModel>(this);
         }
 
         /// <summary>
@@ -786,7 +784,7 @@ namespace Quasar.Controls.Mod.ViewModels
         public void ShowModContents()
         {
             ActionRequested = "ShowContents";
-            EventSystem.Publish<ModListItemViewModel>(this);
+            EventSystem.Publish<ModViewModel>(this);
         }
 
         /// <summary>

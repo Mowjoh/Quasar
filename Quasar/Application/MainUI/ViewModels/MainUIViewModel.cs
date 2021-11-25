@@ -9,8 +9,6 @@ using Quasar.Content.Views;
 using Quasar.Controls.ModManagement.ViewModels;
 using Quasar.Controls.ModManagement.Views;
 using Quasar.Settings.Models;
-using Quasar.Workspaces.Views;
-using Quasar.Workspaces.ViewModels;
 using Quasar.Helpers.ModScanning;
 using Quasar.Helpers.Quasar_Management;
 using Quasar.Helpers;
@@ -60,7 +58,7 @@ namespace Quasar.MainUI.ViewModels
                 _SelectedModListItem = value;
                 if (value != null)
                 {
-                    //CVM = new ContentViewModel(ContentMappings, _SelectedModListItem.ModListItemViewModel.LibraryItem, InternalModTypes, GameDatas);
+                    //CVM = new ContentViewModel(ContentMappings, _SelectedModListItem.ModViewModel.LibraryItem, InternalModTypes, GameDatas);
                     //ContentView.DataContext = CVM;
                 }
                 OnPropertyChanged("SelectedModListItem");
@@ -97,17 +95,13 @@ namespace Quasar.MainUI.ViewModels
         private ObservableCollection<TabItem> _TabItems { get; set; }
         private TabItem _SelectedTabItem { get; set; }
         private int _SelectedTabIndex { get; set; }
-        private ModsView _ModsView { get; set; }
-        private ModsViewModel _MVM { get; set; }
+        private LibraryView _LibraryView { get; set; }
+        private LibraryViewModel _LibraryViewModel { get; set; }
         private ContentView _ContentView { get; set; }
         private ContentViewModel _CVM { get; set; }
-        private AssociationView _AssignationView { get; set; }
+        private AssignmentView _AssignmentView { get; set; }
         private AssociationViewModel _AVM { get; set; }
-        private BuildView _BuildView { get; set; }
-        private BuildViewModel _BVM { get; set; }
         private SettingsView _SettingsView { get; set; }
-        private WorkspaceView _WorkspaceView { get; set; }
-        private WorkspaceViewModel _WVM { get; set; }
         private ModalPopupViewModel _ModalPopupViewModel { get; set; }
 
         private bool _BeginGameChoice { get; set; }
@@ -150,7 +144,7 @@ namespace Quasar.MainUI.ViewModels
                     {
                         if ((string)value.Header == "Overview")
                         {
-                            MVM.ReloadAllStats();
+                            LibraryViewModel.ReloadAllStats();
                         }
                         if ((string)value.Header == "Management")
                         {
@@ -175,28 +169,28 @@ namespace Quasar.MainUI.ViewModels
                 }
             }
         }
-        public ModsView ModsView
+        public LibraryView LibraryView
         {
-            get => _ModsView;
+            get => _LibraryView;
             set
             {
-                if (_ModsView == value)
+                if (_LibraryView == value)
                     return;
 
-                _ModsView = value;
-                OnPropertyChanged("ModsView");
+                _LibraryView = value;
+                OnPropertyChanged("LibraryView");
             }
         }
-        public ModsViewModel MVM
+        public LibraryViewModel LibraryViewModel
         {
-            get => _MVM;
+            get => _LibraryViewModel;
             set
             {
-                if (_MVM == value)
+                if (_LibraryViewModel == value)
                     return;
 
-                _MVM = value;
-                OnPropertyChanged("MVM");
+                _LibraryViewModel = value;
+                OnPropertyChanged("LibraryViewModel");
             }
         }
 
@@ -225,16 +219,16 @@ namespace Quasar.MainUI.ViewModels
             }
         }
 
-        public AssociationView AssociationView
+        public AssignmentView AssignmentView
         {
-            get => _AssignationView;
+            get => _AssignmentView;
             set
             {
-                if (_AssignationView == value)
+                if (_AssignmentView == value)
                     return;
 
-                _AssignationView = value;
-                OnPropertyChanged("AssociationView");
+                _AssignmentView = value;
+                OnPropertyChanged("AssignmentView");
             }
         }
         public AssociationViewModel AVM
@@ -247,31 +241,6 @@ namespace Quasar.MainUI.ViewModels
 
                 _AVM = value;
                 OnPropertyChanged("AVM");
-            }
-        }
-
-        public BuildView BuildView
-        {
-            get => _BuildView;
-            set
-            {
-                if (_BuildView == value)
-                    return;
-
-                _BuildView = value;
-                OnPropertyChanged("BuildView");
-            }
-        }
-        public BuildViewModel BVM
-        {
-            get => _BVM;
-            set
-            {
-                if (_BVM == value)
-                    return;
-
-                _BVM = value;
-                OnPropertyChanged("BVM");
             }
         }
 
@@ -298,30 +267,6 @@ namespace Quasar.MainUI.ViewModels
 
                 _ModalPopupViewModel = value;
                 OnPropertyChanged("ModalPopupViewModel");
-            }
-        }
-        public WorkspaceView WorkspaceView
-        {
-            get => _WorkspaceView;
-            set
-            {
-                if (_WorkspaceView == value)
-                    return;
-
-                _WorkspaceView = value;
-                OnPropertyChanged("WorkspaceView");
-            }
-        }
-        public WorkspaceViewModel WVM
-        {
-            get => _WVM;
-            set
-            {
-                if (_WVM == value)
-                    return;
-
-                _WVM = value;
-                OnPropertyChanged("WVM");
             }
         }
         public bool BeginGameChoice
@@ -494,7 +439,7 @@ namespace Quasar.MainUI.ViewModels
                 default:
                     break;
                 case 2:
-                    MVM.SelectedModListItem = MVM.ModListItems[1];
+                    LibraryViewModel.SelectedModListItem = LibraryViewModel.ModListItems[1];
                     break;
             }
             if (OnboardingStep < 3)
@@ -657,7 +602,6 @@ namespace Quasar.MainUI.ViewModels
                 {
                     //Creating the base workspace if it's not there
                     Guid CreatedWorkspaceGuid = UserDataManager.CreateBaseWorkspace(AppDataPath);
-                    Properties.Settings.Default.LastSelectedWorkspace = CreatedWorkspaceGuid;
                     Properties.Settings.Default.Save();
 
                     Workspaces = UserDataManager.GetWorkspaces(AppDataPath);
@@ -728,35 +672,24 @@ namespace Quasar.MainUI.ViewModels
 
             TabItems = new ObservableCollection<TabItem>();
 
-            ModsView = new ModsView();
-            MVM = new ModsViewModel(this, QuasarLogger);
-            ModsView.DataContext = MVM;
-            TabItems.Add(new TabItem() { Content = ModsView, Header = Properties.Resources.MainUI_OverviewTabHeader, Foreground = new SolidColorBrush() { Color = Colors.White } });
+            LibraryView = new LibraryView();
+            LibraryViewModel = new LibraryViewModel(this, QuasarLogger);
+            LibraryView.DataContext = LibraryViewModel;
+            TabItems.Add(new TabItem() { Content = LibraryView, Header = Properties.Resources.MainUI_LibraryTabHeader, Foreground = new SolidColorBrush() { Color = Colors.White } });
 
             ContentView = new ContentView();
             CVM = new ContentViewModel(this);
             ContentView.DataContext = CVM;
-            TabItems.Add(new TabItem() { Content = ContentView, Header = Properties.Resources.MainUI_ContentsTabHeader, Foreground = new SolidColorBrush() { Color = Colors.White } });
+            TabItems.Add(new TabItem() { Content = ContentView, Header = Properties.Resources.MainUI_FileManagerTabHeader, Foreground = new SolidColorBrush() { Color = Colors.White } });
 
 
             AVM = new AssociationViewModel(this, QuasarLogger);
-            AssociationView = new AssociationView() { AssociationViewModel = AVM };
-            AssociationView.DataContext = AVM;
-            TabItems.Add(new TabItem() { Content = AssociationView, Header = Properties.Resources.MainUI_ManagementTabHeader, Foreground = new SolidColorBrush() { Color = Colors.White } });
-
-            BuildView = new BuildView();
-            BVM = new BuildViewModel(this, QuasarLogger);
-            BVM.QuasarLogger = QuasarLogger;
-            BuildView.DataContext = BVM;
-            TabItems.Add(new TabItem() { Content = BuildView, Header = Properties.Resources.MainUI_FileTransferTabHeader, Foreground = new SolidColorBrush() { Color = Colors.White } });
+            AssignmentView = new AssignmentView() { AssignmentViewModel = AVM };
+            AssignmentView.DataContext = AVM;
+            TabItems.Add(new TabItem() { Content = AssignmentView, Header = Properties.Resources.MainUI_AssignmentTabHeader, Foreground = new SolidColorBrush() { Color = Colors.White } });
 
             SettingsView = new SettingsView();
             TabItems.Add(new TabItem() { Content = SettingsView, Header = Properties.Resources.MainUI_SettingsTabHeader, Foreground = new SolidColorBrush() { Color = Colors.White } });
-
-            WorkspaceView = new WorkspaceView();
-            WVM = new WorkspaceViewModel(this, QuasarLogger);
-            WorkspaceView.DataContext = WVM;
-            TabItems.Add(new TabItem() { Content = WorkspaceView, Header = Properties.Resources.MainUI_WorkspacesTabHeader, Foreground = new SolidColorBrush() { Color = Colors.White }, Visibility = Properties.Settings.Default.EnableWorkspaces ? Visibility.Visible : Visibility.Collapsed });
 
             ModalPopupViewModel = new ModalPopupViewModel(QuasarLogger);
 
@@ -848,8 +781,8 @@ namespace Quasar.MainUI.ViewModels
         public void UpdateOK()
         { 
 
-            MVM.CollectionViewSource.View.Refresh();
-            MVM.ReloadAllStats();
+            LibraryViewModel.CollectionViewSource.View.Refresh();
+            LibraryViewModel.ReloadAllStats();
 
             Updating = false;
         }
@@ -925,7 +858,7 @@ namespace Quasar.MainUI.ViewModels
         /// <param name="_SelectedModListItem"></param>
         public void ModListItemEvent(ModListItem _SelectedModListItem)
         {
-            if (_SelectedModListItem.ModListItemViewModel.ActionRequested == "ShowContents")
+            if (_SelectedModListItem.ModViewModel.ActionRequested == "ShowContents")
             {
                 SelectedTabItem = TabItems[1];
                 SelectedModListItem = _SelectedModListItem;
@@ -955,10 +888,6 @@ namespace Quasar.MainUI.ViewModels
             if (Setting.SettingName == "EnableAdvanced")
             {
                 AdvancedMode = Setting.IsChecked;
-            }
-            if (Setting.SettingName == "EnableWorkspaces")
-            {
-                TabItems[5].Visibility = Setting.IsChecked ? Visibility.Visible : Visibility.Collapsed;
             }
         }
         #endregion

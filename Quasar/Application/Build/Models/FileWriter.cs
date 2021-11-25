@@ -51,10 +51,10 @@ namespace Quasar.Build.Models
             {
                 BVM = _BVM;
 
-                Adress = Properties.Settings.Default.FTPAddress.Split(':')[0];
-                Port = Properties.Settings.Default.FTPAddress.Split(':')[1];
-                Username = Properties.Settings.Default.FTPUN;
-                Password = Properties.Settings.Default.FTPPW;
+                Adress = Properties.Settings.Default.FtpAddress.Split(':')[0];
+                Port = Properties.Settings.Default.FtpAddress.Split(':')[1];
+                Username = Properties.Settings.Default.FtpUsername;
+                Password = Properties.Settings.Default.FtpPassword;
 
                 Client = new FtpClient(Adress);
                 Client.Port = int.Parse(Port);
@@ -79,10 +79,10 @@ namespace Quasar.Build.Models
         {
             if (Properties.Settings.Default.FTPValid)
             {
-                Adress = Properties.Settings.Default.FTPAddress.Split(':')[0];
-                Port = Properties.Settings.Default.FTPAddress.Split(':')[1];
-                Username = Properties.Settings.Default.FTPUN;
-                Password = Properties.Settings.Default.FTPPW;
+                Adress = Properties.Settings.Default.FtpAddress.Split(':')[0];
+                Port = Properties.Settings.Default.FtpAddress.Split(':')[1];
+                Username = Properties.Settings.Default.FtpUsername;
+                Password = Properties.Settings.Default.FtpPassword;
 
                 Client = new FtpClient(Adress);
                 Client.Port = int.Parse(Port);

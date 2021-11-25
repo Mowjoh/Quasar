@@ -17,15 +17,15 @@ namespace Quasar.Helpers.Compression
     public class Unarchiver
     {
         //View Model for UI Updates
-        ModListItemViewModel ModListItemViewModel;
+        ModViewModel _modViewModel;
 
         /// <summary>
         /// Basic Constructor
         /// </summary>
         /// <param name="mli">Mod List Item View Model</param>
-        public Unarchiver(ModListItemViewModel mli)
+        public Unarchiver(ModViewModel mli)
         {
-            ModListItemViewModel = mli;
+            _modViewModel = mli;
         }
 
         /// <summary>
@@ -38,7 +38,7 @@ namespace Quasar.Helpers.Compression
         public async Task<int> ExtractArchiveAsync(string _ArchiveSource, string ArchiveDestination, string _ArchiveType)
         {
             //Launching Extraction Task
-            await Task.Run(() => Extract(_ArchiveSource, ArchiveDestination, _ArchiveType, ModListItemViewModel.MVM.QuasarLogger));
+            await Task.Run(() => Extract(_ArchiveSource, ArchiveDestination, _ArchiveType, _modViewModel.MVM.QuasarLogger));
 
             return 0;
         }

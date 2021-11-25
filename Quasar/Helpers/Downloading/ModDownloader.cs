@@ -12,15 +12,15 @@ namespace Quasar.Helpers.Downloading
         //Parsing Default Directory Path
         readonly string DefaultDirectoryPath = Properties.Settings.Default["DefaultDir"].ToString();
 
-        ModListItemViewModel ModListItemView;
+        ModViewModel _modView;
 
         /// <summary>
         /// Basic Constructor
         /// </summary>
         /// <param name="_MIVM">Mod List Item View Model to update</param>
-        public ModDownloader(ModListItemViewModel _MIVM)
+        public ModDownloader(ModViewModel _MIVM)
         {
-            ModListItemView = _MIVM;
+            _modView = _MIVM;
         }
 
         /// <summary>
@@ -33,21 +33,21 @@ namespace Quasar.Helpers.Downloading
             //Getting info from Quasar URL
             var DownloadURL = new Uri(_QuasarDownload.DownloadURL);
             var DestinationFolderPath = DefaultDirectoryPath + "\\Library\\Downloads\\";
-            var DestinationFilePath = DestinationFolderPath + ModListItemView.LibraryItem.Guid + "." + _QuasarDownload.ModArchiveFormat;
+            var DestinationFilePath = DestinationFolderPath + _modView.LibraryItem.Guid + "." + _QuasarDownload.ModArchiveFormat;
             FileOperation.CheckCreate(DestinationFolderPath);
 
             //Setting up Progress actions
             void DownloadProgressChangedEvent(object s, DownloadProgressChangedEventArgs e)
             {
                 //Changing ProgressBar value
-                ModListItemView.ProgressBarValue = e.ProgressPercentage;
+                _modView.ProgressBarValue = e.ProgressPercentage;
                 //ModListItem.Progress.Dispatcher.BeginInvoke((Action)(() => { ModListItem.ProgressBarValue = e.ProgressPercentage; }));
 
                 //Making a proper string to display
                 var downloadProgress = string.Format("{0} MB / {1} MB", (e.BytesReceived / 1024d / 1024d).ToString("0.00"), (e.TotalBytesToReceive / 1024d / 1024d).ToString("0.00"));
 
                 //Displaying value
-                ModListItemView.ModStatusTextValue = downloadProgress;
+                _modView.ModStatusTextValue = downloadProgress;
                 //ModListItem.ModStatusTextLabel.Dispatcher.BeginInvoke((Action)(() => { ModListItem.ModStatusTextValue = downloadProgress; }));
             }
 

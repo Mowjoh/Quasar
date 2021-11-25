@@ -23,12 +23,15 @@ namespace Quasar.Properties {
             }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("en-US")]
         public string DefaultLanguage {
             get {
                 return ((string)(this["DefaultLanguage"]));
+            }
+            set {
+                this["DefaultLanguage"] = value;
             }
         }
         
@@ -94,30 +97,6 @@ namespace Quasar.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("00000000-0000-0000-0000-000000000000")]
-        public global::System.Guid LastSelectedWorkspace {
-            get {
-                return ((global::System.Guid)(this["LastSelectedWorkspace"]));
-            }
-            set {
-                this["LastSelectedWorkspace"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1")]
-        public int WorkspaceID {
-            get {
-                return ((int)(this["WorkspaceID"]));
-            }
-            set {
-                this["WorkspaceID"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool SupressModDeletion {
             get {
@@ -130,73 +109,49 @@ namespace Quasar.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool SupressBuildDeletion {
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string FtpIP {
             get {
-                return ((bool)(this["SupressBuildDeletion"]));
+                return ((string)(this["FtpIP"]));
             }
             set {
-                this["SupressBuildDeletion"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool EnableIMT {
-            get {
-                return ((bool)(this["EnableIMT"]));
-            }
-            set {
-                this["EnableIMT"] = value;
+                this["FtpIP"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string FTPIP {
+        public string FtpPort {
             get {
-                return ((string)(this["FTPIP"]));
+                return ((string)(this["FtpPort"]));
             }
             set {
-                this["FTPIP"] = value;
+                this["FtpPort"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string FTPPort {
+        public string FtpUsername {
             get {
-                return ((string)(this["FTPPort"]));
+                return ((string)(this["FtpUsername"]));
             }
             set {
-                this["FTPPort"] = value;
+                this["FtpUsername"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string FTPUN {
+        public string FtpPassword {
             get {
-                return ((string)(this["FTPUN"]));
+                return ((string)(this["FtpPassword"]));
             }
             set {
-                this["FTPUN"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string FTPPW {
-            get {
-                return ((string)(this["FTPPW"]));
-            }
-            set {
-                this["FTPPW"] = value;
+                this["FtpPassword"] = value;
             }
         }
         
@@ -209,30 +164,6 @@ namespace Quasar.Properties {
             }
             set {
                 this["FTPValid"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1")]
-        public int ModLoader {
-            get {
-                return ((int)(this["ModLoader"]));
-            }
-            set {
-                this["ModLoader"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool Wireless {
-            get {
-                return ((bool)(this["Wireless"]));
-            }
-            set {
-                this["Wireless"] = value;
             }
         }
         
@@ -251,84 +182,12 @@ namespace Quasar.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string FTPAddress {
+        public string FtpAddress {
             get {
-                return ((string)(this["FTPAddress"]));
+                return ((string)(this["FtpAddress"]));
             }
             set {
-                this["FTPAddress"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool Wipe {
-            get {
-                return ((bool)(this["Wipe"]));
-            }
-            set {
-                this["Wipe"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool EnableCreator {
-            get {
-                return ((bool)(this["EnableCreator"]));
-            }
-            set {
-                this["EnableCreator"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool EnableAdvanced {
-            get {
-                return ((bool)(this["EnableAdvanced"]));
-            }
-            set {
-                this["EnableAdvanced"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool GroupInternalModTypes {
-            get {
-                return ((bool)(this["GroupInternalModTypes"]));
-            }
-            set {
-                this["GroupInternalModTypes"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool EnableWorkspaces {
-            get {
-                return ((bool)(this["EnableWorkspaces"]));
-            }
-            set {
-                this["EnableWorkspaces"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public int LibraryID {
-            get {
-                return ((int)(this["LibraryID"]));
-            }
-            set {
-                this["LibraryID"] = value;
+                this["FtpAddress"] = value;
             }
         }
         
@@ -358,36 +217,36 @@ namespace Quasar.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool ModLoaderSetup {
-            get {
-                return ((bool)(this["ModLoaderSetup"]));
-            }
-            set {
-                this["ModLoaderSetup"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool ModLoaderSetupState {
-            get {
-                return ((bool)(this["ModLoaderSetupState"]));
-            }
-            set {
-                this["ModLoaderSetupState"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         public global::System.DateTime BackupDate {
             get {
                 return ((global::System.DateTime)(this["BackupDate"]));
             }
             set {
                 this["BackupDate"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool FtpPreferred {
+            get {
+                return ((bool)(this["FtpPreferred"]));
+            }
+            set {
+                this["FtpPreferred"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool TransferQuasarFoldersOnly {
+            get {
+                return ((bool)(this["TransferQuasarFoldersOnly"]));
+            }
+            set {
+                this["TransferQuasarFoldersOnly"] = value;
             }
         }
     }

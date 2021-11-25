@@ -97,8 +97,6 @@ namespace Quasar.Helpers.Quasar_Management
                 ObservableCollection<Workspace> DefaultFile = new ObservableCollection<Workspace>() { defaultWorkspace };
                 UserDataManager.SaveWorkspaces(DefaultFile, AppDataPath);
 
-                Properties.Settings.Default.LastSelectedWorkspace = defaultWorkspace.Guid;
-                Properties.Settings.Default.Save();
             }
         }
 

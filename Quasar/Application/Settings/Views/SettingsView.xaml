@@ -17,6 +17,7 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="150" />
                     <RowDefinition Height="1*" />
+                    <RowDefinition Height="1*" />
                 </Grid.RowDefinitions>
 
                 <!--  Application Settings Grid  -->
@@ -62,6 +63,7 @@
                 </Grid>
 
 
+
             </Grid>
             <Grid Grid.Column="1" Background="{StaticResource CutieBG06}" />
             <Grid Grid.Column="2"
@@ -72,8 +74,20 @@
                     <RowDefinition Height="1*" />
                 </Grid.RowDefinitions>
 
-                <!--  Toggle Settings Grid  -->
+                <!--  Transfer Settings  -->
                 <Grid Grid.Row="0" Background="Transparent">
+                    <Label Margin="0,5,5,0" HorizontalAlignment="Left" VerticalAlignment="Top"
+                           Content="File Transfer Settings :" FontSize="15" Style="{StaticResource CutieLabelStyle}" />
+                    <ItemsControl ItemsSource="{Binding TransferSettings}" Margin="0,35,0,0">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Vertical" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ItemsControl>
+                </Grid>
+
+                <Grid Grid.Row="1" Background="Transparent">
                     <Label Margin="0,5,5,0" HorizontalAlignment="Left" VerticalAlignment="Top"
                            Content="Warnings :" FontSize="15" Style="{StaticResource CutieLabelStyle}" />
                     <ItemsControl ItemsSource="{Binding WarningSettings}" Margin="0,35,0,0">
@@ -86,17 +100,6 @@
                 </Grid>
 
 
-                <Grid Grid.Row="1" Background="Transparent">
-                    <Label Margin="0,5,5,0" HorizontalAlignment="Left" VerticalAlignment="Top"
-                           Content="Features :" FontSize="15" Style="{StaticResource CutieLabelStyle}" />
-                    <ItemsControl ItemsSource="{Binding ToggleSettings}" Margin="0,35,0,0">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <StackPanel Orientation="Vertical" />
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                    </ItemsControl>
-                </Grid>
             </Grid>
         </Grid>
 

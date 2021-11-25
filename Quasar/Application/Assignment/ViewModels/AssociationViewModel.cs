@@ -195,9 +195,6 @@ namespace Quasar.Associations.ViewModels
             get => _TypesGrouped;
             set
             {
-                Properties.Settings.Default.GroupInternalModTypes = value;
-                Properties.Settings.Default.Save();
-
                 if (_TypesGrouped == value)
                     return;
 
@@ -602,7 +599,7 @@ namespace Quasar.Associations.ViewModels
 
             EventSystem.Subscribe<Workspace>(SetActiveWorkspace);
             EventSystem.Subscribe<SlotViewModel>(SlotViewModelAction);
-            TypesGrouped = Properties.Settings.Default.GroupInternalModTypes;
+            TypesGrouped = true;
 
             Slot1ViewModel = new SlotViewModel(QuasarLogger)
             {

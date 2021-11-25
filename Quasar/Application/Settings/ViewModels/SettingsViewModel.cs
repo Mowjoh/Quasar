@@ -23,7 +23,7 @@ namespace Quasar.Settings.ViewModels
         ObservableCollection<SettingItemView> _AppSettings { get; set; }
         ObservableCollection<SettingItemView> _FTPSettings { get; set; }
         ObservableCollection<SettingItemView> _WarningSettings { get; set; }
-        ObservableCollection<SettingItemView> _ToggleSettings { get; set; }
+        ObservableCollection<SettingItemView> _TransferSettings { get; set; }
         #endregion
 
         #region Public
@@ -42,7 +42,7 @@ namespace Quasar.Settings.ViewModels
                 OnPropertyChanged("AppSettings");
             }
         }
-public ObservableCollection<SettingItemView> FTPSettings
+        public ObservableCollection<SettingItemView> FTPSettings
         {
             get => _FTPSettings;
             set
@@ -66,16 +66,16 @@ public ObservableCollection<SettingItemView> FTPSettings
                 OnPropertyChanged("WarningSettings");
             }
         }
-        public ObservableCollection<SettingItemView> ToggleSettings
+        public ObservableCollection<SettingItemView> TransferSettings
         {
-            get => _ToggleSettings;
+            get => _TransferSettings;
             set
             {
-                if (_ToggleSettings == value)
+                if (_TransferSettings == value)
                     return;
 
-                _ToggleSettings = value;
-                OnPropertyChanged("ToggleSettings");
+                _TransferSettings = value;
+                OnPropertyChanged("TransferSettings");
             }
         }
         #endregion
@@ -147,21 +147,18 @@ public ObservableCollection<SettingItemView> FTPSettings
             };
             FTPSettings = new ObservableCollection<SettingItemView>
             {
-                new("FTPAddress"),
-                new("FTPUN"),
-                new("FTPPW"),
+                new("FtpAddress"),
+                new("FtpUsername"),
+                new("FtpPassword"),
             };
             WarningSettings = new ObservableCollection<SettingItemView>
             {
                 new("SupressModDeletion"),
-                new("ModLoaderSetup"),
-                new("ModLoaderSetupState"),
             };
-            ToggleSettings = new ObservableCollection<SettingItemView>
+            TransferSettings = new ObservableCollection<SettingItemView>
             {
-                new("EnableWorkspaces"),
-                new("EnableCreator"),
-                new("EnableAdvanced")
+                new("FtpPreferred"),
+                new("TransferQuasarFoldersOnly")
             };
         }
         #endregion
@@ -173,18 +170,18 @@ public ObservableCollection<SettingItemView> FTPSettings
         public void ValidateFTP()
         {
             //Parsing values
-            foreach(SettingItemView SIV in ToggleSettings)
+            foreach(SettingItemView SIV in FTPSettings)
             {
                 switch (SIV.ViewModel.SettingItem.SettingName)
                 {
                     case "FTPAddress":
-                        Properties.Settings.Default.FTPAddress = SIV.ViewModel.SettingItem.DisplayValue;
+                        Properties.Settings.Default.FtpAddress = SIV.ViewModel.SettingItem.DisplayValue;
                         break;
                     case "FTPUN":
-                        Properties.Settings.Default.FTPUN = SIV.ViewModel.SettingItem.DisplayValue;
+                        Properties.Settings.Default.FtpUsername = SIV.ViewModel.SettingItem.DisplayValue;
                         break;
                     case "FTPPW":
-                        Properties.Settings.Default.FTPPW = SIV.ViewModel.SettingItem.DisplayValue;
+                        Properties.Settings.Default.FtpPassword = SIV.ViewModel.SettingItem.DisplayValue;
                         break;
                 }
                 Properties.Settings.Default.Save();
@@ -192,7 +189,7 @@ public ObservableCollection<SettingItemView> FTPSettings
 
             //Validating values
             Regex AddressRegex = new Regex(@"(?'IP'(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})):(?'Port'(\d{1,5}))");
-            if (AddressRegex.IsMatch(Properties.Settings.Default.FTPAddress))
+            if (AddressRegex.IsMatch(Properties.Settings.Default.FtpAddress))
             {
                 //Showing connection Modal
                 ModalEvent Meuh = new ModalEvent()
@@ -207,11 +204,11 @@ public ObservableCollection<SettingItemView> FTPSettings
                 EventSystem.Publish(Meuh);
 
                 //Configuring FTP Client
-                FtpClient ftpClient = new FtpClient(Properties.Settings.Default.FTPAddress.Split(':')[0]);
-                ftpClient.Port = int.Parse(Properties.Settings.Default.FTPAddress.Split(':')[1]);
-                if (Properties.Settings.Default.FTPUN != "")
+                FtpClient ftpClient = new FtpClient(Properties.Settings.Default.FtpAddress.Split(':')[0]);
+                ftpClient.Port = int.Parse(Properties.Settings.Default.FtpAddress.Split(':')[1]);
+                if (Properties.Settings.Default.FtpUsername != "")
                 {
-                    ftpClient.Credentials = new System.Net.NetworkCredential(Properties.Settings.Default.FTPUN, Properties.Settings.Default.FTPPW);
+                    ftpClient.Credentials = new System.Net.NetworkCredential(Properties.Settings.Default.FtpUsername, Properties.Settings.Default.FtpPassword);
                 }
 
                 //Launching connection Task

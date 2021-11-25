@@ -61,47 +61,29 @@ namespace Quasar.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Contents.
+        ///   Looks up a localized string similar to Assignments.
         /// </summary>
-        public static string MainUI_ContentsTabHeader {
+        public static string MainUI_AssignmentTabHeader {
             get {
-                return ResourceManager.GetString("MainUI_ContentsTabHeader", resourceCulture);
+                return ResourceManager.GetString("MainUI_AssignmentTabHeader", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to File Transfer.
+        ///   Looks up a localized string similar to File Manager.
         /// </summary>
-        public static string MainUI_FileTransferTabHeader {
+        public static string MainUI_FileManagerTabHeader {
             get {
-                return ResourceManager.GetString("MainUI_FileTransferTabHeader", resourceCulture);
+                return ResourceManager.GetString("MainUI_FileManagerTabHeader", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Types.
+        ///   Looks up a localized string similar to Library.
         /// </summary>
-        public static string MainUI_InternalModTypesTabHeader {
+        public static string MainUI_LibraryTabHeader {
             get {
-                return ResourceManager.GetString("MainUI_InternalModTypesTabHeader", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Management.
-        /// </summary>
-        public static string MainUI_ManagementTabHeader {
-            get {
-                return ResourceManager.GetString("MainUI_ManagementTabHeader", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Overview.
-        /// </summary>
-        public static string MainUI_OverviewTabHeader {
-            get {
-                return ResourceManager.GetString("MainUI_OverviewTabHeader", resourceCulture);
+                return ResourceManager.GetString("MainUI_LibraryTabHeader", resourceCulture);
             }
         }
         
@@ -111,15 +93,6 @@ namespace Quasar.Properties {
         public static string MainUI_SettingsTabHeader {
             get {
                 return ResourceManager.GetString("MainUI_SettingsTabHeader", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Workspaces.
-        /// </summary>
-        public static string MainUI_WorkspacesTabHeader {
-            get {
-                return ResourceManager.GetString("MainUI_WorkspacesTabHeader", resourceCulture);
             }
         }
         

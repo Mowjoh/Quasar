@@ -28,7 +28,7 @@ using Workshop.Web;
 
 namespace Quasar.Controls.ModManagement.ViewModels
 {
-    public class ModsViewModel : ObservableObject
+    public class LibraryViewModel : ObservableObject
     {
 
         public static string AppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\Quasar";
@@ -94,14 +94,14 @@ namespace Quasar.Controls.ModManagement.ViewModels
 
                 if(_SelectedModListItem != null)
                 {
-                    _SelectedModListItem.ModListItemViewModel.Smol = true;
+                    _SelectedModListItem.ModViewModel.Smol = true;
                 }
 
                 _SelectedModListItem = value;
                 if (_SelectedModListItem != null)
                 {
-                    _SelectedModListItem.ModListItemViewModel.Smol = false;
-                    //SelectedModListItem.ModListItemViewModel.ActionRequested = "ElementChanged";
+                    _SelectedModListItem.ModViewModel.Smol = false;
+                    //SelectedModListItem.ModViewModel.ActionRequested = "ElementChanged";
                     //EventSystem.Publish<ModListItem>(SelectedModListItem);
                 }
                    
@@ -287,14 +287,14 @@ namespace Quasar.Controls.ModManagement.ViewModels
 
                 if (value)
                 {
-                    if (!CollectionViewSource.SortDescriptions.Any(sd => sd.PropertyName == "ModListItemViewModel.LibraryItem.APICategoryName"))
+                    if (!CollectionViewSource.SortDescriptions.Any(sd => sd.PropertyName == "ModViewModel.LibraryItem.APICategoryName"))
                     {
-                        CollectionViewSource.SortDescriptions.Insert((CollectionViewSource.SortDescriptions.Count - 1), new System.ComponentModel.SortDescription() { PropertyName = "ModListItemViewModel.LibraryItem.APICategoryName", Direction = System.ComponentModel.ListSortDirection.Ascending });
+                        CollectionViewSource.SortDescriptions.Insert((CollectionViewSource.SortDescriptions.Count - 1), new System.ComponentModel.SortDescription() { PropertyName = "ModViewModel.LibraryItem.APICategoryName", Direction = System.ComponentModel.ListSortDirection.Ascending });
                     }
                 }
                 else
                 {
-                    CollectionViewSource.SortDescriptions.Remove(CollectionViewSource.SortDescriptions.Single(sd => sd.PropertyName == "ModListItemViewModel.LibraryItem.APICategoryName"));
+                    CollectionViewSource.SortDescriptions.Remove(CollectionViewSource.SortDescriptions.Single(sd => sd.PropertyName == "ModViewModel.LibraryItem.APICategoryName"));
                 }
 
                 CollectionViewSource.View.Refresh();
@@ -313,14 +313,14 @@ namespace Quasar.Controls.ModManagement.ViewModels
 
                 if (value)
                 {
-                    if (!CollectionViewSource.SortDescriptions.Any(sd => sd.PropertyName == "ModListItemViewModel.APISubCategoryName"))
+                    if (!CollectionViewSource.SortDescriptions.Any(sd => sd.PropertyName == "ModViewModel.APISubCategoryName"))
                     {
-                        CollectionViewSource.SortDescriptions.Insert((CollectionViewSource.SortDescriptions.Count - 1), new System.ComponentModel.SortDescription() { PropertyName = "ModListItemViewModel.APISubCategoryName", Direction = System.ComponentModel.ListSortDirection.Ascending });
+                        CollectionViewSource.SortDescriptions.Insert((CollectionViewSource.SortDescriptions.Count - 1), new System.ComponentModel.SortDescription() { PropertyName = "ModViewModel.APISubCategoryName", Direction = System.ComponentModel.ListSortDirection.Ascending });
                     }
                 }
                 else
                 {
-                    CollectionViewSource.SortDescriptions.Remove(CollectionViewSource.SortDescriptions.Single(sd => sd.PropertyName == "ModListItemViewModel.APISubCategoryName"));
+                    CollectionViewSource.SortDescriptions.Remove(CollectionViewSource.SortDescriptions.Single(sd => sd.PropertyName == "ModViewModel.APISubCategoryName"));
                 }
 
                 CollectionViewSource.View.Refresh();
@@ -339,14 +339,14 @@ namespace Quasar.Controls.ModManagement.ViewModels
                 OnPropertyChanged("TimeFilterSelected");
                 if (value)
                 {
-                    if(!CollectionViewSource.SortDescriptions.Any(sd => sd.PropertyName == "ModListItemViewModel.LibraryItem.Time"))
+                    if(!CollectionViewSource.SortDescriptions.Any(sd => sd.PropertyName == "ModViewModel.LibraryItem.Time"))
                     {
-                        CollectionViewSource.SortDescriptions.Insert((CollectionViewSource.SortDescriptions.Count - 1), new System.ComponentModel.SortDescription() { PropertyName = "ModListItemViewModel.LibraryItem.Time", Direction = System.ComponentModel.ListSortDirection.Descending });
+                        CollectionViewSource.SortDescriptions.Insert((CollectionViewSource.SortDescriptions.Count - 1), new System.ComponentModel.SortDescription() { PropertyName = "ModViewModel.LibraryItem.Time", Direction = System.ComponentModel.ListSortDirection.Descending });
                     }
                 }
                 else
                 {
-                    CollectionViewSource.SortDescriptions.Remove(CollectionViewSource.SortDescriptions.Single(sd => sd.PropertyName == "ModListItemViewModel.LibraryItem.Time"));
+                    CollectionViewSource.SortDescriptions.Remove(CollectionViewSource.SortDescriptions.Single(sd => sd.PropertyName == "ModViewModel.LibraryItem.Time"));
                 }
                 CollectionViewSource.View.Refresh();
             }
@@ -397,7 +397,7 @@ namespace Quasar.Controls.ModManagement.ViewModels
         /// </summary>
         /// <param name="_MUVM"></param>
         /// <param name="_QuasarLogger"></param>
-        public ModsViewModel(MainUIViewModel _MUVM, ILog _QuasarLogger)
+        public LibraryViewModel(MainUIViewModel _MUVM, ILog _QuasarLogger)
         {
             MUVM = _MUVM;
             QuasarLogger = _QuasarLogger;
@@ -407,10 +407,10 @@ namespace Quasar.Controls.ModManagement.ViewModels
 
             CollectionViewSource = new CollectionViewSource();
             CollectionViewSource.Source = ModListItems;
-            CollectionViewSource.SortDescriptions.Add(new System.ComponentModel.SortDescription() { PropertyName= "ModListItemViewModel.LibraryItem.Name", Direction= System.ComponentModel.ListSortDirection.Ascending });
+            CollectionViewSource.SortDescriptions.Add(new System.ComponentModel.SortDescription() { PropertyName= "ModViewModel.LibraryItem.Name", Direction= System.ComponentModel.ListSortDirection.Ascending });
             CollectionViewSource.Filter += ModTypeFilter;
 
-            EventSystem.Subscribe<ModListItemViewModel>(GetModListElementTrigger);
+            EventSystem.Subscribe<ModViewModel>(GetModListElementTrigger);
             EventSystem.Subscribe<QuasarDownload>(Download);
             EventSystem.Subscribe<ModalEvent>(ProcessIncomingModalEvent);
 
@@ -434,7 +434,7 @@ namespace Quasar.Controls.ModManagement.ViewModels
                 Game gamu = MUVM.Games.Single(g => g.ID == li.GameID);
 
                 ModListItem mli = new ModListItem(this, QuasarLogger,_LibraryItem: li, _Game: gamu);
-                mli.ModListItemViewModel.LoadStats();
+                mli.ModViewModel.LoadStats();
                 ModListItems.Add(mli);
             }
         }
@@ -450,7 +450,7 @@ namespace Quasar.Controls.ModManagement.ViewModels
             ModListItem mli = e.Item as ModListItem;
 
             //Getting Color Match Status
-            int ColorValue = mli.ModListItemViewModel.ContentStatValue;
+            int ColorValue = mli.ModViewModel.ContentStatValue;
             bool MatchingCheckBox = (RedChecked && ColorValue == 0)
                  || (OrangeChecked && ColorValue == 1)
                  || (GreenChecked && ColorValue == 2)
@@ -460,12 +460,12 @@ namespace Quasar.Controls.ModManagement.ViewModels
             bool NoSelectedType = SelectedGamebananaRootCategory == null;
             bool MatchingSelectedType = false;
             if(!NoSelectedType)
-                MatchingSelectedType = mli.ModListItemViewModel.LibraryItem.GBItem?.RootCategoryGuid == SelectedGamebananaRootCategory.Guid;
+                MatchingSelectedType = mli.ModViewModel.LibraryItem.GBItem?.RootCategoryGuid == SelectedGamebananaRootCategory.Guid;
 
             //Getting Filter Text Match
             bool EmptyText = SearchText.Length == 0;
-            bool MatchingName = mli.ModListItemViewModel.LibraryItem.Name.Contains(SearchText.ToLower()) && !EmptyText;
-            bool MatchingCategory = mli.ModListItemViewModel.APISubCategoryName.ToLower().Contains(SearchText.ToLower()) && !EmptyText;
+            bool MatchingName = mli.ModViewModel.LibraryItem.Name.Contains(SearchText.ToLower()) && !EmptyText;
+            bool MatchingCategory = mli.ModViewModel.APISubCategoryName.ToLower().Contains(SearchText.ToLower()) && !EmptyText;
 
             //Match status
             if (MatchingCheckBox && (MatchingSelectedType || NoSelectedType) && (MatchingName || MatchingCategory || EmptyText))
@@ -539,7 +539,7 @@ namespace Quasar.Controls.ModManagement.ViewModels
                             {
                                 QuasarLogger.Debug("Existing Item");
                                 //Parsing Existing Mod List Item
-                                MLI = ModListItems.Single(i => i.ModListItemViewModel.LibraryItem.GBItem.GamebananaItemID.ToString() == MM.QuasarURL.GamebananaItemID);
+                                MLI = ModListItems.Single(i => i.ModViewModel.LibraryItem.GBItem.GamebananaItemID.ToString() == MM.QuasarURL.GamebananaItemID);
                             }
                             MM.ModListItem = MLI;
 
@@ -624,7 +624,7 @@ namespace Quasar.Controls.ModManagement.ViewModels
                         }
                         catch(Exception e)
                         {
-                            MLI.ModListItemViewModel.DownloadFailed = true;
+                            MLI.ModViewModel.DownloadFailed = true;
 
                             QuasarLogger.Error("Could not download mod");
                             QuasarLogger.Error(e.Message);
@@ -632,7 +632,7 @@ namespace Quasar.Controls.ModManagement.ViewModels
                         }
                         
 
-                        MLI.ModListItemViewModel.Downloading = false;
+                        MLI.ModViewModel.Downloading = false;
                     }
                 }
                 
@@ -663,7 +663,7 @@ namespace Quasar.Controls.ModManagement.ViewModels
         {
             foreach(ModListItem i in ModListItems)
             {
-                i.ModListItemViewModel.LoadStats();
+                i.ModViewModel.LoadStats();
             }
         }
 
@@ -754,7 +754,7 @@ namespace Quasar.Controls.ModManagement.ViewModels
         {
             foreach (ModListItem mli in ModListItems)
             {
-                mli.ModListItemViewModel.CreatorMode = val;
+                mli.ModViewModel.CreatorMode = val;
             }
         }
 
@@ -766,7 +766,7 @@ namespace Quasar.Controls.ModManagement.ViewModels
         {
             foreach (ModListItem mli in ModListItems)
             {
-                mli.ModListItemViewModel.AdvancedMode = val;
+                mli.ModViewModel.AdvancedMode = val;
             }
         }
 
@@ -774,11 +774,11 @@ namespace Quasar.Controls.ModManagement.ViewModels
         /// <summary>
         /// Trigger for an event incoming from a Mod List Item View Model
         /// </summary>
-        /// <param name="ModListItemViewModel"></param>
-        public void GetModListElementTrigger(ModListItemViewModel ModListItemViewModel)
+        /// <param name="modViewModeliewModel"></param>
+        public void GetModListElementTrigger(ModViewModel modViewModel)
         {
-            ModListItem MLI = ModListItems.Single(m => m.ModListItemViewModel == ModListItemViewModel);
-            switch (ModListItemViewModel.ActionRequested)
+            ModListItem MLI = ModListItems.Single(m => m.ModViewModel == modViewModel);
+            switch (modViewModel.ActionRequested)
             {
                 case "Delete":
                     AskDeleteMod(MLI);
@@ -837,7 +837,7 @@ namespace Quasar.Controls.ModManagement.ViewModels
         public void AddToWorkspace(ModListItem MLI)
         {
             //Removing from ContentMappings
-            List<ContentItem> relatedMappings = MUVM.ContentItems.Where(i => i.LibraryItemGuid == MLI.ModListItemViewModel.LibraryItem.Guid).ToList();
+            List<ContentItem> relatedMappings = MUVM.ContentItems.Where(i => i.LibraryItemGuid == MLI.ModViewModel.LibraryItem.Guid).ToList();
             MUVM.ActiveWorkspace = Slotter.AutomaticSlot(relatedMappings, MUVM.ActiveWorkspace, MUVM.QuasarModTypes);
             UserDataManager.SaveWorkspaces(MUVM.Workspaces, AppDataPath);
             QuasarLogger.Debug("Written changes to Workspaces");
@@ -852,7 +852,7 @@ namespace Quasar.Controls.ModManagement.ViewModels
         public void RemoveMod(ModListItem MLI)
         {
             //Removing from ContentMappings
-            List<ContentItem> relatedMappings = MUVM.ContentItems.Where(cm => cm.LibraryItemGuid == MLI.ModListItemViewModel.LibraryItem.Guid).ToList();
+            List<ContentItem> relatedMappings = MUVM.ContentItems.Where(cm => cm.LibraryItemGuid == MLI.ModViewModel.LibraryItem.Guid).ToList();
             foreach (ContentItem ci in relatedMappings)
             {
                 if (ci.GameElementID != -1)
@@ -881,7 +881,7 @@ namespace Quasar.Controls.ModManagement.ViewModels
             }
             UserDataManager.SaveWorkspaces(MUVM.Workspaces, AppDataPath);
             QuasarLogger.Debug("Written changes to Workspaces");
-            MLI.ModListItemViewModel.LoadStats();
+            MLI.ModViewModel.LoadStats();
             CollectionViewSource.View.Refresh();
 
         }
@@ -892,11 +892,11 @@ namespace Quasar.Controls.ModManagement.ViewModels
         /// <param name="MLI"></param>
         public void UpdateMod(ModListItem MLI)
         {
-            GamebananaRootCategory RCat = MUVM.API.Games[0].RootCategories.Single(c => c.Guid == MLI.ModListItemViewModel.LibraryItem.GBItem.RootCategoryGuid);
+            GamebananaRootCategory RCat = MUVM.API.Games[0].RootCategories.Single(c => c.Guid == MLI.ModViewModel.LibraryItem.GBItem.RootCategoryGuid);
 
             Application.Current.Dispatcher.Invoke((Action)delegate {
                 Task.Run(() =>
-                DownloadMod(APIRequest.GetQuasarDownloadURL("",RCat.Name, MLI.ModListItemViewModel.LibraryItem.GBItem.GamebananaItemID.ToString())));;
+                DownloadMod(APIRequest.GetQuasarDownloadURL("",RCat.Name, MLI.ModViewModel.LibraryItem.GBItem.GamebananaItemID.ToString())));;
             });
         }
 
@@ -909,7 +909,7 @@ namespace Quasar.Controls.ModManagement.ViewModels
             if (SelectedModListItem == null)
                 return;
 
-            SelectedModListItem.ModListItemViewModel.ActionRequested = "ShowContents";
+            SelectedModListItem.ModViewModel.ActionRequested = "ShowContents";
             EventSystem.Publish<ModListItem>(SelectedModListItem);
         }
 
@@ -945,11 +945,11 @@ namespace Quasar.Controls.ModManagement.ViewModels
         public void DeleteMod(ModListItem item)
         {
             //Removing Files
-            ModFileManager mfm = new ModFileManager(item.ModListItemViewModel.LibraryItem);
+            ModFileManager mfm = new ModFileManager(item.ModViewModel.LibraryItem);
             mfm.DeleteFiles();
 
             //Removing from ContentMappings
-            List<ContentItem> relatedMappings = MUVM.ContentItems.Where(cm => cm.LibraryItemGuid == item.ModListItemViewModel.LibraryItem.Guid).ToList();
+            List<ContentItem> relatedMappings = MUVM.ContentItems.Where(cm => cm.LibraryItemGuid == item.ModViewModel.LibraryItem.Guid).ToList();
             foreach (ContentItem ci in relatedMappings)
             {
                 foreach (Workspace w in MUVM.Workspaces)
@@ -968,7 +968,7 @@ namespace Quasar.Controls.ModManagement.ViewModels
             }
 
             ModListItems.Remove(item);
-            MUVM.Library.Remove(item.ModListItemViewModel.LibraryItem);
+            MUVM.Library.Remove(item.ModViewModel.LibraryItem);
 
             //Writing changes
             UserDataManager.SaveLibrary(MUVM.Library, AppDataPath);

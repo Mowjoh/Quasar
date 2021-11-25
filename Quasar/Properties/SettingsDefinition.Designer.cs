@@ -12,7 +12,7 @@ namespace Quasar.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.8.1.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.10.0.0")]
     internal sealed partial class SettingsDefinition : global::System.Configuration.ApplicationSettingsBase {
         
         private static SettingsDefinition defaultInstance = ((SettingsDefinition)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new SettingsDefinition())));
@@ -50,33 +50,6 @@ namespace Quasar.Properties {
             }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Supress build warning")]
-        public string SupressBuildDeletionName {
-            get {
-                return ((string)(this["SupressBuildDeletionName"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Enable this to supress the warning when building")]
-        public string SupressBuildDeletionComment {
-            get {
-                return ((string)(this["SupressBuildDeletionComment"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string SupressBuildDeletionValues {
-            get {
-                return ((string)(this["SupressBuildDeletionValues"]));
-            }
-        }
-        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Quasar Version")]
@@ -98,30 +71,6 @@ namespace Quasar.Properties {
             }
             set {
                 this["AppVersionComment"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Enable Internal Mod Types")]
-        public string EnableIMTName {
-            get {
-                return ((string)(this["EnableIMTName"]));
-            }
-            set {
-                this["EnableIMTName"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Enables a tab to configure types, for advanced users only")]
-        public string EnableIMTComment {
-            get {
-                return ((string)(this["EnableIMTComment"]));
-            }
-            set {
-                this["EnableIMTComment"] = value;
             }
         }
         
@@ -175,25 +124,13 @@ namespace Quasar.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string EnableIMTValues {
-            get {
-                return ((string)(this["EnableIMTValues"]));
-            }
-            set {
-                this["EnableIMTValues"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("FTP Address")]
-        public string FTPAddressName {
+        public string FtpAddressName {
             get {
-                return ((string)(this["FTPAddressName"]));
+                return ((string)(this["FtpAddressName"]));
             }
             set {
-                this["FTPAddressName"] = value;
+                this["FtpAddressName"] = value;
             }
         }
         
@@ -201,36 +138,36 @@ namespace Quasar.Properties {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Please enter the address in this format : [IP Address:Port] - Here is an example " +
             ": 192.168.0.100:500 ")]
-        public string FTPAddressComment {
+        public string FtpAddressComment {
             get {
-                return ((string)(this["FTPAddressComment"]));
+                return ((string)(this["FtpAddressComment"]));
             }
             set {
-                this["FTPAddressComment"] = value;
+                this["FtpAddressComment"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("USER=US")]
-        public string FTPAddressValues {
+        public string FtpAddressValues {
             get {
-                return ((string)(this["FTPAddressValues"]));
+                return ((string)(this["FtpAddressValues"]));
             }
             set {
-                this["FTPAddressValues"] = value;
+                this["FtpAddressValues"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("FTP Username")]
-        public string FTPUNName {
+        public string FtpUsernameName {
             get {
-                return ((string)(this["FTPUNName"]));
+                return ((string)(this["FtpUsernameName"]));
             }
             set {
-                this["FTPUNName"] = value;
+                this["FtpUsernameName"] = value;
             }
         }
         
@@ -238,36 +175,36 @@ namespace Quasar.Properties {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("If you have authentification enabled on your Switch, please enter the username he" +
             "re")]
-        public string FTPUNComment {
+        public string FtpUsernameComment {
             get {
-                return ((string)(this["FTPUNComment"]));
+                return ((string)(this["FtpUsernameComment"]));
             }
             set {
-                this["FTPUNComment"] = value;
+                this["FtpUsernameComment"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("USER=US")]
-        public string FTPUNValues {
+        public string FTPUsernameValues {
             get {
-                return ((string)(this["FTPUNValues"]));
+                return ((string)(this["FTPUsernameValues"]));
             }
             set {
-                this["FTPUNValues"] = value;
+                this["FTPUsernameValues"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("FTP Password")]
-        public string FTPPWName {
+        public string FtpPasswordName {
             get {
-                return ((string)(this["FTPPWName"]));
+                return ((string)(this["FtpPasswordName"]));
             }
             set {
-                this["FTPPWName"] = value;
+                this["FtpPasswordName"] = value;
             }
         }
         
@@ -275,207 +212,96 @@ namespace Quasar.Properties {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("If you have authentification enabled on your Switch, please enter the password he" +
             "re")]
-        public string FTPPWComment {
+        public string FtpPasswordComment {
             get {
-                return ((string)(this["FTPPWComment"]));
+                return ((string)(this["FtpPasswordComment"]));
             }
             set {
-                this["FTPPWComment"] = value;
+                this["FtpPasswordComment"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("USER=US")]
-        public string FTPPWValues {
+        public string FtpPasswordValues {
             get {
-                return ((string)(this["FTPPWValues"]));
+                return ((string)(this["FtpPasswordValues"]));
             }
             set {
-                this["FTPPWValues"] = value;
+                this["FtpPasswordValues"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Enable Creator mode")]
-        public string EnableCreatorName {
+        [global::System.Configuration.DefaultSettingValueAttribute("Enable this if you\'d prefer to always use FTP when transferring mods")]
+        public string FtpPreferredComment {
             get {
-                return ((string)(this["EnableCreatorName"]));
+                return ((string)(this["FtpPreferredComment"]));
             }
             set {
-                this["EnableCreatorName"] = value;
+                this["FtpPreferredComment"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Enable this mode if you want to access options dedicated to mod creators")]
-        public string EnableCreatorComment {
+        [global::System.Configuration.DefaultSettingValueAttribute("FTP Transfers")]
+        public string FtpPreferredName {
             get {
-                return ((string)(this["EnableCreatorComment"]));
+                return ((string)(this["FtpPreferredName"]));
             }
             set {
-                this["EnableCreatorComment"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string EnableCreatorValues {
-            get {
-                return ((string)(this["EnableCreatorValues"]));
-            }
-            set {
-                this["EnableCreatorValues"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Enable Advanced mode")]
-        public string EnableAdvancedName {
-            get {
-                return ((string)(this["EnableAdvancedName"]));
-            }
-            set {
-                this["EnableAdvancedName"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Enable this mode if you want full access to Quasar\'s features. This will also ena" +
-            "ble debug logs")]
-        public string EnableAdvancedComment {
-            get {
-                return ((string)(this["EnableAdvancedComment"]));
-            }
-            set {
-                this["EnableAdvancedComment"] = value;
+                this["FtpPreferredName"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string EnableAdvancedValues {
+        public string FtpPreferredValues {
             get {
-                return ((string)(this["EnableAdvancedValues"]));
+                return ((string)(this["FtpPreferredValues"]));
             }
             set {
-                this["EnableAdvancedValues"] = value;
+                this["FtpPreferredValues"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Enable Workspace Tab")]
-        public string EnableWorkspacesName {
+        [global::System.Configuration.DefaultSettingValueAttribute("Transfers only affect folders made by Quasar")]
+        public string TransferQuasarFoldersOnlyComment {
             get {
-                return ((string)(this["EnableWorkspacesName"]));
+                return ((string)(this["TransferQuasarFoldersOnlyComment"]));
             }
             set {
-                this["EnableWorkspacesName"] = value;
+                this["TransferQuasarFoldersOnlyComment"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string EnableWorkspacesValues {
+        [global::System.Configuration.DefaultSettingValueAttribute("Manage all mods")]
+        public string TransferQuasarFoldersOnlyName {
             get {
-                return ((string)(this["EnableWorkspacesValues"]));
+                return ((string)(this["TransferQuasarFoldersOnlyName"]));
             }
             set {
-                this["EnableWorkspacesValues"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("This enables the Workspace tab if you want to add more workspaces")]
-        public string EnableWorkspacesComment {
-            get {
-                return ((string)(this["EnableWorkspacesComment"]));
-            }
-            set {
-                this["EnableWorkspacesComment"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Suppress ModLoader Warning")]
-        public string ModLoaderSetupName {
-            get {
-                return ((string)(this["ModLoaderSetupName"]));
-            }
-            set {
-                this["ModLoaderSetupName"] = value;
+                this["TransferQuasarFoldersOnlyName"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string ModLoaderSetupValues {
+        public string TransferQuasarFoldersOnlyValues {
             get {
-                return ((string)(this["ModLoaderSetupValues"]));
+                return ((string)(this["TransferQuasarFoldersOnlyValues"]));
             }
             set {
-                this["ModLoaderSetupValues"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Enable this to suppress the warning at the end of build. If enabled, the setting " +
-            "below will be the automatic answer")]
-        public string ModLoaderSetupComment {
-            get {
-                return ((string)(this["ModLoaderSetupComment"]));
-            }
-            set {
-                this["ModLoaderSetupComment"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Mod Loader autosetup")]
-        public string ModLoaderSetupStateName {
-            get {
-                return ((string)(this["ModLoaderSetupStateName"]));
-            }
-            set {
-                this["ModLoaderSetupStateName"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string ModLoaderSetupStateValues {
-            get {
-                return ((string)(this["ModLoaderSetupStateValues"]));
-            }
-            set {
-                this["ModLoaderSetupStateValues"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Enable this if you want Quasar to automatically change ARCropolis\' active workspa" +
-            "ce")]
-        public string ModLoaderSetupStateComment {
-            get {
-                return ((string)(this["ModLoaderSetupStateComment"]));
-            }
-            set {
-                this["ModLoaderSetupStateComment"] = value;
+                this["TransferQuasarFoldersOnlyValues"] = value;
             }
         }
     }
