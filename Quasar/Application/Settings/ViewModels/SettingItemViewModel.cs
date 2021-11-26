@@ -150,77 +150,51 @@ namespace Quasar.Settings.ViewModels
         /// Constructor that takes in the Property Name
         /// </summary>
         /// <param name="Property">The Setting to bind the control and UI to</param>
-        public SettingItemViewModel(string Property)
+        public SettingItemViewModel(string Property, string DisplayName, string HoverComment, SettingItemType Type, string Values = "")
         {
             SettingItem = new SettingItem();
-            GetPropertyValues(Property);
-        }
 
-        #region Actions
-        /// <summary>
-        /// Loads data associated to the Property
-        /// </summary>
-        /// <param name="PropertyName">Name of the Property to look for</param>
-        void GetPropertyValues(string PropertyName)
-        {
             //Parsing setting
-            var Property = Properties.Settings.Default[PropertyName];
+            var ParsedProperty = Properties.Settings.Default[Property];
 
             //Parsing definition values
-            SettingItem.SettingName = PropertyName;
-            SettingItem.DisplayName = (string)Properties.SettingsDefinition.Default[PropertyName + "Name"];
-            SettingItem.DisplayComment = (string)Properties.SettingsDefinition.Default[PropertyName + "Comment"];
-            string Values = (string)Properties.SettingsDefinition.Default[PropertyName + "Values"];
+            SettingItem.SettingName = Property;
+            SettingItem.DisplayName = DisplayName;
+            SettingItem.DisplayComment = HoverComment;
 
-            switch (Property.GetType().Name)
+            switch (Type)
             {
                 //Setting up Checkbox View
-                case "Boolean":
+                case SettingItemType.Toggle:
 
                     EnableCheckBox = true;
-                    IsChecked = (bool)Property;
+                    IsChecked = (bool)ParsedProperty;
                     break;
 
 
-                case "String":
-                    //Setting up Combobox View
-                    if (Values != "")
-                    {
-                        SettingItem.Values = Values.Split(',')
-                         .Select(x => x.Split('='))
-                         .ToDictionary(x => x[0], x => x[1]);
-                        if (SettingItem.Values.ContainsKey("USER"))
-                        {
-                            SettingItem.DisplayValue = Property.ToString();
-                            EnableTextBox = true;
-                        }
-                        else
-                        {
-                            EnableComboBox = true;
-                        }
-
-                    }
-                    //Setting up Text View
-                    else
-                    {
-                        EnableValue = true;
-                        SettingItem.DisplayValue = Property.ToString();
-                    }
-
+                case SettingItemType.Input:
+                    EnableTextBox = true;
                     break;
+
                 //Setting up Combobox View
-                case "Integer":
+                case SettingItemType.List:
                     SettingItem.Values = Values.Split(',')
                          .Select(x => x.Split('='))
                          .ToDictionary(x => x[0], x => x[1]);
 
                     EnableComboBox = true;
                     break;
+
+                case SettingItemType.Text:
+                    EnableValue = true;
+                    SettingItem.DisplayValue = Property.ToString();
+                    break;
             }
 
-            //Notify UI
             NotifySettingChanged();
         }
+
+        #region Actions
 
         /// <summary>
         /// Publishes a Setting Item System Event
@@ -236,4 +210,6 @@ namespace Quasar.Settings.ViewModels
         #endregion
 
     }
+
+    public enum SettingItemType { Toggle, Input, List, Text}
 }

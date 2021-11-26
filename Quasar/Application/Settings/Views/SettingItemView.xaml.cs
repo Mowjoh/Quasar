@@ -40,9 +40,9 @@ namespace Quasar.Settings.Views
             }
         }
 
-        public SettingItemView(string Property)
+        public SettingItemView(string Property, string DisplayName, string HoverComment, SettingItemType Type, string Values = "")
         {
-            ViewModel = new SettingItemViewModel(Property);
+            ViewModel = new SettingItemViewModel(Property, DisplayName, HoverComment, Type, Values);
             InitializeComponent();
             DataContext = ViewModel;
             

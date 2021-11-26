@@ -259,7 +259,7 @@ namespace Quasar.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Wireless (FTP)=FTP,Wired =SD")]
         public string FtpPreferredValues {
             get {
                 return ((string)(this["FtpPreferredValues"]));

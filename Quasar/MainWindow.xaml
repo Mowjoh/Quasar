@@ -116,7 +116,7 @@
                                         </Trigger>
                                         <MultiTrigger>
                                             <MultiTrigger.Conditions>
-                                                <Condition Property="Header" Value="Contents" />
+                                                <Condition Property="Header" Value="{x:Static p:Resources.MainUI_FileManagerTabHeader}" />
                                                 <Condition Property="IsSelected" Value="True" />
                                             </MultiTrigger.Conditions>
                                             <MultiTrigger.Setters>
@@ -125,7 +125,7 @@
                                         </MultiTrigger>
                                         <MultiTrigger>
                                             <MultiTrigger.Conditions>
-                                                <Condition Property="Header" Value="Contents" />
+                                                <Condition Property="Header" Value="{x:Static p:Resources.MainUI_FileManagerTabHeader}" />
                                                 <Condition Property="IsSelected" Value="False" />
                                             </MultiTrigger.Conditions>
                                             <MultiTrigger.Setters>
@@ -134,7 +134,7 @@
                                         </MultiTrigger>
                                         <MultiTrigger>
                                             <MultiTrigger.Conditions>
-                                                <Condition Property="Header" Value="Reassignment" />
+                                                <Condition Property="Header" Value="{x:Static p:Resources.MainUI_AssignmentTabHeader}" />
                                                 <Condition Property="IsSelected" Value="True" />
                                             </MultiTrigger.Conditions>
                                             <MultiTrigger.Setters>
@@ -143,7 +143,7 @@
                                         </MultiTrigger>
                                         <MultiTrigger>
                                             <MultiTrigger.Conditions>
-                                                <Condition Property="Header" Value="Reassignment" />
+                                                <Condition Property="Header" Value="{x:Static p:Resources.MainUI_AssignmentTabHeader}" />
                                                 <Condition Property="IsSelected" Value="False" />
                                             </MultiTrigger.Conditions>
                                             <MultiTrigger.Setters>

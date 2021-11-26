@@ -1,6 +1,6 @@
 ﻿<UserControl x:Class="Quasar.Controls.ModListItem"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:Quasar.Controls"
+             xmlns:local="clr-namespace:Quasar.Controls" xmlns:p="clr-namespace:Quasar.Properties"
              Background="{DynamicResource CutieBG01}">
 
     <UserControl.Style>
@@ -226,7 +226,7 @@
 
                 <TextBlock Grid.Column="4"
                            VerticalAlignment="Center"
-                           Style="{StaticResource CutieTextBlockStyle}" Text="{Binding Path=LibraryItem.HumanTime}" Visibility="{Binding Path=Standby, Converter={StaticResource BoolVisi}}" />
+                           Style="{StaticResource CutieTextBlockStyle}" Text="{Binding Path=HumanTime}" Visibility="{Binding Path=Standby, Converter={StaticResource BoolVisi}}" />
                 <!--#endregion-->
 
                 <!--#region  Download UI-->
@@ -251,9 +251,6 @@
 
                     <Button Margin="10,0,0,0"
                             Command="{Binding Path=DeleteModCommand}" Template="{StaticResource ActionTrashButton}" ToolTip="Delete this Mod" />
-
-                    <Button Margin="10,0,0,0"
-                            Command="{Binding Path=FileViewCommand}" Template="{StaticResource ActionFileViewButton}" ToolTip="Show mod files" Visibility="{Binding Path=AdvancedMode, Converter={StaticResource BoolVisi}}" />
 
                     <Button Margin="10,0,0,0"
                             Command="{Binding Path=AddModCommand}" Template="{StaticResource ActionProcessModButton}" ToolTip="Remove the mod from the workspace" Visibility="{Binding Path=NoContent, Converter={StaticResource BoolVisi}}" />
@@ -305,11 +302,11 @@
                     <!--  Version Control  -->
                     <Label Grid.Column="1"
                            HorizontalAlignment="Center" VerticalAlignment="top"
-                           Content="Version Control :" Style="{StaticResource CutieLabelStyle}" />
+                           Content="{x:Static p:Resources.ModListItem_Label_VersionControl}" Style="{StaticResource CutieLabelStyle}" />
 
                     <Label Grid.Column="1"
                            Margin="16,50,0,0" HorizontalAlignment="Left" VerticalAlignment="top"
-                           Content="Update Count :" Style="{StaticResource CutieLabelStyle}" />
+                           Content="{x:Static p:Resources.ModListItem_Label_UpdateCount}" Style="{StaticResource CutieLabelStyle}" />
 
                     <Label Grid.Column="1"
                            Margin="115,50,0,0" HorizontalAlignment="Left" VerticalAlignment="top"
@@ -317,7 +314,7 @@
 
                     <Button Grid.Column="1"
                             Width="200" Margin="0,100,0,0" HorizontalAlignment="Center" VerticalAlignment="Top"
-                            Command="{Binding Path=UpdateModCommand}" Content="Check for updates" Template="{StaticResource CutieSmallButtonTemplate}" Visibility="{Binding CreatorMode, Converter={StaticResource BoolVisi}}" />
+                            Command="{Binding Path=UpdateModCommand}" Content="{x:Static p:Resources.ModListItem_Button_UpdateMod}" Template="{StaticResource CutieSmallButtonTemplate}" />
 
                 </Grid>
                 <!--#endregion-->
@@ -343,7 +340,7 @@
 
                     <Button Grid.Column="1"
                             Width="200" Margin="0,100,0,0" HorizontalAlignment="Center" VerticalAlignment="Top"
-                            Command="{Binding Path=ShowContentsCommand}" Content="Change Files" Template="{StaticResource CutieSmallButtonTemplate}" Visibility="{Binding CreatorMode, Converter={StaticResource BoolVisi}}" />
+                            Command="{Binding Path=ShowContentsCommand}" Content="{x:Static p:Resources.ModListItem_Button_EditFiles}" Template="{StaticResource CutieSmallButtonTemplate}"/>
 
                 </Grid>
                 <!--#endregion-->
@@ -356,7 +353,7 @@
                 <!--#region  Authors Panel-->
                 <Label Grid.Column="2" Grid.ColumnSpan="2"
                        HorizontalAlignment="Center" VerticalAlignment="top"
-                       Content="Creators :" Style="{StaticResource CutieLabelStyle}" />
+                       Content="{x:Static p:Resources.ModListItem_Label_Author}" Style="{StaticResource CutieLabelStyle}" />
 
                 <ItemsControl ItemsSource="{Binding Authors}"
                               x:Name="AutorNameStackPanel"

@@ -33,6 +33,7 @@ using ImageProcessor;
 using ImageProcessor.Plugins.WebP.Imaging.Formats;
 using Helpers.IPC;
 using System.IO;
+using System.Globalization;
 
 namespace Quasar.MainUI.ViewModels
 {
@@ -470,6 +471,8 @@ namespace Quasar.MainUI.ViewModels
 
             try
             {
+                //CultureInfo.CurrentUICulture = new CultureInfo("fr-FR", false);
+
                 QuasarLogger.Info("Tunnel Setup");
                 SetupClientOrServer();
 

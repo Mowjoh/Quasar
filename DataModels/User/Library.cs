@@ -27,14 +27,10 @@ namespace DataModels.User
 
             if (t.TotalDays > 10)
                 return "A long time ago";
-            if (t.TotalDays > 5)
-                return "A couple days ago";
             if (t.TotalDays >= 2)
                 return String.Format("{0} days ago",t.Days);
             if (t.TotalDays == 1)
                 return String.Format("{0} day ago", t.Days);
-            if (t.TotalHours > 5)
-                return "A couple hours ago";
             if (t.TotalHours >= 2)
                 return String.Format("{0} hour(s) ago", t.Hours);
             if (t.TotalHours == 1)

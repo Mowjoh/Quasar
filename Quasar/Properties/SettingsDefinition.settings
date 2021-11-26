@@ -63,7 +63,7 @@
       <Value Profile="(Default)">FTP Transfers</Value>
     </Setting>
     <Setting Name="FtpPreferredValues" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">Wireless (FTP)=FTP,Wired =SD</Value>
     </Setting>
     <Setting Name="TransferQuasarFoldersOnlyComment" Type="System.String" Scope="User">
       <Value Profile="(Default)">Transfers only affect folders made by Quasar</Value>

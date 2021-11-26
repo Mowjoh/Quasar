@@ -152,6 +152,7 @@ namespace Quasar.Controls.ModManagement.ViewModels
         private bool _TypeFilterSelected { get; set; }
         private bool _CategoryFilterSelected { get; set; }
         private bool _TimeFilterSelected { get; set; }
+        private bool _TransferWindowVisible { get; set; }
         #endregion
 
         #region Public
@@ -352,6 +353,21 @@ namespace Quasar.Controls.ModManagement.ViewModels
             }
         }
 
+        public bool TransferWindowVisible
+
+        {
+            get => _TransferWindowVisible;
+            set
+            {
+                if (_TransferWindowVisible == value)
+                    return;
+
+
+                _TransferWindowVisible = value;
+                OnPropertyChanged("TransferWindowVisible");
+            }
+        }
+
         #endregion
 
         #endregion
@@ -361,6 +377,7 @@ namespace Quasar.Controls.ModManagement.ViewModels
         #region Private
         private ICommand _AddManual { get; set; }
         private ICommand _ResetFilters { get; set; }
+        private ICommand _LaunchTransfer { get; set; }
         #endregion
 
         #region Public
@@ -384,6 +401,17 @@ namespace Quasar.Controls.ModManagement.ViewModels
                     _ResetFilters = new RelayCommand(param => ResetFilter());
                 }
                 return _ResetFilters;
+            }
+        }
+        public ICommand LauchTransferCommand
+        {
+            get
+            {
+                if (_LaunchTransfer == null)
+                {
+                    _LaunchTransfer = new RelayCommand(param => LaunchTransfer());
+                }
+                return _LaunchTransfer;
             }
         }
         #endregion
@@ -715,6 +743,10 @@ namespace Quasar.Controls.ModManagement.ViewModels
             OnPropertyChanged("SearchText");
         }
 
+        public void LaunchTransfer()
+        {
+            TransferWindowVisible = !TransferWindowVisible;
+        }
         #endregion
 
         #region Event System

@@ -61,6 +61,114 @@ namespace Quasar.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add Mod Manually.
+        /// </summary>
+        public static string Library_Button_AddModManually {
+            get {
+                return ResourceManager.GetString("Library_Button_AddModManually", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Start Transfer.
+        /// </summary>
+        public static string Library_Button_StartTransfer {
+            get {
+                return ResourceManager.GetString("Library_Button_StartTransfer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Actions.
+        /// </summary>
+        public static string Library_Header_Actions {
+            get {
+                return ResourceManager.GetString("Library_Header_Actions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Category.
+        /// </summary>
+        public static string Library_Header_Category {
+            get {
+                return ResourceManager.GetString("Library_Header_Category", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Last Modification.
+        /// </summary>
+        public static string Library_Header_Date {
+            get {
+                return ResourceManager.GetString("Library_Header_Date", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mod Name.
+        /// </summary>
+        public static string Library_Header_ModName {
+            get {
+                return ResourceManager.GetString("Library_Header_ModName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Type.
+        /// </summary>
+        public static string Library_Header_Type {
+            get {
+                return ResourceManager.GetString("Library_Header_Type", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please download some mods from Gamebanana using the Quasar Download Button.
+        /// </summary>
+        public static string Library_Label_DownloadWarning {
+            get {
+                return ResourceManager.GetString("Library_Label_DownloadWarning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Not Transferred and Reassigned.
+        /// </summary>
+        public static string Library_Label_EditedTransferDisabled {
+            get {
+                return ResourceManager.GetString("Library_Label_EditedTransferDisabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Transferred and Reassigned.
+        /// </summary>
+        public static string Library_Label_EditedTransferEnabled {
+            get {
+                return ResourceManager.GetString("Library_Label_EditedTransferEnabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Not Transferred.
+        /// </summary>
+        public static string Library_Label_TransferDisabled {
+            get {
+                return ResourceManager.GetString("Library_Label_TransferDisabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Transferred.
+        /// </summary>
+        public static string Library_Label_TransferEnabled {
+            get {
+                return ResourceManager.GetString("Library_Label_TransferEnabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Assignments.
         /// </summary>
         public static string MainUI_AssignmentTabHeader {
@@ -97,6 +205,24 @@ namespace Quasar.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Edit Files.
+        /// </summary>
+        public static string ModListItem_Button_EditFiles {
+            get {
+                return ResourceManager.GetString("ModListItem_Button_EditFiles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Update Mod.
+        /// </summary>
+        public static string ModListItem_Button_UpdateMod {
+            get {
+                return ResourceManager.GetString("ModListItem_Button_UpdateMod", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Delete this mod.
         /// </summary>
         public static string ModListItem_DeleteModAction {
@@ -106,11 +232,326 @@ namespace Quasar.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Creators : .
+        /// </summary>
+        public static string ModListItem_Label_Author {
+            get {
+                return ResourceManager.GetString("ModListItem_Label_Author", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Download Failed.
+        /// </summary>
+        public static string ModListItem_Label_DownloadFailed {
+            get {
+                return ResourceManager.GetString("ModListItem_Label_DownloadFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Update Count : .
+        /// </summary>
+        public static string ModListItem_Label_UpdateCount {
+            get {
+                return ResourceManager.GetString("ModListItem_Label_UpdateCount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Version Control : .
+        /// </summary>
+        public static string ModListItem_Label_VersionControl {
+            get {
+                return ResourceManager.GetString("ModListItem_Label_VersionControl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} hours ago.
+        /// </summary>
+        public static string ModListItem_Time_Days {
+            get {
+                return ResourceManager.GetString("ModListItem_Time_Days", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} hours ago.
+        /// </summary>
+        public static string ModListItem_Time_Hours {
+            get {
+                return ResourceManager.GetString("ModListItem_Time_Hours", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A long time ago.
+        /// </summary>
+        public static string ModListItem_Time_Long {
+            get {
+                return ResourceManager.GetString("ModListItem_Time_Long", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A day ago.
+        /// </summary>
+        public static string ModListItem_Time_OneDay {
+            get {
+                return ResourceManager.GetString("ModListItem_Time_OneDay", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An hour ago.
+        /// </summary>
+        public static string ModListItem_Time_OneHour {
+            get {
+                return ResourceManager.GetString("ModListItem_Time_OneHour", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Recently.
+        /// </summary>
+        public static string ModListItem_Time_Recently {
+            get {
+                return ResourceManager.GetString("ModListItem_Time_Recently", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Quasar.
         /// </summary>
         public static string Quasar_WindowTitle {
             get {
                 return ResourceManager.GetString("Quasar_WindowTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Application.
+        /// </summary>
+        public static string Settings_ApplicationSettingsHeader {
+            get {
+                return ResourceManager.GetString("Settings_ApplicationSettingsHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Application Version.
+        /// </summary>
+        public static string Settings_AppVersion {
+            get {
+                return ResourceManager.GetString("Settings_AppVersion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File Transfer Settings.
+        /// </summary>
+        public static string Settings_FileTransferHeader {
+            get {
+                return ResourceManager.GetString("Settings_FileTransferHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Switch&apos;s IP Address.
+        /// </summary>
+        public static string Settings_FtpIP {
+            get {
+                return ResourceManager.GetString("Settings_FtpIP", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter your Switch&apos;s IP address.
+        /// </summary>
+        public static string Settings_FtpIPComment {
+            get {
+                return ResourceManager.GetString("Settings_FtpIPComment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to FTP Password.
+        /// </summary>
+        public static string Settings_FtpPassword {
+            get {
+                return ResourceManager.GetString("Settings_FtpPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please type in your password if you&apos;ve enabled authentification on your Switch.
+        /// </summary>
+        public static string Settings_FtpPasswordComment {
+            get {
+                return ResourceManager.GetString("Settings_FtpPasswordComment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Switch&apos;s FTP Port.
+        /// </summary>
+        public static string Settings_FtpPort {
+            get {
+                return ResourceManager.GetString("Settings_FtpPort", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter your Switch&apos;s FTP Server Port (usually 5000).
+        /// </summary>
+        public static string Settings_FtpPortComment {
+            get {
+                return ResourceManager.GetString("Settings_FtpPortComment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Wireless Transfer.
+        /// </summary>
+        public static string Settings_FtpPreferred {
+            get {
+                return ResourceManager.GetString("Settings_FtpPreferred", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enable this to use FTP when transferring mods to your Switch.
+        /// </summary>
+        public static string Settings_FtpPreferredComment {
+            get {
+                return ResourceManager.GetString("Settings_FtpPreferredComment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to FTP Settings.
+        /// </summary>
+        public static string Settings_FtpSettingsHeader {
+            get {
+                return ResourceManager.GetString("Settings_FtpSettingsHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Username.
+        /// </summary>
+        public static string Settings_FtpUsername {
+            get {
+                return ResourceManager.GetString("Settings_FtpUsername", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please type in your username if you&apos;ve enabled authentification on your Switch.
+        /// </summary>
+        public static string Settings_FtpUsernameComment {
+            get {
+                return ResourceManager.GetString("Settings_FtpUsernameComment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Application Language.
+        /// </summary>
+        public static string Settings_Language {
+            get {
+                return ResourceManager.GetString("Settings_Language", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select an option to change Quasar&apos;s display language.
+        /// </summary>
+        public static string Settings_LanguageComment {
+            get {
+                return ResourceManager.GetString("Settings_LanguageComment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Manage All Mods.
+        /// </summary>
+        public static string Settings_ManageAllMods {
+            get {
+                return ResourceManager.GetString("Settings_ManageAllMods", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enable this to have all the mods on your Switch be only managed by Quasar.
+        /// </summary>
+        public static string Settings_ManageAllModsComment {
+            get {
+                return ResourceManager.GetString("Settings_ManageAllModsComment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Move Installation Folder.
+        /// </summary>
+        public static string Settings_MoveInstallFolderContent {
+            get {
+                return ResourceManager.GetString("Settings_MoveInstallFolderContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Wired Transfer (SD).
+        /// </summary>
+        public static string Settings_SdPreferred {
+            get {
+                return ResourceManager.GetString("Settings_SdPreferred", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enable this to transfer to a SD plugged in your computer.
+        /// </summary>
+        public static string Settings_SdPreferredComment {
+            get {
+                return ResourceManager.GetString("Settings_SdPreferredComment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mod Deletion.
+        /// </summary>
+        public static string Settings_SupressModDeletion {
+            get {
+                return ResourceManager.GetString("Settings_SupressModDeletion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enable this to be warned when deleting Mods.
+        /// </summary>
+        public static string Settings_SupressModDeletionComment {
+            get {
+                return ResourceManager.GetString("Settings_SupressModDeletionComment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Warnings.
+        /// </summary>
+        public static string Settings_TogglesHeader {
+            get {
+                return ResourceManager.GetString("Settings_TogglesHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Test and Save FTP Info.
+        /// </summary>
+        public static string Settings_ValidateFTPContent {
+            get {
+                return ResourceManager.GetString("Settings_ValidateFTPContent", resourceCulture);
             }
         }
     }

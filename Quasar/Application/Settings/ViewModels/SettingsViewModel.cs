@@ -143,22 +143,25 @@ namespace Quasar.Settings.ViewModels
         {
             AppSettings = new ObservableCollection<SettingItemView>
             {
-                new("AppVersion"),
+                new("AppVersion",Properties.Resources.Settings_AppVersion, "", SettingItemType.Text),
+                new("Language", Properties.Resources.Settings_Language,Properties.Resources.Settings_LanguageComment,SettingItemType.List,"English=EN,Français=FR")
             };
             FTPSettings = new ObservableCollection<SettingItemView>
             {
-                new("FtpAddress"),
-                new("FtpUsername"),
-                new("FtpPassword"),
+                new("FtpIP", Properties.Resources.Settings_FtpIP, Properties.Resources.Settings_FtpIPComment, SettingItemType.Input),
+                new("FtpPort", Properties.Resources.Settings_FtpPort, Properties.Resources.Settings_FtpPortComment, SettingItemType.Input),
+                new("FtpUsername", Properties.Resources.Settings_FtpUsername, Properties.Resources.Settings_FtpUsernameComment, SettingItemType.Input),
+                new("FtpPassword", Properties.Resources.Settings_FtpPassword, Properties.Resources.Settings_FtpPasswordComment, SettingItemType.Input),
             };
             WarningSettings = new ObservableCollection<SettingItemView>
             {
-                new("SupressModDeletion"),
+                new("SupressModDeletion", Properties.Resources.Settings_SupressModDeletion, Properties.Resources.Settings_SupressModDeletionComment, SettingItemType.Toggle),
             };
             TransferSettings = new ObservableCollection<SettingItemView>
             {
-                new("FtpPreferred"),
-                new("TransferQuasarFoldersOnly")
+                new("FtpPreferred", Properties.Resources.Settings_FtpPreferred, Properties.Resources.Settings_FtpPreferredComment, SettingItemType.Toggle),
+                new("SdPreferred", Properties.Resources.Settings_SdPreferred, Properties.Resources.Settings_SdPreferredComment, SettingItemType.Toggle),
+                new("TransferQuasarFoldersOnly", Properties.Resources.Settings_ManageAllMods, Properties.Resources.Settings_ManageAllModsComment, SettingItemType.Toggle)
             };
         }
         #endregion

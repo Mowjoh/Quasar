@@ -162,7 +162,7 @@
         <!--#endregion-->
 
         <!--#region Base Colors-->
-        <SolidColorBrush x:Key="CutiePrimaryColor" Color="#147a85" />
+        <SolidColorBrush x:Key="CutiePrimaryColor" Color="#2bba23" />
         <SolidColorBrush x:Key="CutieSecondaryColor" Color="#748bf2" />
         <SolidColorBrush x:Key="CutieErrorColor" Color="#CF6679" />
         <SolidColorBrush x:Key="CutieValidationColor" Color="#66CF66" />
@@ -294,7 +294,7 @@
             <Grid Background="Transparent">
                 <Path x:Name="path"
                       Width="20" Height="20"
-                      Data="M18 19H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm1-16H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z" Fill="Orange" Stretch="Fill" Stroke="Orange" StrokeThickness="0" />
+                      Data="M18 19H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm1-16H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z" Fill="#34e5eb" Stretch="Fill" Stroke="#34e5eb" StrokeThickness="0" />
             </Grid>
 
             <ControlTemplate.Triggers>
