@@ -12,6 +12,7 @@ using System.Windows.Input;
 using DataModels.Common;
 using DataModels.User;
 using DataModels.Resource;
+using Quasar.Settings.Models;
 
 namespace Quasar.Settings.ViewModels
 {
@@ -23,7 +24,7 @@ namespace Quasar.Settings.ViewModels
         ObservableCollection<SettingItemView> _AppSettings { get; set; }
         ObservableCollection<SettingItemView> _FTPSettings { get; set; }
         ObservableCollection<SettingItemView> _WarningSettings { get; set; }
-        ObservableCollection<SettingItemView> _ToggleSettings { get; set; }
+        ObservableCollection<SettingItemView> _TransferSettings { get; set; }
         #endregion
 
         #region Public
@@ -42,7 +43,7 @@ namespace Quasar.Settings.ViewModels
                 OnPropertyChanged("AppSettings");
             }
         }
-public ObservableCollection<SettingItemView> FTPSettings
+        public ObservableCollection<SettingItemView> FTPSettings
         {
             get => _FTPSettings;
             set
@@ -66,16 +67,16 @@ public ObservableCollection<SettingItemView> FTPSettings
                 OnPropertyChanged("WarningSettings");
             }
         }
-        public ObservableCollection<SettingItemView> ToggleSettings
+        public ObservableCollection<SettingItemView> TransferSettings
         {
-            get => _ToggleSettings;
+            get => _TransferSettings;
             set
             {
-                if (_ToggleSettings == value)
+                if (_TransferSettings == value)
                     return;
 
-                _ToggleSettings = value;
-                OnPropertyChanged("ToggleSettings");
+                _TransferSettings = value;
+                OnPropertyChanged("TransferSettings");
             }
         }
         #endregion
@@ -133,6 +134,7 @@ public ObservableCollection<SettingItemView> FTPSettings
             LoadSettings();
 
             EventSystem.Subscribe<ModalEvent>(ProcessModalEvent);
+
         }
 
         #region Actions
@@ -143,27 +145,27 @@ public ObservableCollection<SettingItemView> FTPSettings
         {
             AppSettings = new ObservableCollection<SettingItemView>
             {
-                new("AppVersion"),
+                new("AppVersion",Properties.Resources.Settings_Label_AppVersion, "", SettingItemType.Text),
+                new("Language", Properties.Resources.Settings_Label_Language,Properties.Resources.Settings_Comment_Language,SettingItemType.List,"English=EN,Français=FR")
             };
             FTPSettings = new ObservableCollection<SettingItemView>
             {
-                new("FTPAddress"),
-                new("FTPUN"),
-                new("FTPPW"),
+                new("FtpIP", Properties.Resources.Settings_Label_FtpIP, Properties.Resources.Settings_Comment_FtpIP, SettingItemType.Input),
+                new("FtpPort", Properties.Resources.Settings_Label_FtpPort, Properties.Resources.Settings_Comment_FtpPort, SettingItemType.Input),
+                new("FtpUsername", Properties.Resources.Settings_Label_FtpUsername, Properties.Resources.Settings_Comment_FtpUsername, SettingItemType.Input),
+                new("FtpPassword", Properties.Resources.Settings_Label_FtpPassword, Properties.Resources.Settings_Comment_FtpPassword, SettingItemType.Input),
             };
             WarningSettings = new ObservableCollection<SettingItemView>
             {
-                new("SupressModDeletion"),
-                new("ModLoaderSetup"),
-                new("ModLoaderSetupState"),
+                new("SupressModDeletion", Properties.Resources.Settings_Label_SupressModDeletion, Properties.Resources.Settings_Comment_SupressModDeletion, SettingItemType.Toggle),
             };
-            ToggleSettings = new ObservableCollection<SettingItemView>
+            TransferSettings = new ObservableCollection<SettingItemView>
             {
-                new("EnableWorkspaces"),
-                new("EnableCreator"),
-                new("EnableAdvanced")
+                new("PreferredTransferMethod", Properties.Resources.Settings_Label_PreferredTransferMethod, Properties.Resources.Settings_Comment_PreferredTransferMethod, SettingItemType.List,Properties.Resources.Settings_Values_PreferredTransferMethod),
+                new("TransferQuasarFoldersOnly", Properties.Resources.Settings_Label_ManageAllMods, Properties.Resources.Settings_Comment_ManageAllMods, SettingItemType.Toggle)
             };
         }
+
         #endregion
 
         #region User Actions
@@ -173,77 +175,102 @@ public ObservableCollection<SettingItemView> FTPSettings
         public void ValidateFTP()
         {
             //Parsing values
-            foreach(SettingItemView SIV in ToggleSettings)
+            foreach(SettingItemView SIV in FTPSettings)
             {
                 switch (SIV.ViewModel.SettingItem.SettingName)
                 {
-                    case "FTPAddress":
-                        Properties.Settings.Default.FTPAddress = SIV.ViewModel.SettingItem.DisplayValue;
+                    case "FtpIP":
+                        Properties.Settings.Default.FtpIP = SIV.ViewModel.SettingItem.DisplayValue;
                         break;
-                    case "FTPUN":
-                        Properties.Settings.Default.FTPUN = SIV.ViewModel.SettingItem.DisplayValue;
+                    case "FtpPort":
+                        Properties.Settings.Default.FtpPort = SIV.ViewModel.SettingItem.DisplayValue;
                         break;
-                    case "FTPPW":
-                        Properties.Settings.Default.FTPPW = SIV.ViewModel.SettingItem.DisplayValue;
+                    case "FtpUsername":
+                        Properties.Settings.Default.FtpUsername = SIV.ViewModel.SettingItem.DisplayValue;
+                        break;
+                    case "FtpPassword":
+                        Properties.Settings.Default.FtpPassword = SIV.ViewModel.SettingItem.DisplayValue;
                         break;
                 }
                 Properties.Settings.Default.Save();
             }
 
             //Validating values
-            Regex AddressRegex = new Regex(@"(?'IP'(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})):(?'Port'(\d{1,5}))");
-            if (AddressRegex.IsMatch(Properties.Settings.Default.FTPAddress))
+            Regex AddressRegex = new Regex(@"(?'IP'(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}))");
+            Regex PortRegex = new Regex(@"(?'Port'(\d{1,5}))");
+            if (Properties.Settings.Default.FtpIP != null && Properties.Settings.Default.FtpPort != null)
             {
-                //Showing connection Modal
-                ModalEvent Meuh = new ModalEvent()
+                if (AddressRegex.IsMatch(Properties.Settings.Default.FtpIP) && PortRegex.IsMatch(Properties.Settings.Default.FtpPort))
                 {
-                    Type = ModalType.Loader,
-                    Title = "Connection Test",
-                    Content = "Please wait while Quasar attempts to connect to the Switch",
-                    OkButtonText = "OK",
-                    Action = "Show",
-                    EventName = "FTPConnectionTest"
-                };
-                EventSystem.Publish(Meuh);
+                    //Showing connection Modal
+                    ModalEvent Meuh = new ModalEvent()
+                    {
+                        Type = ModalType.Loader,
+                        Title = Properties.Resources.Settings_Modal_Title_ConnectionWait,
+                        Content = Properties.Resources.Settings_Modal_Content_ConnectionWait,
+                        OkButtonText = Properties.Resources.Modal_Label_DefaultOK,
+                        Action = "Show",
+                        EventName = "FTPConnectionTest"
+                    };
+                    EventSystem.Publish(Meuh);
 
-                //Configuring FTP Client
-                FtpClient ftpClient = new FtpClient(Properties.Settings.Default.FTPAddress.Split(':')[0]);
-                ftpClient.Port = int.Parse(Properties.Settings.Default.FTPAddress.Split(':')[1]);
-                if (Properties.Settings.Default.FTPUN != "")
-                {
-                    ftpClient.Credentials = new System.Net.NetworkCredential(Properties.Settings.Default.FTPUN, Properties.Settings.Default.FTPPW);
+                    //Configuring FTP Client
+                    FtpClient ftpClient = new FtpClient(Properties.Settings.Default.FtpIP);
+                    ftpClient.Port = int.Parse(Properties.Settings.Default.FtpPort);
+                    if (Properties.Settings.Default.FtpUsername != "")
+                    {
+                        ftpClient.Credentials = new System.Net.NetworkCredential(Properties.Settings.Default.FtpUsername, Properties.Settings.Default.FtpPassword);
+                    }
+
+                    //Launching connection Task
+                    Task.Run(() => {
+                        try
+                        {
+                            ftpClient.ConnectTimeout = 3000;
+                            ftpClient.Connect();
+
+                            //Changing Modal state for success
+                            Meuh.Content = Properties.Resources.Settings_Modal_Content_SuccessfulConnection;
+                            Meuh.Title = Properties.Resources.Settings_Modal_Title_SuccessfulConnection;
+                            Meuh.Action = "LoadOK";
+                            EventSystem.Publish(Meuh);
+
+                            //Saving FTP state
+                            Properties.Settings.Default.FTPValid = true;
+                            Properties.Settings.Default.Save();
+                        }
+                        catch (Exception e)
+                        {
+                            //Changing Modal state for failure
+                            Meuh.Content = Properties.Resources.Settings_Modal_Content_UnsuccessfulConnection;
+                            Meuh.Title = Properties.Resources.Settings_Modal_Title_UnsuccessfulConnection;
+                            Meuh.Action = "LoadKO";
+                            EventSystem.Publish(Meuh);
+
+                            //Saving FTP state
+                            Properties.Settings.Default.FTPValid = false;
+                            Properties.Settings.Default.Save();
+                        }
+                    });
                 }
-
-                //Launching connection Task
-                Task.Run(() => {
-                    try
+                else
+                {
+                    //Showing error Modal
+                    ModalEvent Meuh = new ModalEvent()
                     {
-                        ftpClient.ConnectTimeout = 3000;
-                        ftpClient.Connect();
+                        Type = ModalType.Warning,
+                        Title = Properties.Resources.Settings_Modal_Title_WrongIpFormat,
+                        Content = Properties.Resources.Settings_Modal_Content_WrongIpFormat,
+                        OkButtonText = Properties.Resources.Modal_Label_DefaultOK,
+                        Action = "Show",
+                        EventName = "FTPConnectionWarning"
+                    };
+                    EventSystem.Publish(Meuh);
 
-                        //Changing Modal state for success
-                        Meuh.Content = "Connection to the Switch is successful\r you can now use FTP when transferring !";
-                        Meuh.Title = "Success";
-                        Meuh.Action = "LoadOK";
-                        EventSystem.Publish(Meuh);
-
-                        //Saving FTP state
-                        Properties.Settings.Default.FTPValid = true;
-                        Properties.Settings.Default.Save();
-                    }
-                    catch (Exception e)
-                    {
-                        //Changing Modal state for failure
-                        Meuh.Content = "Connection to the Switch is unsuccessful\r please check the address and Username/Password if you have them,\ralso check that your Switch is reachable";
-                        Meuh.Title = "Connection Error";
-                        Meuh.Action = "LoadKO";
-                        EventSystem.Publish(Meuh);
-
-                        //Saving FTP state
-                        Properties.Settings.Default.FTPValid = false;
-                        Properties.Settings.Default.Save();
-                    }
-                });
+                    //Saving FTP state
+                    Properties.Settings.Default.FTPValid = false;
+                    Properties.Settings.Default.Save();
+                }
             }
             else
             {
@@ -251,9 +278,9 @@ public ObservableCollection<SettingItemView> FTPSettings
                 ModalEvent Meuh = new ModalEvent()
                 {
                     Type = ModalType.Warning,
-                    Title = "Invalid Info",
-                    Content = "The Address is not valid, please check that\r you have entered the right IP/Port.\rAlso check that your FTP server is running",
-                    OkButtonText = "OK",
+                    Title = Properties.Resources.Settings_Modal_Title_WrongIpFormat,
+                    Content = Properties.Resources.Settings_Modal_Content_WrongIpFormat,
+                    OkButtonText = Properties.Resources.Modal_Label_DefaultOK,
                     Action = "Show",
                     EventName = "FTPConnectionWarning"
                 };
@@ -263,6 +290,7 @@ public ObservableCollection<SettingItemView> FTPSettings
                 Properties.Settings.Default.FTPValid = false;
                 Properties.Settings.Default.Save();
             }
+
         }
 
         /// <summary>
@@ -283,6 +311,11 @@ public ObservableCollection<SettingItemView> FTPSettings
                     if(meuh.Action == "OK")
                         Application.Current.Shutdown();
                     break;
+                case "ShutdownWarning":
+                    //If the install location change is finished
+                    if (meuh.Action == "OK")
+                        Application.Current.Shutdown();
+                    break;
                 default: break;
             }
         }
@@ -297,8 +330,8 @@ public ObservableCollection<SettingItemView> FTPSettings
                 EventName = "AskMoveInstall",
                 Action = "Show",
                 Type = ModalType.OkCancel,
-                Title = "CHANGE INSTALLATION",
-                Content = "Do you want to change where Quasar stores it's files ? \rIt will take some time to transfer then will shutdown.",
+                Title = Properties.Resources.Settings_Modal_Title_AskMoveInstall,
+                Content = Properties.Resources.Settings_Modal_Content_AskMoveInstall,
                 OkButtonText = "OK",
                 CancelButtonText = "CANCEL"
             };
@@ -324,9 +357,9 @@ public ObservableCollection<SettingItemView> FTPSettings
                     EventName = "MoveInstall",
                     Action = "Show",
                     Type = ModalType.Loader,
-                    Title = "Moving files",
-                    Content = "The operation is in progress, please wait for it to finish",
-                    OkButtonText = "Shutdown Quasar",
+                    Title = Properties.Resources.Settings_Modal_Title_MovingInstall,
+                    Content = Properties.Resources.Settings_Modal_Content_MovingInstall,
+                    OkButtonText = Properties.Resources.Settings_Modal_OkButton_MovingInstall,
                 };
                 EventSystem.Publish<ModalEvent>(Meuh);
 

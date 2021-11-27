@@ -112,36 +112,238 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="MainUI_ContentsTabHeader" xml:space="preserve">
-    <value>Contents</value>
+  <data name="Library_Button_AddModManually" xml:space="preserve">
+    <value>Add Mod Manually</value>
   </data>
-  <data name="MainUI_FileTransferTabHeader" xml:space="preserve">
-    <value>File Transfer</value>
+  <data name="Library_Button_StartTransfer" xml:space="preserve">
+    <value>Start Transfer</value>
   </data>
-  <data name="MainUI_InternalModTypesTabHeader" xml:space="preserve">
-    <value>Types</value>
+  <data name="Library_Header_Actions" xml:space="preserve">
+    <value>Actions</value>
   </data>
-  <data name="MainUI_ManagementTabHeader" xml:space="preserve">
-    <value>Management</value>
+  <data name="Library_Header_Category" xml:space="preserve">
+    <value>Category</value>
   </data>
-  <data name="MainUI_OverviewTabHeader" xml:space="preserve">
-    <value>Overview</value>
+  <data name="Library_Header_Date" xml:space="preserve">
+    <value>Last Modification</value>
+  </data>
+  <data name="Library_Header_ModName" xml:space="preserve">
+    <value>Mod Name</value>
+  </data>
+  <data name="Library_Header_Type" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="Library_Label_DownloadWarning" xml:space="preserve">
+    <value>Please download some mods from Gamebanana using the Quasar Download Button</value>
+  </data>
+  <data name="Library_Label_EditedTransferDisabled" xml:space="preserve">
+    <value>Not Transferred and Reassigned</value>
+  </data>
+  <data name="Library_Label_EditedTransferEnabled" xml:space="preserve">
+    <value>Transferred and Reassigned</value>
+  </data>
+  <data name="Library_Label_TransferDisabled" xml:space="preserve">
+    <value>Not Transferred</value>
+  </data>
+  <data name="Library_Label_TransferEnabled" xml:space="preserve">
+    <value>Transferred</value>
+  </data>
+  <data name="MainUI_AssignmentTabHeader" xml:space="preserve">
+    <value>Assignments</value>
+  </data>
+  <data name="MainUI_FileManagerTabHeader" xml:space="preserve">
+    <value>File Manager</value>
+  </data>
+  <data name="MainUI_LibraryTabHeader" xml:space="preserve">
+    <value>Library</value>
   </data>
   <data name="MainUI_SettingsTabHeader" xml:space="preserve">
     <value>Settings</value>
   </data>
-  <data name="MainUI_WorkspacesTabHeader" xml:space="preserve">
-    <value>Workspaces</value>
+  <data name="Modal_Label_DefaultCancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="Modal_Label_DefaultOK" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="ModListItem_Button_EditFiles" xml:space="preserve">
+    <value>Edit Files</value>
+  </data>
+  <data name="ModListItem_Button_UpdateMod" xml:space="preserve">
+    <value>Update Mod</value>
   </data>
   <data name="ModListItem_DeleteModAction" xml:space="preserve">
     <value>Delete this mod</value>
   </data>
+  <data name="ModListItem_Label_Author" xml:space="preserve">
+    <value>Creators : </value>
+  </data>
+  <data name="ModListItem_Label_DownloadFailed" xml:space="preserve">
+    <value>Download Failed</value>
+  </data>
+  <data name="ModListItem_Label_UpdateCount" xml:space="preserve">
+    <value>Update Count : </value>
+  </data>
+  <data name="ModListItem_Label_VersionControl" xml:space="preserve">
+    <value>Version Control : </value>
+  </data>
+  <data name="ModListItem_Time_Days" xml:space="preserve">
+    <value>{0} hours ago</value>
+  </data>
+  <data name="ModListItem_Time_Hours" xml:space="preserve">
+    <value>{0} hours ago</value>
+  </data>
+  <data name="ModListItem_Time_Long" xml:space="preserve">
+    <value>A long time ago</value>
+  </data>
+  <data name="ModListItem_Time_OneDay" xml:space="preserve">
+    <value>A day ago</value>
+  </data>
+  <data name="ModListItem_Time_OneHour" xml:space="preserve">
+    <value>An hour ago</value>
+  </data>
+  <data name="ModListItem_Time_Recently" xml:space="preserve">
+    <value>Recently</value>
+  </data>
   <data name="Quasar_WindowTitle" xml:space="preserve">
     <value>Quasar</value>
+  </data>
+  <data name="Settings_Button_MoveInstallFolder" xml:space="preserve">
+    <value>Move Installation Folder</value>
+  </data>
+  <data name="Settings_Button_ValidateFTP" xml:space="preserve">
+    <value>Test and Save FTP Info</value>
+  </data>
+  <data name="Settings_Comment_AskMoveInstall" xml:space="preserve">
+    <value>Use this button to move all mods to a new location on your computer</value>
+  </data>
+  <data name="Settings_Comment_FtpIP" xml:space="preserve">
+    <value>Enter your Switch's IP address</value>
+  </data>
+  <data name="Settings_Comment_FtpPassword" xml:space="preserve">
+    <value>Please type in your password if you've enabled authentification on your Switch</value>
+  </data>
+  <data name="Settings_Comment_FtpPort" xml:space="preserve">
+    <value>Enter your Switch's FTP Server Port (usually 5000)</value>
+  </data>
+  <data name="Settings_Comment_FtpUsername" xml:space="preserve">
+    <value>Please type in your username if you've enabled authentification on your Switch</value>
+  </data>
+  <data name="Settings_Comment_Language" xml:space="preserve">
+    <value>Select an option to change Quasar's display language
+The app will need to be rebooted to see the change</value>
+  </data>
+  <data name="Settings_Comment_ManageAllMods" xml:space="preserve">
+    <value>Enable this to have all the mods on your Switch be only managed by Quasar</value>
+  </data>
+  <data name="Settings_Comment_PreferredTransferMethod" xml:space="preserve">
+    <value>Select if you'd rather transfer files wirelessly through FTP or via a plugged in SD</value>
+  </data>
+  <data name="Settings_Comment_SupressModDeletion" xml:space="preserve">
+    <value>Enable this to be warned when deleting Mods</value>
+  </data>
+  <data name="Settings_Comment_TestFTP" xml:space="preserve">
+    <value>Use this button to verify that the Switch's FTP is working and to enable FTP transfers if successful</value>
+  </data>
+  <data name="Settings_Header_ApplicationSettings" xml:space="preserve">
+    <value>Application</value>
+  </data>
+  <data name="Settings_Header_FileTransfer" xml:space="preserve">
+    <value>File Transfer Settings</value>
+  </data>
+  <data name="Settings_Header_FtpSettings" xml:space="preserve">
+    <value>FTP Settings</value>
+  </data>
+  <data name="Settings_Header_Toggles" xml:space="preserve">
+    <value>Warnings</value>
+  </data>
+  <data name="Settings_Label_AppVersion" xml:space="preserve">
+    <value>Application Version</value>
+  </data>
+  <data name="Settings_Label_FtpIP" xml:space="preserve">
+    <value>Switch's IP Address</value>
+  </data>
+  <data name="Settings_Label_FtpPassword" xml:space="preserve">
+    <value>FTP Password</value>
+  </data>
+  <data name="Settings_Label_FtpPort" xml:space="preserve">
+    <value>Switch's FTP Port</value>
+  </data>
+  <data name="Settings_Label_FtpUsername" xml:space="preserve">
+    <value>Username</value>
+  </data>
+  <data name="Settings_Label_Language" xml:space="preserve">
+    <value>Application Language</value>
+  </data>
+  <data name="Settings_Label_ManageAllMods" xml:space="preserve">
+    <value>Manage All Mods</value>
+  </data>
+  <data name="Settings_Label_PreferredTransferMethod" xml:space="preserve">
+    <value>Transfer Method</value>
+  </data>
+  <data name="Settings_Label_SupressModDeletion" xml:space="preserve">
+    <value>Mod Deletion</value>
+  </data>
+  <data name="Settings_Modal_Button_ShutdownWarning" xml:space="preserve">
+    <value>Shutdown Quasar</value>
+  </data>
+  <data name="Settings_Modal_Content_AskMoveInstall" xml:space="preserve">
+    <value>Do you want to change where Quasar stores it's files ? 
+It will take some time to transfer then will shutdown.</value>
+  </data>
+  <data name="Settings_Modal_Content_ConnectionWait" xml:space="preserve">
+    <value>Please wait while Quasar attempts to connect to the Switch</value>
+  </data>
+  <data name="Settings_Modal_Content_MovingInstall" xml:space="preserve">
+    <value>The operation is in progress, please wait for it to finish</value>
+  </data>
+  <data name="Settings_Modal_Content_ShutdownWarning" xml:space="preserve">
+    <value>Quasar will now close to process this change</value>
+  </data>
+  <data name="Settings_Modal_Content_SuccessfulConnection" xml:space="preserve">
+    <value>Connection to the Switch is successful 
+you can now use FTP when transferring !</value>
+  </data>
+  <data name="Settings_Modal_Content_UnsuccessfulConnection" xml:space="preserve">
+    <value>Connection to the Switch is unsuccessful 
+please check the address and Username/Password if you have them,
+also check that your Switch is reachable</value>
+  </data>
+  <data name="Settings_Modal_Content_WrongIpFormat" xml:space="preserve">
+    <value>The Address is not valid, please check that
+you have entered the right IP/Port.
+Also check that your FTP server is running</value>
+  </data>
+  <data name="Settings_Modal_OkButton_MovingInstall" xml:space="preserve">
+    <value>Shutdown Quasar</value>
+  </data>
+  <data name="Settings_Modal_Title_AskMoveInstall" xml:space="preserve">
+    <value>Location Change</value>
+  </data>
+  <data name="Settings_Modal_Title_ConnectionWait" xml:space="preserve">
+    <value>Connection Test</value>
+  </data>
+  <data name="Settings_Modal_Title_MovingInstall" xml:space="preserve">
+    <value>Moving files</value>
+  </data>
+  <data name="Settings_Modal_Title_ShutdownWarning" xml:space="preserve">
+    <value>Shutdown</value>
+  </data>
+  <data name="Settings_Modal_Title_SuccessfulConnection" xml:space="preserve">
+    <value>Success</value>
+  </data>
+  <data name="Settings_Modal_Title_UnsuccessfulConnection" xml:space="preserve">
+    <value>Connection Error</value>
+  </data>
+  <data name="Settings_Modal_Title_WrongIpFormat" xml:space="preserve">
+    <value>Invalid Info</value>
+  </data>
+  <data name="Settings_Values_PreferredTransferMethod" xml:space="preserve">
+    <value>Wireless (FTP)=FTP,Wired (SD)=SD</value>
   </data>
 </root>

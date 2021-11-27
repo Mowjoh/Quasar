@@ -3,13 +3,11 @@
              xmlns:fa="http://schemas.fontawesome.io/icons/">
 
     <Grid x:Name="OverlayGrid"
-          Background="#B3000000"
           Margin="0,0,0,0" Panel.ZIndex="1000"
-          Visibility="{Binding ModalVisible, Converter={StaticResource BoolVisi}}">
+          Background="#B3000000" Visibility="{Binding ModalVisible, Converter={StaticResource BoolVisi}}">
 
         <Grid x:Name="ModalGrid"
-              Width="800" Height="400"
-              HorizontalAlignment="Center" VerticalAlignment="Center">
+              Width="800" Height="400" HorizontalAlignment="Center" VerticalAlignment="Center">
 
             <Grid.RowDefinitions>
                 <RowDefinition Height="2*" />
@@ -20,44 +18,36 @@
             <!--  Border  -->
             <Path x:Name="BorderCornerBackground"
                   Grid.RowSpan="3"
-                  Fill="{StaticResource QD2}" Stroke="{StaticResource QD2}"
-                  StrokeThickness="2">
+                  Fill="{StaticResource QD2}" Stroke="{StaticResource QD2}" StrokeThickness="2">
                 <Path.Data>
                     <RectangleGeometry RadiusX="30" RadiusY="30" Rect="0,0,800,400" />
                 </Path.Data>
             </Path>
 
             <!--#region Warning Sign-->
-            <Grid x:Name="WarningSignGrid"
-                  Visibility="{Binding ModalLoading, Converter={StaticResource BoolVisi}}">
+            <Grid x:Name="WarningSignGrid" Visibility="{Binding ModalLoading, Converter={StaticResource BoolVisi}}">
                 <fa:ImageAwesome x:Name="WarningLoaderImage"
-                                 Foreground="{DynamicResource CutieSecondaryColor}"
                                  Margin="15" HorizontalAlignment="Center" VerticalAlignment="Bottom"
-                                 Icon="CircleOutlineNotch" Spin="True" />
+                                 Foreground="{DynamicResource CutieSecondaryColor}" Icon="CircleOutlineNotch" Spin="True" />
             </Grid>
 
-            <Grid x:Name="WarningSignSuccessGrid"
-                  Visibility="{Binding ModalSuccessVisible, Converter={StaticResource BoolVisi}}">
+            <Grid x:Name="WarningSignSuccessGrid" Visibility="{Binding ModalSuccessVisible, Converter={StaticResource BoolVisi}}">
                 <fa:ImageAwesome x:Name="WarningLoaderSuccessImage"
-                                 Foreground="Green"
                                  Margin="15" HorizontalAlignment="Center" VerticalAlignment="Bottom"
-                                 Icon="Circle" />
+                                 Foreground="Green" Icon="Circle" />
             </Grid>
 
-            <Grid x:Name="WarningSignFailureGrid"
-                  Visibility="{Binding ModalFailureVisible, Converter={StaticResource BoolVisi}}">
+            <Grid x:Name="WarningSignFailureGrid" Visibility="{Binding ModalFailureVisible, Converter={StaticResource BoolVisi}}">
                 <fa:ImageAwesome x:Name="WarningLoaderFailureImage"
-                                 Foreground="Red"
                                  Margin="15" HorizontalAlignment="Center" VerticalAlignment="Bottom"
-                                 Icon="Circle" />
+                                 Foreground="Red" Icon="Circle" />
             </Grid>
 
 
             <Path x:Name="WhiteFillerPath"
                   Grid.Row="0"
-                  Fill="white" Stroke="white"
                   HorizontalAlignment="Center" VerticalAlignment="Center"
-                  StrokeThickness="2">
+                  Fill="white" Stroke="white" StrokeThickness="2">
                 <Path.Data>
                     <RectangleGeometry Rect="0,0,40,40" />
                 </Path.Data>
@@ -65,9 +55,8 @@
 
             <Path x:Name="ExclamationMark"
                   Grid.Row="0"
-                  Fill="{StaticResource CutiePrimaryColor}" Stroke="black"
                   Width="75" Height="75"
-                  Data="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 11c-.55 0-1-.45-1-1V8c0-.55.45-1 1-1s1 .45 1 1v4c0 .55-.45 1-1 1zm1 4h-2v-2h2v2z" Stretch="Uniform" />
+                  Data="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 11c-.55 0-1-.45-1-1V8c0-.55.45-1 1-1s1 .45 1 1v4c0 .55-.45 1-1 1zm1 4h-2v-2h2v2z" Fill="{StaticResource CutiePrimaryColor}" Stretch="Uniform" Stroke="black" />
             <!--#endregion-->
 
             <!--  Modal Text  -->
@@ -76,13 +65,11 @@
                   Margin="0,10,0,10"
                   Visibility="{Binding TitleVisible, Converter={StaticResource BoolVisi}}">
                 <TextBlock x:Name="ModalTitleTextBlock"
-                           FontSize="25" Foreground="White"
-                           TextAlignment="Center">
+                           FontSize="25" Foreground="White" TextAlignment="Center">
                     <Run Text="{Binding Meuh.Title}" />
                     <LineBreak />
                     <LineBreak />
-                    <Run Text="{Binding Meuh.Content}"
-                         FontSize="20" />
+                    <Run FontSize="20" Text="{Binding Meuh.Content}" />
                 </TextBlock>
             </Grid>
 
@@ -91,8 +78,7 @@
                   Margin="0,10,0,10"
                   Visibility="{Binding TitleInvisible, Converter={StaticResource BoolVisi}}">
                 <TextBlock x:Name="ModalTextBlock"
-                           FontSize="25" Foreground="White"
-                           TextAlignment="Center">
+                           FontSize="25" Foreground="White" TextAlignment="Center">
                     <Run Text="{Binding Meuh.Content}" />
                 </TextBlock>
             </Grid>
@@ -103,10 +89,8 @@
                   Visibility="{Binding OkButtonVisible, Converter={StaticResource BoolVisi}}">
 
                 <Button x:Name="ModalOKButton"
-                        Command="{Binding Path=ModalOKCommand}" Content="{Binding Meuh.OkButtonText}"
-                        Template="{StaticResource QuasarButtonTemplate}"
                         HorizontalAlignment="Center" VerticalAlignment="Center"
-                        IsEnabled="{Binding OKButtonEnabled}" />
+                        Command="{Binding Path=ModalOKCommand}" Content="{Binding Meuh.OkButtonText}" IsEnabled="{Binding OKButtonEnabled}" Template="{StaticResource QuasarButtonTemplate}" />
 
             </Grid>
             <Grid x:Name="OKCancelButtonGrid"
@@ -114,14 +98,12 @@
                   Visibility="{Binding OkCancelButtonVisible, Converter={StaticResource BoolVisi}}">
 
                 <Button x:Name="ModalOKCancel_OKButton"
-                        Command="{Binding Path=ModalOKCommand}" Content="{Binding Meuh.OkButtonText}"
-                        Template="{StaticResource QuasarButtonTemplate}"
-                        Margin="100,0" HorizontalAlignment="Left" VerticalAlignment="Center" />
+                        Margin="100,0" HorizontalAlignment="Left" VerticalAlignment="Center"
+                        Command="{Binding Path=ModalOKCommand}" Content="{Binding Meuh.OkButtonText}" Template="{StaticResource QuasarButtonTemplate}" />
 
                 <Button x:Name="ModalOKCancel_CancelButton"
-                        Command="{Binding Path=ModalCancelCommand}" Content="{Binding Meuh.CancelButtonText}"
-                        Template="{StaticResource QuasarButtonTemplate}"
-                        Margin="100,0" HorizontalAlignment="Right" VerticalAlignment="Center" />
+                        Margin="100,0" HorizontalAlignment="Right" VerticalAlignment="Center"
+                        Command="{Binding Path=ModalCancelCommand}" Content="{Binding Meuh.CancelButtonText}" Template="{StaticResource QuasarButtonTemplate}" />
 
             </Grid>
             <!--#endregion-->

@@ -303,7 +303,7 @@ namespace Quasar.Content.ViewModels
             {
                 if (MUVM.SelectedModListItem != null)
                 {
-                    LibraryItem = MUVM.SelectedModListItem.ModListItemViewModel.LibraryItem;
+                    LibraryItem = MUVM.SelectedModListItem.ModViewModel.LibraryItem;
                     ModName = LibraryItem.Name;
                 }
 

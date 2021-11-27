@@ -103,8 +103,6 @@ namespace Quasar.Build.ViewModels
                     return;
 
                 _WirelessSelected = value;
-                Properties.Settings.Default.Wireless = value;
-                Properties.Settings.Default.Save();
 
                 OnPropertyChanged("WirelessSelected");
 
@@ -349,24 +347,6 @@ namespace Quasar.Build.ViewModels
                 SelectedDrive = Drives[0];
             }
 
-            if (Properties.Settings.Default.Wireless)
-            {
-                WirelessSelected = true;
-            }
-            else
-            {
-                LocalSelected = true;
-            }
-
-            if (Properties.Settings.Default.Wipe)
-            {
-                CleanSelected = true;
-            }
-            else
-            {
-                SynchronizeSelected = true;
-            }
-
         }
 
         /// <summary>
@@ -525,41 +505,11 @@ namespace Quasar.Build.ViewModels
 
                             EventSystem.Publish<ModalEvent>(meuh);
                         }
-                        //Mod Loader is present
-                        else
-                        {
-                            //Autoconfig Check / Proposal
-                            if (!Properties.Settings.Default.ModLoaderSetup)
-                            {
-                                SetStep("ModLoader Configuration");
-                                ModalEvent meuh = new ModalEvent()
-                                {
-                                    Type = ModalType.OkCancel,
-                                    Action = "Show",
-                                    EventName = "AskModLoaderSetup",
-                                    Title = "ARCropolis setup",
-                                    Content = "Do you want Quasar to change ARCRopolis'\ractive workspace to this one ?",
-                                    OkButtonText = "Yes please",
-                                    CancelButtonText = "No"
-                                };
+                        await Task.Run(() => {
 
-                                EventSystem.Publish<ModalEvent>(meuh);
-                            }
-                            else
-                            {
-                                if (Properties.Settings.Default.ModLoaderSetupState)
-                                {
-                                    await Task.Run(() => {
-
-                                        SB.SetupModLoader(SelectedModLoader.ID, MUVM.ActiveWorkspace.Name);
-                                    });
-
-                                }
-
-                                EndBuildProcess();
-
-                            }
-                        }
+                            SB.SetupModLoader(SelectedModLoader.ID, MUVM.ActiveWorkspace.Name);
+                        });
+                        EndBuildProcess();
                     }
                     else
                     {

@@ -19,7 +19,7 @@ using System.Windows.Media;
 
 namespace Quasar.Controls.Mod.ViewModels
 {
-    public class ModListItemViewModel : ObservableObject
+    public class ModViewModel : ObservableObject
     {
 
         #region Data
@@ -38,7 +38,7 @@ namespace Quasar.Controls.Mod.ViewModels
 
         private string _ActionRequested { get; set; }
 
-        public ModsViewModel MVM { get; set; }
+        public LibraryViewModel MVM { get; set; }
         #endregion
 
         #region Public
@@ -234,6 +234,7 @@ namespace Quasar.Controls.Mod.ViewModels
         private Rect _Rekt { get; set; }
         private Rect _Rekta { get; set; }
         private Uri _ImageSource { get; set; }
+        private string _HumanTime { get; set; }
         #endregion
 
         #region Public
@@ -432,6 +433,21 @@ namespace Quasar.Controls.Mod.ViewModels
                 OnPropertyChanged("ImageSource");
             }
         }
+        public string HumanTime
+        {
+            get
+            {
+                return _HumanTime;
+            }
+            set
+            {
+                if (_HumanTime == value)
+                    return;
+
+                _HumanTime = value;
+                OnPropertyChanged("HumanTime");
+            }
+        }
         #endregion
 
         #endregion
@@ -533,7 +549,7 @@ namespace Quasar.Controls.Mod.ViewModels
 
         ILog QuasarLogger { get; set; }
 
-        public ModListItemViewModel()
+        public ModViewModel()
         {
             Downloading = true;
             Smol = true;
@@ -541,7 +557,7 @@ namespace Quasar.Controls.Mod.ViewModels
             EventSystem.Subscribe<LibraryItem>(Refresh);
         }
 
-        public ModListItemViewModel(LibraryItem Mod, Game Gamu, ModsViewModel model, ILog _QuasarLogger, bool _Downloading = false)
+        public ModViewModel(LibraryItem Mod, Game Gamu, LibraryViewModel model, ILog _QuasarLogger, bool _Downloading = false)
         {
             QuasarLogger = _QuasarLogger;
 
@@ -551,15 +567,13 @@ namespace Quasar.Controls.Mod.ViewModels
             MVM = model;
             LibraryItem = Mod;
 
-            CreatorMode = Properties.Settings.Default.EnableCreator;
-            AdvancedMode = Properties.Settings.Default.EnableAdvanced;
-
+            GetHumanTime();
             GetAuthors();
 
             EventSystem.Subscribe<LibraryItem>(Refresh);
         }
 
-        public ModListItemViewModel(string QuasarURL, ObservableCollection<Game> _Games, ObservableCollection<LibraryItem> _Mods, ModsViewModel model, ILog _QuasarLogger)
+        public ModViewModel(string QuasarURL, ObservableCollection<Game> _Games, ObservableCollection<LibraryItem> _Mods, LibraryViewModel model, ILog _QuasarLogger)
         {
             QuasarLogger = _QuasarLogger;
 
@@ -568,6 +582,7 @@ namespace Quasar.Controls.Mod.ViewModels
             Games = _Games;
             Mods = _Mods;
             MVM = model;
+
 
             EventSystem.Subscribe<LibraryItem>(Refresh);
         }
@@ -582,8 +597,10 @@ namespace Quasar.Controls.Mod.ViewModels
         {
             if(li.Guid == LibraryItem.Guid)
             {
+                GetHumanTime();
                 OnPropertyChanged("LibraryItem");
             }
+
         }
 
         /// <summary>
@@ -710,6 +727,25 @@ namespace Quasar.Controls.Mod.ViewModels
 
         }
 
+        public void GetHumanTime()
+        {
+            TimeSpan t = DateTime.Now - LibraryItem.Time;
+
+            HumanTime = String.Format(Properties.Resources.ModListItem_Time_Recently);
+
+            if (t.TotalDays > 10)
+                HumanTime = Properties.Resources.ModListItem_Time_Long;
+            if (t.TotalDays >= 2)
+                HumanTime = String.Format(Properties.Resources.ModListItem_Time_Days, t.Days);
+            if (t.TotalDays == 1)
+                HumanTime = String.Format(Properties.Resources.ModListItem_Time_OneDay);
+            if (t.TotalHours >= 2)
+                HumanTime = String.Format(Properties.Resources.ModListItem_Time_Hours, t.Hours);
+            if (t.TotalHours == 1)
+                HumanTime = String.Format(Properties.Resources.ModListItem_Time_OneHour);
+
+            
+        }
         #endregion
 
         #region User Actions
@@ -740,7 +776,7 @@ namespace Quasar.Controls.Mod.ViewModels
         public void UpdateMod()
         {
             ActionRequested = "Update";
-            EventSystem.Publish<ModListItemViewModel>(this);
+            EventSystem.Publish<ModViewModel>(this);
         }
 
         /// <summary>
@@ -749,7 +785,7 @@ namespace Quasar.Controls.Mod.ViewModels
         public void DeleteMod()
         {
             ActionRequested = "Delete";
-            EventSystem.Publish<ModListItemViewModel>(this);
+            EventSystem.Publish<ModViewModel>(this);
 
         }
 
@@ -768,7 +804,7 @@ namespace Quasar.Controls.Mod.ViewModels
                 ActionRequested = "Remove";
             }
 
-            EventSystem.Publish<ModListItemViewModel>(this);
+            EventSystem.Publish<ModViewModel>(this);
         }
 
         /// <summary>
@@ -777,7 +813,7 @@ namespace Quasar.Controls.Mod.ViewModels
         public void RetryDownload()
         {
             ActionRequested = "RetryDownload";
-            EventSystem.Publish<ModListItemViewModel>(this);
+            EventSystem.Publish<ModViewModel>(this);
         }
 
         /// <summary>
@@ -786,7 +822,7 @@ namespace Quasar.Controls.Mod.ViewModels
         public void ShowModContents()
         {
             ActionRequested = "ShowContents";
-            EventSystem.Publish<ModListItemViewModel>(this);
+            EventSystem.Publish<ModViewModel>(this);
         }
 
         /// <summary>

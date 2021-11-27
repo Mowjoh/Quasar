@@ -14,9 +14,9 @@ namespace Quasar.Helpers.Tools
         /// <returns>Connection status</returns>
         private static async Task<bool> ValidateFTPConnection()
         {
-            string address = Properties.Settings.Default.FTPAddress;
-            string username = Properties.Settings.Default.FTPUN;
-            string password = Properties.Settings.Default.FTPPW;
+            string address = Properties.Settings.Default.FtpAddress;
+            string username = Properties.Settings.Default.FtpUsername;
+            string password = Properties.Settings.Default.FtpPassword;
 
             if (validateIP(address.Split(':')[0]) && validatePort(address.Split(':')[1]))
             {

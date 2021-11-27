@@ -12,7 +12,7 @@ namespace Quasar.Associations.Views
     /// <summary>
     /// Interaction logic for AssignationView.xaml
     /// </summary>
-    public partial class AssociationView : UserControl, INotifyPropertyChanged
+    public partial class AssignmentView : UserControl, INotifyPropertyChanged
     {
         #region Properties
         //Drag and Drop properties
@@ -24,7 +24,7 @@ namespace Quasar.Associations.Views
 
         //Data View Model
         private AssociationViewModel _AssociationViewModel { get; set; }
-        public AssociationViewModel AssociationViewModel
+        public AssociationViewModel AssignmentViewModel
         {
             get => _AssociationViewModel;
             set
@@ -33,13 +33,13 @@ namespace Quasar.Associations.Views
                     return;
 
                 _AssociationViewModel = value;
-                OnPropertyChanged("AssociationViewModel");
+                OnPropertyChanged("AssignmentViewModel");
                 ;
             }
         }
         #endregion
 
-        public AssociationView()
+        public AssignmentView()
         {
             InitializeComponent();
         }
@@ -52,7 +52,7 @@ namespace Quasar.Associations.Views
             {
                 var source = e.Data.GetData(typeof(Slot)) as Slot;
                 var target = (Slot)sender;
-                AssociationViewModel.SetSlot(source, target);
+                AssignmentViewModel.SetSlot(source, target);
             }
         }
         #endregion

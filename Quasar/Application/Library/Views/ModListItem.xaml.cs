@@ -47,20 +47,20 @@ namespace Quasar.Controls
         #endregion
 
         #region Fields
-        private ModListItemViewModel _ModListItemViewModel { get; set; }
+        private ModViewModel _ModViewModel { get; set; }
         #endregion
 
         #region Properties
-        public ModListItemViewModel ModListItemViewModel
+        public ModViewModel ModViewModel
         {
-            get => _ModListItemViewModel;
+            get => _ModViewModel;
             set
             {
-                if (_ModListItemViewModel == value)
+                if (_ModViewModel == value)
                     return;
 
-                _ModListItemViewModel = value;
-                OnPropertyChanged("ModListItemViewModel");
+                _ModViewModel = value;
+                OnPropertyChanged("ModViewModel");
 
             }
         }
@@ -73,17 +73,17 @@ namespace Quasar.Controls
             InitializeComponent();
         }
 
-        public ModListItem(ModsViewModel model,ILog _QuasarLogger, LibraryItem _LibraryItem = null,  Game _Game = null, bool Downloading = false)
+        public ModListItem(LibraryViewModel model,ILog _QuasarLogger, LibraryItem _LibraryItem = null,  Game _Game = null, bool Downloading = false)
         {
-            ModListItemViewModel = new ModListItemViewModel(_LibraryItem,_Game, model, _QuasarLogger, Downloading);
+            ModViewModel = new ModViewModel(_LibraryItem,_Game, model, _QuasarLogger, Downloading);
             InitializeComponent();
-            DataContext = ModListItemViewModel;
+            DataContext = ModViewModel;
         }
-        public ModListItem(string QuasarURL, ObservableCollection<Game> Games, ObservableCollection<LibraryItem> Mods, ModsViewModel model, ILog _QuasarLogger)
+        public ModListItem(string QuasarURL, ObservableCollection<Game> Games, ObservableCollection<LibraryItem> Mods, LibraryViewModel model, ILog _QuasarLogger)
         {
-            ModListItemViewModel = new ModListItemViewModel(QuasarURL, Games, Mods, model, _QuasarLogger);
+            ModViewModel = new ModViewModel(QuasarURL, Games, Mods, model, _QuasarLogger);
             InitializeComponent();
-            DataContext = ModListItemViewModel;
+            DataContext = ModViewModel;
         }
 
     }

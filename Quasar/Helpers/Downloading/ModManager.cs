@@ -311,22 +311,22 @@ namespace Quasar.Helpers.Downloading
             if (DownloadNeeded || UpdateNeeded)
             {
                 QuasarLogger.Debug("Launching Download");
-                ModListItem.ModListItemViewModel.ModStatusValue = "Downloading";
+                ModListItem.ModViewModel.ModStatusValue = "Downloading";
                 bool Downloaded = await Download();
                 
                 //Stopping the process if necessary
                 if (Downloaded)
                 {
                     QuasarLogger.Debug("Launching Extraction");
-                    ModListItem.ModListItemViewModel.ModStatusValue = "Extracting";
-                    ModListItem.ModListItemViewModel.ModStatusTextValue = "Please wait";
+                    ModListItem.ModViewModel.ModStatusValue = "Extracting";
+                    ModListItem.ModViewModel.ModStatusTextValue = "Please wait";
                     
                     bool Extracted = await Extract();
 
                     if (Extracted)
                     {
                         QuasarLogger.Debug("Launching File location change");
-                        ModListItem.ModListItemViewModel.ModStatusValue = "Processing Files";
+                        ModListItem.ModViewModel.ModStatusValue = "Processing Files";
                         
                         bool Processed = await ProcessExtractedFiles();
 
@@ -346,7 +346,7 @@ namespace Quasar.Helpers.Downloading
             }
             if (ProcessAborted)
             {
-                ModListItem.ModListItemViewModel.DownloadFailed = true;
+                ModListItem.ModViewModel.DownloadFailed = true;
             }
 
             return false;
@@ -358,7 +358,7 @@ namespace Quasar.Helpers.Downloading
         /// <returns>Success state</returns>
         public async Task<bool> Download()
         {
-            ModDownloader modDownloader = new ModDownloader(ModListItem.ModListItemViewModel);
+            ModDownloader modDownloader = new ModDownloader(ModListItem.ModViewModel);
             bool success = await modDownloader.DownloadArchiveAsync(QuasarURL);
             return success;
         }
@@ -369,7 +369,7 @@ namespace Quasar.Helpers.Downloading
         /// <returns>Success state</returns>
         public async Task<bool> Update()
         {
-            ModDownloader modDownloader = new ModDownloader(ModListItem.ModListItemViewModel);
+            ModDownloader modDownloader = new ModDownloader(ModListItem.ModViewModel);
             bool success = await modDownloader.DownloadArchiveAsync(QuasarURL);
             return success;
         }
@@ -381,7 +381,7 @@ namespace Quasar.Helpers.Downloading
         public async Task<bool> Extract()
         {
             ModFileManager = new ModFileManager(LibraryItem, QuasarURL.ModArchiveFormat);
-            Unarchiver un = new Unarchiver(ModListItem.ModListItemViewModel);
+            Unarchiver un = new Unarchiver(ModListItem.ModViewModel);
             bool success = await un.ExtractArchiveAsync(ModFileManager.DownloadDestinationFilePath, ModFileManager.ArchiveContentFolderPath, QuasarURL.ModArchiveFormat) == 0;
             return success;
         }
@@ -405,8 +405,8 @@ namespace Quasar.Helpers.Downloading
         /// <returns>Success Status</returns>
         public async Task<bool> Scan(ObservableCollection<QuasarModType> QuasarModTypes, Game Game)
         {
-            ModListItem.ModListItemViewModel.ModStatusValue = "Scanning mod files";
-            ModListItem.ModListItemViewModel.ModStatusTextValue = "Please wait";
+            ModListItem.ModViewModel.ModStatusValue = "Scanning mod files";
+            ModListItem.ModViewModel.ModStatusTextValue = "Please wait";
 
             await Task.Run(() =>
             {

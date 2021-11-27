@@ -18,9 +18,9 @@ namespace Quasar.Controls.ModManagement.Views
     /// <summary>
     /// Interaction logic for ModManagementView.xaml
     /// </summary>
-    public partial class ModsView : UserControl
+    public partial class LibraryView : UserControl
     {
-        public ModsView()
+        public LibraryView()
         {
             InitializeComponent();
         }

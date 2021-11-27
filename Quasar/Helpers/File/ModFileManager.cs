@@ -71,14 +71,7 @@ namespace Quasar.FileSystem
             Log = LogManager.GetLogger("QuasarAppender");
             FileAppender appender = (FileAppender)Log.Logger.Repository.GetAppenders()[0];
             appender.File = Properties.Settings.Default.DefaultDir + "\\Quasar.log";
-            if (Properties.Settings.Default.EnableAdvanced)
-            {
-                appender.Threshold = log4net.Core.Level.Debug;
-            }
-            else
-            {
-                appender.Threshold = log4net.Core.Level.Info;
-            }
+            appender.Threshold = log4net.Core.Level.Debug;
             appender.ActivateOptions();
         }
 
