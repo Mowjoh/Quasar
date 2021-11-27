@@ -20,6 +20,8 @@ namespace DataModels.User
 
         [JsonIgnore]
         public bool ManualMod => GBItem == null;
+        public bool Included { get; set; }
+        public bool Modified { get; set; }
 
         public string GetFormattedTime()
         {

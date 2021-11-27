@@ -6,7 +6,7 @@
       <Value Profile="(Default)">en-US</Value>
     </Setting>
     <Setting Name="Language" Type="System.String" Scope="User">
-      <Value Profile="(Default)">[System Language]</Value>
+      <Value Profile="(Default)">EN</Value>
     </Setting>
     <Setting Name="DefaultDir" Type="System.String" Scope="User">
       <Value Profile="(Default)">[User's Document Folder]</Value>
@@ -48,18 +48,15 @@
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="Onboarded" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
+      <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="BackupDate" Type="System.DateTime" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="FtpPreferred" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
+    <Setting Name="PreferredTransferMethod" Type="System.String" Scope="User">
+      <Value Profile="(Default)">SD</Value>
     </Setting>
-    <Setting Name="TransferQuasarFoldersOnly" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
-    </Setting>
-    <Setting Name="SdPreferred" Type="System.Boolean" Scope="User">
+    <Setting Name="TransferQuasarModsOnly" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
   </Settings>

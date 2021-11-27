@@ -162,7 +162,7 @@
         <!--#endregion-->
 
         <!--#region Base Colors-->
-        <SolidColorBrush x:Key="CutiePrimaryColor" Color="#2bba23" />
+        <SolidColorBrush x:Key="CutiePrimaryColor" Color="#b34637" />
         <SolidColorBrush x:Key="CutieSecondaryColor" Color="#748bf2" />
         <SolidColorBrush x:Key="CutieErrorColor" Color="#CF6679" />
         <SolidColorBrush x:Key="CutieValidationColor" Color="#66CF66" />

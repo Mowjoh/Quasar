@@ -5,6 +5,8 @@ using DataModels.Resource;
 using Quasar.Settings.Models;
 using Quasar.Helpers;
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
 
@@ -50,6 +52,9 @@ namespace Quasar.Settings.ViewModels
         private bool _EnableComboBox { get; set; }
 
         private bool _EnableTextBox { get; set; }
+        private ObservableCollection<SettingKeyValue> _AvailableValues { get; set; }
+        private SettingKeyValue _SelectedBoxValue { get; set; }
+        private string _TextBoxValue { get; set; }
         #endregion
 
         #region Public
@@ -130,6 +135,51 @@ namespace Quasar.Settings.ViewModels
         /// <summary>
         /// Enables the TextBox Display mode
         /// </summary>
+        public SettingKeyValue SelectedBoxValue
+        {
+            get => _SelectedBoxValue;
+            set
+            {
+                if (_SelectedBoxValue == value)
+                    return;
+
+                _SelectedBoxValue = value;
+                OnPropertyChanged("SelectedBoxValue");
+
+                if ((string)Properties.Settings.Default[SettingItem.SettingName] == value.Value)
+                    return;
+
+                Properties.Settings.Default[SettingItem.SettingName] = value.Value;
+                Properties.Settings.Default.Save();
+
+                if (SettingItem.SettingName == "Language")
+                {
+                    EventSystem.Publish<ModalEvent>(new()
+                    {
+                        Action = "Show",
+                        Content = Properties.Resources.Settings_Modal_Content_ShutdownWarning,
+                        Title = Properties.Resources.Settings_Modal_Title_ShutdownWarning,
+                        OkButtonText = Properties.Resources.Settings_Modal_Button_ShutdownWarning,
+                        EventName = "ShutdownWarning",
+                        Type = ModalType.Warning
+                    });
+                }
+
+            }
+        }
+
+        public ObservableCollection<SettingKeyValue> AvailableValues
+        {
+            get => _AvailableValues;
+            set
+            {
+                if (_AvailableValues == value)
+                    return;
+
+                _AvailableValues = value;
+                OnPropertyChanged("AvailableValues");
+            }
+        }
         public bool EnableTextBox
         {
             get => _EnableTextBox;
@@ -140,6 +190,19 @@ namespace Quasar.Settings.ViewModels
 
                 _EnableTextBox = value;
                 OnPropertyChanged("EnableTextBox");
+            }
+        }
+
+        public string TextBoxValue
+        {
+            get => _TextBoxValue;
+            set
+            {
+                if (_TextBoxValue == value)
+                    return;
+
+                _TextBoxValue = value;
+                OnPropertyChanged("TextBoxValue");
             }
         }
         #endregion
@@ -174,20 +237,27 @@ namespace Quasar.Settings.ViewModels
 
                 case SettingItemType.Input:
                     EnableTextBox = true;
+                    SettingItem.DisplayValue = (string) ParsedProperty;
                     break;
 
                 //Setting up Combobox View
                 case SettingItemType.List:
-                    SettingItem.Values = Values.Split(',')
-                         .Select(x => x.Split('='))
-                         .ToDictionary(x => x[0], x => x[1]);
+                    AvailableValues = new();
+                    foreach (string s in Values.Split(','))
+                    {
+                        string key = s.Split('=')[0];
+                        string value = s.Split('=')[1];
+                        AvailableValues.Add(new SettingKeyValue(key, value));
+                    }
 
+                    SelectedBoxValue =
+                        AvailableValues.SingleOrDefault(v => v.Value == Properties.Settings.Default[Property].ToString());
                     EnableComboBox = true;
                     break;
 
                 case SettingItemType.Text:
                     EnableValue = true;
-                    SettingItem.DisplayValue = Property.ToString();
+                    SettingItem.DisplayValue = Properties.Settings.Default[Property].ToString();
                     break;
             }
 
@@ -212,4 +282,16 @@ namespace Quasar.Settings.ViewModels
     }
 
     public enum SettingItemType { Toggle, Input, List, Text}
+
+    public class SettingKeyValue
+    {
+        public string Key { get; set; }
+        public string Value { get; set; }
+
+        public SettingKeyValue(string k, string v)
+        {
+            Key = k;
+            Value = v;
+        }
+    }
 }

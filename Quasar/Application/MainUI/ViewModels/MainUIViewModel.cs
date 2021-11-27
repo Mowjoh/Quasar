@@ -471,7 +471,11 @@ namespace Quasar.MainUI.ViewModels
 
             try
             {
-                //CultureInfo.CurrentUICulture = new CultureInfo("fr-FR", false);
+                if (Properties.Settings.Default.Language != null)
+                {
+                    CultureInfo.CurrentUICulture = new CultureInfo(Properties.Settings.Default.Language, false);
+                }
+                
 
                 QuasarLogger.Info("Tunnel Setup");
                 SetupClientOrServer();

@@ -165,6 +165,12 @@
   <data name="MainUI_SettingsTabHeader" xml:space="preserve">
     <value>Settings</value>
   </data>
+  <data name="Modal_Label_DefaultCancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="Modal_Label_DefaultOK" xml:space="preserve">
+    <value>OK</value>
+  </data>
   <data name="ModListItem_Button_EditFiles" xml:space="preserve">
     <value>Edit Files</value>
   </data>
@@ -207,79 +213,137 @@
   <data name="Quasar_WindowTitle" xml:space="preserve">
     <value>Quasar</value>
   </data>
-  <data name="Settings_ApplicationSettingsHeader" xml:space="preserve">
-    <value>Application</value>
-  </data>
-  <data name="Settings_AppVersion" xml:space="preserve">
-    <value>Application Version</value>
-  </data>
-  <data name="Settings_FileTransferHeader" xml:space="preserve">
-    <value>File Transfer Settings</value>
-  </data>
-  <data name="Settings_FtpIP" xml:space="preserve">
-    <value>Switch's IP Address</value>
-  </data>
-  <data name="Settings_FtpIPComment" xml:space="preserve">
-    <value>Enter your Switch's IP address</value>
-  </data>
-  <data name="Settings_FtpPassword" xml:space="preserve">
-    <value>FTP Password</value>
-  </data>
-  <data name="Settings_FtpPasswordComment" xml:space="preserve">
-    <value>Please type in your password if you've enabled authentification on your Switch</value>
-  </data>
-  <data name="Settings_FtpPort" xml:space="preserve">
-    <value>Switch's FTP Port</value>
-  </data>
-  <data name="Settings_FtpPortComment" xml:space="preserve">
-    <value>Enter your Switch's FTP Server Port (usually 5000)</value>
-  </data>
-  <data name="Settings_FtpPreferred" xml:space="preserve">
-    <value>Wireless Transfer</value>
-  </data>
-  <data name="Settings_FtpPreferredComment" xml:space="preserve">
-    <value>Enable this to use FTP when transferring mods to your Switch</value>
-  </data>
-  <data name="Settings_FtpSettingsHeader" xml:space="preserve">
-    <value>FTP Settings</value>
-  </data>
-  <data name="Settings_FtpUsername" xml:space="preserve">
-    <value>Username</value>
-  </data>
-  <data name="Settings_FtpUsernameComment" xml:space="preserve">
-    <value>Please type in your username if you've enabled authentification on your Switch</value>
-  </data>
-  <data name="Settings_Language" xml:space="preserve">
-    <value>Application Language</value>
-  </data>
-  <data name="Settings_LanguageComment" xml:space="preserve">
-    <value>Select an option to change Quasar's display language</value>
-  </data>
-  <data name="Settings_ManageAllMods" xml:space="preserve">
-    <value>Manage All Mods</value>
-  </data>
-  <data name="Settings_ManageAllModsComment" xml:space="preserve">
-    <value>Enable this to have all the mods on your Switch be only managed by Quasar</value>
-  </data>
-  <data name="Settings_MoveInstallFolderContent" xml:space="preserve">
+  <data name="Settings_Button_MoveInstallFolder" xml:space="preserve">
     <value>Move Installation Folder</value>
   </data>
-  <data name="Settings_SdPreferred" xml:space="preserve">
-    <value>Wired Transfer (SD)</value>
+  <data name="Settings_Button_ValidateFTP" xml:space="preserve">
+    <value>Test and Save FTP Info</value>
   </data>
-  <data name="Settings_SdPreferredComment" xml:space="preserve">
-    <value>Enable this to transfer to a SD plugged in your computer</value>
+  <data name="Settings_Comment_AskMoveInstall" xml:space="preserve">
+    <value>Use this button to move all mods to a new location on your computer</value>
   </data>
-  <data name="Settings_SupressModDeletion" xml:space="preserve">
-    <value>Mod Deletion</value>
+  <data name="Settings_Comment_FtpIP" xml:space="preserve">
+    <value>Enter your Switch's IP address</value>
   </data>
-  <data name="Settings_SupressModDeletionComment" xml:space="preserve">
+  <data name="Settings_Comment_FtpPassword" xml:space="preserve">
+    <value>Please type in your password if you've enabled authentification on your Switch</value>
+  </data>
+  <data name="Settings_Comment_FtpPort" xml:space="preserve">
+    <value>Enter your Switch's FTP Server Port (usually 5000)</value>
+  </data>
+  <data name="Settings_Comment_FtpUsername" xml:space="preserve">
+    <value>Please type in your username if you've enabled authentification on your Switch</value>
+  </data>
+  <data name="Settings_Comment_Language" xml:space="preserve">
+    <value>Select an option to change Quasar's display language
+The app will need to be rebooted to see the change</value>
+  </data>
+  <data name="Settings_Comment_ManageAllMods" xml:space="preserve">
+    <value>Enable this to have all the mods on your Switch be only managed by Quasar</value>
+  </data>
+  <data name="Settings_Comment_PreferredTransferMethod" xml:space="preserve">
+    <value>Select if you'd rather transfer files wirelessly through FTP or via a plugged in SD</value>
+  </data>
+  <data name="Settings_Comment_SupressModDeletion" xml:space="preserve">
     <value>Enable this to be warned when deleting Mods</value>
   </data>
-  <data name="Settings_TogglesHeader" xml:space="preserve">
+  <data name="Settings_Comment_TestFTP" xml:space="preserve">
+    <value>Use this button to verify that the Switch's FTP is working and to enable FTP transfers if successful</value>
+  </data>
+  <data name="Settings_Header_ApplicationSettings" xml:space="preserve">
+    <value>Application</value>
+  </data>
+  <data name="Settings_Header_FileTransfer" xml:space="preserve">
+    <value>File Transfer Settings</value>
+  </data>
+  <data name="Settings_Header_FtpSettings" xml:space="preserve">
+    <value>FTP Settings</value>
+  </data>
+  <data name="Settings_Header_Toggles" xml:space="preserve">
     <value>Warnings</value>
   </data>
-  <data name="Settings_ValidateFTPContent" xml:space="preserve">
-    <value>Test and Save FTP Info</value>
+  <data name="Settings_Label_AppVersion" xml:space="preserve">
+    <value>Application Version</value>
+  </data>
+  <data name="Settings_Label_FtpIP" xml:space="preserve">
+    <value>Switch's IP Address</value>
+  </data>
+  <data name="Settings_Label_FtpPassword" xml:space="preserve">
+    <value>FTP Password</value>
+  </data>
+  <data name="Settings_Label_FtpPort" xml:space="preserve">
+    <value>Switch's FTP Port</value>
+  </data>
+  <data name="Settings_Label_FtpUsername" xml:space="preserve">
+    <value>Username</value>
+  </data>
+  <data name="Settings_Label_Language" xml:space="preserve">
+    <value>Application Language</value>
+  </data>
+  <data name="Settings_Label_ManageAllMods" xml:space="preserve">
+    <value>Manage All Mods</value>
+  </data>
+  <data name="Settings_Label_PreferredTransferMethod" xml:space="preserve">
+    <value>Transfer Method</value>
+  </data>
+  <data name="Settings_Label_SupressModDeletion" xml:space="preserve">
+    <value>Mod Deletion</value>
+  </data>
+  <data name="Settings_Modal_Button_ShutdownWarning" xml:space="preserve">
+    <value>Shutdown Quasar</value>
+  </data>
+  <data name="Settings_Modal_Content_AskMoveInstall" xml:space="preserve">
+    <value>Do you want to change where Quasar stores it's files ? 
+It will take some time to transfer then will shutdown.</value>
+  </data>
+  <data name="Settings_Modal_Content_ConnectionWait" xml:space="preserve">
+    <value>Please wait while Quasar attempts to connect to the Switch</value>
+  </data>
+  <data name="Settings_Modal_Content_MovingInstall" xml:space="preserve">
+    <value>The operation is in progress, please wait for it to finish</value>
+  </data>
+  <data name="Settings_Modal_Content_ShutdownWarning" xml:space="preserve">
+    <value>Quasar will now close to process this change</value>
+  </data>
+  <data name="Settings_Modal_Content_SuccessfulConnection" xml:space="preserve">
+    <value>Connection to the Switch is successful 
+you can now use FTP when transferring !</value>
+  </data>
+  <data name="Settings_Modal_Content_UnsuccessfulConnection" xml:space="preserve">
+    <value>Connection to the Switch is unsuccessful 
+please check the address and Username/Password if you have them,
+also check that your Switch is reachable</value>
+  </data>
+  <data name="Settings_Modal_Content_WrongIpFormat" xml:space="preserve">
+    <value>The Address is not valid, please check that
+you have entered the right IP/Port.
+Also check that your FTP server is running</value>
+  </data>
+  <data name="Settings_Modal_OkButton_MovingInstall" xml:space="preserve">
+    <value>Shutdown Quasar</value>
+  </data>
+  <data name="Settings_Modal_Title_AskMoveInstall" xml:space="preserve">
+    <value>Location Change</value>
+  </data>
+  <data name="Settings_Modal_Title_ConnectionWait" xml:space="preserve">
+    <value>Connection Test</value>
+  </data>
+  <data name="Settings_Modal_Title_MovingInstall" xml:space="preserve">
+    <value>Moving files</value>
+  </data>
+  <data name="Settings_Modal_Title_ShutdownWarning" xml:space="preserve">
+    <value>Shutdown</value>
+  </data>
+  <data name="Settings_Modal_Title_SuccessfulConnection" xml:space="preserve">
+    <value>Success</value>
+  </data>
+  <data name="Settings_Modal_Title_UnsuccessfulConnection" xml:space="preserve">
+    <value>Connection Error</value>
+  </data>
+  <data name="Settings_Modal_Title_WrongIpFormat" xml:space="preserve">
+    <value>Invalid Info</value>
+  </data>
+  <data name="Settings_Values_PreferredTransferMethod" xml:space="preserve">
+    <value>Wireless (FTP)=FTP,Wired (SD)=SD</value>
   </data>
 </root>

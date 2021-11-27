@@ -37,7 +37,7 @@ namespace Quasar.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("[System Language]")]
+        [global::System.Configuration.DefaultSettingValueAttribute("EN")]
         public string Language {
             get {
                 return ((string)(this["Language"]));
@@ -205,7 +205,7 @@ namespace Quasar.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool Onboarded {
             get {
                 return ((bool)(this["Onboarded"]));
@@ -228,37 +228,25 @@ namespace Quasar.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool FtpPreferred {
+        [global::System.Configuration.DefaultSettingValueAttribute("SD")]
+        public string PreferredTransferMethod {
             get {
-                return ((bool)(this["FtpPreferred"]));
+                return ((string)(this["PreferredTransferMethod"]));
             }
             set {
-                this["FtpPreferred"] = value;
+                this["PreferredTransferMethod"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool TransferQuasarFoldersOnly {
+        public bool TransferQuasarModsOnly {
             get {
-                return ((bool)(this["TransferQuasarFoldersOnly"]));
+                return ((bool)(this["TransferQuasarModsOnly"]));
             }
             set {
-                this["TransferQuasarFoldersOnly"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool SdPreferred {
-            get {
-                return ((bool)(this["SdPreferred"]));
-            }
-            set {
-                this["SdPreferred"] = value;
+                this["TransferQuasarModsOnly"] = value;
             }
         }
     }
