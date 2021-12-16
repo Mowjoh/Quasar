@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
 using Quasar.Common.Models;
 using Quasar.Helpers;
 using Quasar.MainUI.ViewModels;
@@ -7,7 +8,7 @@ namespace Quasar
 {
     public partial class MainWindow : Window
     {
-        MainUIViewModel MUVM { get; set; }
+        public MainUIViewModel MUVM { get; set; }
 
         /// <summary>
         /// Basic constructor
@@ -16,12 +17,12 @@ namespace Quasar
         {
             MUVM = new MainUIViewModel();
             
-            
 
             //Aww, here we go again
             InitializeComponent();
 
             QuasarGrid.DataContext = MUVM;
+
 
             EventSystem.Subscribe<ModalEvent>(ProcessIncomingModalEvent);
             
@@ -59,7 +60,16 @@ namespace Quasar
         /// <param name="meuh"></param>
         public void ProcessIncomingModalEvent(ModalEvent meuh)
         {
-            if(meuh.EventName == "QuasarClose")
+            if (meuh.EventName == "ShowFile")
+            {
+                NewTabControl.SelectedIndex = 1;
+            }
+            if (meuh.EventName == "ShowAssignments")
+            {
+                NewTabControl.SelectedIndex = 2;
+            }
+
+            if (meuh.EventName == "QuasarClose")
             {
                 if(meuh.Action == "OK")
                 {

@@ -635,19 +635,6 @@ namespace Quasar.Controls.ModManagement.ViewModels
                                 UserDataManager.SaveModInformation(MI, Properties.Settings.Default.DefaultDir);
                             }
 
-                            QuasarLogger.Debug("Scanning Mod");
-                            //Launching scan
-                            await MM.Scan(MUVM.QuasarModTypes, MUVM.Games[0]);
-                            Scannerino.UpdateContents(MUVM, MM.LibraryItem, MM.ScannedContents);
-
-                            QuasarLogger.Debug("Saving Contents");
-                            //Saving Contents
-                            UserDataManager.SaveContentItems(MUVM.ContentItems, AppDataPath);
-
-                            QuasarLogger.Debug("Slotting Contents and Saving Workspace");
-                            //Slotting Contents
-                            MUVM.ActiveWorkspace = Slotter.AutomaticSlot(MM.ScannedContents.ToList(), MUVM.ActiveWorkspace, MUVM.QuasarModTypes);
-                            UserDataManager.SaveWorkspaces(MUVM.Workspaces, AppDataPath);
                             ReloadAllStats();
                         }
                         catch(Exception e)
@@ -816,13 +803,16 @@ namespace Quasar.Controls.ModManagement.ViewModels
                     AskDeleteMod(MLI);
                     break;
                 case "Add":
-                    AddToWorkspace(MLI);
+                    AddToTransferList(MLI);
                     break;
                 case "Remove":
                     RemoveMod(MLI);
                     break;
                 case "ShowContents":
                     ShowModContents(MLI);
+                    break;
+                case "ShowAssignments":
+                    ShowModAssignments(MLI);
                     break;
                 case "Update":
                     UpdateMod(MLI);
@@ -866,13 +856,10 @@ namespace Quasar.Controls.ModManagement.ViewModels
         /// Adds this mod's contents to the workspace
         /// </summary>
         /// <param name="MLI"></param>
-        public void AddToWorkspace(ModListItem MLI)
+        public void AddToTransferList(ModListItem MLI)
         {
-            //Removing from ContentMappings
-            List<ContentItem> relatedMappings = MUVM.ContentItems.Where(i => i.LibraryItemGuid == MLI.ModViewModel.LibraryItem.Guid).ToList();
-            MUVM.ActiveWorkspace = Slotter.AutomaticSlot(relatedMappings, MUVM.ActiveWorkspace, MUVM.QuasarModTypes);
-            UserDataManager.SaveWorkspaces(MUVM.Workspaces, AppDataPath);
-            QuasarLogger.Debug("Written changes to Workspaces");
+            MUVM.Library.Single(li => li.Guid == MLI.ModViewModel.LibraryItem.Guid).Included = true;
+            UserDataManager.SaveLibrary(MUVM.Library, AppDataPath);
             ReloadAllStats();
             CollectionViewSource.View.Refresh();
         }
@@ -883,37 +870,9 @@ namespace Quasar.Controls.ModManagement.ViewModels
         /// <param name="MLI"></param>
         public void RemoveMod(ModListItem MLI)
         {
-            //Removing from ContentMappings
-            List<ContentItem> relatedMappings = MUVM.ContentItems.Where(cm => cm.LibraryItemGuid == MLI.ModViewModel.LibraryItem.Guid).ToList();
-            foreach (ContentItem ci in relatedMappings)
-            {
-                if (ci.GameElementID != -1)
-                {
-                    QuasarModType qmt = MUVM.QuasarModTypes.Single(i => i.ID == ci.QuasarModTypeID);
-                    List<Association> associations = null;
-                    if (qmt.IsExternal)
-                    {
-                        associations = MUVM.ActiveWorkspace.Associations.Where(ass => ass.QuasarModTypeID == ci.QuasarModTypeID && ass.ContentItemGuid == ci.Guid).ToList();
-
-                    }
-                    else
-                    {
-                        associations = MUVM.ActiveWorkspace.Associations.Where(ass => ass.GameElementID == ci.GameElementID && ass.QuasarModTypeID == ci.QuasarModTypeID && ass.SlotNumber == ci.SlotNumber && ass.ContentItemGuid == ci.Guid).ToList();
-                    }
-                    if (associations != null)
-                    {
-                        foreach (Association ass in associations)
-                        {
-                            QuasarLogger.Debug(String.Format("Association found for ContentMapping ID '{0}', slot '{1}', IMT '{2}', GDIID '{3}', removing it it", ass.ContentItemGuid, ass.SlotNumber, ass.QuasarModTypeID, ass.GameElementID));
-                            MUVM.ActiveWorkspace.Associations.Remove(ass);
-                        }
-
-                    }
-                }
-            }
-            UserDataManager.SaveWorkspaces(MUVM.Workspaces, AppDataPath);
-            QuasarLogger.Debug("Written changes to Workspaces");
-            MLI.ModViewModel.LoadStats();
+            MUVM.Library.Single(li => li.Guid == MLI.ModViewModel.LibraryItem.Guid).Included = false;
+            UserDataManager.SaveLibrary(MUVM.Library, AppDataPath);
+            ReloadAllStats();
             CollectionViewSource.View.Refresh();
 
         }
@@ -941,8 +900,15 @@ namespace Quasar.Controls.ModManagement.ViewModels
             if (SelectedModListItem == null)
                 return;
 
-            SelectedModListItem.ModViewModel.ActionRequested = "ShowContents";
-            EventSystem.Publish<ModListItem>(SelectedModListItem);
+            EventSystem.Publish<ModalEvent>(new() { EventName = "ShowFile" });
+        }
+
+        public void ShowModAssignments(ModListItem MLI)
+        {
+            if (SelectedModListItem == null)
+                return;
+
+            EventSystem.Publish<ModalEvent>(new(){ EventName = "ShowAssignments"});
         }
 
 

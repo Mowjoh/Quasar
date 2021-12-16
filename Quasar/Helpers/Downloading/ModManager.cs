@@ -311,22 +311,22 @@ namespace Quasar.Helpers.Downloading
             if (DownloadNeeded || UpdateNeeded)
             {
                 QuasarLogger.Debug("Launching Download");
-                ModListItem.ModViewModel.ModStatusValue = "Downloading";
+                ModListItem.ModViewModel.ModStatusValue = Properties.Resources.ModItem_Label_Downloading;
                 bool Downloaded = await Download();
                 
                 //Stopping the process if necessary
                 if (Downloaded)
                 {
                     QuasarLogger.Debug("Launching Extraction");
-                    ModListItem.ModViewModel.ModStatusValue = "Extracting";
-                    ModListItem.ModViewModel.ModStatusTextValue = "Please wait";
+                    ModListItem.ModViewModel.ModStatusValue = Properties.Resources.ModItem_Label_Extracting;
+                    ModListItem.ModViewModel.ModStatusTextValue = Properties.Resources.ModItem_Label_ExtractWait;
                     
                     bool Extracted = await Extract();
 
                     if (Extracted)
                     {
                         QuasarLogger.Debug("Launching File location change");
-                        ModListItem.ModViewModel.ModStatusValue = "Processing Files";
+                        ModListItem.ModViewModel.ModStatusValue = Properties.Resources.ModItem_Label_Processing;
                         
                         bool Processed = await ProcessExtractedFiles();
 

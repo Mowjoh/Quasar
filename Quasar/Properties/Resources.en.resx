@@ -141,9 +141,6 @@
   <data name="Library_Label_DownloadWarning" xml:space="preserve">
     <value>Please download some mods from Gamebanana using the Quasar Download Button</value>
   </data>
-  <data name="Library_Label_EditedTransferDisabled" xml:space="preserve">
-    <value>Not Transferred and Reassigned</value>
-  </data>
   <data name="Library_Label_EditedTransferEnabled" xml:space="preserve">
     <value>Transferred and Reassigned</value>
   </data>
@@ -170,6 +167,18 @@
   </data>
   <data name="Modal_Label_DefaultOK" xml:space="preserve">
     <value>OK</value>
+  </data>
+  <data name="ModItem_Label_Downloading" xml:space="preserve">
+    <value>Downloading</value>
+  </data>
+  <data name="ModItem_Label_Extracting" xml:space="preserve">
+    <value>Extracting</value>
+  </data>
+  <data name="ModItem_Label_ExtractWait" xml:space="preserve">
+    <value>Please Wait</value>
+  </data>
+  <data name="ModItem_Label_Processing" xml:space="preserve">
+    <value>Moving Files</value>
   </data>
   <data name="ModListItem_Button_EditFiles" xml:space="preserve">
     <value>Edit Files</value>

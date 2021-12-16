@@ -115,6 +115,9 @@ namespace Quasar.MainUI.ViewModels
 
         private bool _TabLocked { get; set; }
 
+        private bool _AssignmentTabActive { get; set; }
+        private bool _FileManagerTabActive { get; set; }
+
         private TaskbarItemProgressState _TaskbarProgressState { get; set; }
         #endregion
 
@@ -319,6 +322,26 @@ namespace Quasar.MainUI.ViewModels
                 OnPropertyChanged("AdvancedMode");
             }
         }
+        public bool FileManagerTabActive
+
+        {
+            get => _FileManagerTabActive;
+            set
+            {
+                _FileManagerTabActive = value;
+                OnPropertyChanged("FileManagerTabActive");
+            }
+        }
+        public bool AssignmentTabActive
+
+        {
+            get => _AssignmentTabActive;
+            set
+            {
+                _AssignmentTabActive = value;
+                OnPropertyChanged("AssignmentTabActive");
+            }
+        }
         public bool Updating
 
         {
@@ -471,11 +494,15 @@ namespace Quasar.MainUI.ViewModels
 
             try
             {
-                if (Properties.Settings.Default.Language != null)
+
+                if (Properties.Settings.Default.Language == "[System Language]")
                 {
-                    CultureInfo.CurrentUICulture = new CultureInfo(Properties.Settings.Default.Language, false);
+                    Properties.Settings.Default.Language = "EN";
+                    Properties.Settings.Default.Save();
                 }
-                
+
+                CultureInfo.CurrentUICulture = new CultureInfo(Properties.Settings.Default.Language, false);
+
 
                 QuasarLogger.Info("Tunnel Setup");
                 SetupClientOrServer();
@@ -867,9 +894,19 @@ namespace Quasar.MainUI.ViewModels
         {
             if (_SelectedModListItem.ModViewModel.ActionRequested == "ShowContents")
             {
+                AssignmentTabActive = false;
+                FileManagerTabActive = true;
                 SelectedTabItem = TabItems[1];
                 SelectedModListItem = _SelectedModListItem;
                 CVM.GetRefreshed("RefreshContents");
+            }
+            if (_SelectedModListItem.ModViewModel.ActionRequested == "ShowAssignments")
+            {
+                AssignmentTabActive = true;
+                FileManagerTabActive = false;
+                SelectedTabItem = TabItems[1];
+                SelectedModListItem = _SelectedModListItem;
+                //AVM.GetRefreshed("RefreshContents");
             }
         }
 

@@ -56,7 +56,7 @@
     <Setting Name="PreferredTransferMethod" Type="System.String" Scope="User">
       <Value Profile="(Default)">SD</Value>
     </Setting>
-    <Setting Name="TransferQuasarModsOnly" Type="System.Boolean" Scope="User">
+    <Setting Name="TransferQuasarFoldersOnly" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
   </Settings>

@@ -59,10 +59,6 @@
                    Height="20" Margin="0,57,35,0" HorizontalAlignment="Right" VerticalAlignment="Top"
                    Style="{StaticResource CutieTextBlockStyle}" Text="{x:Static p:Resources.Library_Label_TransferDisabled}" />
 
-        <TextBlock Grid.RowSpan="2"
-                   Height="20" Margin="0,82,35,0" HorizontalAlignment="Right" VerticalAlignment="Top"
-                   Style="{StaticResource CutieTextBlockStyle}" Text="{x:Static p:Resources.Library_Label_EditedTransferDisabled}" />
-
         <CheckBox Margin="0,5,10,0" HorizontalAlignment="Right" VerticalAlignment="Top"
                   BorderBrush="green" IsChecked="{Binding GreenChecked}" Template="{StaticResource CutieCheckBoxGreen}" />
                   
@@ -74,9 +70,6 @@
                   Margin="0,55,10,0" HorizontalAlignment="Right" VerticalAlignment="Top"
                   IsChecked="{Binding RedChecked}" Template="{StaticResource CutieCheckBoxRed}" />
 
-        <CheckBox Grid.RowSpan="2"
-                  Margin="0,80,10,0" HorizontalAlignment="Right" VerticalAlignment="Top"
-                  BorderBrush="#9e168e" IsChecked="{Binding PurpleChecked}" Template="{StaticResource CutieCheckBoxPurple}" />
         <!--#endregion-->
 
         <!--  Headers  -->

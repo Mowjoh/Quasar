@@ -133,15 +133,6 @@ namespace Quasar.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Not Transferred and Reassigned.
-        /// </summary>
-        public static string Library_Label_EditedTransferDisabled {
-            get {
-                return ResourceManager.GetString("Library_Label_EditedTransferDisabled", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Transferred and Reassigned.
         /// </summary>
         public static string Library_Label_EditedTransferEnabled {
@@ -219,6 +210,42 @@ namespace Quasar.Properties {
         public static string Modal_Label_DefaultOK {
             get {
                 return ResourceManager.GetString("Modal_Label_DefaultOK", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Downloading.
+        /// </summary>
+        public static string ModItem_Label_Downloading {
+            get {
+                return ResourceManager.GetString("ModItem_Label_Downloading", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Extracting.
+        /// </summary>
+        public static string ModItem_Label_Extracting {
+            get {
+                return ResourceManager.GetString("ModItem_Label_Extracting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please Wait.
+        /// </summary>
+        public static string ModItem_Label_ExtractWait {
+            get {
+                return ResourceManager.GetString("ModItem_Label_ExtractWait", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Moving Files.
+        /// </summary>
+        public static string ModItem_Label_Processing {
+            get {
+                return ResourceManager.GetString("ModItem_Label_Processing", resourceCulture);
             }
         }
         

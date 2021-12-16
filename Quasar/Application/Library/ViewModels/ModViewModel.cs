@@ -9,6 +9,7 @@ using Quasar.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows;
@@ -456,7 +457,7 @@ namespace Quasar.Controls.Mod.ViewModels
 
         #region Private
         private ICommand _UpdateModCommand { get; set; }
-        private ICommand _FileViewCommand { get; set; }
+        private ICommand _AssignCommand { get; set; }
         private ICommand _DeleteModCommand { get; set; }
         private ICommand _AddModCommand { get; set; }
         private ICommand _ShowContentsCommand { get; set; }
@@ -476,15 +477,15 @@ namespace Quasar.Controls.Mod.ViewModels
                 return _UpdateModCommand;
             }
         }
-        public ICommand FileViewCommand
+        public ICommand AssignCommand
         {
             get
             {
-                if (_FileViewCommand == null)
+                if (_AssignCommand == null)
                 {
-                    _FileViewCommand = new RelayCommand(param => ShowFileView());
+                    _AssignCommand = new RelayCommand(param => ShowAssignmentTab());
                 }
-                return _FileViewCommand;
+                return _AssignCommand;
             }
         }
         public ICommand DeleteModCommand
@@ -635,25 +636,8 @@ namespace Quasar.Controls.Mod.ViewModels
         /// </summary>
         public void LoadStats()
         {
-            if(MVM != null)
-            {
-                List<ContentItem> CM = MVM.MUVM.ContentItems.Where(ci => ci.LibraryItemGuid == LibraryItem.Guid).ToList();
-                bool allFound = true;
-                bool noneFound = true;
-                foreach (ContentItem item in CM)
-                {
-                    if (!MVM.MUVM.ActiveWorkspace.Associations.Any(a => a.ContentItemGuid == item.Guid))
-                    {
-                        allFound = false;
-                    }
-                    else
-                    {
-                        noneFound = false;
-                    }
-                }
-                ContentStatValue = CM.Count == 0 ? 3 : noneFound ? 0 : allFound ? 2 : 1;
-            }
-            
+            OnPropertyChanged("LibraryItem");
+
         }
 
         /// <summary>
@@ -765,9 +749,10 @@ namespace Quasar.Controls.Mod.ViewModels
         /// <summary>
         /// Triggers the file view window
         /// </summary>
-        public void ShowFileView()
+        public void ShowAssignmentTab()
         {
-            new FileView(new ModFileManager(LibraryItem).LibraryContentFolderPath, LibraryItem.Name).Show();
+            ActionRequested = "ShowAssignments";
+            EventSystem.Publish<ModViewModel>(this);
         }
 
         /// <summary>
@@ -795,7 +780,7 @@ namespace Quasar.Controls.Mod.ViewModels
         /// </summary>
         public void AddorRemoveFromWorkspace()
         {
-            if (ContentStatValue == 0)
+            if (LibraryItem.Included == false)
             {
                 ActionRequested = "Add";
             }

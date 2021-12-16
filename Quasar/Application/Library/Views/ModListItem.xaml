@@ -56,18 +56,19 @@
             <Setter Property="Fill" Value="{StaticResource DefaultColor}" />
             <Setter Property="Stroke" Value="AliceBlue" />
             <Style.Triggers>
-                <DataTrigger Binding="{Binding ContentStatValue}" Value="0">
-                    <Setter Property="Fill" Value="red" />
-                </DataTrigger>
-                <DataTrigger Binding="{Binding ContentStatValue}" Value="1">
-                    <Setter Property="Fill" Value="orange" />
-                </DataTrigger>
-                <DataTrigger Binding="{Binding ContentStatValue}" Value="2">
+                <DataTrigger Binding="{Binding LibraryItem.Included}" Value="True">
                     <Setter Property="Fill" Value="green" />
                 </DataTrigger>
-                <DataTrigger Binding="{Binding ContentStatValue}" Value="3">
-                    <Setter Property="Fill" Value="#9e168e" />
+                <DataTrigger Binding="{Binding LibraryItem.Included}" Value="False">
+                    <Setter Property="Fill" Value="Red" />
                 </DataTrigger>
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding LibraryItem.Included}" Value="True" />
+                        <Condition Binding="{Binding LibraryItem.Modified}" Value="True" />
+                    </MultiDataTrigger.Conditions>
+                    <Setter Property="Fill" Value="#9e168e" />
+                </MultiDataTrigger>
             </Style.Triggers>
         </Style>
 
@@ -253,7 +254,9 @@
                             Command="{Binding Path=DeleteModCommand}" Template="{StaticResource ActionTrashButton}" ToolTip="Delete this Mod" />
 
                     <Button Margin="10,0,0,0"
-                            Command="{Binding Path=AddModCommand}" Template="{StaticResource ActionProcessModButton}" ToolTip="Remove the mod from the workspace" Visibility="{Binding Path=NoContent, Converter={StaticResource BoolVisi}}" />
+                            Command="{Binding Path=AddModCommand}" Template="{StaticResource ActionProcessModButton}" ToolTip="Remove the mod from the workspace" />
+                    <Button Margin="10,0,0,0"
+                            Command="{Binding Path=AssignCommand}" Template="{StaticResource ActionAssignModButton}" ToolTip="Edit this mod's assignments" />
 
                 </WrapPanel>
 
@@ -340,7 +343,7 @@
 
                     <Button Grid.Column="1"
                             Width="200" Margin="0,100,0,0" HorizontalAlignment="Center" VerticalAlignment="Top"
-                            Command="{Binding Path=ShowContentsCommand}" Content="{x:Static p:Resources.ModListItem_Button_EditFiles}" Template="{StaticResource CutieSmallButtonTemplate}"/>
+                            Command="{Binding Path=ShowContentsCommand}" Content="{x:Static p:Resources.ModListItem_Button_EditFiles}" Template="{StaticResource CutieSmallButtonTemplate}" />
 
                 </Grid>
                 <!--#endregion-->

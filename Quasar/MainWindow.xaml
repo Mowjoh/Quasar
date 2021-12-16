@@ -114,6 +114,7 @@
                                             <Setter TargetName="Border" Property="Background" Value="Transparent" />
                                             <Setter TargetName="Border" Property="BorderThickness" Value="0" />
                                         </Trigger>
+                                        <!--  File Manager Visibility  -->
                                         <MultiTrigger>
                                             <MultiTrigger.Conditions>
                                                 <Condition Property="Header" Value="{x:Static p:Resources.MainUI_FileManagerTabHeader}" />
@@ -132,6 +133,7 @@
                                                 <Setter Property="Visibility" Value="Collapsed" />
                                             </MultiTrigger.Setters>
                                         </MultiTrigger>
+                                        <!--  Assignments visibility  -->
                                         <MultiTrigger>
                                             <MultiTrigger.Conditions>
                                                 <Condition Property="Header" Value="{x:Static p:Resources.MainUI_AssignmentTabHeader}" />
