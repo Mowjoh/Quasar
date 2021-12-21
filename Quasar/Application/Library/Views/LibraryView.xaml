@@ -36,7 +36,7 @@
                   Style="{StaticResource ComboBoxFlatStyle}" />
 
         <Button Width="24" Margin="223,0,0,5" HorizontalAlignment="Left" VerticalAlignment="Bottom"
-                Command="{Binding Path=ResetFilters}" Template="{StaticResource ActionTestModButton}" ToolTip="Reset the filters" />
+                Command="{Binding Path=ResetFilters}" Template="{StaticResource ActionResetFilters}" ToolTip="Reset the filters" />
 
         <TextBox Width="200" Height="32" Margin="254,32,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
                  Style="{StaticResource CutieTextBoxStyle}" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" />
@@ -61,7 +61,7 @@
 
         <CheckBox Margin="0,5,10,0" HorizontalAlignment="Right" VerticalAlignment="Top"
                   BorderBrush="green" IsChecked="{Binding GreenChecked}" Template="{StaticResource CutieCheckBoxGreen}" />
-                  
+
 
         <CheckBox Margin="0,30,10,0" HorizontalAlignment="Right" VerticalAlignment="Top"
                   BorderBrush="LightBlue" IsChecked="{Binding OrangeChecked}" Template="{StaticResource CutieCheckBoxOrange}" />
@@ -129,11 +129,11 @@
 
             <ListView.Style>
                 <Style TargetType="ListView">
-                    <Setter Property="Grid.Row" Value="2"/>
-                    <Setter Property="Grid.RowSpan" Value="5"/>
+                    <Setter Property="Grid.Row" Value="2" />
+                    <Setter Property="Grid.RowSpan" Value="5" />
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding TransferWindowVisible}" Value="True">
-                            <Setter Property="Grid.RowSpan" Value="1"/>
+                            <Setter Property="Grid.RowSpan" Value="1" />
                         </DataTrigger>
                     </Style.Triggers>
                 </Style>
@@ -169,8 +169,10 @@
 
         </ListView>
 
-        <Grid Grid.Row="3" Background="{StaticResource CutieBG06}" Visibility="{Binding TransferWindowVisible, Converter={StaticResource BoolVisi}}" />
-        <Grid Grid.Row="4" Background="{DynamicResource CutieBG01}" Visibility="{Binding TransferWindowVisible, Converter={StaticResource BoolVisi}}">
+        <Grid Grid.Row="3"
+              Background="{StaticResource CutieBG06}" Visibility="{Binding TransferWindowVisible, Converter={StaticResource BoolVisi}}" />
+        <Grid Grid.Row="4"
+              Background="{DynamicResource CutieBG01}" Visibility="{Binding TransferWindowVisible, Converter={StaticResource BoolVisi}}">
             <!--#region  Status-->
             <StackPanel Margin="15,10,0,0" HorizontalAlignment="Center" VerticalAlignment="Top"
                         Orientation="Horizontal">
@@ -199,10 +201,11 @@
                          IsIndeterminate="{Binding ProgressBarStyle}"
                          Value="30" />
         </Grid>
-        <Grid Grid.Row="5" Background="{StaticResource CutieBG06}" Visibility="{Binding TransferWindowVisible, Converter={StaticResource BoolVisi}}" />
-        <Grid Grid.Row="6" Visibility="{Binding TransferWindowVisible, Converter={StaticResource BoolVisi}}"
+        <Grid Grid.Row="5"
+              Background="{StaticResource CutieBG06}" Visibility="{Binding TransferWindowVisible, Converter={StaticResource BoolVisi}}" />
+        <Grid Grid.Row="6"
               Margin="10,0,0,0"
-              Background="{DynamicResource CutieBG00}">
+              Background="{DynamicResource CutieBG00}" Visibility="{Binding TransferWindowVisible, Converter={StaticResource BoolVisi}}">
             <ScrollViewer>
                 <TextBlock FontFamily="{StaticResource PoppinsRegular}" Foreground="{DynamicResource QuasarTextColor}" TextWrapping="Wrap">
                     <Run Text="Test" />

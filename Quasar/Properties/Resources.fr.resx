@@ -117,6 +117,21 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="FileManagement_Button_ChangeFiles" xml:space="preserve">
+    <value>Changer les fichiers</value>
+  </data>
+  <data name="FileManagement_Button_ImportFiles" xml:space="preserve">
+    <value>Importer des fichiers</value>
+  </data>
+  <data name="FileManagement_Button_OpenFolder" xml:space="preserve">
+    <value>Ouvrir le dossier du mod</value>
+  </data>
+  <data name="FileManagement_Button_SaveModName" xml:space="preserve">
+    <value>Sauvegarder</value>
+  </data>
+  <data name="FileManagement_Label_ModName" xml:space="preserve">
+    <value>Nom du mod :</value>
+  </data>
   <data name="Library_Button_AddModManually" xml:space="preserve">
     <value>Ajout manuel</value>
   </data>
@@ -177,8 +192,32 @@
   <data name="ModItem_Label_ExtractWait" xml:space="preserve">
     <value>Veuillez patienter</value>
   </data>
+  <data name="ModItem_Label_ManualAuthor" xml:space="preserve">
+    <value>Vous!</value>
+  </data>
+  <data name="ModItem_Label_ManualAuthorRole" xml:space="preserve">
+    <value>L'avez importé</value>
+  </data>
   <data name="ModItem_Label_Processing" xml:space="preserve">
     <value>Déplacement des fichiers</value>
+  </data>
+  <data name="ModItem_Tooltip_AddMod" xml:space="preserve">
+    <value>Ajouter ce mod à la liste de transfert</value>
+  </data>
+  <data name="ModItem_Tooltip_AssignMod" xml:space="preserve">
+    <value>Changer l'assignation du mod (Slot, élément remplacé etc.)</value>
+  </data>
+  <data name="ModItem_Tooltip_DeleteMod" xml:space="preserve">
+    <value>Supprimer ce mod de Quasar</value>
+  </data>
+  <data name="ModItem_Tooltip_RemoveMod" xml:space="preserve">
+    <value>Supprimer ce mod de la liste de transfert</value>
+  </data>
+  <data name="ModItem_Tooltip_RenameMod" xml:space="preserve">
+    <value>Renommer ce mod</value>
+  </data>
+  <data name="ModItem_Tooltip_ValidateRename" xml:space="preserve">
+    <value>Sauvegarder le nouveau nom</value>
   </data>
   <data name="ModListItem_Button_EditFiles" xml:space="preserve">
     <value>Editer les fichiers</value>

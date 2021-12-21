@@ -117,6 +117,21 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="FileManagement_Button_ChangeFiles" xml:space="preserve">
+    <value>Change Files</value>
+  </data>
+  <data name="FileManagement_Button_ImportFiles" xml:space="preserve">
+    <value>Import files</value>
+  </data>
+  <data name="FileManagement_Button_OpenFolder" xml:space="preserve">
+    <value>Open mod directory</value>
+  </data>
+  <data name="FileManagement_Button_SaveModName" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="FileManagement_Label_ModName" xml:space="preserve">
+    <value>Mod Name :</value>
+  </data>
   <data name="Library_Button_AddModManually" xml:space="preserve">
     <value>Add Mod Manually</value>
   </data>
@@ -177,8 +192,32 @@
   <data name="ModItem_Label_ExtractWait" xml:space="preserve">
     <value>Please Wait</value>
   </data>
+  <data name="ModItem_Label_ManualAuthor" xml:space="preserve">
+    <value>You!</value>
+  </data>
+  <data name="ModItem_Label_ManualAuthorRole" xml:space="preserve">
+    <value>Imported this</value>
+  </data>
   <data name="ModItem_Label_Processing" xml:space="preserve">
     <value>Moving Files</value>
+  </data>
+  <data name="ModItem_Tooltip_AddMod" xml:space="preserve">
+    <value>Add this mod to the transfer list</value>
+  </data>
+  <data name="ModItem_Tooltip_AssignMod" xml:space="preserve">
+    <value>Change this mod's assignments (slots, item it goes over etc.)</value>
+  </data>
+  <data name="ModItem_Tooltip_DeleteMod" xml:space="preserve">
+    <value>Delete this mod from Quasar</value>
+  </data>
+  <data name="ModItem_Tooltip_RemoveMod" xml:space="preserve">
+    <value>Remove this mod from the transfer list</value>
+  </data>
+  <data name="ModItem_Tooltip_RenameMod" xml:space="preserve">
+    <value>Rename this mod</value>
+  </data>
+  <data name="ModItem_Tooltip_ValidateRename" xml:space="preserve">
+    <value>Save the new name</value>
   </data>
   <data name="ModListItem_Button_EditFiles" xml:space="preserve">
     <value>Edit Files</value>

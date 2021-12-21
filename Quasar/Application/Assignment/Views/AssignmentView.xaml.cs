@@ -46,15 +46,7 @@ namespace Quasar.Associations.Views
 
         #region User Actions
  
-        private void ListBox_Drop(object sender, DragEventArgs e)
-        {
-            if (sender is Slot)
-            {
-                var source = e.Data.GetData(typeof(Slot)) as Slot;
-                var target = (Slot)sender;
-                AssignmentViewModel.SetSlot(source, target);
-            }
-        }
+
         #endregion
 
         #region Actions

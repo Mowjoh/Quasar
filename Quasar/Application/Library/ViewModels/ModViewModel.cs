@@ -17,6 +17,8 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using Quasar.MainUI.ViewModels;
+using Workshop.FileManagement;
 
 namespace Quasar.Controls.Mod.ViewModels
 {
@@ -84,6 +86,8 @@ namespace Quasar.Controls.Mod.ViewModels
                 _LibraryMod = value;
                 OnPropertyChanged("LibraryItem");
                 OnPropertyChanged("APISubCategoryName");
+                OnPropertyChanged("Standby");
+                OnPropertyChanged("StandbyEditing");
                 if (value != null && value.GBItem != null)
                 {
                     AssociatedRootCategory = MVM.MUVM.API.Games[0].RootCategories.Single(c => c.Guid == value.GBItem.RootCategoryGuid);
@@ -331,6 +335,8 @@ namespace Quasar.Controls.Mod.ViewModels
             }
         }
         public bool Standby => !Downloading;
+        public bool StandbyEditing => !Downloading && LibraryItem.Editing;
+        public bool StandbyNotEditing => !Downloading && !LibraryItem.Editing;
         public bool DownloadFailed
         {
             get
@@ -463,6 +469,7 @@ namespace Quasar.Controls.Mod.ViewModels
         private ICommand _ShowContentsCommand { get; set; }
         private ICommand _RetryDownloadCommand { get; set; }
         private ICommand _BigSmolCommand { get; set; }
+        private ICommand _RenameCommand { get; set; }
         #endregion
 
         #region Public
@@ -544,6 +551,19 @@ namespace Quasar.Controls.Mod.ViewModels
                 return _BigSmolCommand;
             }
         }
+
+        public ICommand RenameCommand
+        {
+            get
+            {
+                if (_RenameCommand == null)
+                {
+                    _RenameCommand = new RelayCommand(param => RenameMod());
+                }
+                return _RenameCommand;
+            }
+        }
+
         #endregion
 
         #endregion
@@ -693,7 +713,7 @@ namespace Quasar.Controls.Mod.ViewModels
             {
                 Authors.Add(new Label()
                 {
-                    Content = "You !",
+                    Content = Properties.Resources.ModItem_Label_ManualAuthor,
                     Foreground = (SolidColorBrush)App.Current.Resources["QuasarTextColor"],
                     FontFamily = (FontFamily)App.Current.Resources["PoppinsRegular"],
                     Height = 28
@@ -701,7 +721,7 @@ namespace Quasar.Controls.Mod.ViewModels
 
                 Roles.Add(new Label()
                 {
-                    Content = "Imported this",
+                    Content = Properties.Resources.ModItem_Label_ManualAuthorRole,
                     FontFamily = (FontFamily)App.Current.Resources["PoppinsRegular"],
                     Foreground = (SolidColorBrush)App.Current.Resources["QuasarTextColor"],
                     Height = 28
@@ -824,6 +844,27 @@ namespace Quasar.Controls.Mod.ViewModels
                 Smol = false;
             }
 
+        }
+
+        public void RenameMod()
+        {
+            if (LibraryItem.Editing)
+            {
+                LibraryItem.Editing = false;
+                OnPropertyChanged("LibraryItem");
+                OnPropertyChanged("StandbyNotEditing");
+                OnPropertyChanged("StandbyEditing");
+                ActionRequested = "SaveLibrary";
+                EventSystem.Publish<ModViewModel>(this);
+            }
+            else
+            {
+                LibraryItem.Editing = true;
+                OnPropertyChanged("LibraryItem");
+                OnPropertyChanged("StandbyNotEditing");
+                OnPropertyChanged("StandbyEditing");
+            }
+            
         }
         #endregion
     }

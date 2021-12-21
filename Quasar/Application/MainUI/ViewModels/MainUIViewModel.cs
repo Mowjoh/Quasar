@@ -59,7 +59,7 @@ namespace Quasar.MainUI.ViewModels
                 _SelectedModListItem = value;
                 if (value != null)
                 {
-                    //CVM = new ContentViewModel(ContentMappings, _SelectedModListItem.ModViewModel.LibraryItem, InternalModTypes, GameDatas);
+                    //CVM = new FileManagementViewModel(ContentMappings, _SelectedModListItem.ModViewModel.LibraryItem, InternalModTypes, GameDatas);
                     //ContentView.DataContext = CVM;
                 }
                 OnPropertyChanged("SelectedModListItem");
@@ -99,7 +99,7 @@ namespace Quasar.MainUI.ViewModels
         private LibraryView _LibraryView { get; set; }
         private LibraryViewModel _LibraryViewModel { get; set; }
         private ContentView _ContentView { get; set; }
-        private ContentViewModel _CVM { get; set; }
+        private FileManagementViewModel _CVM { get; set; }
         private AssignmentView _AssignmentView { get; set; }
         private AssociationViewModel _AVM { get; set; }
         private SettingsView _SettingsView { get; set; }
@@ -152,7 +152,6 @@ namespace Quasar.MainUI.ViewModels
                         }
                         if ((string)value.Header == "Management")
                         {
-                            AVM.RefreshSlotData();
                         }
                         _SelectedTabItem = value;
                     }
@@ -210,7 +209,7 @@ namespace Quasar.MainUI.ViewModels
                 OnPropertyChanged("ContentView");
             }
         }
-        public ContentViewModel CVM
+        public FileManagementViewModel CVM
         {
             get => _CVM;
             set
@@ -712,7 +711,7 @@ namespace Quasar.MainUI.ViewModels
             TabItems.Add(new TabItem() { Content = LibraryView, Header = Properties.Resources.MainUI_LibraryTabHeader, Foreground = new SolidColorBrush() { Color = Colors.White } });
 
             ContentView = new ContentView();
-            CVM = new ContentViewModel(this);
+            CVM = new FileManagementViewModel(this);
             ContentView.DataContext = CVM;
             TabItems.Add(new TabItem() { Content = ContentView, Header = Properties.Resources.MainUI_FileManagerTabHeader, Foreground = new SolidColorBrush() { Color = Colors.White } });
 

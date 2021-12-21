@@ -215,7 +215,11 @@
                 <!--#region  Normal Mod UI-->
                 <TextBlock Grid.Column="1"
                            Margin="10,0,0,0" VerticalAlignment="Center"
-                           Style="{StaticResource CutieTextBlockStyle}" Text="{Binding Path=LibraryItem.Name}" Visibility="{Binding Path=Standby, Converter={StaticResource BoolVisi}}" />
+                           Style="{StaticResource CutieTextBlockStyle}" Text="{Binding Path=LibraryItem.Name}" Visibility="{Binding Path=StandbyNotEditing, Converter={StaticResource BoolVisi}}" />
+                <TextBox Grid.Column="1"
+                         Margin="10,0,10,0" VerticalAlignment="Center"
+                         Style="{StaticResource CutieTextBoxStyle}" Text="{Binding Path=LibraryItem.Name}" Visibility="{Binding Path=StandbyEditing, Converter={StaticResource BoolVisi}}" />
+
 
                 <TextBlock Grid.Column="2"
                            VerticalAlignment="Center"
@@ -250,13 +254,21 @@
                            Height="30"
                            FlowDirection="RightToLeft" Visibility="{Binding Path=Standby, Converter={StaticResource BoolVisi}}">
 
+                    <!--  Delete Button  -->
                     <Button Margin="10,0,0,0"
-                            Command="{Binding Path=DeleteModCommand}" Template="{StaticResource ActionTrashButton}" ToolTip="Delete this Mod" />
+                            Command="{Binding Path=DeleteModCommand}" Template="{StaticResource ActionTrashButton}" ToolTip="{x:Static p:Resources.ModItem_Tooltip_DeleteMod}" />
 
+                    <!--  In/Out Button  -->
                     <Button Margin="10,0,0,0"
-                            Command="{Binding Path=AddModCommand}" Template="{StaticResource ActionProcessModButton}" ToolTip="Remove the mod from the workspace" />
+                            Command="{Binding Path=AddModCommand}" Template="{StaticResource ActionProcessModButton}" ToolTip="{x:Static p:Resources.ModItem_Tooltip_RemoveMod}" />
+
+                    <!--  Reassign Button  -->
                     <Button Margin="10,0,0,0"
-                            Command="{Binding Path=AssignCommand}" Template="{StaticResource ActionAssignModButton}" ToolTip="Edit this mod's assignments" />
+                            Command="{Binding Path=AssignCommand}" Template="{StaticResource ActionAssignModButton}" ToolTip="{x:Static p:Resources.ModItem_Tooltip_AssignMod}" />
+
+                    <!--  Rename Button  -->
+                    <Button Margin="10,0,0,0"
+                            Command="{Binding Path=RenameCommand}" Template="{StaticResource ActionEditNameButton}" ToolTip="{x:Static p:Resources.ModItem_Tooltip_RenameMod}" Visibility="{Binding Path=LibraryItem.ManualMod, Converter={StaticResource BoolVisi}}" />
 
                 </WrapPanel>
 

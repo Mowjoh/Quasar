@@ -61,6 +61,51 @@ namespace Quasar.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Change files.
+        /// </summary>
+        public static string FileManagement_Button_ChangeFiles {
+            get {
+                return ResourceManager.GetString("FileManagement_Button_ChangeFiles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Import Files.
+        /// </summary>
+        public static string FileManagement_Button_ImportFiles {
+            get {
+                return ResourceManager.GetString("FileManagement_Button_ImportFiles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open mod directory.
+        /// </summary>
+        public static string FileManagement_Button_OpenFolder {
+            get {
+                return ResourceManager.GetString("FileManagement_Button_OpenFolder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Save.
+        /// </summary>
+        public static string FileManagement_Button_SaveModName {
+            get {
+                return ResourceManager.GetString("FileManagement_Button_SaveModName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mod Name :.
+        /// </summary>
+        public static string FileManagement_Label_ModName {
+            get {
+                return ResourceManager.GetString("FileManagement_Label_ModName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add Mod Manually.
         /// </summary>
         public static string Library_Button_AddModManually {
@@ -241,11 +286,83 @@ namespace Quasar.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to You!.
+        /// </summary>
+        public static string ModItem_Label_ManualAuthor {
+            get {
+                return ResourceManager.GetString("ModItem_Label_ManualAuthor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Imported this.
+        /// </summary>
+        public static string ModItem_Label_ManualAuthorRole {
+            get {
+                return ResourceManager.GetString("ModItem_Label_ManualAuthorRole", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Moving Files.
         /// </summary>
         public static string ModItem_Label_Processing {
             get {
                 return ResourceManager.GetString("ModItem_Label_Processing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add this mod to the transfer list.
+        /// </summary>
+        public static string ModItem_Tooltip_AddMod {
+            get {
+                return ResourceManager.GetString("ModItem_Tooltip_AddMod", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Change this mod&apos;s assignments (slots, item it goes over etc.).
+        /// </summary>
+        public static string ModItem_Tooltip_AssignMod {
+            get {
+                return ResourceManager.GetString("ModItem_Tooltip_AssignMod", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete this mod from Quasar.
+        /// </summary>
+        public static string ModItem_Tooltip_DeleteMod {
+            get {
+                return ResourceManager.GetString("ModItem_Tooltip_DeleteMod", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remove this mod from the transfer list.
+        /// </summary>
+        public static string ModItem_Tooltip_RemoveMod {
+            get {
+                return ResourceManager.GetString("ModItem_Tooltip_RemoveMod", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rename this mod.
+        /// </summary>
+        public static string ModItem_Tooltip_RenameMod {
+            get {
+                return ResourceManager.GetString("ModItem_Tooltip_RenameMod", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Save the new name.
+        /// </summary>
+        public static string ModItem_Tooltip_ValidateRename {
+            get {
+                return ResourceManager.GetString("ModItem_Tooltip_ValidateRename", resourceCulture);
             }
         }
         

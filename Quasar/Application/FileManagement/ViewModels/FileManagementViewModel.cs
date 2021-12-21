@@ -16,7 +16,7 @@ using Workshop.FileManagement;
 namespace Quasar.Content.ViewModels
 {
 
-    public class ContentViewModel : ObservableObject
+    public class FileManagementViewModel : ObservableObject
     {
         public static string AppDataPath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.LocalApplicationData) + @"\Quasar";
 
@@ -209,7 +209,7 @@ namespace Quasar.Content.ViewModels
         /// Basic Content View Model constructor
         /// </summary>
         /// <param name="_MUVM">MainUI View Model to link</param>
-        public ContentViewModel(MainUIViewModel _MUVM)
+        public FileManagementViewModel(MainUIViewModel _MUVM)
         {
             MUVM = _MUVM;
 

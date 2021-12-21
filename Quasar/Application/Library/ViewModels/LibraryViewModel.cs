@@ -23,6 +23,7 @@ using Quasar.Helpers.Tools;
 using Quasar.MainUI.ViewModels;
 using Microsoft.WindowsAPICodePack.Taskbar;
 using System.Diagnostics;
+using Ookii.Dialogs.Wpf;
 using Workshop.FileManagement;
 using Workshop.Web;
 
@@ -244,36 +245,6 @@ namespace Quasar.Controls.ModManagement.ViewModels
                 CollectionViewSource.View.Refresh();
             }
         }
-        public bool CreatorMode
-
-        {
-            get => _CreatorMode;
-            set
-            {
-                if (_CreatorMode == value)
-                    return;
-
-
-                _CreatorMode = value;
-                ChangeCreatorVisibility(_CreatorMode);
-                OnPropertyChanged("CreatorMode");
-            }
-        }
-        public bool AdvanceMode
-
-        {
-            get => _AdvanceMode;
-            set
-            {
-                if (_AdvanceMode == value)
-                    return;
-
-
-                _AdvanceMode = value;
-                ChangeAdvanceVisibility(_AdvanceMode);
-                OnPropertyChanged("AdvanceMode");
-            }
-        }
 
         public bool TypeFilterSelected
         {
@@ -443,9 +414,6 @@ namespace Quasar.Controls.ModManagement.ViewModels
             EventSystem.Subscribe<ModalEvent>(ProcessIncomingModalEvent);
 
             ActiveModManagers = new ObservableCollection<ModManager>();
-
-            EventSystem.Subscribe<SettingItem>(SettingChanged);
-            EventSystem.Subscribe<Workspace>(WorkspaceChanged);
         }
 
         #region Actions
@@ -738,57 +706,6 @@ namespace Quasar.Controls.ModManagement.ViewModels
 
         #region Event System
 
-        //Workspace Trigger
-        /// <summary>
-        /// Trigger when the workspace is changed
-        /// </summary>
-        /// <param name="workspace"></param>
-        public void WorkspaceChanged(Workspace workspace)
-        {
-            MUVM.ActiveWorkspace = workspace;
-        }
-
-        //Settings Triggers
-        /// <summary>
-        /// Trigger when a setting is changed
-        /// </summary>
-        /// <param name="Setting"></param>
-        public void SettingChanged(SettingItem Setting)
-        {
-            if (Setting.SettingName == "EnableCreator")
-            {
-                CreatorMode = Setting.IsChecked;
-            }
-            if (Setting.SettingName == "EnableAdvanced")
-            {
-                AdvanceMode = Setting.IsChecked;
-            }
-        }
-
-        /// <summary>
-        /// Changes the visibility of items affected by the Creator setting
-        /// </summary>
-        /// <param name="val"></param>
-        public void ChangeCreatorVisibility(bool val)
-        {
-            foreach (ModListItem mli in ModListItems)
-            {
-                mli.ModViewModel.CreatorMode = val;
-            }
-        }
-
-        /// <summary>
-        /// Changes the visibility of items affected by the Advanced setting
-        /// </summary>
-        /// <param name="val"></param>
-        public void ChangeAdvanceVisibility(bool val)
-        {
-            foreach (ModListItem mli in ModListItems)
-            {
-                mli.ModViewModel.AdvancedMode = val;
-            }
-        }
-
         //Mod List Item Triggers
         /// <summary>
         /// Trigger for an event incoming from a Mod List Item View Model
@@ -809,10 +726,13 @@ namespace Quasar.Controls.ModManagement.ViewModels
                     RemoveMod(MLI);
                     break;
                 case "ShowContents":
-                    ShowModContents(MLI);
+                    EditModFiles(MLI);
                     break;
                 case "ShowAssignments":
                     ShowModAssignments(MLI);
+                    break;
+                case "SaveLibrary":
+                    SaveLibrary(MLI);
                     break;
                 case "Update":
                     UpdateMod(MLI);
@@ -895,12 +815,22 @@ namespace Quasar.Controls.ModManagement.ViewModels
         /// Show this mod's file view
         /// </summary>
         /// <param name="MLI"></param>
-        public void ShowModContents(ModListItem MLI)
+        public void EditModFiles(ModListItem MLI)
         {
             if (SelectedModListItem == null)
                 return;
 
-            EventSystem.Publish<ModalEvent>(new() { EventName = "ShowFile" });
+            ModFileManager FileManager = new ModFileManager(MLI.ModViewModel.LibraryItem);
+
+            VistaFolderBrowserDialog newDialog = new VistaFolderBrowserDialog();
+            newDialog.ShowDialog();
+
+            if (newDialog.SelectedPath == "")
+                return;
+
+            //Importing files
+            string NewInstallPath = newDialog.SelectedPath;
+            FileManager.ImportFolder(NewInstallPath);
         }
 
         public void ShowModAssignments(ModListItem MLI)
@@ -911,7 +841,10 @@ namespace Quasar.Controls.ModManagement.ViewModels
             EventSystem.Publish<ModalEvent>(new(){ EventName = "ShowAssignments"});
         }
 
-
+        public void SaveLibrary(ModListItem MLI)
+        {
+            UserDataManager.SaveLibrary(MUVM.Library,AppDataPath);
+        }
         #endregion
 
         #region Modal Events

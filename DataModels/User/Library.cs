@@ -18,8 +18,9 @@ namespace DataModels.User
         public DateTime Time { get; set; }
         public string HumanTime => GetFormattedTime();
 
-        [JsonIgnore]
-        public bool ManualMod => GBItem == null;
+        [JsonIgnore] public bool ManualMod => GBItem == null;
+
+        [JsonIgnore] public bool Editing { get; set; } = false;
         public bool Included { get; set; }
         public bool Modified { get; set; }
 

@@ -1,0 +1,30 @@
+﻿<UserControl x:Class="Quasar.Content.Views.ContentView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:Quasar.Content.Views" xmlns:p="clr-namespace:Quasar.Properties">
+    <Grid x:Name="ContentGrid" Background="{DynamicResource QD1}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="128" />
+            <RowDefinition Height="64" />
+            <RowDefinition Height="656*" />
+        </Grid.RowDefinitions>
+
+        <!--  Top Actions  -->
+        <Button Width="200" Height="38" Margin="16,0,0,64" HorizontalAlignment="Left" VerticalAlignment="Bottom"
+                Command="{Binding Path=PickModFilesCommand}" Content="{x:Static p:Resources.FileManagement_Button_ImportFiles}" Template="{StaticResource CutieSmallButtonTemplate}" />
+
+        <Button Width="200" Height="38" Margin="250,0,0,64" HorizontalAlignment="Left" VerticalAlignment="Bottom"
+                Command="{Binding Path=PickModFilesCommand}" Content="{x:Static p:Resources.FileManagement_Button_OpenFolder}" Template="{StaticResource CutieSmallButtonTemplate}" />
+
+
+        <TextBlock Width="102" Margin="20,10,0,7" HorizontalAlignment="Left" VerticalAlignment="Bottom"
+                   FontFamily="{StaticResource PoppinsRegular}" FontSize="15" Style="{StaticResource CutieTextBlockStyle}" Text="{x:Static p:Resources.FileManagement_Label_ModName}" />
+
+        <TextBox Width="550" Margin="130,0" HorizontalAlignment="Left" VerticalAlignment="Bottom"
+                 Style="{StaticResource CutieTextBoxStyle}" Text="{Binding ModName, Mode=TwoWay}" TextWrapping="NoWrap" />
+
+        <Button Width="100" Height="38" Margin="695,0,0,-3" HorizontalAlignment="Left" VerticalAlignment="Bottom"
+                Command="{Binding Path=SaveModNameCommand}" Content="{x:Static p:Resources.FileManagement_Button_SaveModName}" Template="{StaticResource CutieSmallButtonTemplate}" />
+
+
+    </Grid>
+</UserControl>
