@@ -8,7 +8,7 @@
             <RowDefinition Height="64" />
             <RowDefinition Height="64" />
             <RowDefinition />
-            <RowDefinition Height="1" />
+            <RowDefinition Height="4" />
             <RowDefinition Height="125" />
             <RowDefinition Height="1" />
             <RowDefinition Height="60" />
@@ -173,33 +173,38 @@
               Background="{StaticResource CutieBG06}" Visibility="{Binding TransferWindowVisible, Converter={StaticResource BoolVisi}}" />
         <Grid Grid.Row="4"
               Background="{DynamicResource CutieBG01}" Visibility="{Binding TransferWindowVisible, Converter={StaticResource BoolVisi}}">
+
+            <!--  In/Out Button  -->
+            <Button Margin="10,0,0,0" HorizontalAlignment="Right" VerticalAlignment="Top"
+                    Command="{Binding Path=CloseBuildCommand}" Template="{StaticResource ActionCloseBuildButton}" ToolTip="{x:Static p:Resources.Transfer_Tooltip_CloseWindowButton}" />
+
             <!--#region  Status-->
             <StackPanel Margin="15,10,0,0" HorizontalAlignment="Center" VerticalAlignment="Top"
                         Orientation="Horizontal">
                 <TextBlock HorizontalAlignment="Center"
-                           FontFamily="{StaticResource PoppinsRegular}" FontSize="16" Style="{StaticResource CutieTextBlockStyle}" Text="Transfer Status :  " />
-                <TextBlock Margin="0,1,0,0" HorizontalAlignment="Center"
+                           FontFamily="{StaticResource PoppinsRegular}" FontSize="16" Style="{StaticResource CutieTextBlockStyle}" Text="{x:Static p:Resources.Transfer_Step_Global}" />
+                <TextBlock Margin="5,1,0,0" HorizontalAlignment="Center"
                            FontFamily="{StaticResource PoppinsRegular}" FontSize="16" Style="{StaticResource CutieTextBlockStyle}" Text="{Binding Total}" />
             </StackPanel>
             <!--#endregion-->
 
             <!--#region Information panel-->
             <TextBlock Margin="10,46,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
-                       FontFamily="{StaticResource PoppinsRegular}" FontSize="12" Style="{StaticResource CutieTextBlockStyle}" Text="Step : Transfering Mods" />
+                       FontFamily="{StaticResource PoppinsRegular}" FontSize="12" Style="{StaticResource CutieTextBlockStyle}" Text="{Binding Steps}" />
             <TextBlock Margin="10,75,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
-                       FontFamily="{StaticResource PoppinsRegular}" FontSize="12" Style="{StaticResource CutieTextBlockStyle}" Text="SubStep : Transfering files for `Casino Luigi`" />
+                       FontFamily="{StaticResource PoppinsRegular}" FontSize="12" Style="{StaticResource CutieTextBlockStyle}" Text="{Binding SubStep}" />
 
             <TextBlock Margin="10,46,10,0" HorizontalAlignment="Right" VerticalAlignment="Top"
-                       FontFamily="{StaticResource PoppinsRegular}" FontSize="12" Style="{StaticResource CutieTextBlockStyle}" Text="2 To/s" />
+                       FontFamily="{StaticResource PoppinsRegular}" FontSize="12" Style="{StaticResource CutieTextBlockStyle}" Text="{Binding Speed}" />
             <TextBlock Margin="10,75,10,0" HorizontalAlignment="Right" VerticalAlignment="Top"
-                       FontFamily="{StaticResource PoppinsRegular}" FontSize="12" Style="{StaticResource CutieTextBlockStyle}" Text="500Go / 4 Po" />
+                       FontFamily="{StaticResource PoppinsRegular}" FontSize="12" Style="{StaticResource CutieTextBlockStyle}" Text="{Binding Size}" />
             <!--#endregion-->
 
             <!--  Progress Bar  -->
             <ProgressBar Grid.Row="1"
                          Height="10" Margin="10,105,10,0" VerticalAlignment="Top"
                          IsIndeterminate="{Binding ProgressBarStyle}"
-                         Value="30" />
+                         Value="{Binding BuildProgress}" />
         </Grid>
         <Grid Grid.Row="5"
               Background="{StaticResource CutieBG06}" Visibility="{Binding TransferWindowVisible, Converter={StaticResource BoolVisi}}" />
@@ -207,14 +212,7 @@
               Margin="10,0,0,0"
               Background="{DynamicResource CutieBG00}" Visibility="{Binding TransferWindowVisible, Converter={StaticResource BoolVisi}}">
             <ScrollViewer>
-                <TextBlock FontFamily="{StaticResource PoppinsRegular}" Foreground="{DynamicResource QuasarTextColor}" TextWrapping="Wrap">
-                    <Run Text="Test" />
-                    <LineBreak />
-                    <Run Text="Test 2" />
-                    <LineBreak />
-                    <Run Text="Test 3" />
-                    <LineBreak />
-                </TextBlock>
+                <TextBlock FontFamily="{StaticResource PoppinsRegular}" Foreground="{DynamicResource QuasarTextColor}" Text="{Binding Logs}" TextWrapping="Wrap" />
             </ScrollViewer>
         </Grid>
 

@@ -393,4 +393,52 @@ que la bonne IP et le bon port soient utilisés.</value>
   <data name="Settings_Values_PreferredTransferMethod" xml:space="preserve">
     <value>Sans-fil (FTP)=FTP,Local (SD)=SD</value>
   </data>
+  <data name="Transfer_Log_Error" xml:space="preserve">
+    <value>Erreur</value>
+  </data>
+  <data name="Transfer_Log_FTPConnectionFail" xml:space="preserve">
+    <value>Echec de la connection.</value>
+  </data>
+  <data name="Transfer_Log_FTPConnectionSuccess" xml:space="preserve">
+    <value>Connection réussie.</value>
+  </data>
+  <data name="Transfer_Log_FTPConnectionTest" xml:space="preserve">
+    <value>Essai de connection à la Switch...</value>
+  </data>
+  <data name="Transfer_Log_GeneralTransferError" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Transfer_Log_Info" xml:space="preserve">
+    <value>Info</value>
+  </data>
+  <data name="Transfer_Log_NoLaunch" xml:space="preserve">
+    <value>Echec de lancement du transfert.</value>
+  </data>
+  <data name="Transfer_Log_NoSDSelected" xml:space="preserve">
+    <value>Aucune SD sélectionnée</value>
+  </data>
+  <data name="Transfer_Log_ProcessStart" xml:space="preserve">
+    <value>Début du transfert :</value>
+  </data>
+  <data name="Transfer_Log_TransferFinished" xml:space="preserve">
+    <value>Transfert terminé</value>
+  </data>
+  <data name="Transfer_Step_Files" xml:space="preserve">
+    <value>{0}/{1} Fichiers</value>
+  </data>
+  <data name="Transfer_Step_FinishedStepText" xml:space="preserve">
+    <value>Terminé</value>
+  </data>
+  <data name="Transfer_Step_Global" xml:space="preserve">
+    <value>Statut du transfert :</value>
+  </data>
+  <data name="Transfer_Step_StepText" xml:space="preserve">
+    <value>Etape : {0}</value>
+  </data>
+  <data name="Transfer_Step_SubStepText" xml:space="preserve">
+    <value>Sous-tâche : {0}</value>
+  </data>
+  <data name="Transfer_Tooltip_CloseWindowButton" xml:space="preserve">
+    <value>Fermer la fenêtre de transfert.</value>
+  </data>
 </root>

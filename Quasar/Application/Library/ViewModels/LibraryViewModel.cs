@@ -24,6 +24,7 @@ using Quasar.MainUI.ViewModels;
 using Microsoft.WindowsAPICodePack.Taskbar;
 using System.Diagnostics;
 using Ookii.Dialogs.Wpf;
+using Quasar.Build.Models;
 using Workshop.FileManagement;
 using Workshop.Web;
 
@@ -154,6 +155,15 @@ namespace Quasar.Controls.ModManagement.ViewModels
         private bool _CategoryFilterSelected { get; set; }
         private bool _TimeFilterSelected { get; set; }
         private bool _TransferWindowVisible { get; set; }
+        private bool _Building { get; set; } = false;
+        private string _Logs { get; set; }
+        private double _BuilderProgress { get; set; }
+        private string _Steps { get; set; } = "Step :";
+        private string _SubStep { get; set; } = "Sub-Step :";
+        private string _Total { get; set; } = "0/0 Contents";
+        private string _Speed { get; set; } = "0 MB";
+        private string _Size { get; set; } = "0 MB/s";
+        private bool _ProgressBarStyle { get; set; } = false;
         #endregion
 
         #region Public
@@ -338,7 +348,91 @@ namespace Quasar.Controls.ModManagement.ViewModels
                 OnPropertyChanged("TransferWindowVisible");
             }
         }
+        public bool Building
+        {
+            get => _Building;
+            set
+            {
+                if (_Building == value)
+                    return;
 
+                _Building = value;
+                OnPropertyChanged("Building");
+            }
+        }
+
+        public string Logs
+        {
+            get => _Logs;
+            set
+            {
+                _Logs = value;
+                OnPropertyChanged("Logs");
+            }
+        }
+        public double BuildProgress
+        {
+            get => _BuilderProgress;
+            set
+            {
+                _BuilderProgress = value;
+                OnPropertyChanged("BuildProgress");
+            }
+        }
+        public string Steps
+        {
+            get => _Steps;
+            set
+            {
+                _Steps = value;
+                OnPropertyChanged("Steps");
+            }
+        }
+        public string SubStep
+        {
+            get => _SubStep;
+            set
+            {
+                _SubStep = value;
+                OnPropertyChanged("SubStep");
+            }
+        }
+        public string Total
+        {
+            get => _Total;
+            set
+            {
+                _Total = value;
+                OnPropertyChanged("Total");
+            }
+        }
+        public string Speed
+        {
+            get => _Speed;
+            set
+            {
+                _Speed = value;
+                OnPropertyChanged("Speed");
+            }
+        }
+        public string Size
+        {
+            get => _Size;
+            set
+            {
+                _Size = value;
+                OnPropertyChanged("Size");
+            }
+        }
+        public bool ProgressBarStyle
+        {
+            get => _ProgressBarStyle;
+            set
+            {
+                _ProgressBarStyle = value;
+                OnPropertyChanged("ProgressBarStyle");
+            }
+        }
         #endregion
 
         #endregion
@@ -349,6 +443,7 @@ namespace Quasar.Controls.ModManagement.ViewModels
         private ICommand _AddManual { get; set; }
         private ICommand _ResetFilters { get; set; }
         private ICommand _LaunchTransfer { get; set; }
+        private ICommand _CloseBuildCommand { get; set; }
         #endregion
 
         #region Public
@@ -380,9 +475,21 @@ namespace Quasar.Controls.ModManagement.ViewModels
             {
                 if (_LaunchTransfer == null)
                 {
-                    _LaunchTransfer = new RelayCommand(param => LaunchTransfer());
+                    _LaunchTransfer = new RelayCommand(param => Build());
                 }
                 return _LaunchTransfer;
+            }
+        }
+
+        public ICommand CloseBuildCommand
+        {
+            get
+            {
+                if (_CloseBuildCommand == null)
+                {
+                    _CloseBuildCommand = new RelayCommand(param => CloseBuildWindow());
+                }
+                return _CloseBuildCommand;
             }
         }
         #endregion
@@ -416,7 +523,7 @@ namespace Quasar.Controls.ModManagement.ViewModels
             ActiveModManagers = new ObservableCollection<ModManager>();
         }
 
-        #region Actions
+        #region Library View Management
 
         /// <summary>
         /// Creates and fills the mod list
@@ -473,6 +580,39 @@ namespace Quasar.Controls.ModManagement.ViewModels
                 e.Accepted = false;
             }
         }
+        
+        /// <summary>
+        /// Reloads the workspace presence status for all list items
+        /// </summary>
+        public void ReloadAllStats()
+        {
+            foreach (ModListItem i in ModListItems)
+            {
+                i.ModViewModel.LoadStats();
+            }
+        }
+
+        /// <summary>
+        /// Refreshes the view
+        /// </summary>
+        public void ViewRefresh()
+        {
+            CollectionViewSource.Source = null;
+            ParseModListItems();
+            CollectionViewSource.Source = ModListItems;
+            CollectionViewSource.View.Refresh();
+        }
+        
+        public void Flash()
+        {
+            TaskbarManager.Instance.SetProgressValue(100, 100, Process.GetCurrentProcess().MainWindowHandle);
+            System.Threading.Thread.Sleep(500);
+            TaskbarManager.Instance.SetProgressValue(0, 100, Process.GetCurrentProcess().MainWindowHandle);
+        }
+
+        #endregion
+
+        #region Downloads
 
         /// <summary>
         /// Trigger for downloads
@@ -481,7 +621,7 @@ namespace Quasar.Controls.ModManagement.ViewModels
         public void Download(QuasarDownload download)
         {
             Application.Current.Dispatcher.Invoke((Action)delegate {
-                
+
                 Task.Run(() => Flash());
                 Task.Run(() => DownloadMod(download.QuasarURL));
             });
@@ -494,10 +634,10 @@ namespace Quasar.Controls.ModManagement.ViewModels
         /// <returns></returns>
         public async Task<bool> DownloadMod(string QuasarURL)
         {
-            
+
             ModManager MM = new ModManager(QuasarURL);
             //If there is no Mod Manager already doing something for this mod
-            if(!ActiveModManagers.Any(m => m.QuasarURL.GamebananaItemID == MM.QuasarURL.GamebananaItemID))
+            if (!ActiveModManagers.Any(m => m.QuasarURL.GamebananaItemID == MM.QuasarURL.GamebananaItemID))
             {
                 if (ActiveModManagers.Count == 0)
                 {
@@ -605,7 +745,7 @@ namespace Quasar.Controls.ModManagement.ViewModels
 
                             ReloadAllStats();
                         }
-                        catch(Exception e)
+                        catch (Exception e)
                         {
                             MLI.ModViewModel.DownloadFailed = true;
 
@@ -613,14 +753,14 @@ namespace Quasar.Controls.ModManagement.ViewModels
                             QuasarLogger.Error(e.Message);
                             QuasarLogger.Error(e.StackTrace);
                         }
-                        
+
 
                         MLI.ModViewModel.Downloading = false;
                     }
                 }
-                
+
                 ActiveModManagers.Remove(MM);
-                if(ActiveModManagers.Count == 0)
+                if (ActiveModManagers.Count == 0)
                 {
                     EventSystem.Publish<SettingItem>(new SettingItem
                     {
@@ -633,32 +773,160 @@ namespace Quasar.Controls.ModManagement.ViewModels
             return true;
         }
 
-        public void Flash()
+        #endregion
+
+        #region Transfers
+
+        public async void Build()
         {
-            TaskbarManager.Instance.SetProgressValue(100, 100, Process.GetCurrentProcess().MainWindowHandle);
-            System.Threading.Thread.Sleep(500);
-            TaskbarManager.Instance.SetProgressValue(0, 100, Process.GetCurrentProcess().MainWindowHandle);
-        }
-        /// <summary>
-        /// Reloads the workspace presence status for all list items
-        /// </summary>
-        public void ReloadAllStats()
-        {
-            foreach(ModListItem i in ModListItems)
+            TransferWindowVisible = true;
+
+            //Setting Tab Lock ON
+            EventSystem.Publish<SettingItem>(new SettingItem
             {
-                i.ModViewModel.LoadStats();
+                IsChecked = true,
+                SettingName = "TabLock"
+            });
+
+            ResetLogs();
+
+            //Everything is in prepared to start the transfer
+            BuildLog(Properties.Resources.Transfer_Log_Info, Properties.Resources.Transfer_Log_ProcessStart);
+            bool ok = true;
+
+            //Starting the transfer for the selected FileWriter
+            FileWriter FW;
+            if (Properties.Settings.Default.PreferredTransferMethod == "FTP")
+            {
+                //FTP FileWriter
+                BuildLog(Properties.Resources.Transfer_Log_Info, Properties.Resources.Transfer_Log_FTPConnectionTest);
+                FW = new FTPWriter(this) { Log = QuasarLogger };
+                ok = await FW.VerifyOK();
+                if (!ok)
+                {
+                    BuildLog(Properties.Resources.Transfer_Log_Error, Properties.Resources.Transfer_Log_FTPConnectionFail);
+                }
+                else
+                {
+                    BuildLog(Properties.Resources.Transfer_Log_Info, Properties.Resources.Transfer_Log_FTPConnectionSuccess);
+                }
             }
+            else
+            {
+                //SD Card FileWriter
+                BuildLog(Properties.Resources.Transfer_Log_Error, Properties.Resources.Transfer_Log_NoSDSelected);
+                //if (SelectedDrive == null)
+                //{
+                //    BuildLog("Error", "No SD selected");
+                //    ok = false;
+                //    FW = null;
+                //}
+                //else
+                //{
+                //    if (SelectedDrive.MediaD != null)
+                //    {
+                //        FW = new MTPWriter(this) { MediaD = SelectedDrive.MediaD };
+                //    }
+                //    else
+                //    {
+                //        FW = new SDWriter(this) { LetterPath = SelectedDrive.Info.Name, Log = QuasarLogger };
+                //    }
+                //}
+            }
+
+            if (ok)
+            {
+                //bool proceed = false;
+                //try
+                //{
+                //    SB = new SmashBuilder(FW, SelectedModLoader.ID, CleanSelected, OverwriteSelected, this);
+                //    proceed = true;
+                //}
+                //catch (Exception e)
+                //{
+                //    QuasarLogger.Error(e.Message);
+                //}
+
+                //if (proceed)
+                //{
+                //    bool BuildSuccess = false;
+                //    await Task.Run(() => {
+                //        BuildSuccess = SB.StartBuild().Result;
+                //    });
+
+                //    if (BuildSuccess)
+                //    {
+                //        //Mod Loader presence detection
+                //        SB.CheckModLoader(SelectedModLoader.ID);
+                //        if (!SB.ModLoaderInstalled)
+                //        {
+                //            //Not Installed
+                //            SetStep("ModLoader Configuration");
+                //            ModalEvent meuh = new ModalEvent()
+                //            {
+                //                Type = ModalType.OkCancel,
+                //                Action = "Show",
+                //                EventName = "AskModLoaderInstall",
+                //                Title = "ARCropolis setup",
+                //                Content = "Arcropolis is not detected on your Switch\rIt's required to load mods\rDo you want Quasar to install and setup ARCRopolis for you?",
+                //                OkButtonText = "Yes please",
+                //                CancelButtonText = "No, I want to do it myself"
+                //            };
+
+                //            EventSystem.Publish<ModalEvent>(meuh);
+                //        }
+                //        await Task.Run(() => {
+
+                //            SB.SetupModLoader(SelectedModLoader.ID, MUVM.ActiveWorkspace.Name);
+                //        });
+                //        EndBuildProcess();
+                //    }
+                //    else
+                //    {
+                //        BuildLog("Error", "Something went wrong");
+                //        EndBuildProcess();
+                //    }
+                //}
+                //else
+                //{
+                //    BuildLog("Error", "Could not launch build");
+                //    EndBuildProcess();
+
+                //}
+                EndBuildProcess();
+            }
+            else
+            {
+                BuildLog(Properties.Resources.Transfer_Log_Error, Properties.Resources.Transfer_Log_NoLaunch);
+                EndBuildProcess();
+            }
+
+
         }
 
         /// <summary>
-        /// Refreshes the view
+        /// Sets UI for the end build process
         /// </summary>
-        public void ViewRefresh()
+        public async void EndBuildProcess()
         {
-            CollectionViewSource.Source = null;
-            ParseModListItems();
-            CollectionViewSource.Source = ModListItems;
-            CollectionViewSource.View.Refresh();
+            QuasarLogger.Info(Properties.Resources.Transfer_Log_TransferFinished);
+            SetStep(Properties.Resources.Transfer_Step_FinishedStepText);
+            SetSubStep("");
+            SetProgression(100);
+            SetProgressionStyle(false);
+            SetSize("");
+            SetSpeed("");
+            SetTotal("0", "0");
+            TaskbarManager.Instance.SetProgressValue(100, 100, Process.GetCurrentProcess().MainWindowHandle);
+            Building = false;
+            BuildLog(Properties.Resources.Transfer_Log_Info, Properties.Resources.Transfer_Log_TransferFinished);
+
+            EventSystem.Publish<SettingItem>(new SettingItem
+            {
+                IsChecked = false,
+                SettingName = "TabLock"
+            });
+
         }
 
         #endregion
@@ -684,6 +952,9 @@ namespace Quasar.Controls.ModManagement.ViewModels
             ModListItems.Add(mli);
             CollectionViewSource.View.Refresh();
             UserDataManager.SaveLibrary(MUVM.Library, AppDataPath);
+            SelectedModListItem = mli;
+            mli.ModViewModel.RenameMod();
+
 
         }
 
@@ -698,9 +969,9 @@ namespace Quasar.Controls.ModManagement.ViewModels
             OnPropertyChanged("SearchText");
         }
 
-        public void LaunchTransfer()
+        public void CloseBuildWindow()
         {
-            TransferWindowVisible = !TransferWindowVisible;
+            TransferWindowVisible = false;
         }
         #endregion
 
@@ -820,6 +1091,16 @@ namespace Quasar.Controls.ModManagement.ViewModels
             if (SelectedModListItem == null)
                 return;
 
+            EventSystem.Publish<ModalEvent>(new()
+            {
+                Action = "Show",
+                Title = "Import in Progress",
+                Content = "Quasar is importing the selected files",
+                EventName = "ImportingFiles",
+                OkButtonText = Properties.Resources.Modal_Label_DefaultOK,
+                Type = ModalType.Loader
+            });
+
             ModFileManager FileManager = new ModFileManager(MLI.ModViewModel.LibraryItem);
 
             VistaFolderBrowserDialog newDialog = new VistaFolderBrowserDialog();
@@ -831,6 +1112,16 @@ namespace Quasar.Controls.ModManagement.ViewModels
             //Importing files
             string NewInstallPath = newDialog.SelectedPath;
             FileManager.ImportFolder(NewInstallPath);
+
+            EventSystem.Publish<ModalEvent>(new()
+            {
+                Action = "LoadOK",
+                Title = "Import Success",
+                Content = "Quasar finished importing the selected files",
+                EventName = "ImportingFiles",
+                OkButtonText = Properties.Resources.Modal_Label_DefaultOK,
+                Type = ModalType.Loader
+            });
         }
 
         public void ShowModAssignments(ModListItem MLI)
@@ -911,6 +1202,76 @@ namespace Quasar.Controls.ModManagement.ViewModels
             });
         }
 
+        #endregion
+
+        #region Async UI Modifiers
+        public void SetStep(string s)
+        {
+            System.Windows.Application.Current.Dispatcher.Invoke((Action)(() => {
+                Steps = String.Format(Properties.Resources.Transfer_Step_StepText, s);
+            }));
+        }
+        public void SetSubStep(string s)
+        {
+            System.Windows.Application.Current.Dispatcher.Invoke((Action)(() => {
+                SubStep = String.Format(Properties.Resources.Transfer_Step_SubStepText, s);
+            }));
+        }
+
+        public void SetTotal(string current, string total)
+        {
+            System.Windows.Application.Current.Dispatcher.Invoke((Action)(() => {
+                Total = String.Format(Properties.Resources.Transfer_Step_Files, current, total);
+
+                int cur = int.Parse(current);
+                int tot = int.Parse(total);
+                if (cur >= 0 && tot >= 0)
+                {
+
+                    TaskbarManager.Instance.SetProgressValue(cur, tot, Process.GetCurrentProcess().MainWindowHandle);
+
+                }
+            }));
+        }
+        public void SetProgression(double value)
+        {
+            System.Windows.Application.Current.Dispatcher.Invoke((Action)(() => {
+                BuildProgress = value;
+            }));
+        }
+
+        public void SetSpeed(string value)
+        {
+            System.Windows.Application.Current.Dispatcher.Invoke((Action)(() => {
+                Speed = value;
+            }));
+        }
+        public void SetSize(string value)
+        {
+            System.Windows.Application.Current.Dispatcher.Invoke((Action)(() => {
+                Size = value;
+            }));
+        }
+        public void SetProgressionStyle(bool IsIndeterminate)
+        {
+            System.Windows.Application.Current.Dispatcher.Invoke((Action)(() => {
+                ProgressBarStyle = IsIndeterminate;
+            }));
+        }
+
+        public void BuildLog(string type, string log)
+        {
+            System.Windows.Application.Current.Dispatcher.Invoke((Action)(() => {
+                Logs += String.Format("{0} - {1} \r\n", type, log);
+            }));
+        }
+
+        public void ResetLogs()
+        {
+            System.Windows.Application.Current.Dispatcher.Invoke((Action)(() => {
+                Logs = "";
+            }));
+        }
         #endregion
     }
 

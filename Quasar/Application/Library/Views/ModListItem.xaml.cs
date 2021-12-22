@@ -86,5 +86,10 @@ namespace Quasar.Controls
             DataContext = ModViewModel;
         }
 
+        private void ModNameKeyDown(object sender, KeyEventArgs e)
+        {
+            if(e.Key == Key.Return)
+                ModViewModel.RenameMod();
+        }
     }
 }

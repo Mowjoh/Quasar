@@ -876,5 +876,149 @@ namespace Quasar.Properties {
                 return ResourceManager.GetString("Settings_Values_PreferredTransferMethod", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error.
+        /// </summary>
+        public static string Transfer_Log_Error {
+            get {
+                return ResourceManager.GetString("Transfer_Log_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not connect..
+        /// </summary>
+        public static string Transfer_Log_FTPConnectionFail {
+            get {
+                return ResourceManager.GetString("Transfer_Log_FTPConnectionFail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Connection successful..
+        /// </summary>
+        public static string Transfer_Log_FTPConnectionSuccess {
+            get {
+                return ResourceManager.GetString("Transfer_Log_FTPConnectionSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Attempting to connect to the Switch....
+        /// </summary>
+        public static string Transfer_Log_FTPConnectionTest {
+            get {
+                return ResourceManager.GetString("Transfer_Log_FTPConnectionTest", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string Transfer_Log_GeneralTransferError {
+            get {
+                return ResourceManager.GetString("Transfer_Log_GeneralTransferError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Info.
+        /// </summary>
+        public static string Transfer_Log_Info {
+            get {
+                return ResourceManager.GetString("Transfer_Log_Info", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not launch the file transfer..
+        /// </summary>
+        public static string Transfer_Log_NoLaunch {
+            get {
+                return ResourceManager.GetString("Transfer_Log_NoLaunch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No SD selected.
+        /// </summary>
+        public static string Transfer_Log_NoSDSelected {
+            get {
+                return ResourceManager.GetString("Transfer_Log_NoSDSelected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Transfer Process Start :.
+        /// </summary>
+        public static string Transfer_Log_ProcessStart {
+            get {
+                return ResourceManager.GetString("Transfer_Log_ProcessStart", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Transfer Finished.
+        /// </summary>
+        public static string Transfer_Log_TransferFinished {
+            get {
+                return ResourceManager.GetString("Transfer_Log_TransferFinished", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0}/{1} Files.
+        /// </summary>
+        public static string Transfer_Step_Files {
+            get {
+                return ResourceManager.GetString("Transfer_Step_Files", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Finished.
+        /// </summary>
+        public static string Transfer_Step_FinishedStepText {
+            get {
+                return ResourceManager.GetString("Transfer_Step_FinishedStepText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Transfer Status :.
+        /// </summary>
+        public static string Transfer_Step_Global {
+            get {
+                return ResourceManager.GetString("Transfer_Step_Global", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Step : {0}.
+        /// </summary>
+        public static string Transfer_Step_StepText {
+            get {
+                return ResourceManager.GetString("Transfer_Step_StepText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sub-Step : {0}.
+        /// </summary>
+        public static string Transfer_Step_SubStepText {
+            get {
+                return ResourceManager.GetString("Transfer_Step_SubStepText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Close the transfer window.
+        /// </summary>
+        public static string Transfer_Tooltip_CloseWindowButton {
+            get {
+                return ResourceManager.GetString("Transfer_Tooltip_CloseWindowButton", resourceCulture);
+            }
+        }
     }
 }
