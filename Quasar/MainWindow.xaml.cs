@@ -60,13 +60,9 @@ namespace Quasar
         /// <param name="meuh"></param>
         public void ProcessIncomingModalEvent(ModalEvent meuh)
         {
-            if (meuh.EventName == "ShowFile")
-            {
-                NewTabControl.SelectedIndex = 1;
-            }
             if (meuh.EventName == "ShowAssignments")
             {
-                NewTabControl.SelectedIndex = 2;
+                NewTabControl.SelectedIndex = 1;
             }
 
             if (meuh.EventName == "QuasarClose")

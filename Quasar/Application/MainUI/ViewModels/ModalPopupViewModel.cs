@@ -161,6 +161,7 @@ namespace Quasar.MainUI.ViewModels
             {
                 ModalLoading = true;
                 OnPropertyChanged("ModalLoading");
+                OnPropertyChanged("OKButtonEnabled");
             }
         }
 
@@ -175,6 +176,8 @@ namespace Quasar.MainUI.ViewModels
             ModalLoading = false;
             ModalSuccessShown = true;
             ModalSuccess = Success;
+            OnPropertyChanged("ModalLoading");
+            OnPropertyChanged("OKButtonEnabled");
             UpdateModal(meuh);
 
         }

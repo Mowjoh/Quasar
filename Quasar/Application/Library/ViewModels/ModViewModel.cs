@@ -657,6 +657,8 @@ namespace Quasar.Controls.Mod.ViewModels
         public void LoadStats()
         {
             OnPropertyChanged("LibraryItem");
+            OnPropertyChanged("StandbyNotEditing");
+            OnPropertyChanged("StandbyEditing");
 
         }
 

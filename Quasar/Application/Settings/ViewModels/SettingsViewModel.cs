@@ -25,6 +25,7 @@ namespace Quasar.Settings.ViewModels
         ObservableCollection<SettingItemView> _FTPSettings { get; set; }
         ObservableCollection<SettingItemView> _WarningSettings { get; set; }
         ObservableCollection<SettingItemView> _TransferSettings { get; set; }
+        private bool _Setup { get; set; }
         #endregion
 
         #region Public
@@ -77,6 +78,19 @@ namespace Quasar.Settings.ViewModels
 
                 _TransferSettings = value;
                 OnPropertyChanged("TransferSettings");
+            }
+        }
+
+        public bool Setup
+        {
+            get => _Setup;
+            set
+            {
+                if (_Setup == value)
+                    return;
+
+                _Setup = value;
+                OnPropertyChanged("Setup");
             }
         }
         #endregion
@@ -134,6 +148,7 @@ namespace Quasar.Settings.ViewModels
             LoadSettings();
 
             EventSystem.Subscribe<ModalEvent>(ProcessModalEvent);
+            EventSystem.Subscribe<SettingItem>(ProcessSettingChanged);
 
         }
 
@@ -143,6 +158,7 @@ namespace Quasar.Settings.ViewModels
         /// </summary>
         private void LoadSettings()
         {
+            Setup = true;
             AppSettings = new ObservableCollection<SettingItemView>
             {
                 new("AppVersion",Properties.Resources.Settings_Label_AppVersion, "", SettingItemType.Text),
@@ -164,8 +180,25 @@ namespace Quasar.Settings.ViewModels
                 new("PreferredTransferMethod", Properties.Resources.Settings_Label_PreferredTransferMethod, Properties.Resources.Settings_Comment_PreferredTransferMethod, SettingItemType.List,Properties.Resources.Settings_Values_PreferredTransferMethod),
                 new("TransferQuasarFoldersOnly", Properties.Resources.Settings_Label_ManageAllMods, Properties.Resources.Settings_Comment_ManageAllMods, SettingItemType.Toggle)
             };
+
+            Setup = false;
         }
 
+        private void ProcessSettingChanged(SettingItem SettingItem)
+        {
+            if (SettingItem.SettingName == "Language" && !Setup)
+            {
+                EventSystem.Publish<ModalEvent>(new()
+                {
+                    Action = "Show",
+                    Content = Properties.Resources.Settings_Modal_Content_ShutdownWarning,
+                    Title = Properties.Resources.Settings_Modal_Title_ShutdownWarning,
+                    OkButtonText = Properties.Resources.Settings_Modal_Button_ShutdownWarning,
+                    EventName = "ShutdownWarning",
+                    Type = ModalType.Warning
+                });
+            }
+        }
         #endregion
 
         #region User Actions

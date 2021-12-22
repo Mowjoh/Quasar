@@ -367,7 +367,7 @@ namespace Quasar.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Edit Files.
+        ///   Looks up a localized string similar to Import Files.
         /// </summary>
         public static string ModListItem_Button_EditFiles {
             get {

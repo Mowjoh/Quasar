@@ -59,11 +59,21 @@ namespace Quasar.Associations.ViewModels
         #region Commands
 
         #region Private
-
+        private ICommand _ScanMods { get; set; }
         #endregion
 
         #region Public
-
+        public ICommand ScanMods
+        {
+            get
+            {
+                if (_ScanMods == null)
+                {
+                    _ScanMods = new RelayCommand(param => ScanFiles());
+                }
+                return _ScanMods;
+            }
+        }
         #endregion
 
         #endregion
@@ -78,6 +88,7 @@ namespace Quasar.Associations.ViewModels
         {
             QuasarLogger = _QuasarLogger;
             MUVM = _MUVM;
+            
         }
 
         #region Actions    
@@ -85,11 +96,26 @@ namespace Quasar.Associations.ViewModels
         #endregion
 
         #region User Actions
-
+        private void ScanFiles()
+        {
+            EventSystem.Publish<ModalEvent>(new()
+            {
+                EventName = "ScanningMod",
+                Title = "Scanning",
+                Content = "Please wait while Quasar scans the mod's contents",
+                Action = "Show",
+                OkButtonText = Properties.Resources.Modal_Label_DefaultOK,
+                Type = ModalType.Loader,
+            });
+        }
         #endregion
 
         #region Events
 
+        private void ProcessIncomingModalEvent(ModalEvent meuh)
+        {
+
+        }
         #endregion
 
     }

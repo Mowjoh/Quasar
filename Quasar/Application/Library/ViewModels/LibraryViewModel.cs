@@ -136,6 +136,7 @@ namespace Quasar.Controls.ModManagement.ViewModels
         }
         ModListItem mliToDelete { get; set; }
         
+        
         #endregion
 
         #endregion
@@ -687,6 +688,7 @@ namespace Quasar.Controls.ModManagement.ViewModels
                             {
                                 QuasarLogger.Debug("Adding to Library");
                                 //If the mod is new and downloaded
+                                MM.LibraryItem.Included = true;
                                 MUVM.Library.Add(MM.LibraryItem);
                                 UserDataManager.SaveLibrary(MUVM.Library, AppDataPath);
 
@@ -1128,7 +1130,7 @@ namespace Quasar.Controls.ModManagement.ViewModels
         {
             if (SelectedModListItem == null)
                 return;
-
+            SelectedModListItem = MLI;
             EventSystem.Publish<ModalEvent>(new(){ EventName = "ShowAssignments"});
         }
 

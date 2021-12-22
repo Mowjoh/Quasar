@@ -220,7 +220,7 @@
     <value>Sauvegarder le nouveau nom</value>
   </data>
   <data name="ModListItem_Button_EditFiles" xml:space="preserve">
-    <value>Editer les fichiers</value>
+    <value>Importer des fichiers</value>
   </data>
   <data name="ModListItem_Button_UpdateMod" xml:space="preserve">
     <value>Mettre à jour</value>

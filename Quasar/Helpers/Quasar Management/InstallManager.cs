@@ -179,13 +179,6 @@ namespace Quasar.Helpers.Quasar_Management
 
                 EventSystem.Publish<ModalEvent>(Meuh);
             }
-
-
-
-
-
-
-
         }
 
         /// <summary>
