@@ -61,6 +61,33 @@ namespace Quasar.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Scan Files.
+        /// </summary>
+        public static string Assignments_Button_ScanFiles {
+            get {
+                return ResourceManager.GetString("Assignments_Button_ScanFiles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Types Grouped.
+        /// </summary>
+        public static string Assignments_Label_GroupTypes {
+            get {
+                return ResourceManager.GetString("Assignments_Label_GroupTypes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Showing Assignments for : .
+        /// </summary>
+        public static string Assignments_Label_ModName {
+            get {
+                return ResourceManager.GetString("Assignments_Label_ModName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Change files.
         /// </summary>
         public static string FileManagement_Button_ChangeFiles {

@@ -182,6 +182,7 @@
     <PackageReference Include="Microsoft.Windows.Compatibility" Version="5.0.2" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Application\Assignment\Models\" />
     <Folder Include="Application\Common\Views\" />
     <Folder Include="Application\MainUI\Models\" />
     <Folder Include="Resources\ModLoaders\ARCropolis\atmosphere\contents\01006A800016E000\romfs\arcropolis\workspaces\Example\arc\" />

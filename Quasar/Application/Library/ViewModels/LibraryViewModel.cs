@@ -1128,8 +1128,6 @@ namespace Quasar.Controls.ModManagement.ViewModels
 
         public void ShowModAssignments(ModListItem MLI)
         {
-            if (SelectedModListItem == null)
-                return;
             SelectedModListItem = MLI;
             EventSystem.Publish<ModalEvent>(new(){ EventName = "ShowAssignments"});
         }

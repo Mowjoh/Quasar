@@ -259,57 +259,61 @@ namespace Workshop.Scanners
             //Processing Search Results into ContentItems
             foreach (ScanFile sf in _ScanFiles)
             {
-                if (sf.Scanned == true)
+                if (!sf.Ignored)
                 {
-                    List<ContentItem> SearchList = SearchResults.Where(i => i.GameElementID == sf.GameElementID && i.SlotNumber == int.Parse(sf.Slot) && i.QuasarModTypeID == sf.QuasarModTypeID).ToList();
-                    if (SearchList.Count == 0)
+                    if (sf.Scanned == true)
                     {
-                        //If there is no content item related
-                        ContentItem ci = new ContentItem()
+                        List<ContentItem> SearchList = SearchResults.Where(i => i.GameElementID == sf.GameElementID && i.SlotNumber == int.Parse(sf.Slot) && i.QuasarModTypeID == sf.QuasarModTypeID).ToList();
+                        if (SearchList.Count == 0)
                         {
-                            GameElementID = sf.GameElementID,
-                            QuasarModTypeID = sf.QuasarModTypeID,
-                            SlotNumber = int.Parse(sf.Slot),
-                            LibraryItemGuid = _LibraryItem.Guid,
-                            Name = _LibraryItem.Name,
-                            ScanFiles = new ObservableCollection<ScanFile>()
-                        {
-                            sf
-                        }
-                        };
-                        SearchResults.Add(ci);
-                    }
-                    else
-                    {
-                        bool ItemAdded = false;
-                        foreach (ContentItem ci in SearchList)
-                        {
-                            //If there is a related parent
-                            if (ci.ScanFiles[0].OriginPath.Replace('/', '\\') == sf.OriginPath.Replace('/', '\\'))
-                            {
-                                ci.ScanFiles.Add(sf);
-                                ItemAdded = true;
-                            }
-                        }
-                        if (!ItemAdded)
-                        {
-                            //If there is no related parent
+                            //If there is no content item related
                             ContentItem ci = new ContentItem()
                             {
                                 GameElementID = sf.GameElementID,
                                 QuasarModTypeID = sf.QuasarModTypeID,
                                 SlotNumber = int.Parse(sf.Slot),
                                 LibraryItemGuid = _LibraryItem.Guid,
-                                Name = _LibraryItem.Name + " #" + (SearchList.Count + 1).ToString(),
+                                Name = _LibraryItem.Name,
                                 ScanFiles = new ObservableCollection<ScanFile>()
-                                {
-                                    sf
-                                }
+                        {
+                            sf
+                        }
                             };
                             SearchResults.Add(ci);
                         }
+                        else
+                        {
+                            bool ItemAdded = false;
+                            foreach (ContentItem ci in SearchList)
+                            {
+                                //If there is a related parent
+                                if (ci.ScanFiles[0].OriginPath.Replace('/', '\\') == sf.OriginPath.Replace('/', '\\'))
+                                {
+                                    ci.ScanFiles.Add(sf);
+                                    ItemAdded = true;
+                                }
+                            }
+                            if (!ItemAdded)
+                            {
+                                //If there is no related parent
+                                ContentItem ci = new ContentItem()
+                                {
+                                    GameElementID = sf.GameElementID,
+                                    QuasarModTypeID = sf.QuasarModTypeID,
+                                    SlotNumber = int.Parse(sf.Slot),
+                                    LibraryItemGuid = _LibraryItem.Guid,
+                                    Name = _LibraryItem.Name + " #" + (SearchList.Count + 1).ToString(),
+                                    ScanFiles = new ObservableCollection<ScanFile>()
+                                {
+                                    sf
+                                }
+                                };
+                                SearchResults.Add(ci);
+                            }
+                        }
                     }
                 }
+                
             }
 
             return SearchResults;

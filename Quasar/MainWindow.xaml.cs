@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Linq;
+using System.Windows;
 using System.Windows.Controls;
 using Quasar.Common.Models;
 using Quasar.Helpers;
@@ -63,6 +64,17 @@ namespace Quasar
             if (meuh.EventName == "ShowAssignments")
             {
                 NewTabControl.SelectedIndex = 1;
+                if (MUVM.ContentItems.Any(ci =>
+                    ci.LibraryItemGuid == MUVM.LibraryViewModel.SelectedModListItem.ModViewModel.LibraryItem.Guid))
+                {
+                    MUVM.AVM.ScanFiles();
+                }
+                else
+                {
+                    MUVM.AVM.DisplayContentItems(MUVM.ContentItems.Where(ci =>
+                        ci.LibraryItemGuid == MUVM.LibraryViewModel.SelectedModListItem.ModViewModel.LibraryItem.Guid).ToList());
+                }
+                    
             }
 
             if (meuh.EventName == "QuasarClose")

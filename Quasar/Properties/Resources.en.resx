@@ -117,6 +117,15 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Assignments_Button_ScanFiles" xml:space="preserve">
+    <value>Scan Files</value>
+  </data>
+  <data name="Assignments_Label_GroupTypes" xml:space="preserve">
+    <value>Types Grouped</value>
+  </data>
+  <data name="Assignments_Label_ModName" xml:space="preserve">
+    <value>Showing Assignments for : </value>
+  </data>
   <data name="FileManagement_Button_ChangeFiles" xml:space="preserve">
     <value>Change Files</value>
   </data>
