@@ -1,14 +1,8 @@
-﻿using Quasar.Common.Models;
-using DataModels.Common;
-using DataModels.User;
-using DataModels.Resource;
+﻿using DataModels.Common;
 using Quasar.Settings.Models;
 using Quasar.Helpers;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Windows.Input;
 
 namespace Quasar.Settings.ViewModels
 {
@@ -152,19 +146,8 @@ namespace Quasar.Settings.ViewModels
                 Properties.Settings.Default[SettingItem.SettingName] = value.Value;
                 Properties.Settings.Default.Save();
 
-                if (SettingItem.SettingName == "Language")
-                {
-                    EventSystem.Publish<ModalEvent>(new()
-                    {
-                        Action = "Show",
-                        Content = Properties.Resources.Settings_Modal_Content_ShutdownWarning,
-                        Title = Properties.Resources.Settings_Modal_Title_ShutdownWarning,
-                        OkButtonText = Properties.Resources.Settings_Modal_Button_ShutdownWarning,
-                        EventName = "ShutdownWarning",
-                        Type = ModalType.Warning
-                    });
-                }
-
+                EventSystem.Publish<SettingItem>(SettingItem);
+                
             }
         }
 
@@ -251,7 +234,7 @@ namespace Quasar.Settings.ViewModels
                     }
 
                     SelectedBoxValue =
-                        AvailableValues.SingleOrDefault(v => v.Value == Properties.Settings.Default[Property].ToString());
+                        AvailableValues.SingleOrDefault(v => v.Value == (Properties.Settings.Default[Property].ToString() == "en-150" ? "EN" : Properties.Settings.Default[Property].ToString()));
                     EnableComboBox = true;
                     break;
 

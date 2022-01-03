@@ -117,6 +117,15 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Assignments_Button_ScanFiles" xml:space="preserve">
+    <value>Scan Files</value>
+  </data>
+  <data name="Assignments_Label_GroupTypes" xml:space="preserve">
+    <value>Types Grouped</value>
+  </data>
+  <data name="Assignments_Label_ModName" xml:space="preserve">
+    <value>Showing Assignments for : </value>
+  </data>
   <data name="FileManagement_Button_ChangeFiles" xml:space="preserve">
     <value>Change files</value>
   </data>
@@ -220,7 +229,7 @@
     <value>Save the new name</value>
   </data>
   <data name="ModListItem_Button_EditFiles" xml:space="preserve">
-    <value>Edit Files</value>
+    <value>Import Files</value>
   </data>
   <data name="ModListItem_Button_UpdateMod" xml:space="preserve">
     <value>Update Mod</value>
@@ -241,7 +250,7 @@
     <value>Version Control : </value>
   </data>
   <data name="ModListItem_Time_Days" xml:space="preserve">
-    <value>{0} hours ago</value>
+    <value>{0} days ago</value>
   </data>
   <data name="ModListItem_Time_Hours" xml:space="preserve">
     <value>{0} hours ago</value>
@@ -393,5 +402,53 @@ Also check that your FTP server is running</value>
   </data>
   <data name="Settings_Values_PreferredTransferMethod" xml:space="preserve">
     <value>Wireless (FTP)=FTP,Wired (SD)=SD</value>
+  </data>
+  <data name="Transfer_Log_Error" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="Transfer_Log_FTPConnectionFail" xml:space="preserve">
+    <value>Could not connect.</value>
+  </data>
+  <data name="Transfer_Log_FTPConnectionSuccess" xml:space="preserve">
+    <value>Connection successful.</value>
+  </data>
+  <data name="Transfer_Log_FTPConnectionTest" xml:space="preserve">
+    <value>Attempting to connect to the Switch...</value>
+  </data>
+  <data name="Transfer_Log_GeneralTransferError" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Transfer_Log_Info" xml:space="preserve">
+    <value>Info</value>
+  </data>
+  <data name="Transfer_Log_NoLaunch" xml:space="preserve">
+    <value>Could not launch the file transfer.</value>
+  </data>
+  <data name="Transfer_Log_NoSDSelected" xml:space="preserve">
+    <value>No SD selected</value>
+  </data>
+  <data name="Transfer_Log_ProcessStart" xml:space="preserve">
+    <value>Transfer Process Start :</value>
+  </data>
+  <data name="Transfer_Log_TransferFinished" xml:space="preserve">
+    <value>Transfer Finished</value>
+  </data>
+  <data name="Transfer_Step_Files" xml:space="preserve">
+    <value>{0}/{1} Files</value>
+  </data>
+  <data name="Transfer_Step_FinishedStepText" xml:space="preserve">
+    <value>Finished</value>
+  </data>
+  <data name="Transfer_Step_Global" xml:space="preserve">
+    <value>Transfer Status :</value>
+  </data>
+  <data name="Transfer_Step_StepText" xml:space="preserve">
+    <value>Step : {0}</value>
+  </data>
+  <data name="Transfer_Step_SubStepText" xml:space="preserve">
+    <value>Sub-Step : {0}</value>
+  </data>
+  <data name="Transfer_Tooltip_CloseWindowButton" xml:space="preserve">
+    <value>Close the transfer window</value>
   </data>
 </root>

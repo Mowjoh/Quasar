@@ -1,18 +1,9 @@
 ﻿using log4net;
 using log4net.Appender;
-using Quasar.FileSystem;
-using Quasar.Helpers.FileOperations;
 using Quasar.Helpers.Quasar_Management;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Forms;
 using Workshop.Updates;
 
 namespace Quasar.Internal.Tools

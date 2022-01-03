@@ -1,7 +1,6 @@
 ﻿using log4net;
 using log4net.Appender;
 using DataModels.User;
-using DataModels.Common;
 using DataModels.Resource;
 using Quasar.Helpers.FileOperations;
 using System;

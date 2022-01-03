@@ -432,16 +432,16 @@ namespace Quasar.Build.ViewModels
             if (WirelessSelected)
             {
                 BuildLog("Info", "Attempting to connect to the Switch...");
-                FW = new FTPWriter(this) { Log = QuasarLogger };
-                ok = await FW.VerifyOK();
-                if (!ok)
-                {
-                    BuildLog("Error", "Could not connect.");
-                }
-                else
-                {
-                    BuildLog("Info", "Connection successful.");
-                }
+                //FW = new FTPWriter(this) { Log = QuasarLogger };
+                //ok = await FW.VerifyOK();
+                //if (!ok)
+                //{
+                //    BuildLog("Error", "Could not connect.");
+                //}
+                //else
+                //{
+                //    BuildLog("Info", "Connection successful.");
+                //}
             }
             else
             {
@@ -453,14 +453,14 @@ namespace Quasar.Build.ViewModels
                 }
                 else
                 {
-                    if (SelectedDrive.MediaD != null)
-                    {
-                        FW = new MTPWriter(this) { MediaD = SelectedDrive.MediaD };
-                    }
-                    else
-                    {
-                        FW = new SDWriter(this) { LetterPath = SelectedDrive.Info.Name, Log = QuasarLogger };
-                    }
+                    //if (SelectedDrive.MediaD != null)
+                    //{
+                    //    FW = new MTPWriter(this) { MediaD = SelectedDrive.MediaD };
+                    //}
+                    //else
+                    //{
+                    //    FW = new SDWriter(this) { LetterPath = SelectedDrive.Info.Name, Log = QuasarLogger };
+                    //}
                 }
             }
 
@@ -469,8 +469,8 @@ namespace Quasar.Build.ViewModels
                 bool proceed = false;
                 try
                 {
-                    SB = new SmashBuilder(FW, SelectedModLoader.ID, CleanSelected, OverwriteSelected, this);
-                    proceed = true;
+                    //SB = new SmashBuilder(FW, SelectedModLoader.ID, CleanSelected, OverwriteSelected, this);
+                    //proceed = true;
                 }
                 catch(Exception e)
                 {

@@ -4,12 +4,9 @@ using Quasar.Controls.ModManagement.ViewModels;
 using DataModels.Common;
 using DataModels.User;
 using DataModels.Resource;
-using Quasar.FileSystem;
 using Quasar.Helpers;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows;
@@ -17,8 +14,6 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using Quasar.MainUI.ViewModels;
-using Workshop.FileManagement;
 
 namespace Quasar.Controls.Mod.ViewModels
 {
@@ -657,6 +652,8 @@ namespace Quasar.Controls.Mod.ViewModels
         public void LoadStats()
         {
             OnPropertyChanged("LibraryItem");
+            OnPropertyChanged("StandbyNotEditing");
+            OnPropertyChanged("StandbyEditing");
 
         }
 
@@ -741,11 +738,11 @@ namespace Quasar.Controls.Mod.ViewModels
                 HumanTime = Properties.Resources.ModListItem_Time_Long;
             if (t.TotalDays >= 2)
                 HumanTime = String.Format(Properties.Resources.ModListItem_Time_Days, t.Days);
-            if (t.TotalDays == 1)
+            if (t.TotalDays == 1 && t.TotalDays < 1)
                 HumanTime = String.Format(Properties.Resources.ModListItem_Time_OneDay);
-            if (t.TotalHours >= 2)
+            if (t.TotalHours >= 2 && t.TotalDays < 1)
                 HumanTime = String.Format(Properties.Resources.ModListItem_Time_Hours, t.Hours);
-            if (t.TotalHours == 1)
+            if (t.TotalHours == 1 && t.TotalDays < 1)
                 HumanTime = String.Format(Properties.Resources.ModListItem_Time_OneHour);
 
             

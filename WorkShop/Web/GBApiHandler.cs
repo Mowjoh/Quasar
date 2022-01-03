@@ -1,17 +1,9 @@
 ﻿using DataModels.Common;
-using ImageProcessor;
-using ImageProcessor.Plugins.WebP.Imaging.Formats;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Net.Http;
-using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using System.Drawing;
-using System.Net;
 
 namespace Workshop.Web
 {

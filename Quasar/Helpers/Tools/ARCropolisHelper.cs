@@ -3,8 +3,6 @@ using log4net.Appender;
 using Nett;
 using Quasar.Build.Models;
 using DataModels.User;
-using DataModels.Common;
-using DataModels.Resource;
 using Quasar.Helpers.FileOperations;
 using System;
 using System.IO;

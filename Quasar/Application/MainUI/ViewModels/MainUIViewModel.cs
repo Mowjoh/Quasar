@@ -1,16 +1,11 @@
 ﻿using log4net;
 using log4net.Appender;
 using Quasar.Controls;
-using Quasar.Build.ViewModels;
-using Quasar.Build.Views;
 using Quasar.Common.Models;
-using Quasar.Content.ViewModels;
-using Quasar.Content.Views;
 using Quasar.Controls.ModManagement.ViewModels;
 using Quasar.Controls.ModManagement.Views;
 using Quasar.Settings.Models;
 using Quasar.Helpers.ModScanning;
-using Quasar.Helpers.Quasar_Management;
 using Quasar.Helpers;
 using Quasar.Internal.Tools;
 using DataModels.Common;
@@ -29,8 +24,6 @@ using Quasar.Settings.Views;
 using Quasar.Associations.Views;
 using Quasar.Associations.ViewModels;
 using System.Windows.Shell;
-using ImageProcessor;
-using ImageProcessor.Plugins.WebP.Imaging.Formats;
 using Helpers.IPC;
 using System.IO;
 using System.Globalization;
@@ -98,8 +91,6 @@ namespace Quasar.MainUI.ViewModels
         private int _SelectedTabIndex { get; set; }
         private LibraryView _LibraryView { get; set; }
         private LibraryViewModel _LibraryViewModel { get; set; }
-        private ContentView _ContentView { get; set; }
-        private FileManagementViewModel _CVM { get; set; }
         private AssignmentView _AssignmentView { get; set; }
         private AssociationViewModel _AVM { get; set; }
         private SettingsView _SettingsView { get; set; }
@@ -194,31 +185,6 @@ namespace Quasar.MainUI.ViewModels
 
                 _LibraryViewModel = value;
                 OnPropertyChanged("LibraryViewModel");
-            }
-        }
-
-        public ContentView ContentView
-        {
-            get => _ContentView;
-            set
-            {
-                if (_ContentView == value)
-                    return;
-
-                _ContentView = value;
-                OnPropertyChanged("ContentView");
-            }
-        }
-        public FileManagementViewModel CVM
-        {
-            get => _CVM;
-            set
-            {
-                if (_CVM == value)
-                    return;
-
-                _CVM = value;
-                OnPropertyChanged("CVM");
             }
         }
 
@@ -710,12 +676,6 @@ namespace Quasar.MainUI.ViewModels
             LibraryView.DataContext = LibraryViewModel;
             TabItems.Add(new TabItem() { Content = LibraryView, Header = Properties.Resources.MainUI_LibraryTabHeader, Foreground = new SolidColorBrush() { Color = Colors.White } });
 
-            ContentView = new ContentView();
-            CVM = new FileManagementViewModel(this);
-            ContentView.DataContext = CVM;
-            TabItems.Add(new TabItem() { Content = ContentView, Header = Properties.Resources.MainUI_FileManagerTabHeader, Foreground = new SolidColorBrush() { Color = Colors.White } });
-
-
             AVM = new AssociationViewModel(this, QuasarLogger);
             AssignmentView = new AssignmentView() { AssignmentViewModel = AVM };
             AssignmentView.DataContext = AVM;
@@ -891,14 +851,6 @@ namespace Quasar.MainUI.ViewModels
         /// <param name="_SelectedModListItem"></param>
         public void ModListItemEvent(ModListItem _SelectedModListItem)
         {
-            if (_SelectedModListItem.ModViewModel.ActionRequested == "ShowContents")
-            {
-                AssignmentTabActive = false;
-                FileManagerTabActive = true;
-                SelectedTabItem = TabItems[1];
-                SelectedModListItem = _SelectedModListItem;
-                CVM.GetRefreshed("RefreshContents");
-            }
             if (_SelectedModListItem.ModViewModel.ActionRequested == "ShowAssignments")
             {
                 AssignmentTabActive = true;

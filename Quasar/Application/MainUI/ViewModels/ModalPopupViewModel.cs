@@ -1,8 +1,6 @@
 ﻿using log4net;
 using Quasar.Common.Models;
 using DataModels.Common;
-using DataModels.User;
-using DataModels.Resource;
 using Quasar.Helpers;
 using System.Windows.Input;
 
@@ -161,6 +159,7 @@ namespace Quasar.MainUI.ViewModels
             {
                 ModalLoading = true;
                 OnPropertyChanged("ModalLoading");
+                OnPropertyChanged("OKButtonEnabled");
             }
         }
 
@@ -175,6 +174,8 @@ namespace Quasar.MainUI.ViewModels
             ModalLoading = false;
             ModalSuccessShown = true;
             ModalSuccess = Success;
+            OnPropertyChanged("ModalLoading");
+            OnPropertyChanged("OKButtonEnabled");
             UpdateModal(meuh);
 
         }
