@@ -814,93 +814,61 @@ namespace Quasar.Controls.ModManagement.ViewModels
             {
                 //SD Card FileWriter
                 BuildLog(Properties.Resources.Transfer_Log_Error, Properties.Resources.Transfer_Log_NoSDSelected);
-                //if (SelectedDrive == null)
-                //{
-                //    BuildLog("Error", "No SD selected");
-                //    ok = false;
-                //    FW = null;
-                //}
-                //else
-                //{
-                //    if (SelectedDrive.MediaD != null)
-                //    {
-                //        FW = new MTPWriter(this) { MediaD = SelectedDrive.MediaD };
-                //    }
-                //    else
-                //    {
-                //        FW = new SDWriter(this) { LetterPath = SelectedDrive.Info.Name, Log = QuasarLogger };
-                //    }
-                //}
+                if (Properties.Settings.Default.SelectedSD == null)
+                {
+                    BuildLog("Error", "No SD selected");
+                    ok = false;
+                    FW = null;
+                }
+                else
+                {
+                    FW = new SDWriter(this) { LetterPath = Properties.Settings.Default.SelectedSD, Log = QuasarLogger };
+                }
             }
 
             if (ok)
             {
-                //bool proceed = false;
-                //try
-                //{
-                //    SB = new SmashBuilder(FW, SelectedModLoader.ID, CleanSelected, OverwriteSelected, this);
-                //    proceed = true;
-                //}
-                //catch (Exception e)
-                //{
-                //    QuasarLogger.Error(e.Message);
-                //}
+                SmashBuilder SB = new(FW, this);
+                bool proceed = false;
+                try
+                {
+                    proceed = true;
+                }
+                catch (Exception e)
+                {
+                    QuasarLogger.Error(e.Message);
+                }
 
-                //if (proceed)
-                //{
-                //    bool BuildSuccess = false;
-                //    await Task.Run(() => {
-                //        BuildSuccess = SB.StartBuild().Result;
-                //    });
+                if (proceed)
+                {
+                    bool BuildSuccess = false;
+                    await Task.Run(() =>
+                    {
+                        BuildSuccess = SB.StartBuild().Result;
+                    });
 
-                //    if (BuildSuccess)
-                //    {
-                //        //Mod Loader presence detection
-                //        SB.CheckModLoader(SelectedModLoader.ID);
-                //        if (!SB.ModLoaderInstalled)
-                //        {
-                //            //Not Installed
-                //            SetStep("ModLoader Configuration");
-                //            ModalEvent meuh = new ModalEvent()
-                //            {
-                //                Type = ModalType.OkCancel,
-                //                Action = "Show",
-                //                EventName = "AskModLoaderInstall",
-                //                Title = "ARCropolis setup",
-                //                Content = "Arcropolis is not detected on your Switch\rIt's required to load mods\rDo you want Quasar to install and setup ARCRopolis for you?",
-                //                OkButtonText = "Yes please",
-                //                CancelButtonText = "No, I want to do it myself"
-                //            };
+                    if (BuildSuccess)
+                    {
+                        EndBuildProcess();
+                    }
+                    else
+                    {
+                        BuildLog("Error", "Something went wrong");
+                        EndBuildProcess();
+                    }
+                }
+                else
+                {
+                    BuildLog("Error", "Could not launch build");
+                    EndBuildProcess();
 
-                //            EventSystem.Publish<ModalEvent>(meuh);
-                //        }
-                //        await Task.Run(() => {
-
-                //            SB.SetupModLoader(SelectedModLoader.ID, MUVM.ActiveWorkspace.Name);
-                //        });
-                //        EndBuildProcess();
-                //    }
-                //    else
-                //    {
-                //        BuildLog("Error", "Something went wrong");
-                //        EndBuildProcess();
-                //    }
-                //}
-                //else
-                //{
-                //    BuildLog("Error", "Could not launch build");
-                //    EndBuildProcess();
-
-                //}
-                EndBuildProcess();
+                }
             }
             else
             {
                 BuildLog(Properties.Resources.Transfer_Log_Error, Properties.Resources.Transfer_Log_NoLaunch);
                 EndBuildProcess();
             }
-
-
         }
 
         /// <summary>

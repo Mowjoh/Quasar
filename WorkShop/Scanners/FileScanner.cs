@@ -19,7 +19,7 @@ namespace Workshop.Scanners
         //List of files and extensions to filter with
         public static string[] IgnoreExtensions = { ".csv" };
         public static string[] IgnoreFiles = { "ModInformation.json" };
-        public static string RootFolders = "append|assist|boss|camera|campaign|common|effect|enemy|fighter|finalsmash|item|item|miihat|param|pokemon|prebuilt;|render|snapshot|sound|spirits|stage|standard|stream;|ui";
+        public static string RootFolders = "append|assist|boss|camera|campaign|common|effect|enemy|fighter|finalsmash|item|item|miihat|param|pokemon|prebuilt;|render|snapshot|stream;|sound|spirits|stage|standard|ui";
         
         /// <summary>
         /// Scans a Library Mod
@@ -71,7 +71,8 @@ namespace Workshop.Scanners
                 {
                     FilesToScan.Add(new ScanFile()
                     {
-                        SourcePath = s
+                        SourcePath = s,
+                        FilePath = Path.GetFileName(s)
                     });
                 }
                 
@@ -393,12 +394,14 @@ namespace Workshop.Scanners
 
         public static string[] GetRootFolder(string _path)
         {
-            Regex RootRegex = new Regex(String.Format(@"(?'LeadFolder'^.*)(?'RootFolder'{0})(?'FilePath'.*$)",RootFolders));
+            Regex RootRegex = new Regex(String.Format(@"(?'RootFolder'{0})(?'FilePath'.*$)",RootFolders));
             Match m = RootRegex.Match(_path);
 
             if (m.Success)
             {
-                return new[] {m.Groups["LeadFolder"].Value, m.Groups["RootFolder"].Value + m.Groups["FilePath"].Value };
+                string RootPath = _path.Replace(m.Groups["RootFolder"].Value, "");
+                RootPath = RootPath.Replace(m.Groups["FilePath"].Value, "");
+                return new[] { RootPath, m.Groups["RootFolder"].Value + m.Groups["FilePath"].Value };
             }
             else
             {

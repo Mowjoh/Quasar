@@ -298,8 +298,14 @@ L'app doit être redémarrer pour que le changement soit effectif</value>
   <data name="Settings_Comment_ManageAllMods" xml:space="preserve">
     <value>Activez cette option pour que le dossier de mods de la Switch soit uniquement géré par Quasar</value>
   </data>
+  <data name="Settings_Comment_ModsPath" xml:space="preserve">
+    <value>Vous pouvez changer l'emplacement des mods sur la SD avec ce champ</value>
+  </data>
   <data name="Settings_Comment_PreferredTransferMethod" xml:space="preserve">
     <value>Veuillez sélectionner si vous préférez transférer les fichiers par FTP sans-fil ou avec un transfert local sur une SD connectée</value>
+  </data>
+  <data name="Settings_Comment_SDSelect" xml:space="preserve">
+    <value>Sélectionnez la SD sur laquelle vous voulez transférer les fichiers</value>
   </data>
   <data name="Settings_Comment_SupressModDeletion" xml:space="preserve">
     <value>Activez cette option pour être prévenu de la supression d'un mod</value>
@@ -340,8 +346,14 @@ L'app doit être redémarrer pour que le changement soit effectif</value>
   <data name="Settings_Label_ManageAllMods" xml:space="preserve">
     <value>Gérer tous les mods</value>
   </data>
+  <data name="Settings_Label_ModsPath" xml:space="preserve">
+    <value>Répertoire de mods</value>
+  </data>
   <data name="Settings_Label_PreferredTransferMethod" xml:space="preserve">
     <value>Méthode de transfert</value>
+  </data>
+  <data name="Settings_Label_SDSelect" xml:space="preserve">
+    <value>Sélection de SD</value>
   </data>
   <data name="Settings_Label_SupressModDeletion" xml:space="preserve">
     <value>Supression de mods</value>

@@ -12,39 +12,18 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Quasar.Controls.ModManagement.ViewModels;
 using Workshop.FileManagement;
+using Workshop.Builder;
 
 namespace Quasar.Build.Models
 {
 
-    enum BuildModes { Clean, Synchronize, Overwrite }
-
-    public abstract class Builder: ObservableObject
-    {
-        public abstract Task<bool> StartBuild();
-
-        public abstract Task<bool> CheckModLoader(int ModLoader);
-        public abstract Task<bool> SetupModLoader(int ModLoader, string WorkspaceName);
-        public abstract Task<bool> InstallModLoader(int ModLoader, string WorkspaceName);
-        
-        public abstract Task<bool> StartCheck();
-        public abstract Task<bool> GetLocalFileList();
-        public abstract Task<bool> GetDistantFileList();
-
-        public abstract Task<bool> ProcessTransferList();
-        public abstract Task<bool> DeleteDifferences();
-        public abstract Task<bool> CopyFiles();
-
-        
-        public abstract void CleanWorkspace();
-        
-    }
-
-    public class SmashBuilder : Builder
+    public class SmashBuilder
     {
 
-        private BuildViewModel _ViewModel { get; set; }
-        public BuildViewModel ViewModel
+        private LibraryViewModel _ViewModel { get; set; }
+        public LibraryViewModel ViewModel
         {
             get => _ViewModel;
             set
@@ -53,7 +32,6 @@ namespace Quasar.Build.Models
                     return;
 
                 _ViewModel = value;
-                OnPropertyChanged("ViewModel");
             }
         }
         FileWriter Writer { get; set; }
@@ -63,39 +41,31 @@ namespace Quasar.Build.Models
         
         string WorkspacePath { get; set; }
 
-        ObservableCollection<ModFile> WorkspaceIndex { get; set; }
-        ObservableCollection<ModFile> DistantFiles { get; set; }
-        List<ModFile> WorkspaceFilesToCopy { get; set; }
-        List<ModFile> WorkspaceFilesToDelete { get; set; }
-        ObservableCollection<ModFile> DistantIndex { get; set; }
+        List<FileReference> LibraryIndex { get; set; }
+        List<FileReference> DistantIndex { get; set; }
+        List<FileReference> DistantFiles { get; set; }
+        List<FileReference> FilesToCopy { get; set; }
+        List<FileReference> FilesToDelete { get; set; }
+        
+        private List<FileReference> LibraryFiles { get; set; }
         public bool ModLoaderInstalled { get; set; }
         public bool ModLoaderSetup { get; set; }
 
-        public SmashBuilder(FileWriter _Writer, int _ModLoader, bool _CleanSelected, bool _OverwriteSelected, BuildViewModel _ViewModel)
+        public SmashBuilder(FileWriter _Writer, LibraryViewModel _ViewModel)
         {
             Writer = _Writer;
-            ModLoader = _ModLoader;
             ViewModel = _ViewModel;
-
-            CleanSelected = _CleanSelected;
-            OverwriteSelected = _OverwriteSelected;
-
         }
 
-        public override async Task<bool> StartBuild()
+        public async Task<bool> StartBuild()
         {
             ViewModel.Building = true;
             ViewModel.QuasarLogger.Debug("Building set to true");
 
             try
             {
-                //Base Operations
-                if (!await StartCheck())
-                    return false;
-                ViewModel.QuasarLogger.Debug("Start Check Finished");
 
-                if (!await GetLocalFileList())
-                    return false;
+                LibraryIndex = await Builder.CreateFileList(_ViewModel.MUVM.Library, Properties.Settings.Default.DefaultDir, Properties.Settings.Default.TransferPath);
                 ViewModel.QuasarLogger.Debug("Got Local File List");
 
                 if (!await GetDistantFileList())
@@ -108,7 +78,7 @@ namespace Quasar.Build.Models
 
 
                 //File Operations
-                if (WorkspaceFilesToDelete.Count != 0)
+                if (FilesToDelete.Count != 0)
                 {
                     if (!await DeleteDifferences())
                         return false;
@@ -119,7 +89,8 @@ namespace Quasar.Build.Models
                     ViewModel.BuildLog("Info", "No files to delete");
                     ViewModel.QuasarLogger.Debug("No files to delete");
                 }
-                if (WorkspaceFilesToCopy.Count != 0)
+
+                if (LibraryIndex.Count != 0)
                 {
                     if (!await CopyFiles())
                         return false;
@@ -143,10 +114,8 @@ namespace Quasar.Build.Models
                 return false;
             }
             
-            
-            
         }
-        public override async Task<bool> CheckModLoader(int ModLoader)
+        public async Task<bool> CheckModLoader(int ModLoader)
         {
             try
             {
@@ -177,7 +146,7 @@ namespace Quasar.Build.Models
 
             
         }
-        public override async Task<bool> InstallModLoader(int ModLoader, string WorkspaceName)
+        public async Task<bool> InstallModLoader(int ModLoader, string WorkspaceName)
         {
             try
             {
@@ -200,7 +169,7 @@ namespace Quasar.Build.Models
 
             
         }
-        public override async Task<bool> SetupModLoader(int ModLoader, string WorkspaceName)
+        public async Task<bool> SetupModLoader(int ModLoader, string WorkspaceName)
         {
             try
             {
@@ -236,102 +205,7 @@ namespace Quasar.Build.Models
 
             
         }
-        public override async Task<bool> StartCheck()
-        {
-            try
-            {
-                //Base File List Setup
-                WorkspaceIndex = new ObservableCollection<ModFile>();
-                DistantFiles = new ObservableCollection<ModFile>();
-                WorkspaceFilesToCopy = new List<ModFile>();
-                WorkspaceFilesToDelete = new List<ModFile>();
-
-                //Base Path Setup
-                ModLoader sml = ViewModel.MUVM.ModLoaders.Single(ml => ml.ID == ModLoader);
-                WorkspacePath = sml.WorkspacePath.Replace("{Workspace}", ViewModel.MUVM.ActiveWorkspace.Name);
-
-                if (CleanSelected)
-                {
-                    CleanWorkspace();
-                }
-                return true;
-            }
-            catch (Exception e)
-            {
-                ViewModel.BuildLog("Error", "Could not execute Startup Check");
-                ViewModel.QuasarLogger.Error("Startup Check Error");
-                ViewModel.QuasarLogger.Error(e.Message);
-                ViewModel.QuasarLogger.Error(e.StackTrace);
-                return false;
-            }
-            
-        }
-        public override async Task<bool> GetLocalFileList()
-        {
-            try
-            {
-                //UI Setup
-                ViewModel.SetStep("Listing Local Files");
-                ViewModel.QuasarLogger.Debug("Listing Local Files");
-                WorkspaceIndex = new ObservableCollection<ModFile>();
-                ObservableCollection<BasicInfoData> InfoData = new ObservableCollection<BasicInfoData>();
-
-                foreach (Association ass in ViewModel.MUVM.ActiveWorkspace.Associations)
-                {
-                    ContentItem ci = ViewModel.MUVM.ContentItems.Single(c => c.Guid == ass.ContentItemGuid);
-                    LibraryItem li = ViewModel.MUVM.Library.Single(l => l.Guid == ci.LibraryItemGuid);
-                    QuasarModType qmt = ViewModel.MUVM.QuasarModTypes.Single(t => t.ID == ass.QuasarModTypeID);
-                    GameElementFamily gef = ViewModel.MUVM.Games[0].GameElementFamilies.Single(f => f.ID == qmt.GameElementFamilyID);
-
-                    if (ModLoader == 2)
-                    {
-                        if (InfoData.Any(d => d.LibraryItem.Guid == li.Guid))
-                        {
-                            BasicInfoData data = InfoData.Single(d => d.LibraryItem.Guid == li.Guid);
-                            data.Description += String.Format("Slot #{0} - {1} - {2}\r\n", (ci.SlotNumber + 1).ToString(), qmt.Name, ci.Name);
-                        }
-                        else
-                        {
-                            BasicInfoData data = new BasicInfoData()
-                            {
-                                LibraryItem = li,
-                                Description = "Contains : \r\n"
-                            };
-                            data.Description += String.Format("Slot #{0} - {1} - {2}\r\n", (ci.SlotNumber + 1).ToString(), qmt.Name, ci.Name);
-
-                            InfoData.Add(data);
-                        }
-
-                    }
-
-                    foreach (ModFile mf in Scannerino.GetModFiles(qmt, gef, ci, ass.SlotNumber, ModLoader, li, ViewModel.MUVM.Games[0]))
-                    {
-                        mf.Hash = BuilderActions.GetHash(mf.SourceFilePath);
-                        WorkspaceIndex.Add(mf);
-                    }
-                }
-
-                foreach (BasicInfoData d in InfoData)
-                {
-                    ARCropolisHelper.CreateInfoFile(d.LibraryItem, d.Description);
-                }
-
-                return true;
-            }
-            catch (Exception e)
-            {
-                ViewModel.BuildLog("Error", "Could not list local files");
-                ViewModel.QuasarLogger.Error("Local File Listing");
-                ViewModel.QuasarLogger.Error(e.Message);
-                ViewModel.QuasarLogger.Error(e.StackTrace);
-                return false;
-            }
-
-            
-            
-
-        }
-        public override async Task<bool> GetDistantFileList()
+        public async Task<bool> GetDistantFileList()
         {
             try
             {
@@ -349,7 +223,7 @@ namespace Quasar.Build.Models
                 }
                 else
                 {
-                    DistantFiles = new ObservableCollection<ModFile>();
+                    DistantFiles = new List<FileReference>();
                 }
 
                 return true;
@@ -363,7 +237,7 @@ namespace Quasar.Build.Models
                 return false;
             }
         }
-        public override async Task<bool> ProcessTransferList()
+        public async Task<bool> ProcessTransferList()
         {
             try
             {
@@ -372,8 +246,6 @@ namespace Quasar.Build.Models
 
                 //List files for deletion
                 getDeleteFileList();
-
-                SetupWorkspaceFolders();
 
                 return true;
             }
@@ -388,15 +260,15 @@ namespace Quasar.Build.Models
 
             
         }
-        public override async Task<bool> DeleteDifferences()
+        public async Task<bool> DeleteDifferences()
         {
             try
             {
                 ViewModel.SetStep("Deleting Differences");
-                foreach (ModFile reference in WorkspaceFilesToDelete)
+                foreach (FileReference reference in FilesToDelete)
                 {
-                    ViewModel.QuasarLogger.Debug("Deleting " + reference.DestinationFilePath);
-                    Writer.DeleteFile(WorkspacePath + reference.DestinationFilePath);
+                    ViewModel.QuasarLogger.Debug("Deleting " + reference.OutputFilePath);
+                    Writer.DeleteFile(WorkspacePath + reference.OutputFilePath);
                 }
                 return true;
 
@@ -411,52 +283,50 @@ namespace Quasar.Build.Models
             }
             
         }
-        public override async Task<bool> CopyFiles()
+        public async Task<bool> CopyFiles()
         {
             try
             {
+                if (!Writer.CheckFolderExists(Properties.Settings.Default.TransferPath))
+                    Writer.CreateFolder(Properties.Settings.Default.TransferPath);
+
                 ViewModel.SetStep("Transfering Files");
                 ViewModel.SetProgressionStyle(false);
-                int TotalFiles = WorkspaceFilesToCopy.Count;
-                while (WorkspaceFilesToCopy.Count > 0)
+                int TotalFiles = FilesToCopy.Count;
+                while (FilesToCopy.Count > 0)
                 {
                     try
                     {
-                        ModFile MF = WorkspaceFilesToCopy[0];
+                        FileReference MF = FilesToCopy[0];
                         string description = "Contains :\r\n";
-                        List<ModFile> AssociatedFiles = WorkspaceFilesToCopy.Where(r => r.LibraryItemGuid == MF.LibraryItemGuid).ToList();
-                        LibraryItem Item = ViewModel.MUVM.Library.Single(li => li.Guid == MF.LibraryItemGuid);
-                        GamebananaRootCategory RCat = ViewModel.MUVM.API.Games[0].RootCategories.SingleOrDefault(c => c.Guid == Item.GBItem?.RootCategoryGuid);
-                        ViewModel.SetSubStep("Copying files for " + Item.Name);
-                        foreach (ModFile Ferb in AssociatedFiles)
+                        List<FileReference> AssociatedFiles = FilesToCopy.Where(r => r.LibraryItem.Guid == MF.LibraryItem.Guid).ToList();
+                        ViewModel.SetSubStep("Copying files for " + MF.LibraryItem.Name);
+                        foreach (FileReference Ferb in AssociatedFiles)
                         {
-                            SetProgression((TotalFiles - WorkspaceFilesToCopy.Count), TotalFiles);
-                            Writer.SendFile(Ferb.SourceFilePath, WorkspacePath + Ferb.DestinationFilePath);
-                            WorkspaceFilesToCopy.Remove(Ferb);
+                            SetProgression((TotalFiles - FilesToCopy.Count), TotalFiles);
+                            Writer.SendFile(Ferb.SourceFilePath, Ferb.OutputFilePath);
+                            FilesToCopy.Remove(Ferb);
                         }
-                        //Sending ARCadia files
-                        if (ModLoader == 2)
-                        {
-                            string ModConfigInputPath = String.Format(@"{0}\Library\Mods\{1}\info.toml", Properties.Settings.Default.DefaultDir, Item.Guid);
-                            string ModConfigOutputPath = String.Format(@"{0}\{1}\info.toml", WorkspacePath, Item.Name.Replace(".", ""));
-                            string ModScreenInputPath = String.Format(@"{0}\Library\Screenshots\{1}.webp", Properties.Settings.Default.DefaultDir, Item.Guid);
-                            string ModDefaultScreenInputPath = String.Format(@"{0}\Resources\images\NoScreenshot.webp", Properties.Settings.Default.DefaultDir);
-                            string ModScreenOutputPath = String.Format(@"{0}\{1}\preview.webp", WorkspacePath, Item.Name.Replace(".", ""));
+                        ////Sending ARCadia files
+                        //string ModConfigInputPath = String.Format(@"{0}\Library\Mods\{1}\info.toml", Properties.Settings.Default.DefaultDir, Item.Guid);
+                        //string ModConfigOutputPath = String.Format(@"{0}\{1}\info.toml", WorkspacePath, Item.Name.Replace(".", ""));
+                        //string ModScreenInputPath = String.Format(@"{0}\Library\Screenshots\{1}.webp", Properties.Settings.Default.DefaultDir, Item.Guid);
+                        //string ModDefaultScreenInputPath = String.Format(@"{0}\Resources\images\NoScreenshot.webp", Properties.Settings.Default.DefaultDir);
+                        //string ModScreenOutputPath = String.Format(@"{0}\{1}\preview.webp", WorkspacePath, Item.Name.Replace(".", ""));
 
-                            Writer.SendFile(ModConfigInputPath, ModConfigOutputPath);
+                        //Writer.SendFile(ModConfigInputPath, ModConfigOutputPath);
 
-                            if (File.Exists(ModScreenInputPath))
-                            {
-                                Writer.SendFile(ModScreenInputPath, ModScreenOutputPath);
-                            }
-                            else
-                            {
-                                Writer.SendFile(ModDefaultScreenInputPath, ModScreenOutputPath);
-                            }
+                        //if (File.Exists(ModScreenInputPath))
+                        //{
+                        //    Writer.SendFile(ModScreenInputPath, ModScreenOutputPath);
+                        //}
+                        //else
+                        //{
+                        //    Writer.SendFile(ModDefaultScreenInputPath, ModScreenOutputPath);
+                        //}
 
-                        }
-                        ViewModel.QuasarLogger.Info(String.Format("Finished copying files for {0}", Item.Name));
-                        ViewModel.BuildLog("Mod", String.Format("Finished copying files for {0}", Item.Name));
+                        ViewModel.QuasarLogger.Info(String.Format("Finished copying files for {0}", MF.LibraryItem.Name));
+                        ViewModel.BuildLog("Mod", String.Format("Finished copying files for {0}", MF.LibraryItem.Name));
                     }
                     catch (Exception e)
                     {
@@ -468,7 +338,7 @@ namespace Quasar.Build.Models
                     }
 
                 }
-                SetProgression((TotalFiles - WorkspaceIndex.Count), TotalFiles);
+                SetProgression((TotalFiles - FilesToCopy.Count), TotalFiles);
 
                 return true;
             }
@@ -485,15 +355,6 @@ namespace Quasar.Build.Models
            
 
         }
-        public override void CleanWorkspace()
-        {
-            ViewModel.SetStep("Cleaning Workspace");
-            ViewModel.SetProgressionStyle(true);
-            Writer.DeleteFolder(WorkspacePath);
-            ViewModel.QuasarLogger.Debug("Workspace Cleaned");
-            ViewModel.BuildLog("Info", "Workspace Cleaned");
-
-        }
 
         public void GetDistantIndex()
         {
@@ -501,10 +362,10 @@ namespace Quasar.Build.Models
             string localHashFilePath = Properties.Settings.Default.DefaultDir + @"\Library\Downloads\Files.json";
 
             //Getting Workspace Hashes
-            if (Writer.CheckFileExists(DistantWorkspacePath + @"Files.json"))
+            if (Writer.CheckFileExists(DistantWorkspacePath + @"Quasar.json"))
             {
-                Writer.GetFile(DistantWorkspacePath + @"Files.json", localHashFilePath);
-                ViewModel.QuasarLogger.Debug(String.Format("Distant Hash File Exists : {0}", DistantWorkspacePath + @"Files.json"));
+                Writer.GetFile(DistantWorkspacePath + @"Quasar.json", localHashFilePath);
+                ViewModel.QuasarLogger.Debug(String.Format("Distant Hash File Exists : {0}", DistantWorkspacePath + @"Quasar.json"));
             }
 
             //Loading distant Workspace Hashes if found
@@ -518,13 +379,13 @@ namespace Quasar.Build.Models
             {
                 ViewModel.QuasarLogger.Debug("No Remote Hash File");
                 ViewModel.QuasarLogger.Debug("Hash List Created");
-                DistantIndex = new ObservableCollection<ModFile>();
+                DistantIndex = new List<FileReference>();
             }
         }
         public void getDistantFileList()
         {
             //Getting Workspace Distant Files
-            DistantFiles = Writer.GetRemoteFiles(WorkspacePath);
+            //DistantFiles = Writer.GetRemoteFiles(WorkspacePath);
         }
 
         public void getCopyFileList()
@@ -532,41 +393,42 @@ namespace Quasar.Build.Models
             if (DistantIndex.Count == 0)
             {
                 //No distant index means first copy
-                WorkspaceFilesToCopy = WorkspaceIndex.ToList();
+                FilesToCopy = LibraryIndex;
             }
             else
             {
                 //Copy over means find the differences
-                foreach (ModFile reference in WorkspaceIndex)
+                foreach (FileReference reference in LibraryIndex)
                 {
-                    ModFile distantFile = DistantIndex.FirstOrDefault(mf => mf.DestinationFilePath == reference.DestinationFilePath);
+                    FileReference distantFile = DistantIndex.FirstOrDefault(mf => mf.OutputFilePath == reference.OutputFilePath);
                     //If there is no distant match
                     if (distantFile == null)
                     {
-                        WorkspaceFilesToCopy.Add(reference);
+                        FilesToCopy.Add(reference);
                     }
                     else
                     {
                         //Different hash means overwrite
-                        if (reference.Hash != distantFile.Hash)
+                        if (reference.FileHash != distantFile.FileHash)
                         {
-                            WorkspaceFilesToCopy.Add(reference);
+                            FilesToCopy.Add(reference);
                         }
                     }
-
                 }
             }
         }
         public void getDeleteFileList()
         {
+            DistantIndex = new();
+            FilesToDelete = new();
             //No distant hashes means nothing to compare with
             if(DistantIndex.Count != 0)
             {
-                foreach(ModFile mf in DistantIndex)
+                foreach(FileReference FileReference in DistantIndex)
                 {
-                    if(!WorkspaceIndex.Any(fr => fr.DestinationFilePath == mf.DestinationFilePath))
+                    if(!LibraryIndex.Any(fr => fr.OutputFilePath == FileReference.OutputFilePath))
                     {
-                        WorkspaceFilesToDelete.Add(new ModFile() { DestinationFilePath = mf.DestinationFilePath });
+                        FilesToDelete.Add(new FileReference() { OutputFilePath = FileReference.OutputFilePath });
                     }
                 }
             }
@@ -575,18 +437,19 @@ namespace Quasar.Build.Models
         public void SaveAndSendIndex()
         {
            //Saving, sending Hashes file
-           string LocalIndexFilePath = Properties.Settings.Default.DefaultDir + @"\Library\Downloads\Files.json";
+           string LocalIndexFilePath = Properties.Settings.Default.DefaultDir + @"\Library\Downloads\Quasar.json";
 
-            foreach(ModFile mf in WorkspaceIndex)
+            foreach(FileReference mf in LibraryIndex)
             {
                 mf.SourceFilePath = "";
             }
+
             //TODO Edit This
-            UserDataManager.SaveModFiles(WorkspaceIndex, "");
+            UserDataManager.SaveModFiles(LibraryIndex, "");
             ViewModel.QuasarLogger.Debug("Saved Index");
 
            //Sending Hash Files
-           Writer.SendFile(LocalIndexFilePath, WorkspacePath + @"Files.json");
+           Writer.SendFile(LocalIndexFilePath, WorkspacePath + @"Quasar.json");
 
            ViewModel.QuasarLogger.Debug("Sent Index");
            File.Delete(LocalIndexFilePath);
@@ -598,22 +461,6 @@ namespace Quasar.Build.Models
             ViewModel.SetTotal(cnt.ToString(), tot.ToString());
         }
 
-        public void SetupWorkspaceFolders()
-        {
-            if (WorkspacePath.Split('/')[WorkspacePath.Split('/').Count() - 2] == "arc")
-            {
-                if (!Writer.CheckFolderExists(WorkspacePath.Substring(0, WorkspacePath.Length - 4) + @"/umm/"))
-                    Writer.CreateFolder(WorkspacePath.Substring(0, WorkspacePath.Length -4) + @"/umm/");
-            }
-
-            if (WorkspacePath.Split('/')[WorkspacePath.Split('/').Count() - 2] == "umm")
-            {
-                if (!Writer.CheckFolderExists(WorkspacePath.Substring(0, WorkspacePath.Length - 4) + @"/arc/"))
-                    Writer.CreateFolder(WorkspacePath.Substring(0, WorkspacePath.Length - 4) + @"/arc/");
-            }
-            
-        }
-        
     }
 
     static class BuilderActions
@@ -697,20 +544,10 @@ namespace Quasar.Build.Models
         }
     }
 
-    public class FileReference
-    {
-        public LibraryItem LibraryItem { get; set; }
-        public string SourceFilePath { get; set; }
-        public string OutputFilePath { get; set; }
-        public bool OutsideFile { get; set; }
-    }
-
     public class BasicInfoData
     {
         public LibraryItem LibraryItem { get; set; }
         public string Description { get; set; }
     }
-
-    
 
 }

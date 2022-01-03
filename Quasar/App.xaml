@@ -216,8 +216,9 @@
         <!--#region Templates-->
         <ControlTemplate x:Key="CutieButtonTemplate" TargetType="{x:Type Button}">
             <Grid Height="38" MaxHeight="38">
-                <Border Height="38"
-                        Background="{StaticResource CutiePrimaryColor}" CornerRadius="8">
+
+                <Border Height="38" CornerRadius="17">
+
                     <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center">
                         <ContentPresenter.ContentTemplate>
                             <DataTemplate>
@@ -231,7 +232,17 @@
         <ControlTemplate x:Key="CutieSmallButtonTemplate" TargetType="{x:Type Button}">
             <Grid Height="32" MaxHeight="32">
                 <Border Height="32"
-                        Background="{StaticResource CutiePrimaryColor}" CornerRadius="10">
+                        Background="{StaticResource CutiePrimaryColor}" CornerRadius="17">
+                    <Border.Style>
+                        <Style TargetType="Border">
+                            <Setter Property="Background" Value="{StaticResource CutiePrimaryColor}" />
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="Pink" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Border.Style>
                     <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center">
                         <ContentPresenter.ContentTemplate>
                             <DataTemplate>

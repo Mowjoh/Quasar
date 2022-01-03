@@ -6,7 +6,7 @@ using Workshop.FileManagement;
 using Workshop.Scanners;
 using Xunit;
 
-namespace Testing_Scanner
+namespace Validator.Scanning
 {
     /// <summary>
     /// Testing for the File Scanner

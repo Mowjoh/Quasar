@@ -329,9 +329,9 @@
                            Margin="115,50,0,0" HorizontalAlignment="Left" VerticalAlignment="top"
                            Content="{Binding LibraryItem.GBItem.UpdateCount}" Style="{StaticResource CutieLabelStyle}" />
 
-                    <Button Grid.Column="1"
+                    <!--<Button Grid.Column="1"
                             Width="200" Margin="0,100,0,0" HorizontalAlignment="Center" VerticalAlignment="Top"
-                            Command="{Binding Path=UpdateModCommand}" Content="{x:Static p:Resources.ModListItem_Button_UpdateMod}" Template="{StaticResource CutieSmallButtonTemplate}" />
+                            Command="{Binding Path=UpdateModCommand}" Content="{x:Static p:Resources.ModListItem_Button_UpdateMod}" Template="{StaticResource CutieSmallButtonTemplate}" />-->
 
                 </Grid>
                 <!--#endregion-->

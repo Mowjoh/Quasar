@@ -1,6 +1,6 @@
 ﻿namespace Validator.Builds
 {
-    class BuildTests
+    public class BuildTests
     {
 
     }

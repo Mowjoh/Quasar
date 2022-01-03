@@ -261,5 +261,29 @@ namespace Quasar.Properties {
                 this["GroupAssignmentTypes"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("ultimate\\mods")]
+        public string TransferPath {
+            get {
+                return ((string)(this["TransferPath"]));
+            }
+            set {
+                this["TransferPath"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string SelectedSD {
+            get {
+                return ((string)(this["SelectedSD"]));
+            }
+            set {
+                this["SelectedSD"] = value;
+            }
+        }
     }
 }

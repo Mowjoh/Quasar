@@ -298,8 +298,14 @@ The app will need to be rebooted to see the change</value>
   <data name="Settings_Comment_ManageAllMods" xml:space="preserve">
     <value>Enable this to have all the mods on your Switch be only managed by Quasar</value>
   </data>
+  <data name="Settings_Comment_ModsPath" xml:space="preserve">
+    <value>You can change where Quasar stores the mods on the SD with this setting</value>
+  </data>
   <data name="Settings_Comment_PreferredTransferMethod" xml:space="preserve">
     <value>Select if you'd rather transfer files wirelessly through FTP or via a plugged in SD</value>
+  </data>
+  <data name="Settings_Comment_SDSelect" xml:space="preserve">
+    <value>Select the SD you want to transfer to</value>
   </data>
   <data name="Settings_Comment_SupressModDeletion" xml:space="preserve">
     <value>Enable this to be warned when deleting Mods</value>
@@ -340,8 +346,14 @@ The app will need to be rebooted to see the change</value>
   <data name="Settings_Label_ManageAllMods" xml:space="preserve">
     <value>Manage All Mods</value>
   </data>
+  <data name="Settings_Label_ModsPath" xml:space="preserve">
+    <value>SD Mods Path</value>
+  </data>
   <data name="Settings_Label_PreferredTransferMethod" xml:space="preserve">
     <value>Transfer Method</value>
+  </data>
+  <data name="Settings_Label_SDSelect" xml:space="preserve">
+    <value>SD Selection</value>
   </data>
   <data name="Settings_Label_SupressModDeletion" xml:space="preserve">
     <value>Mod Deletion</value>

@@ -2,7 +2,7 @@ using DataModels.Common;
 using Workshop.Web;
 using Xunit;
 
-namespace Testing_Web
+namespace Validator.Web
 {
     /// <summary>
     /// Aimed at validating interactions with Gamebanana's API

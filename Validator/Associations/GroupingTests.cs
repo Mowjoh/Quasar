@@ -5,7 +5,7 @@ using System.Collections.ObjectModel;
 using Workshop.Associations;
 using Xunit;
 
-namespace Testing_Grouping
+namespace Validator.Grouping
 {
     public class GroupingTests
     {

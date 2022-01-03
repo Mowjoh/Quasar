@@ -602,11 +602,29 @@ namespace Quasar.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to You can change where Quasar stores the mods on the SD with this setting.
+        /// </summary>
+        public static string Settings_Comment_ModsPath {
+            get {
+                return ResourceManager.GetString("Settings_Comment_ModsPath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Select if you&apos;d rather transfer files wirelessly through FTP or via a plugged in SD.
         /// </summary>
         public static string Settings_Comment_PreferredTransferMethod {
             get {
                 return ResourceManager.GetString("Settings_Comment_PreferredTransferMethod", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select the SD you want to transfer to.
+        /// </summary>
+        public static string Settings_Comment_SDSelect {
+            get {
+                return ResourceManager.GetString("Settings_Comment_SDSelect", resourceCulture);
             }
         }
         
@@ -728,11 +746,29 @@ namespace Quasar.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to SD Mods Path.
+        /// </summary>
+        public static string Settings_Label_ModsPath {
+            get {
+                return ResourceManager.GetString("Settings_Label_ModsPath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Transfer Method.
         /// </summary>
         public static string Settings_Label_PreferredTransferMethod {
             get {
                 return ResourceManager.GetString("Settings_Label_PreferredTransferMethod", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SD Selection.
+        /// </summary>
+        public static string Settings_Label_SDSelect {
+            get {
+                return ResourceManager.GetString("Settings_Label_SDSelect", resourceCulture);
             }
         }
         

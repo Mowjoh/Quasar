@@ -62,5 +62,11 @@
     <Setting Name="GroupAssignmentTypes" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
+    <Setting Name="TransferPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">ultimate\mods</Value>
+    </Setting>
+    <Setting Name="SelectedSD" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
   </Settings>
 </SettingsFile>

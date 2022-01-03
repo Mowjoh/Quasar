@@ -5,6 +5,7 @@ using Quasar.Helpers.Quasar_Management;
 using Quasar.Helpers;
 using System;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
@@ -175,7 +176,9 @@ namespace Quasar.Settings.ViewModels
             };
             TransferSettings = new ObservableCollection<SettingItemView>
             {
+                new("TransferPath", Properties.Resources.Settings_Label_ModsPath, Properties.Resources.Settings_Comment_ModsPath, SettingItemType.Input),
                 new("PreferredTransferMethod", Properties.Resources.Settings_Label_PreferredTransferMethod, Properties.Resources.Settings_Comment_PreferredTransferMethod, SettingItemType.List,Properties.Resources.Settings_Values_PreferredTransferMethod),
+                new("SelectedSD", Properties.Resources.Settings_Label_SDSelect, Properties.Resources.Settings_Comment_SDSelect, SettingItemType.List,getSDCards()),
                 new("TransferQuasarFoldersOnly", Properties.Resources.Settings_Label_ManageAllMods, Properties.Resources.Settings_Comment_ManageAllMods, SettingItemType.Toggle)
             };
 
@@ -418,6 +421,22 @@ namespace Quasar.Settings.ViewModels
 
             };
             EventSystem.Publish<ModalEvent>(meuh);
+        }
+
+        public string getSDCards()
+        {
+            string DriveString = "";
+
+            DriveInfo[] CurrentDrives = DriveInfo.GetDrives();
+            foreach (DriveInfo di in CurrentDrives)
+            {
+                if (di.DriveType == DriveType.Removable && di.IsReady)
+                {
+                    DriveString += String.Format("{0} ({1})={1}",di.VolumeLabel, di.Name);
+                }
+            }
+
+            return DriveString;
         }
         #endregion
     }

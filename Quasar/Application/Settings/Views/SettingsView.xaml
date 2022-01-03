@@ -74,7 +74,7 @@
                   Margin="15,0,0,0"
                   Background="{DynamicResource CutieBG01}">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="190" />
+                    <RowDefinition Height="225" />
                     <RowDefinition Height="1*" />
                 </Grid.RowDefinitions>
 
