@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using DataModels.User;
-using DataModels.Common;
 using DataModels.Resource;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -21,26 +19,27 @@ namespace Workshop.Scanners
         //List of files and extensions to filter with
         public static string[] IgnoreExtensions = { ".csv" };
         public static string[] IgnoreFiles = { "ModInformation.json" };
+        public static string RootFolders = "append|assist|boss|camera|campaign|common|effect|enemy|fighter|finalsmash|item|item|miihat|param|pokemon|prebuilt;|render|snapshot|sound|spirits|stage|standard|stream;|ui";
         
         /// <summary>
         /// Scans a Library Mod
         /// </summary>
-        /// <param name="_FolderPath"></param>
-        /// <param name="_QuasarModTypes"></param>
-        /// <param name="_Game"></param>
-        /// <param name="_LibraryItem"></param>
+        /// <param name="_folder_path"></param>
+        /// <param name="_quasar_mod_types"></param>
+        /// <param name="_game"></param>
+        /// <param name="_library_item"></param>
         /// <param name="FileList"></param>
         /// <returns>The mod's corresponding Content Items</returns>
-        public static ObservableCollection<ContentItem> ScanMod(string _FolderPath, ObservableCollection<QuasarModType> _QuasarModTypes, Game _Game, LibraryItem _LibraryItem)
+        public static ObservableCollection<ContentItem> ScanMod(string _folder_path, ObservableCollection<QuasarModType> _quasar_mod_types, Game _game, LibraryItem _library_item)
         {
             //Getting Mod Folder
-            string ModFolder = String.Format(@"{0}\Library\Mods\{1}\", _FolderPath, _LibraryItem.Guid);
+            string ModFolder = String.Format(@"{0}\Library\Mods\{1}\", _folder_path, _library_item.Guid);
 
             //Listing Files and processing matches
-            ObservableCollection<ScanFile> MatchedFiles = MatchScanFiles(GetScanFiles(_FolderPath),_QuasarModTypes,_Game, ModFolder);
+            ObservableCollection<ScanFile> MatchedFiles = MatchScanFiles(GetScanFiles(_folder_path),_quasar_mod_types,_game, ModFolder);
 
             //Parsing Content Items from processed File Matches
-            ObservableCollection<ContentItem> ParsedContentItems = ParseContentItems(MatchedFiles, _LibraryItem);
+            ObservableCollection<ContentItem> ParsedContentItems = ParseContentItems(MatchedFiles, _library_item);
 
             return ParsedContentItems;
         }
@@ -57,10 +56,25 @@ namespace Workshop.Scanners
 
             foreach (string s in Directory.GetFiles(_FolderPath, "*", SearchOption.AllDirectories))
             {
-                FilesToScan.Add(new ScanFile()
+                string[] paths = GetRootFolder(s);
+                if (paths[0] != "")
                 {
-                    SourcePath = s
-                });
+                    FilesToScan.Add(new ScanFile()
+                    {
+                        SourcePath = s,
+                        RootPath = paths[0],
+                        FilePath = paths[1]
+                        
+                    });
+                }
+                else
+                {
+                    FilesToScan.Add(new ScanFile()
+                    {
+                        SourcePath = s
+                    });
+                }
+                
             }
 
             return FilesToScan;
@@ -274,10 +288,8 @@ namespace Workshop.Scanners
                                 SlotNumber = int.Parse(sf.Slot),
                                 LibraryItemGuid = _LibraryItem.Guid,
                                 Name = _LibraryItem.Name,
-                                ScanFiles = new ObservableCollection<ScanFile>()
-                        {
-                            sf
-                        }
+                                ScanFiles = new ObservableCollection<ScanFile>() { sf },
+                                ParentName = sf.OriginPath.Replace('/', '\\')
                             };
                             SearchResults.Add(ci);
                         }
@@ -287,7 +299,7 @@ namespace Workshop.Scanners
                             foreach (ContentItem ci in SearchList)
                             {
                                 //If there is a related parent
-                                if (ci.ScanFiles[0].OriginPath.Replace('/', '\\') == sf.OriginPath.Replace('/', '\\'))
+                                if (ci.ScanFiles[0].RootPath == sf.RootPath)
                                 {
                                     ci.ScanFiles.Add(sf);
                                     ItemAdded = true;
@@ -303,10 +315,7 @@ namespace Workshop.Scanners
                                     SlotNumber = int.Parse(sf.Slot),
                                     LibraryItemGuid = _LibraryItem.Guid,
                                     Name = _LibraryItem.Name + " #" + (SearchList.Count + 1).ToString(),
-                                    ScanFiles = new ObservableCollection<ScanFile>()
-                                {
-                                    sf
-                                }
+                                    ScanFiles = new ObservableCollection<ScanFile>() { sf }
                                 };
                                 SearchResults.Add(ci);
                             }
@@ -380,6 +389,22 @@ namespace Workshop.Scanners
 
             //after your loop
             File.WriteAllText(Path, csv.ToString());
+        }
+
+        public static string[] GetRootFolder(string _path)
+        {
+            Regex RootRegex = new Regex(String.Format(@"(?'LeadFolder'^.*)(?'RootFolder'{0})(?'FilePath'.*$)",RootFolders));
+            Match m = RootRegex.Match(_path);
+
+            if (m.Success)
+            {
+                return new[] {m.Groups["LeadFolder"].Value, m.Groups["RootFolder"].Value + m.Groups["FilePath"].Value };
+            }
+            else
+            {
+                return new[] { "", "" };
+            }
+            
         }
     }
 }

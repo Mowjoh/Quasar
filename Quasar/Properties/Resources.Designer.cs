@@ -457,7 +457,7 @@ namespace Quasar.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0} hours ago.
+        ///   Looks up a localized string similar to {0} days ago.
         /// </summary>
         public static string ModListItem_Time_Days {
             get {

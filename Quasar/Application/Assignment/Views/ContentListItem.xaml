@@ -15,7 +15,7 @@
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="0"
                        HorizontalAlignment="Left" VerticalAlignment="Center"
-                       Content="{Binding ContentItem.Name}" Style="{StaticResource CutieLabelStyle}" />
+                       Content="{Binding AssignmentContent.AssignmentName}" Style="{StaticResource CutieLabelStyle}" />
 
                 <Label Grid.Column="1"
                        HorizontalAlignment="Left" VerticalAlignment="Center"

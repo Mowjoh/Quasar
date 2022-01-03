@@ -10,8 +10,6 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using DataModels.Common;
-using DataModels.User;
-using DataModels.Resource;
 using Quasar.Settings.Models;
 
 namespace Quasar.Settings.ViewModels

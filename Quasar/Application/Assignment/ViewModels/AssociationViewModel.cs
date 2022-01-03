@@ -1,5 +1,4 @@
 ﻿using log4net;
-using Quasar.Associations.ViewModels;
 using Quasar.Associations.Views;
 using Quasar.Common.Models;
 using DataModels.User;
@@ -11,9 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Windows.Data;
 using System.Windows.Input;
-using Microsoft.VisualBasic.ApplicationServices;
 using Workshop.FileManagement;
 using Workshop.Scanners;
 
@@ -27,16 +24,16 @@ namespace Quasar.Associations.ViewModels
 
         #region Private
 
-        private ObservableCollection<ContentListItem> _itemCollection { get; set; }
+        private ObservableCollection<ContentListItem> _ItemCollection { get; set; }
         #endregion
 
         #region Public
         public ObservableCollection<ContentListItem> ItemCollection
         {
-            get => _itemCollection;
+            get => _ItemCollection;
             set
             {
-                _itemCollection = value;
+                _ItemCollection = value;
                 OnPropertyChanged("ItemCollection");
             }
         }
@@ -49,6 +46,7 @@ namespace Quasar.Associations.ViewModels
         #region Private
         private MainUIViewModel _MUVM { get; set; }
 
+        private bool _GroupedTypes { get; set; }
         #endregion
 
         #region Public
@@ -60,6 +58,21 @@ namespace Quasar.Associations.ViewModels
             {
                 _MUVM = value;
                 OnPropertyChanged("MUVM");
+            }
+        }
+
+        public bool GroupedTypes
+        {
+            get => _GroupedTypes;
+            set
+            {
+                if (_GroupedTypes == value) return;
+
+                _GroupedTypes = value;
+                OnPropertyChanged("GroupedTypes");
+                
+                Properties.Settings.Default.GroupAssignmentTypes = value;
+                Properties.Settings.Default.Save();
             }
         }
         #endregion
@@ -79,7 +92,7 @@ namespace Quasar.Associations.ViewModels
             {
                 if (_ScanMods == null)
                 {
-                    _ScanMods = new RelayCommand(param => ScanFiles());
+                    _ScanMods = new RelayCommand(_param => ScanFiles());
                 }
                 return _ScanMods;
             }
@@ -93,30 +106,28 @@ namespace Quasar.Associations.ViewModels
         /// <summary>
         /// Association View Model Constructor
         /// </summary>
-        /// <param name="_MUVM">MainUI View Model to link</param>
-        public AssociationViewModel(MainUIViewModel _MUVM, ILog _QuasarLogger)
+        /// <param name="_muvm">MainUI View Model to link</param>
+        public AssociationViewModel(MainUIViewModel _muvm, ILog _quasar_logger)
         {
-            QuasarLogger = _QuasarLogger;
-            MUVM = _MUVM;
-            ItemCollection = new();
-
+            QuasarLogger = _quasar_logger;
+            MUVM = _muvm;
+            ItemCollection = new ObservableCollection<ContentListItem>();
+            GroupedTypes = Properties.Settings.Default.GroupAssignmentTypes;
         }
 
         #region Actions
-
-        public void DisplayContentItems(List<ContentItem> collection)
+        public void DisplayContentItems(List<AssignmentContent> _assignment_contents)
         {
             //Clearing Collection
             ItemCollection.Clear();
 
-            foreach (ContentItem ContentItem in collection)
+            foreach (AssignmentContent AssignmentContent in _assignment_contents)
             {
-                QuasarModType QMT = MUVM.QuasarModTypes.Single(t => t.ID == ContentItem.QuasarModTypeID);
-                GameElement GE = MUVM.Games[0].GameElementFamilies.Single(f => f.ID == QMT.GameElementFamilyID)
-                    .GameElements.Single(e => e.ID == ContentItem.GameElementID);
-                string TypeName = string.Format("");
+                QuasarModType Qmt = MUVM.QuasarModTypes.Single(_t => _t.ID == AssignmentContent.AssignmentContentItems[0].QuasarModTypeID);
+                GameElement Ge = MUVM.Games[0].GameElementFamilies.Single(_f => _f.ID == Qmt.GameElementFamilyID)
+                    .GameElements.Single(_e => _e.ID == AssignmentContent.AssignmentContentItems[0].GameElementID);
 
-                if (QMT.ID == 8)
+                if (Qmt.ID == 8)
                 {
                     List<Option> MusicOptions = new();
                     foreach (GameElement GameElement in MUVM.Games[0].GameElementFamilies[2].GameElements)
@@ -124,16 +135,25 @@ namespace Quasar.Associations.ViewModels
                         MusicOptions.Add(new Option() { Key = GameElement.ID.ToString(), Value = GameElement.Name });
                     }
                     
-                    ItemCollection.Add(new ContentListItem(ContentItem, QMT.Name, GE.Name, ContentTypes.ElementSelected, MusicOptions));
+                    ItemCollection.Add(new ContentListItem(AssignmentContent, Qmt.Name, Ge.Name, ContentTypes.ElementSelected, MusicOptions));
                 }
                 else
                 {
                     List<Option> SlotOptions = new();
                     for (int i = 0; i < 8; i++)
                     {
-                        SlotOptions.Add(new Option() { Key = i.ToString(), Value = String.Format("Slot {0}", (i +1)) });
+                        SlotOptions.Add(new Option() { Key = i.ToString(), Value = String.Format("Slot {0}", (i + 1)) });
                     }
-                    ItemCollection.Add(new ContentListItem(ContentItem, QMT.Name, GE.Name, ContentTypes.Slotted, SlotOptions));
+
+                    if (!AssignmentContent.Single)
+                    {
+                        ItemCollection.Add(new ContentListItem(AssignmentContent, Qmt.GroupName, Ge.Name, ContentTypes.Slotted, SlotOptions));
+                    }
+                    else
+                    {
+                        ItemCollection.Add(new ContentListItem(AssignmentContent, Qmt.Name, Ge.Name, ContentTypes.Slotted, SlotOptions));
+                    }
+                    
                 }
 
                 
@@ -158,8 +178,8 @@ namespace Quasar.Associations.ViewModels
             });
 
             //Removing Old Content Items
-            foreach (ContentItem ContentItem in MUVM.ContentItems.Where(ci =>
-                ci.LibraryItemGuid == MUVM.LibraryViewModel.SelectedModListItem.ModViewModel.LibraryItem.Guid).ToList())
+            foreach (ContentItem ContentItem in MUVM.ContentItems.Where(_ci =>
+                _ci.LibraryItemGuid == MUVM.LibraryViewModel.SelectedModListItem.ModViewModel.LibraryItem.Guid).ToList())
             {
                 MUVM.ContentItems.Remove(ContentItem);
             }
@@ -173,9 +193,6 @@ namespace Quasar.Associations.ViewModels
             Files = FileScanner.MatchScanFiles(Files, MUVM.QuasarModTypes, MUVM.Games[0], LibraryContentFolderPath);
             ObservableCollection<ContentItem> Contents = FileScanner.ParseContentItems(Files,
                 MUVM.LibraryViewModel.SelectedModListItem.ModViewModel.LibraryItem);
-
-            //Adding them to the display
-            DisplayContentItems(Contents.ToList());
 
             //Adding them to the library
             foreach (ContentItem ContentItem in Contents)
@@ -201,7 +218,7 @@ namespace Quasar.Associations.ViewModels
 
         #region Events
 
-        private void ProcessIncomingModalEvent(ModalEvent meuh)
+        private void ProcessIncomingModalEvent(ModalEvent _meuh)
         {
 
         }

@@ -1,12 +1,7 @@
 ﻿using DataModels.Resource;
 using DataModels.User;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Workshop.FileManagement;
 using Workshop.Scanners;
 using Xunit;
@@ -193,9 +188,9 @@ namespace Testing_Scanner
         #region Test ScanFile Data
         static ObservableCollection<ScanFile> ScanFileTestData = new ObservableCollection<ScanFile>()
         {
-            new ScanFile() { SourcePath = @"DummyLocation" },
-            new ScanFile() { SourcePath = @"DummyLocation" },
-            new ScanFile() { SourcePath = @"DummyLocation" }
+            new ScanFile() { SourcePath = @"C:\Users\Test\Documents\Quasar\Library\Mods\5f649369-b260-48e5-ae28-b808590e6ba7\fighter\mario\model\body\c01\alp_mario_001_col.nutexb" },
+            new ScanFile() { SourcePath = @"C:\Users\Test\Documents\Quasar\Library\Mods\5f649369-b260-48e5-ae28-b808590e6ba7\fighter\mario\model\body\c01\def_mario_001_col.nutexb" },
+            new ScanFile() { SourcePath = @"C:\Users\Test\Documents\Quasar\Library\Mods\5f649369-b260-48e5-ae28-b808590e6ba7\fighter\mario\model\dokan\c03\metal_dokan_001_col.nutexb" }
         };
 
         #endregion
@@ -233,11 +228,15 @@ namespace Testing_Scanner
         {
             ObservableCollection<Game> Games = ResourceManager.GetGames();
             ObservableCollection<QuasarModType> QuasarModTypes = ResourceManager.GetQuasarModTypes();
-            string ModFolder = "";
+            LibraryItem LibraryItem = new() {Guid = Guid.Parse("5f649369-b260-48e5-ae28-b808590e6ba7")};
+            string ModFolder = @"C:\Users\Test\Documents\Quasar\Library\Mods\5f649369-b260-48e5-ae28-b808590e6ba7";
 
-            ////Launching scan process
-            //FilesToScan = FileScanner.MatchScanFiles(FilesToScan, QuasarModTypes, Games[0], ModFolder);
+            //Launching scan process
+            ObservableCollection<ScanFile> FilesToScan = FileScanner.MatchScanFiles(ScanFileTestData, QuasarModTypes, Games[0], ModFolder);
+            ObservableCollection<ContentItem> ContentItems = FileScanner.ParseContentItems(FilesToScan, LibraryItem);
 
+            Assert.DoesNotContain(FilesToScan,sf => sf.RootPath == "");
+            Assert.DoesNotContain(FilesToScan,sf => sf.FilePath == "");
             ////Every file must be scanned
             //Assert.DoesNotContain(FilesToScan, sf => sf.Scanned == false);
         }
@@ -301,6 +300,16 @@ namespace Testing_Scanner
             Assert.Equal(flagOutput, ProcessedRule);
         }
 
-        
+        [Theory]
+        [InlineData(@"C:\Users\Mowjoh\Documents\Quasar\Library\Mods\5f649369-b260-48e5-ae28-b808590e6ba7\fighter\mario\model\body\c01\alp_mario_001_col.nutexb")]
+        [InlineData(@"C:\Users\Mowjoh\Documents\Quasar\Library\Mods\5f649369-b260-48e5-ae28-b808590e6ba7\test\fighter\mario\model\body\c01\alp_mario_001_col.nutexb")]
+        public void Regex_FilePathRootIsProperlyFound(string _path)
+        {
+            string[] SplitStrings = FileScanner.GetRootFolder(_path);
+
+            Assert.True(SplitStrings.Length > 0);
+            Assert.NotEqual("",SplitStrings[0]);
+            Assert.NotEqual("",SplitStrings[1]);
+        }
     }
 }

@@ -1,17 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+﻿using System.Collections.Generic;
 using DataModels.User;
 using Quasar.Associations.ViewModels;
 
@@ -20,14 +7,14 @@ namespace Quasar.Associations.Views
     /// <summary>
     /// Interaction logic for ContentListItem.xaml
     /// </summary>
-    public partial class ContentListItem : UserControl
+    public partial class ContentListItem 
     {
-        private ContentListItemViewModel ContentListItemViewModel { get; set; }
-        public ContentListItem(ContentItem ci, string TypeName, string ElementName, ContentTypes Type, List<Option> Options)
+        private ContentListItemViewModel _ContentListItemViewModel { get; }
+        public ContentListItem(AssignmentContent _assignment_content, string _type_name, string _element_name, ContentTypes _type, List<Option> _options)
         {
-            ContentListItemViewModel = new(ci, TypeName, ElementName, Type, Options);
+            _ContentListItemViewModel = new ContentListItemViewModel(_assignment_content, _type_name, _element_name, _type, _options);
             InitializeComponent();
-            this.DataContext = ContentListItemViewModel;
+            this.DataContext = _ContentListItemViewModel;
         }
     }
 

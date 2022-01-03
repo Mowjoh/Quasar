@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using DataModels.User;
 using DataModels.Common;
-using DataModels.Resource;
 
 namespace Quasar.Associations.ViewModels
 {
@@ -63,22 +59,23 @@ namespace Quasar.Associations.ViewModels
         #region Data
 
         #region Private
-        private ContentItem _ContentItem { get; set; }
+        private AssignmentContent _AssignmentContent { get; set; }
         private List<Option> _Options { get; set; }
         private Option _SelectedOption { get; set; }
         private int _SelectedSlot { get; set; }
+        
         #endregion
 
         #region Public
 
-        public ContentItem ContentItem
+        public AssignmentContent AssignmentContent
         {
-            get => _ContentItem;
+            get => _AssignmentContent;
 
             set
             {
-                _ContentItem = value;
-                OnPropertyChanged("ContentItem");
+                _AssignmentContent = value;
+                OnPropertyChanged("AssignmentContent");
             }
         }
         public List<Option> Options
@@ -111,6 +108,8 @@ namespace Quasar.Associations.ViewModels
                 }
             }
         }
+
+        
         #endregion
 
         #endregion
@@ -127,22 +126,19 @@ namespace Quasar.Associations.ViewModels
 
         #endregion
 
-        public ContentListItemViewModel(ContentItem ci, string _TypeName, string _ElementName, ContentTypes _Type, List<Option> _Options)
+        public ContentListItemViewModel(AssignmentContent _assignment_content, string _type_name, string _element_name, ContentTypes _type, List<Option> _options)
         {
-            ContentItem = ci;
-            TypeName = _TypeName;
-            ElementName = _ElementName;
-            Type = _Type;
-            Options = _Options;
+            AssignmentContent = _assignment_content;
+            TypeName = _type_name;
+            ElementName = _element_name;
+            Type = _type;
+            Options = _options;
 
-            if (Type == ContentTypes.Slotted)
-            {
-                SelectedOption = Options.Single(o => o.Key == ci.SlotNumber.ToString());
-            }
-            else
-            {
-                SelectedOption = Options.Single(o => o.Key == ci.GameElementID.ToString());
-            }
+            SelectedOption = Type == ContentTypes.Slotted ? 
+                Options.Single(_o => _o.Key == _assignment_content.SlotNumber.ToString()) : 
+                Options.Single(_o => _o.Key == _assignment_content.AssignmentContentItems[0].GameElementID.ToString());
+
+            
         }
 
         #region Actions

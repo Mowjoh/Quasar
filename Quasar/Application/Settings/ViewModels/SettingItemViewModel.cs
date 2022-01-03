@@ -1,14 +1,8 @@
-﻿using Quasar.Common.Models;
-using DataModels.Common;
-using DataModels.User;
-using DataModels.Resource;
+﻿using DataModels.Common;
 using Quasar.Settings.Models;
 using Quasar.Helpers;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Windows.Input;
 
 namespace Quasar.Settings.ViewModels
 {

@@ -1,9 +1,7 @@
 ﻿using FluentFTP;
 using log4net;
 using MediaDevices;
-using DataModels.Common;
 using DataModels.User;
-using DataModels.Resource;
 using Quasar.Helpers.FileOperations;
 using System;
 using System.Collections.Generic;

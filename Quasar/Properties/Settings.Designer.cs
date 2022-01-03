@@ -249,5 +249,17 @@ namespace Quasar.Properties {
                 this["TransferQuasarFoldersOnly"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool GroupAssignmentTypes {
+            get {
+                return ((bool)(this["GroupAssignmentTypes"]));
+            }
+            set {
+                this["GroupAssignmentTypes"] = value;
+            }
+        }
     }
 }

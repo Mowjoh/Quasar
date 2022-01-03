@@ -1,26 +1,17 @@
-﻿using FluentFTP.Rules;
-using log4net;
-using Quasar.Build.ViewModels;
-using Quasar.Common.Models;
+﻿using Quasar.Build.ViewModels;
 using DataModels.User;
 using DataModels.Common;
 using DataModels.Resource;
-using Quasar.FileSystem;
 using Quasar.Helpers.ModScanning;
 using Quasar.Helpers.Tools;
-using Quasar.Internal.Tools;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Forms;
-using System.Windows.Threading;
 using Workshop.FileManagement;
 
 namespace Quasar.Build.Models

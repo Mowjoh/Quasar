@@ -1,12 +1,4 @@
-﻿using Quasar.Common.Models;
-using DataModels.Common;
-using DataModels.User;
-using DataModels.Resource;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using DataModels.Common;
 
 namespace Quasar.Controls.Mod.Models
 {

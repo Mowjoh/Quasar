@@ -250,7 +250,7 @@
     <value>Version Control : </value>
   </data>
   <data name="ModListItem_Time_Days" xml:space="preserve">
-    <value>{0} hours ago</value>
+    <value>{0} days ago</value>
   </data>
   <data name="ModListItem_Time_Hours" xml:space="preserve">
     <value>{0} hours ago</value>
