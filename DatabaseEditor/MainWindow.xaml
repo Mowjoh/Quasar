@@ -121,7 +121,11 @@
                             <DataGridTextColumn Width="50"
                                                 Binding="{Binding SlotNumber}" Header="Slot" />
                             <DataGridTextColumn Width="50"
+                                                Binding="{Binding OriginalSlotNumber}" Header="OSlot" />
+                            <DataGridTextColumn Width="50"
                                                 Binding="{Binding GameElementID}" Header="GE ID" />
+                            <DataGridTextColumn Width="50"
+                                                Binding="{Binding OriginalGameElementID}" Header="OGE ID" />
                         </DataGrid.Columns>
                     </DataGrid>
                     <DataGrid ItemsSource="{Binding SelectedContentItem.ScanFiles}"

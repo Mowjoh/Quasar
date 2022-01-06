@@ -10,9 +10,9 @@ namespace Quasar.Associations.Views
     public partial class ContentListItem 
     {
         private ContentListItemViewModel _ContentListItemViewModel { get; }
-        public ContentListItem(AssignmentContent _assignment_content, string _type_name, string _element_name, ContentTypes _type, List<Option> _options)
+        public ContentListItem(AssignmentContent _assignment_content, string _type_name, string _element_name,string _origin, ContentTypes _type, List<Option> _options)
         {
-            _ContentListItemViewModel = new ContentListItemViewModel(_assignment_content, _type_name, _element_name, _type, _options);
+            _ContentListItemViewModel = new ContentListItemViewModel(_assignment_content, _type_name, _element_name, _origin, _type, _options);
             InitializeComponent();
             this.DataContext = _ContentListItemViewModel;
         }

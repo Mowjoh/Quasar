@@ -64,7 +64,7 @@
 
 
         <CheckBox Margin="0,30,10,0" HorizontalAlignment="Right" VerticalAlignment="Top"
-                  BorderBrush="LightBlue" IsChecked="{Binding OrangeChecked}" Template="{StaticResource CutieCheckBoxOrange}" />
+                  BorderBrush="LightBlue" IsChecked="{Binding BlueChecked}" Template="{StaticResource CutieCheckBoxOrange}" />
 
         <CheckBox Grid.RowSpan="2"
                   Margin="0,55,10,0" HorizontalAlignment="Right" VerticalAlignment="Top"

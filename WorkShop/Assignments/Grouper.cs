@@ -68,7 +68,7 @@ namespace Workshop.Associations
                     foreach (AssignmentContent AssignmentContent in Contents)
                     {
                         if (AssignmentContent.AssignmentContentItems[0].GroupName == MatchingContentItem.GroupName && AssignmentContent.AssignmentContentItems[0].ScanFiles[0].RootPath ==
-                            MatchingContentItem.ScanFiles[0].RootPath && AssignmentContent.AssignmentContentItems[0].SlotNumber == MatchingContentItem.SlotNumber)
+                            MatchingContentItem.ScanFiles[0].RootPath && AssignmentContent.AssignmentContentItems[0].OriginalSlotNumber == MatchingContentItem.OriginalSlotNumber)
                         {
                             AssignmentContent.AssignmentContentItems.Add(MatchingContentItem);
                             ContentAdded = true;

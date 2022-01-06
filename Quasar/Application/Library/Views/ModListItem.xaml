@@ -65,9 +65,9 @@
                 <MultiDataTrigger>
                     <MultiDataTrigger.Conditions>
                         <Condition Binding="{Binding LibraryItem.Included}" Value="True" />
-                        <Condition Binding="{Binding LibraryItem.Modified}" Value="True" />
+                        <Condition Binding="{Binding Edited}" Value="True" />
                     </MultiDataTrigger.Conditions>
-                    <Setter Property="Fill" Value="#9e168e" />
+                    <Setter Property="Fill" Value="LightBlue" />
                 </MultiDataTrigger>
             </Style.Triggers>
         </Style>

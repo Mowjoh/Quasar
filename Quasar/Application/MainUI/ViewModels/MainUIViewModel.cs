@@ -137,7 +137,7 @@ namespace Quasar.MainUI.ViewModels
 
                     if(value != null)
                     {
-                        if ((string)value.Header == "Overview")
+                        if ((string)value.Header == Properties.Resources.MainUI_LibraryTabHeader)
                         {
                             LibraryViewModel.ReloadAllStats();
                         }
@@ -528,7 +528,6 @@ namespace Quasar.MainUI.ViewModels
                         });
                         break;
                     case UpdateStatus.Regular:
-                        InitialWarnings();
                         BackupRestoreUserData(UserDataLoaded);
                         break;
                 }
@@ -570,7 +569,6 @@ namespace Quasar.MainUI.ViewModels
                     }
                     else
                     {
-                        InitialWarnings();
                         BackupRestoreUserData(UserDataLoaded);
                     }
                 }

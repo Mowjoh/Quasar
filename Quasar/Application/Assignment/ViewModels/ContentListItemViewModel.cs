@@ -2,6 +2,8 @@
 using System.Linq;
 using DataModels.User;
 using DataModels.Common;
+using Quasar.Helpers;
+using System;
 
 namespace Quasar.Associations.ViewModels
 {
@@ -12,6 +14,7 @@ namespace Quasar.Associations.ViewModels
         #region Private
         private string _Name { get; set; }
         private string _ElementName { get; set; }
+        private string _Origin { get; set; }
         private ContentTypes _Type { get; set; }
         #endregion
 
@@ -36,6 +39,17 @@ namespace Quasar.Associations.ViewModels
                 OnPropertyChanged("ElementName");
             }
         }
+
+        public string Origin
+        {
+            get => _Origin;
+            set
+            {
+                _Origin = value;
+                OnPropertyChanged("Origin");
+            }
+        }
+
 
         public ContentTypes Type
         {
@@ -97,17 +111,22 @@ namespace Quasar.Associations.ViewModels
                 _SelectedOption = value;
                 OnPropertyChanged("SelectedOption");
 
-                if (Type == ContentTypes.Slotted)
+                if (!Instanciating)
                 {
-                    SlotSelected();
+                    if (Type == ContentTypes.Slotted)
+                    {
+                        SlotSelected();
+                    }
+                    else
+                    {
+                        ElementSelected();
+                    }
                 }
-                else
-                {
-                    ElementSelected();
-                }
+                
             }
         }
         public string RequestedAction { get; set; }
+        public bool Instanciating { get; set; }
         
         #endregion
 
@@ -125,19 +144,25 @@ namespace Quasar.Associations.ViewModels
 
         #endregion
 
-        public ContentListItemViewModel(AssignmentContent _assignment_content, string _type_name, string _element_name, ContentTypes _type, List<Option> _options)
+        public ContentListItemViewModel(AssignmentContent _assignment_content, string _type_name, string _element_name,string origin, ContentTypes _type, List<Option> _options)
         {
             AssignmentContent = _assignment_content;
             TypeName = _type_name;
             ElementName = _element_name;
             Type = _type;
             Options = _options;
+            Origin = _type == ContentTypes.Slotted ? String.Format("Origin : Slot {0}",origin) : String.Format("Origin : {0}", origin);
 
-            SelectedOption = Type == ContentTypes.Slotted ? 
-                Options.Single(_o => _o.Key == _assignment_content.SlotNumber.ToString()) : 
-                Options.Single(_o => _o.Key == _assignment_content.AssignmentContentItems[0].GameElementID.ToString());
+            string Key = Type == ContentTypes.Slotted ? _assignment_content.SlotNumber.ToString() : _assignment_content.AssignmentContentItems[0].GameElementID.ToString();
 
-            
+            Instanciating = true;
+
+            SelectedOption = Key == "-1" ? 
+                Options.Single(_o => _o.Key == "none") : 
+                Options.Single(_o => _o.Key == Key);
+
+            Instanciating = false;
+
         }
 
         #region Actions
@@ -145,11 +170,13 @@ namespace Quasar.Associations.ViewModels
         public void SlotSelected()
         {
             RequestedAction = "SlotChange";
+            EventSystem.Publish<ContentListItemViewModel>(this);
         }
 
         public void ElementSelected()
         {
             RequestedAction = "ElementChange";
+            EventSystem.Publish<ContentListItemViewModel>(this);
         }
 
         #endregion

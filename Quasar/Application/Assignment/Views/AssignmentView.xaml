@@ -27,7 +27,7 @@
 
                 <!--  Scan Files Button  -->
                 <Button Width="175" Height="40" Margin="16,16,16,0" HorizontalAlignment="Right" VerticalAlignment="Top"
-                        Command="{Binding Path=ScanMods}" Content="{x:Static p:Resources.Assignments_Button_ScanFiles}" Style="{StaticResource QuasarButton}" Template="{StaticResource CutieButtonTemplate}" />
+                        Command="{Binding Path=ScanMods}" Content="{x:Static p:Resources.Assignments_Button_ScanFiles}" Style="{StaticResource QuasarButton}" Template="{StaticResource CutieSmallButtonTemplate}" />
             </Grid>
 
             <!--  Assignment Display Grid  -->

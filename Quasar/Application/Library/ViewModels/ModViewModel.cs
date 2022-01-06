@@ -379,6 +379,7 @@ namespace Quasar.Controls.Mod.ViewModels
         }
         public bool NoContent => ContentStatValue != 3;
         public bool ManualMod => LibraryItem.GBItem == null;
+        public bool Edited { get; set; }
         public bool Smol
         {
             get
@@ -655,6 +656,8 @@ namespace Quasar.Controls.Mod.ViewModels
             OnPropertyChanged("StandbyNotEditing");
             OnPropertyChanged("StandbyEditing");
 
+            Edited = MVM.MUVM.ContentItems.Any(ci => ci.LibraryItemGuid == LibraryItem.Guid && (ci.OriginalGameElementID != ci.GameElementID || ci.OriginalSlotNumber != ci.SlotNumber));
+            OnPropertyChanged("Edited");
         }
 
         /// <summary>

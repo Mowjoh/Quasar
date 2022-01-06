@@ -13,6 +13,8 @@ using System.Windows.Input;
 using DataModels.Common;
 using log4net;
 using Quasar.Settings.Models;
+using System.Management;
+using System.ComponentModel;
 
 namespace Quasar.Settings.ViewModels
 {
@@ -152,6 +154,22 @@ namespace Quasar.Settings.ViewModels
             EventSystem.Subscribe<ModalEvent>(ProcessModalEvent);
             EventSystem.Subscribe<SettingItem>(ProcessSettingChanged);
 
+            ManagementEventWatcher watcher = new ManagementEventWatcher();
+            WqlEventQuery query = new WqlEventQuery("SELECT * FROM Win32_VolumeChangeEvent WHERE EventType = 2 or EventType = 3");
+
+            watcher.EventArrived += (s, e) =>
+            {
+                Application.Current.Dispatcher.Invoke((Action)delegate {
+
+                    LoadSettings();
+                });
+
+                
+            };
+
+            watcher.Query = query;
+            watcher.Start();
+
         }
 
         #region Actions
@@ -186,7 +204,6 @@ namespace Quasar.Settings.ViewModels
                 new("SelectedSD", Properties.Resources.Settings_Label_SDSelect, Properties.Resources.Settings_Comment_SDSelect, SettingItemType.List,getSDCards()),
                 new("TransferQuasarFoldersOnly", Properties.Resources.Settings_Label_ManageAllMods, Properties.Resources.Settings_Comment_ManageAllMods, SettingItemType.Toggle)
             };
-                QuasarLogger.Debug(Properties.Resources.Settings_Values_PreferredTransferMethod);
                 QuasarLogger.Debug(Properties.Resources.Settings_Values_PreferredTransferMethod);
 
                 Setup = false;
@@ -453,5 +470,19 @@ namespace Quasar.Settings.ViewModels
             return DriveString;
         }
         #endregion
-    }
+
+        #region USB Detection
+
+        private void DeviceInsertedEvent(object sender, EventArrivedEventArgs e)
+        {
+            LoadSettings();
+        }
+
+        private void DeviceRemovedEvent(object sender, EventArrivedEventArgs e)
+        {
+            LoadSettings();
+        }
+
+    #endregion
+}
 }

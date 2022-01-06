@@ -19,6 +19,8 @@ namespace DataModels.User
         public bool Included { get; set; }
         public bool Modified { get; set; }
 
+        public bool Scanned { get; set; }
+
         public string GetFormattedTime()
         {
             TimeSpan t = DateTime.Now - Time;

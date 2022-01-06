@@ -144,7 +144,7 @@ namespace Quasar.Controls.ModManagement.ViewModels
         private string _SearchText { get; set; } = "";
         private bool _BlackChecked { get; set; } = true;
         private bool _RedChecked { get; set; } = true;
-        private bool _OrangeChecked { get; set; } = true;
+        private bool _BlueChecked { get; set; } = true;
         private bool _GreenChecked { get; set; } = true;
         private bool _PurpleChecked { get; set; } = true;
         private bool _CreatorMode { get; set; }
@@ -190,7 +190,7 @@ namespace Quasar.Controls.ModManagement.ViewModels
 
                 _BlackChecked = true;
                 _RedChecked = false;
-                _OrangeChecked = false;
+                _BlueChecked = false;
                 _GreenChecked = false;
                 OnPropertyChanged("BlackChecked");
                 OnPropertyChanged("RedChecked");
@@ -213,16 +213,16 @@ namespace Quasar.Controls.ModManagement.ViewModels
                 CollectionViewSource.View.Refresh();
             }
         }
-        public bool OrangeChecked
+        public bool BlueChecked
         {
-            get => _OrangeChecked;
+            get => _BlueChecked;
             set
             {
-                if (_OrangeChecked == value)
+                if (_BlueChecked == value)
                     return;
 
-                _OrangeChecked = value;
-                OnPropertyChanged("OrangeChecked");
+                _BlueChecked = value;
+                OnPropertyChanged("BlueChecked");
                 CollectionViewSource.View.Refresh();
 
             }
@@ -552,10 +552,9 @@ namespace Quasar.Controls.ModManagement.ViewModels
 
             //Getting Color Match Status
             int ColorValue = mli.ModViewModel.ContentStatValue;
-            bool MatchingCheckBox = (RedChecked && ColorValue == 0)
-                 || (OrangeChecked && ColorValue == 1)
-                 || (GreenChecked && ColorValue == 2)
-                 || (PurpleChecked && ColorValue == 3);
+            bool MatchingCheckBox = (RedChecked && !mli.ModViewModel.LibraryItem.Included)
+                 || (BlueChecked && mli.ModViewModel.Edited)
+                 || (GreenChecked && mli.ModViewModel.LibraryItem.Included);
 
             //Getting Type Select Match
             bool NoSelectedType = SelectedGamebananaRootCategory == null;

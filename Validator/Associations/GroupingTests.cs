@@ -177,6 +177,7 @@ namespace Validator.Grouping
                     Name = "First Content",
                     GroupName = "Test Group 1",
                     SlotNumber = 0,
+                    OriginalSlotNumber = 0,
                     ScanFiles = new()
                     {
                         new ScanFile()
@@ -195,6 +196,7 @@ namespace Validator.Grouping
                     Name = "First Content",
                     GroupName = "Test Group 1",
                     SlotNumber = 0,
+                    OriginalSlotNumber = 0,
                     ScanFiles = new()
                     {
                         new ScanFile()
@@ -213,6 +215,7 @@ namespace Validator.Grouping
                     Name = "Second Content",
                     GroupName = "Test Group 1",
                     SlotNumber = 0,
+                    OriginalSlotNumber = 0,
                     ScanFiles = new()
                     {
                         new ScanFile()
@@ -231,6 +234,7 @@ namespace Validator.Grouping
                     Name = "Third Content",
                     GroupName = "Test Group 2",
                     SlotNumber = 1,
+                    OriginalSlotNumber = 1,
                     ScanFiles = new()
                     {
                         new ScanFile()
@@ -248,6 +252,7 @@ namespace Validator.Grouping
                     Name = "Third Content",
                     GroupName = "Test Group 2",
                     SlotNumber = 1,
+                    OriginalSlotNumber = 1,
                     ScanFiles = new()
                     {
                         new ScanFile()
@@ -266,6 +271,7 @@ namespace Validator.Grouping
                     Name = "Fourth Content",
                     GroupName = "Test Group 2",
                     SlotNumber = 5,
+                    OriginalSlotNumber = 1,
                     ScanFiles = new()
                     {
                         new ScanFile()
@@ -283,6 +289,7 @@ namespace Validator.Grouping
                     Name = "First Content",
                     GroupName = "Test Group 1",
                     SlotNumber = 1,
+                    OriginalSlotNumber = 1,
                     ScanFiles = new()
                     {
                         new ScanFile()
@@ -301,6 +308,7 @@ namespace Validator.Grouping
                     Name = "First Content",
                     GroupName = "Test Group 1",
                     SlotNumber = 1,
+                    OriginalSlotNumber = 1,
                     ScanFiles = new()
                     {
                         new ScanFile()
