@@ -18,6 +18,8 @@ namespace DataModels.User
         public int QuasarModTypeID { get; set; }
         [Newtonsoft.Json.JsonProperty]
         public int SlotNumber { get; set; }
+        public int OriginalSlotNumber { get; set; }
+        public int OriginalGameElementID { get; set; }
         [Newtonsoft.Json.JsonProperty]
         public ObservableCollection<ScanFile> ScanFiles { get; set; }
         public string ParentName { get; set; }

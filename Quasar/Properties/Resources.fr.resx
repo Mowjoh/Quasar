@@ -126,6 +126,25 @@
   <data name="Assignments_Label_ModName" xml:space="preserve">
     <value>Affichage des attributions pour : </value>
   </data>
+  <data name="Assignment_Label_NoElement" xml:space="preserve">
+    <value>Pas d'élément</value>
+  </data>
+  <data name="Assignment_Label_NoSlot" xml:space="preserve">
+    <value>Pas de slot</value>
+  </data>
+  <data name="Assignment_Modal_ScanContent" xml:space="preserve">
+    <value>Veuillez attendre que Quasar scanne les contenus du mod</value>
+  </data>
+  <data name="Assignment_Modal_ScanFinishedContent" xml:space="preserve">
+    <value>Quasar  a scanné le mod et ses  
+contenus éditables sont affichés ici</value>
+  </data>
+  <data name="Assignment_Modal_ScanFinishedTitle" xml:space="preserve">
+    <value>Scan terminé</value>
+  </data>
+  <data name="Assignment_Modal_ScanTitle" xml:space="preserve">
+    <value>Scan en cours</value>
+  </data>
   <data name="FileManagement_Button_ChangeFiles" xml:space="preserve">
     <value>Changer les fichiers</value>
   </data>
@@ -174,6 +193,19 @@
   <data name="Library_Label_TransferEnabled" xml:space="preserve">
     <value>Transféré</value>
   </data>
+  <data name="Library_Modal_DeleteCancel" xml:space="preserve">
+    <value>Annuler</value>
+  </data>
+  <data name="Library_Modal_DeleteContent" xml:space="preserve">
+    <value>Etes-vous sûr de vouloir supprimer ce mod ? 
+Ses fichiers et informations seront supprimées de Quasar.</value>
+  </data>
+  <data name="Library_Modal_DeleteOK" xml:space="preserve">
+    <value>Je suis sûr</value>
+  </data>
+  <data name="Library_Modal_DeleteTitle" xml:space="preserve">
+    <value>Suppression de Mod</value>
+  </data>
   <data name="MainUI_AssignmentTabHeader" xml:space="preserve">
     <value>Attributions</value>
   </data>
@@ -182,6 +214,40 @@
   </data>
   <data name="MainUI_LibraryTabHeader" xml:space="preserve">
     <value>Librairie</value>
+  </data>
+  <data name="MainUI_Modal_CFWContent" xml:space="preserve">
+    <value>Quasar est une application qui permet de gérer les 
+fichiers de mods pour vous. Les mods fonctionnent sur des Switch 
+disposant d'un CFW (Firmware custom). Si vous n'en disposez pas,
+Quasar ne pourra rien pour vous.</value>
+  </data>
+  <data name="MainUI_Modal_CFWOK" xml:space="preserve">
+    <value>Ma Switch a un CFW</value>
+  </data>
+  <data name="MainUI_Modal_RecoverFinishedContent" xml:space="preserve">
+    <value />
+  </data>
+  <data name="MainUI_Modal_RecoverFinishedTitle" xml:space="preserve">
+    <value />
+  </data>
+  <data name="MainUI_Modal_RecoverProgressContent" xml:space="preserve">
+    <value>Veuillez patienter, Quasar récupère
+les fichiers d'une installation précédente</value>
+  </data>
+  <data name="MainUI_Modal_RecoverProgressTitle" xml:space="preserve">
+    <value>Récupération de données</value>
+  </data>
+  <data name="MainUI_Modal_UpdateFinishedContent" xml:space="preserve">
+    <value />
+  </data>
+  <data name="MainUI_Modal_UpdateFinishedTitle" xml:space="preserve">
+    <value />
+  </data>
+  <data name="MainUI_Modal_UpdateProgressContent" xml:space="preserve">
+    <value />
+  </data>
+  <data name="MainUI_Modal_UpdateProgressTitle" xml:space="preserve">
+    <value />
   </data>
   <data name="MainUI_SettingsTabHeader" xml:space="preserve">
     <value>Paramètres</value>

@@ -34,8 +34,8 @@ namespace Quasar.Helpers.Quasar_Management
         public static void CreateBaseFolders()
         {
             //Setting Paths
-            String InstallationPath = Properties.Settings.Default.DefaultDir;
-            String AppPath = Properties.Settings.Default.AppPath;
+            String InstallationPath = Properties.QuasarSettings.Default.DefaultDir;
+            String AppPath = Properties.QuasarSettings.Default.AppPath;
             String LibraryPath = "\\Library\\";
             String ModsPath = "\\Library\\Mods\\";
             String DownloadsPath = "\\Library\\Downloads\\";
@@ -58,23 +58,23 @@ namespace Quasar.Helpers.Quasar_Management
         {
             //Getting system language
             CultureInfo ci = CultureInfo.InstalledUICulture;
-            Properties.Settings.Default.Language = (String)ci.Name;
+            Properties.QuasarSettings.Default.Language = (String)ci.Name;
 
             if (ExternalPath == "")
             {
                 //Getting User's Documents folder for storage purposes
                 String DocumentsFolderPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
                 DocumentsFolderPath += "\\Quasar";
-                Properties.Settings.Default.DefaultDir = DocumentsFolderPath;
+                Properties.QuasarSettings.Default.DefaultDir = DocumentsFolderPath;
             }
             else
             {
-                Properties.Settings.Default.DefaultDir = ExternalPath;
+                Properties.QuasarSettings.Default.DefaultDir = ExternalPath;
             }
 
             //Getting execution path
             String AppPath = Environment.GetCommandLineArgs()[0];
-            Properties.Settings.Default.AppPath = System.IO.Path.GetDirectoryName(AppPath);
+            Properties.QuasarSettings.Default.AppPath = System.IO.Path.GetDirectoryName(AppPath);
 
         }
 
@@ -83,7 +83,7 @@ namespace Quasar.Helpers.Quasar_Management
         /// </summary>
         public static void CreateBaseWorkspace()
         {
-            String AssociationsPath = Properties.Settings.Default.DefaultDir + @"\Library\Workspaces.json";
+            String AssociationsPath = Properties.QuasarSettings.Default.DefaultDir + @"\Library\Workspaces.json";
             if (!File.Exists(AssociationsPath))
             {
                 Workspace defaultWorkspace = new Workspace() { Name = "Default", Guid = Guid.NewGuid(), Associations = new ObservableCollection<Association>(), BuildDate = "" };
@@ -105,14 +105,14 @@ namespace Quasar.Helpers.Quasar_Management
 
                 if (results == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
                 {
-                    Properties.Settings.Default.DefaultDir = fbd.SelectedPath;
-                    Properties.Settings.Default.Save();
+                    Properties.QuasarSettings.Default.DefaultDir = fbd.SelectedPath;
+                    Properties.QuasarSettings.Default.Save();
                     MessageBox.Show("Thanks ! It's been saved and applied. Have fun modding !");
                 }
                 else
                 {
-                    Properties.Settings.Default.DefaultDir = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\Quasar";
-                    Properties.Settings.Default.Save();
+                    Properties.QuasarSettings.Default.DefaultDir = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\Quasar";
+                    Properties.QuasarSettings.Default.Save();
                     MessageBox.Show("No path selected, using defaults. Don't worry you can still change later in the settings");
                 }
             }
@@ -124,7 +124,7 @@ namespace Quasar.Helpers.Quasar_Management
         /// <param name="newPath">New install folder path</param>
         public static void ChangeInstallLocation(string newPath)
         {
-            string SourcePath = Properties.Settings.Default.DefaultDir;
+            string SourcePath = Properties.QuasarSettings.Default.DefaultDir;
             bool proceed = true;
             try
             {
@@ -152,8 +152,8 @@ namespace Quasar.Helpers.Quasar_Management
 
             if (proceed)
             {
-                Properties.Settings.Default.DefaultDir = newPath;
-                Properties.Settings.Default.Save();
+                Properties.QuasarSettings.Default.DefaultDir = newPath;
+                Properties.QuasarSettings.Default.Save();
                 ModalEvent Meuh = new ModalEvent()
                 {
                     EventName = "MoveInstall",
@@ -179,14 +179,14 @@ namespace Quasar.Helpers.Quasar_Management
         /// </summary>
         public static void BackupUserData()
         {
-            string Base = Properties.Settings.Default.DefaultDir;
+            string Base = Properties.QuasarSettings.Default.DefaultDir;
 
             FileOperation.CheckCopyFile(Base + LibraryPath, Base + LibraryBackupPath);
             FileOperation.CheckCopyFile(Base + ContentItemsPath, Base + ContentItemsBackupPath);
             FileOperation.CheckCopyFile(Base + WorkspacesPath, Base + WorkspacesBackupPath);
 
-            Properties.Settings.Default.BackupDate = DateTime.Now;
-            Properties.Settings.Default.Save();
+            Properties.QuasarSettings.Default.BackupDate = DateTime.Now;
+            Properties.QuasarSettings.Default.Save();
         }
 
         /// <summary>
@@ -194,7 +194,7 @@ namespace Quasar.Helpers.Quasar_Management
         /// </summary>
         public static void RestoreUserData()
         {
-            string Base = Properties.Settings.Default.DefaultDir;
+            string Base = Properties.QuasarSettings.Default.DefaultDir;
 
             FileOperation.CheckCopyFile(Base + LibraryBackupPath, Base + LibraryPath);
             FileOperation.CheckCopyFile(Base + ContentItemsBackupPath, Base + ContentItemsPath);
@@ -242,7 +242,7 @@ namespace Quasar.Helpers.Quasar_Management
         public static void TransferMods(ObservableCollection<LibraryItem> Library, ILog QuasarLogger)
         {
             //Source path
-            string ModPath = String.Format(@"{0}\Library\Mods\SmashUltimate", Properties.Settings.Default.DefaultDir);
+            string ModPath = String.Format(@"{0}\Library\Mods\SmashUltimate", Properties.QuasarSettings.Default.DefaultDir);
 
             //Foreach possible old mod folder
             foreach (string d in Directory.GetDirectories(ModPath))
@@ -260,14 +260,14 @@ namespace Quasar.Helpers.Quasar_Management
                         if (li != null)
                         {
 
-                            string NewModFolder = String.Format(@"{0}\Library\Mods\{1}", Properties.Settings.Default.DefaultDir, li.Guid);
+                            string NewModFolder = String.Format(@"{0}\Library\Mods\{1}", Properties.QuasarSettings.Default.DefaultDir, li.Guid);
                             //Copying Files
                             FileOperation.CopyFolder(PreviousModFolder, NewModFolder, true);
 
-                            string[] Screenshots = Directory.GetFiles(String.Format(@"{0}\Library\Screenshots\", Properties.Settings.Default.DefaultDir), "*");
+                            string[] Screenshots = Directory.GetFiles(String.Format(@"{0}\Library\Screenshots\", Properties.QuasarSettings.Default.DefaultDir), "*");
                             string PreviousScreenFilePath = Screenshots.SingleOrDefault(s => s.Contains(ModFolder));
                             FileInfo fi = new FileInfo(PreviousScreenFilePath);
-                            string NewScreenFilePath = String.Format(@"{0}\Library\Screenshots\{1}.{2}", Properties.Settings.Default.DefaultDir, li.Guid, fi.Extension);
+                            string NewScreenFilePath = String.Format(@"{0}\Library\Screenshots\{1}.{2}", Properties.QuasarSettings.Default.DefaultDir, li.Guid, fi.Extension);
 
                             //Converting screenshot
                             ConvertScreenshot(PreviousScreenFilePath, NewScreenFilePath, QuasarLogger);
@@ -302,10 +302,10 @@ namespace Quasar.Helpers.Quasar_Management
 
         public static void LastCleanup()
         {
-            File.Delete(String.Format(@"{0}\Library\Library.xml", Properties.Settings.Default.DefaultDir));
-            File.Delete(String.Format(@"{0}\Library\ContentMapping.xml", Properties.Settings.Default.DefaultDir));
-            File.Delete(String.Format(@"{0}\Library\Workspaces.xml", Properties.Settings.Default.DefaultDir));
-            Directory.Delete(String.Format(@"{0}\References", Properties.Settings.Default.DefaultDir), true);
+            File.Delete(String.Format(@"{0}\Library\Library.xml", Properties.QuasarSettings.Default.DefaultDir));
+            File.Delete(String.Format(@"{0}\Library\ContentMapping.xml", Properties.QuasarSettings.Default.DefaultDir));
+            File.Delete(String.Format(@"{0}\Library\Workspaces.xml", Properties.QuasarSettings.Default.DefaultDir));
+            Directory.Delete(String.Format(@"{0}\References", Properties.QuasarSettings.Default.DefaultDir), true);
         }
 
         public static void Rescan(MainUIViewModel MUVM)

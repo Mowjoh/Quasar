@@ -1,5 +1,5 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Quasar.Properties" GeneratedClassName="Settings">
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Quasar.Properties" GeneratedClassName="QuasarSettings">
   <Profiles />
   <Settings>
     <Setting Name="DefaultLanguage" Type="System.String" Scope="User">
@@ -9,10 +9,10 @@
       <Value Profile="(Default)">EN</Value>
     </Setting>
     <Setting Name="DefaultDir" Type="System.String" Scope="User">
-      <Value Profile="(Default)">[User's Document Folder]</Value>
+      <Value Profile="(Default)" />
     </Setting>
     <Setting Name="AppPath" Type="System.String" Scope="User">
-      <Value Profile="(Default)">[Application's Folder]</Value>
+      <Value Profile="(Default)" />
     </Setting>
     <Setting Name="AppVersion" Type="System.String" Scope="User">
       <Value Profile="(Default)">0000</Value>
@@ -41,11 +41,11 @@
     <Setting Name="PreviousVersion" Type="System.String" Scope="User">
       <Value Profile="(Default)">0000</Value>
     </Setting>
-    <Setting Name="FtpAddress" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
-    </Setting>
     <Setting Name="CFWAcknowledged" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="FtpAddress" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
     </Setting>
     <Setting Name="Onboarded" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
@@ -54,7 +54,7 @@
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="PreferredTransferMethod" Type="System.String" Scope="User">
-      <Value Profile="(Default)">SD</Value>
+      <Value Profile="(Default)" />
     </Setting>
     <Setting Name="TransferQuasarFoldersOnly" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>

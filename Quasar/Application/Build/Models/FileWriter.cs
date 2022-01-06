@@ -45,14 +45,14 @@ namespace Quasar.Build.Models
         #endregion
         public FTPWriter(LibraryViewModel _LVM)
         {
-            if (Properties.Settings.Default.FTPValid)
+            if (Properties.QuasarSettings.Default.FTPValid)
             {
                 Lvm = _LVM;
 
-                Adress = Properties.Settings.Default.FtpAddress;
-                Port = Properties.Settings.Default.FtpPort;
-                Username = Properties.Settings.Default.FtpUsername;
-                Password = Properties.Settings.Default.FtpPassword;
+                Adress = Properties.QuasarSettings.Default.FtpIP;
+                Port = Properties.QuasarSettings.Default.FtpPort;
+                Username = Properties.QuasarSettings.Default.FtpUsername;
+                Password = Properties.QuasarSettings.Default.FtpPassword;
 
                 Client = new FtpClient(Adress);
                 Client.Port = int.Parse(Port);
@@ -75,12 +75,12 @@ namespace Quasar.Build.Models
         }
         public FTPWriter()
         {
-            if (Properties.Settings.Default.FTPValid)
+            if (Properties.QuasarSettings.Default.FTPValid)
             {
-                Adress = Properties.Settings.Default.FtpAddress.Split(':')[0];
-                Port = Properties.Settings.Default.FtpAddress.Split(':')[1];
-                Username = Properties.Settings.Default.FtpUsername;
-                Password = Properties.Settings.Default.FtpPassword;
+                Adress = Properties.QuasarSettings.Default.FtpAddress.Split(':')[0];
+                Port = Properties.QuasarSettings.Default.FtpAddress.Split(':')[1];
+                Username = Properties.QuasarSettings.Default.FtpUsername;
+                Password = Properties.QuasarSettings.Default.FtpPassword;
 
                 Client = new FtpClient(Adress);
                 Client.Port = int.Parse(Port);
@@ -120,13 +120,17 @@ namespace Quasar.Build.Models
         }
         public override bool CheckFileExists(string FilePath)
         {
-            return Client.FileExists(FilePath);
+            return Client.FileExists(FilePath.Replace(@"\", @"/"));
         }
         public override bool SendFile(string SourceFilePath, string FilePath)
         {
             Lvm.SetSize(String.Format("Current File Size : {0}", WriterOperations.BytesToString(new FileInfo(SourceFilePath).Length)));
             Log.Debug(String.Format("Updating File {0} - {1}", SourceFilePath, FilePath));
-            FtpStatus Status = Client.UploadFile(SourceFilePath, FilePath, FtpRemoteExists.Overwrite, true, FtpVerify.None, Progress);
+            string CorrectedPath = FilePath.Replace(@"\", @"/");
+            string Directory =
+                CorrectedPath.Replace(CorrectedPath.Split(@"/")[CorrectedPath.Split(@"/").Length - 1], "");
+            Client.CreateDirectory(Directory);
+            FtpStatus Status = Client.UploadFile(SourceFilePath.Replace(@"\", @"/"), CorrectedPath, FtpRemoteExists.Overwrite, true, FtpVerify.None, Progress);
             return true;
         }
         public override bool DeleteFile(string FilePath)

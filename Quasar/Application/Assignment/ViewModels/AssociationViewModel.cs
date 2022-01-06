@@ -71,8 +71,8 @@ namespace Quasar.Associations.ViewModels
                 _GroupedTypes = value;
                 OnPropertyChanged("GroupedTypes");
                 
-                Properties.Settings.Default.GroupAssignmentTypes = value;
-                Properties.Settings.Default.Save();
+                Properties.QuasarSettings.Default.GroupAssignmentTypes = value;
+                Properties.QuasarSettings.Default.Save();
             }
         }
         #endregion
@@ -112,7 +112,9 @@ namespace Quasar.Associations.ViewModels
             QuasarLogger = _quasar_logger;
             MUVM = _muvm;
             ItemCollection = new ObservableCollection<ContentListItem>();
-            GroupedTypes = Properties.Settings.Default.GroupAssignmentTypes;
+            GroupedTypes = Properties.QuasarSettings.Default.GroupAssignmentTypes;
+
+            EventSystem.Subscribe<ContentListItemViewModel>(ProcessIncomingModalEvent);
         }
 
         #region Actions
@@ -129,7 +131,7 @@ namespace Quasar.Associations.ViewModels
 
                 if (Qmt.ID == 8)
                 {
-                    List<Option> MusicOptions = new();
+                    List<Option> MusicOptions = new() { new Option() { Key = "none", Value = Properties.Resources.Assignment_Label_NoElement } };
                     foreach (GameElement GameElement in MUVM.Games[0].GameElementFamilies[2].GameElements)
                     {
                         MusicOptions.Add(new Option() { Key = GameElement.ID.ToString(), Value = GameElement.Name });
@@ -139,7 +141,8 @@ namespace Quasar.Associations.ViewModels
                 }
                 else
                 {
-                    List<Option> SlotOptions = new();
+                    List<Option> SlotOptions = new(){ new Option(){Key = "none",Value=Properties.Resources.Assignment_Label_NoSlot}};
+
                     for (int i = 0; i < 8; i++)
                     {
                         SlotOptions.Add(new Option() { Key = i.ToString(), Value = String.Format("Slot {0}", (i + 1)) });
@@ -170,8 +173,8 @@ namespace Quasar.Associations.ViewModels
             EventSystem.Publish<ModalEvent>(new()
             {
                 EventName = "ScanningMod",
-                Title = "Scanning",
-                Content = "Please wait while Quasar scans the mod's contents",
+                Title = Properties.Resources.Assignment_Modal_ScanTitle,
+                Content = Properties.Resources.Assignment_Modal_ScanContent,
                 Action = "Show",
                 OkButtonText = Properties.Resources.Modal_Label_DefaultOK,
                 Type = ModalType.Loader,
@@ -185,7 +188,7 @@ namespace Quasar.Associations.ViewModels
             }
 
             //Getting and filtering files
-            string LibraryContentFolderPath = Properties.Settings.Default.DefaultDir + "\\Library\\Mods\\" + MUVM.LibraryViewModel.SelectedModListItem.ModViewModel.LibraryItem.Guid + "\\";
+            string LibraryContentFolderPath = Properties.QuasarSettings.Default.DefaultDir + "\\Library\\Mods\\" + MUVM.LibraryViewModel.SelectedModListItem.ModViewModel.LibraryItem.Guid + "\\";
             ObservableCollection<ScanFile> Files = FileScanner.GetScanFiles(LibraryContentFolderPath);
             Files = FileScanner.FilterIgnoredFiles(Files);
 
@@ -207,8 +210,8 @@ namespace Quasar.Associations.ViewModels
             EventSystem.Publish<ModalEvent>(new()
             {
                 EventName = "ScanningMod",
-                Title = "Scan Finished",
-                Content = "Quasar has scanned the mod and it's \reditable contents will be displayed here",
+                Title = Properties.Resources.Assignment_Modal_ScanFinishedTitle,
+                Content = Properties.Resources.Assignment_Modal_ScanFinishedContent,
                 Action = "LoadOK",
                 OkButtonText = Properties.Resources.Modal_Label_DefaultOK,
                 Type = ModalType.Loader,
@@ -218,9 +221,23 @@ namespace Quasar.Associations.ViewModels
 
         #region Events
 
-        private void ProcessIncomingModalEvent(ModalEvent _meuh)
+        private void ProcessIncomingModalEvent(ContentListItemViewModel _meuh)
         {
+            if (_meuh.RequestedAction == "SlotChange")
+            {
+                string Slot = _meuh.SelectedOption.Value;
 
+                foreach (ContentItem ContentItem in _meuh.AssignmentContent.AssignmentContentItems)
+                {
+                    
+                    ContentItem.SlotNumber = 
+                }
+            }
+
+            if (_meuh.RequestedAction == "ElementChange")
+            {
+
+            }
         }
         #endregion
 

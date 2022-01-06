@@ -61,6 +61,61 @@ namespace Quasar.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No Element.
+        /// </summary>
+        public static string Assignment_Label_NoElement {
+            get {
+                return ResourceManager.GetString("Assignment_Label_NoElement", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No Slot.
+        /// </summary>
+        public static string Assignment_Label_NoSlot {
+            get {
+                return ResourceManager.GetString("Assignment_Label_NoSlot", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please wait while Quasar scans the mod&apos;s contents.
+        /// </summary>
+        public static string Assignment_Modal_ScanContent {
+            get {
+                return ResourceManager.GetString("Assignment_Modal_ScanContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Quasar has scanned the mod and it&apos;s 
+        ///editable contents will be displayed here.
+        /// </summary>
+        public static string Assignment_Modal_ScanFinishedContent {
+            get {
+                return ResourceManager.GetString("Assignment_Modal_ScanFinishedContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Scan Finished.
+        /// </summary>
+        public static string Assignment_Modal_ScanFinishedTitle {
+            get {
+                return ResourceManager.GetString("Assignment_Modal_ScanFinishedTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Scanning.
+        /// </summary>
+        public static string Assignment_Modal_ScanTitle {
+            get {
+                return ResourceManager.GetString("Assignment_Modal_ScanTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Scan Files.
         /// </summary>
         public static string Assignments_Button_ScanFiles {
@@ -232,6 +287,43 @@ namespace Quasar.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        public static string Library_Modal_DeleteCancel {
+            get {
+                return ResourceManager.GetString("Library_Modal_DeleteCancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Are you sure you want to delete this mod ? 
+        ///It&apos;s file and information will be removed from Quasar..
+        /// </summary>
+        public static string Library_Modal_DeleteContent {
+            get {
+                return ResourceManager.GetString("Library_Modal_DeleteContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to I&apos;m sure.
+        /// </summary>
+        public static string Library_Modal_DeleteOK {
+            get {
+                return ResourceManager.GetString("Library_Modal_DeleteOK", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mod Deletion.
+        /// </summary>
+        public static string Library_Modal_DeleteTitle {
+            get {
+                return ResourceManager.GetString("Library_Modal_DeleteTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Assignments.
         /// </summary>
         public static string MainUI_AssignmentTabHeader {
@@ -255,6 +347,99 @@ namespace Quasar.Properties {
         public static string MainUI_LibraryTabHeader {
             get {
                 return ResourceManager.GetString("MainUI_LibraryTabHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Quasar is an application that will help you manage mod 
+        ///files for you. Modding is only for Switches running 
+        ///Custom Firmware (CFW). If your Switch is not hacked, 
+        ///Quasar will be of no use to you..
+        /// </summary>
+        public static string MainUI_Modal_CFWContent {
+            get {
+                return ResourceManager.GetString("MainUI_Modal_CFWContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to My switch is running CFW.
+        /// </summary>
+        public static string MainUI_Modal_CFWOK {
+            get {
+                return ResourceManager.GetString("MainUI_Modal_CFWOK", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string MainUI_Modal_RecoverFinishedContent {
+            get {
+                return ResourceManager.GetString("MainUI_Modal_RecoverFinishedContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string MainUI_Modal_RecoverFinishedTitle {
+            get {
+                return ResourceManager.GetString("MainUI_Modal_RecoverFinishedTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please be patient, Quasar is looking for previously installed files.
+        /// </summary>
+        public static string MainUI_Modal_RecoverProgressContent {
+            get {
+                return ResourceManager.GetString("MainUI_Modal_RecoverProgressContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Recovering Files and Data.
+        /// </summary>
+        public static string MainUI_Modal_RecoverProgressTitle {
+            get {
+                return ResourceManager.GetString("MainUI_Modal_RecoverProgressTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string MainUI_Modal_UpdateFinishedContent {
+            get {
+                return ResourceManager.GetString("MainUI_Modal_UpdateFinishedContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string MainUI_Modal_UpdateFinishedTitle {
+            get {
+                return ResourceManager.GetString("MainUI_Modal_UpdateFinishedTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please be patient, Quasar is updating.
+        /// </summary>
+        public static string MainUI_Modal_UpdateProgressContent {
+            get {
+                return ResourceManager.GetString("MainUI_Modal_UpdateProgressContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Update Process.
+        /// </summary>
+        public static string MainUI_Modal_UpdateProgressTitle {
+            get {
+                return ResourceManager.GetString("MainUI_Modal_UpdateProgressTitle", resourceCulture);
             }
         }
         

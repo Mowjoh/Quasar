@@ -46,9 +46,9 @@ namespace Quasar.FileSystem
                     ModTypeID = mt.ID.ToString();
                     ModTypeFolderName = mt.LibraryFolderName;
 
-                    DownloadDestinationFilePath = Properties.Settings.Default.DefaultDir + "\\Library\\Downloads\\" + ModID + "." + ModArchiveFormat;
-                    ArchiveContentFolderPath = Properties.Settings.Default.DefaultDir + "\\Library\\Downloads\\" + ModID + "\\";
-                    LibraryContentFolderPath = Properties.Settings.Default.DefaultDir + "\\Library\\Mods\\" + ModTypeFolderName + "\\" + ModID + "\\";
+                    DownloadDestinationFilePath = Properties.QuasarSettings.Default.DefaultDir + "\\Library\\Downloads\\" + ModID + "." + ModArchiveFormat;
+                    ArchiveContentFolderPath = Properties.QuasarSettings.Default.DefaultDir + "\\Library\\Downloads\\" + ModID + "\\";
+                    LibraryContentFolderPath = Properties.QuasarSettings.Default.DefaultDir + "\\Library\\Mods\\" + ModTypeFolderName + "\\" + ModID + "\\";
                 }
                 else
                 {
@@ -69,7 +69,7 @@ namespace Quasar.FileSystem
         {
             Log = LogManager.GetLogger("QuasarAppender");
             FileAppender appender = (FileAppender)Log.Logger.Repository.GetAppenders()[0];
-            appender.File = Properties.Settings.Default.DefaultDir + "\\Quasar.log";
+            appender.File = Properties.QuasarSettings.Default.DefaultDir + "\\Quasar.log";
             appender.Threshold = log4net.Core.Level.Debug;
             appender.ActivateOptions();
         }
@@ -77,14 +77,14 @@ namespace Quasar.FileSystem
         //Sets up default paths from the Library Mod
         public ModFileManager(LibraryItem _mod, string ModArchiveFormat = "")
         {        
-            DownloadDestinationFilePath = Properties.Settings.Default.DefaultDir + "\\Library\\Downloads\\" + _mod.Guid + "." + ModArchiveFormat;
-            LibraryContentFolderPath = Properties.Settings.Default.DefaultDir + "\\Library\\Mods\\" + _mod.Guid + "\\";
-            ArchiveContentFolderPath = Properties.Settings.Default.DefaultDir + "\\Library\\Downloads\\" + _mod.Guid + "\\";
+            DownloadDestinationFilePath = Properties.QuasarSettings.Default.DefaultDir + "\\Library\\Downloads\\" + _mod.Guid + "." + ModArchiveFormat;
+            LibraryContentFolderPath = Properties.QuasarSettings.Default.DefaultDir + "\\Library\\Mods\\" + _mod.Guid + "\\";
+            ArchiveContentFolderPath = Properties.QuasarSettings.Default.DefaultDir + "\\Library\\Downloads\\" + _mod.Guid + "\\";
         }
 
         public void CheckOldFolderPath()
         {
-            string OldContentPath = Properties.Settings.Default.DefaultDir + "\\Library\\Mods\\SmashUltimate\\" + ModID + "\\";
+            string OldContentPath = Properties.QuasarSettings.Default.DefaultDir + "\\Library\\Mods\\SmashUltimate\\" + ModID + "\\";
             if (Directory.Exists(OldContentPath))
             {
                 if (Directory.Exists(LibraryContentFolderPath))

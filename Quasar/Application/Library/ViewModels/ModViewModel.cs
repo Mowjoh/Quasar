@@ -627,7 +627,7 @@ namespace Quasar.Controls.Mod.ViewModels
         {
             if (!_Smol)
             {
-                string imageSource = Properties.Settings.Default.DefaultDir + @"\Library\Screenshots\";
+                string imageSource = Properties.QuasarSettings.Default.DefaultDir + @"\Library\Screenshots\";
                 string[] files = System.IO.Directory.GetFiles(imageSource, LibraryItem.Guid + ".*");
 
                 if (files.Length > 0)
@@ -636,12 +636,12 @@ namespace Quasar.Controls.Mod.ViewModels
                 }
                 else
                 {
-                    ImageSource = new Uri(Properties.Settings.Default.DefaultDir + @"\Resources\images\NoScreenshot.png");
+                    ImageSource = new Uri(Properties.QuasarSettings.Default.DefaultDir + @"\Resources\images\NoScreenshot.png");
                 }
             }
             else
             {
-                ImageSource = new Uri(Properties.Settings.Default.DefaultDir + @"\Resources\images\NoScreenshot.png");
+                ImageSource = new Uri(Properties.QuasarSettings.Default.DefaultDir + @"\Resources\images\NoScreenshot.png");
             }
             
         }

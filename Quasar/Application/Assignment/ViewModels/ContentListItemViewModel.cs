@@ -88,7 +88,6 @@ namespace Quasar.Associations.ViewModels
                 OnPropertyChanged("Options");
             }
         }
-
         public Option SelectedOption
         {
             get => _SelectedOption;
@@ -108,7 +107,7 @@ namespace Quasar.Associations.ViewModels
                 }
             }
         }
-
+        public string RequestedAction { get; set; }
         
         #endregion
 
@@ -145,12 +144,12 @@ namespace Quasar.Associations.ViewModels
 
         public void SlotSelected()
         {
-
+            RequestedAction = "SlotChange";
         }
 
         public void ElementSelected()
         {
-
+            RequestedAction = "ElementChange";
         }
 
         #endregion

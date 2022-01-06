@@ -285,8 +285,10 @@ namespace Workshop.Scanners
                             ContentItem ci = new ContentItem()
                             {
                                 GameElementID = sf.GameElementID,
+                                OriginalGameElementID = sf.GameElementID,
                                 QuasarModTypeID = sf.QuasarModTypeID,
                                 SlotNumber = int.Parse(sf.Slot),
+                                OriginalSlotNumber = int.Parse(sf.Slot),
                                 LibraryItemGuid = _LibraryItem.Guid,
                                 Name = _LibraryItem.Name,
                                 ScanFiles = new ObservableCollection<ScanFile>() { sf },
@@ -312,8 +314,10 @@ namespace Workshop.Scanners
                                 ContentItem ci = new ContentItem()
                                 {
                                     GameElementID = sf.GameElementID,
+                                    OriginalGameElementID = sf.GameElementID,
                                     QuasarModTypeID = sf.QuasarModTypeID,
                                     SlotNumber = int.Parse(sf.Slot),
+                                    OriginalSlotNumber = int.Parse(sf.Slot),
                                     LibraryItemGuid = _LibraryItem.Guid,
                                     Name = _LibraryItem.Name + " #" + (SearchList.Count + 1).ToString(),
                                     ScanFiles = new ObservableCollection<ScanFile>() { sf }

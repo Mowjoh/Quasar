@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using DataModels.Common;
+using log4net;
 using Quasar.Settings.Models;
 
 namespace Quasar.Settings.ViewModels
@@ -142,8 +143,10 @@ namespace Quasar.Settings.ViewModels
 
         #endregion
 
-        public SettingsViewModel()
+        public ILog QuasarLogger { get; set; }
+        public SettingsViewModel(ILog quasar_log)
         {
+            QuasarLogger = quasar_log;
             LoadSettings();
 
             EventSystem.Subscribe<ModalEvent>(ProcessModalEvent);
@@ -157,32 +160,43 @@ namespace Quasar.Settings.ViewModels
         /// </summary>
         private void LoadSettings()
         {
-            Setup = true;
-            AppSettings = new ObservableCollection<SettingItemView>
+            try
+            {
+                Setup = true;
+                AppSettings = new ObservableCollection<SettingItemView>
             {
                 new("AppVersion",Properties.Resources.Settings_Label_AppVersion, "", SettingItemType.Text),
                 new("Language", Properties.Resources.Settings_Label_Language,Properties.Resources.Settings_Comment_Language,SettingItemType.List,"English=EN,Français=FR")
             };
-            FTPSettings = new ObservableCollection<SettingItemView>
+                FTPSettings = new ObservableCollection<SettingItemView>
             {
                 new("FtpIP", Properties.Resources.Settings_Label_FtpIP, Properties.Resources.Settings_Comment_FtpIP, SettingItemType.Input),
                 new("FtpPort", Properties.Resources.Settings_Label_FtpPort, Properties.Resources.Settings_Comment_FtpPort, SettingItemType.Input),
                 new("FtpUsername", Properties.Resources.Settings_Label_FtpUsername, Properties.Resources.Settings_Comment_FtpUsername, SettingItemType.Input),
                 new("FtpPassword", Properties.Resources.Settings_Label_FtpPassword, Properties.Resources.Settings_Comment_FtpPassword, SettingItemType.Input),
             };
-            WarningSettings = new ObservableCollection<SettingItemView>
+                WarningSettings = new ObservableCollection<SettingItemView>
             {
                 new("SupressModDeletion", Properties.Resources.Settings_Label_SupressModDeletion, Properties.Resources.Settings_Comment_SupressModDeletion, SettingItemType.Toggle),
             };
-            TransferSettings = new ObservableCollection<SettingItemView>
+                TransferSettings = new ObservableCollection<SettingItemView>
             {
                 new("TransferPath", Properties.Resources.Settings_Label_ModsPath, Properties.Resources.Settings_Comment_ModsPath, SettingItemType.Input),
                 new("PreferredTransferMethod", Properties.Resources.Settings_Label_PreferredTransferMethod, Properties.Resources.Settings_Comment_PreferredTransferMethod, SettingItemType.List,Properties.Resources.Settings_Values_PreferredTransferMethod),
                 new("SelectedSD", Properties.Resources.Settings_Label_SDSelect, Properties.Resources.Settings_Comment_SDSelect, SettingItemType.List,getSDCards()),
                 new("TransferQuasarFoldersOnly", Properties.Resources.Settings_Label_ManageAllMods, Properties.Resources.Settings_Comment_ManageAllMods, SettingItemType.Toggle)
             };
+                QuasarLogger.Debug(Properties.Resources.Settings_Values_PreferredTransferMethod);
+                QuasarLogger.Debug(Properties.Resources.Settings_Values_PreferredTransferMethod);
 
-            Setup = false;
+                Setup = false;
+            }
+            catch (Exception e)
+            {
+                QuasarLogger.Error(e.Message);
+                QuasarLogger.Error(e.StackTrace);
+            }
+            
         }
 
         private void ProcessSettingChanged(SettingItem SettingItem)
@@ -214,27 +228,27 @@ namespace Quasar.Settings.ViewModels
                 switch (SIV.ViewModel.SettingItem.SettingName)
                 {
                     case "FtpIP":
-                        Properties.Settings.Default.FtpIP = SIV.ViewModel.SettingItem.DisplayValue;
+                        Properties.QuasarSettings.Default.FtpIP = SIV.ViewModel.SettingItem.DisplayValue;
                         break;
                     case "FtpPort":
-                        Properties.Settings.Default.FtpPort = SIV.ViewModel.SettingItem.DisplayValue;
+                        Properties.QuasarSettings.Default.FtpPort = SIV.ViewModel.SettingItem.DisplayValue;
                         break;
                     case "FtpUsername":
-                        Properties.Settings.Default.FtpUsername = SIV.ViewModel.SettingItem.DisplayValue;
+                        Properties.QuasarSettings.Default.FtpUsername = SIV.ViewModel.SettingItem.DisplayValue;
                         break;
                     case "FtpPassword":
-                        Properties.Settings.Default.FtpPassword = SIV.ViewModel.SettingItem.DisplayValue;
+                        Properties.QuasarSettings.Default.FtpPassword = SIV.ViewModel.SettingItem.DisplayValue;
                         break;
                 }
-                Properties.Settings.Default.Save();
+                Properties.QuasarSettings.Default.Save();
             }
 
             //Validating values
             Regex AddressRegex = new Regex(@"(?'IP'(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}))");
             Regex PortRegex = new Regex(@"(?'Port'(\d{1,5}))");
-            if (Properties.Settings.Default.FtpIP != null && Properties.Settings.Default.FtpPort != null)
+            if (Properties.QuasarSettings.Default.FtpIP != null && Properties.QuasarSettings.Default.FtpPort != null)
             {
-                if (AddressRegex.IsMatch(Properties.Settings.Default.FtpIP) && PortRegex.IsMatch(Properties.Settings.Default.FtpPort))
+                if (AddressRegex.IsMatch(Properties.QuasarSettings.Default.FtpIP) && PortRegex.IsMatch(Properties.QuasarSettings.Default.FtpPort))
                 {
                     //Showing connection Modal
                     ModalEvent Meuh = new ModalEvent()
@@ -249,11 +263,11 @@ namespace Quasar.Settings.ViewModels
                     EventSystem.Publish(Meuh);
 
                     //Configuring FTP Client
-                    FtpClient ftpClient = new FtpClient(Properties.Settings.Default.FtpIP);
-                    ftpClient.Port = int.Parse(Properties.Settings.Default.FtpPort);
-                    if (Properties.Settings.Default.FtpUsername != "")
+                    FtpClient ftpClient = new FtpClient(Properties.QuasarSettings.Default.FtpIP);
+                    ftpClient.Port = int.Parse(Properties.QuasarSettings.Default.FtpPort);
+                    if (Properties.QuasarSettings.Default.FtpUsername != "")
                     {
-                        ftpClient.Credentials = new System.Net.NetworkCredential(Properties.Settings.Default.FtpUsername, Properties.Settings.Default.FtpPassword);
+                        ftpClient.Credentials = new System.Net.NetworkCredential(Properties.QuasarSettings.Default.FtpUsername, Properties.QuasarSettings.Default.FtpPassword);
                     }
 
                     //Launching connection Task
@@ -270,8 +284,8 @@ namespace Quasar.Settings.ViewModels
                             EventSystem.Publish(Meuh);
 
                             //Saving FTP state
-                            Properties.Settings.Default.FTPValid = true;
-                            Properties.Settings.Default.Save();
+                            Properties.QuasarSettings.Default.FTPValid = true;
+                            Properties.QuasarSettings.Default.Save();
                         }
                         catch (Exception e)
                         {
@@ -282,8 +296,8 @@ namespace Quasar.Settings.ViewModels
                             EventSystem.Publish(Meuh);
 
                             //Saving FTP state
-                            Properties.Settings.Default.FTPValid = false;
-                            Properties.Settings.Default.Save();
+                            Properties.QuasarSettings.Default.FTPValid = false;
+                            Properties.QuasarSettings.Default.Save();
                         }
                     });
                 }
@@ -302,8 +316,8 @@ namespace Quasar.Settings.ViewModels
                     EventSystem.Publish(Meuh);
 
                     //Saving FTP state
-                    Properties.Settings.Default.FTPValid = false;
-                    Properties.Settings.Default.Save();
+                    Properties.QuasarSettings.Default.FTPValid = false;
+                    Properties.QuasarSettings.Default.Save();
                 }
             }
             else
@@ -321,8 +335,8 @@ namespace Quasar.Settings.ViewModels
                 EventSystem.Publish(Meuh);
 
                 //Saving FTP state
-                Properties.Settings.Default.FTPValid = false;
-                Properties.Settings.Default.Save();
+                Properties.QuasarSettings.Default.FTPValid = false;
+                Properties.QuasarSettings.Default.Save();
             }
 
         }

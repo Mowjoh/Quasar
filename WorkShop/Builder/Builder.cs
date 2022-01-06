@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using DataModels.FileWriters;
 using DataModels.User;
@@ -94,9 +95,12 @@ namespace Workshop.Builder
 
     public class FileReference
     {
+        [JsonIgnore]
         public LibraryItem LibraryItem { get; set; }
+        [JsonIgnore]
         public string SourceFilePath { get; set; }
         public string OutputFilePath { get; set; }
+
         public bool OutsideFile { get; set; }
         public string FileHash { get; set; }
     }

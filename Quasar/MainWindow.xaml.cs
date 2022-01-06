@@ -72,7 +72,7 @@ namespace Quasar
                 ObservableCollection<AssignmentContent> AssignmentContents =
                     Grouper.GetAssignmentContents(
                         MUVM.LibraryViewModel.SelectedModListItem.ModViewModel.LibraryItem, MUVM.ContentItems,
-                        Properties.Settings.Default.GroupAssignmentTypes);
+                        Properties.QuasarSettings.Default.GroupAssignmentTypes);
 
                 MUVM.AVM.DisplayContentItems(AssignmentContents.ToList());
 

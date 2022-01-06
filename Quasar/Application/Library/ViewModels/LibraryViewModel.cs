@@ -709,7 +709,7 @@ namespace Quasar.Controls.ModManagement.ViewModels
                                         }
                                     }
                                 };
-                                UserDataManager.SaveModInformation(MI, Properties.Settings.Default.DefaultDir);
+                                UserDataManager.SaveModInformation(MI, Properties.QuasarSettings.Default.DefaultDir);
                             }
                             else
                             {
@@ -739,7 +739,7 @@ namespace Quasar.Controls.ModManagement.ViewModels
                                         }
                                     }
                                 };
-                                UserDataManager.SaveModInformation(MI, Properties.Settings.Default.DefaultDir);
+                                UserDataManager.SaveModInformation(MI, Properties.QuasarSettings.Default.DefaultDir);
                             }
 
                             ReloadAllStats();
@@ -795,7 +795,7 @@ namespace Quasar.Controls.ModManagement.ViewModels
 
             //Starting the transfer for the selected FileWriter
             FileWriter FW;
-            if (Properties.Settings.Default.PreferredTransferMethod == "FTP")
+            if (Properties.QuasarSettings.Default.PreferredTransferMethod == "FTP")
             {
                 //FTP FileWriter
                 BuildLog(Properties.Resources.Transfer_Log_Info, Properties.Resources.Transfer_Log_FTPConnectionTest);
@@ -814,7 +814,7 @@ namespace Quasar.Controls.ModManagement.ViewModels
             {
                 //SD Card FileWriter
                 BuildLog(Properties.Resources.Transfer_Log_Error, Properties.Resources.Transfer_Log_NoSDSelected);
-                if (Properties.Settings.Default.SelectedSD == null)
+                if (Properties.QuasarSettings.Default.SelectedSD == null)
                 {
                     BuildLog("Error", "No SD selected");
                     ok = false;
@@ -822,7 +822,7 @@ namespace Quasar.Controls.ModManagement.ViewModels
                 }
                 else
                 {
-                    FW = new SDWriter(this) { LetterPath = Properties.Settings.Default.SelectedSD, Log = QuasarLogger };
+                    FW = new SDWriter(this) { LetterPath = Properties.QuasarSettings.Default.SelectedSD, Log = QuasarLogger };
                 }
             }
 
@@ -988,17 +988,17 @@ namespace Quasar.Controls.ModManagement.ViewModels
         {
             mliToDelete = item;
 
-            if (!Properties.Settings.Default.SupressModDeletion)
+            if (Properties.QuasarSettings.Default.SupressModDeletion)
             {
                 ModalEvent meuh = new ModalEvent()
                 {
                     EventName = "DeleteMod",
                     Type = ModalType.OkCancel,
                     Action = "Show",
-                    Title = "Mod Deletion",
-                    Content = "Are you sure you want to delete this mod ? \rIt's file and information will be removed from Quasar.",
-                    OkButtonText = "I'm sure",
-                    CancelButtonText = "Cancel"
+                    Title = Properties.Resources.Library_Modal_DeleteTitle,
+                    Content = Properties.Resources.Library_Modal_DeleteContent,
+                    OkButtonText = Properties.Resources.Library_Modal_DeleteOK,
+                    CancelButtonText = Properties.Resources.Library_Modal_DeleteCancel
 
                 };
 

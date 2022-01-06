@@ -65,7 +65,7 @@ namespace Quasar.Build.Models
             try
             {
 
-                LibraryIndex = await Builder.CreateFileList(_ViewModel.MUVM.Library, Properties.Settings.Default.DefaultDir, Properties.Settings.Default.TransferPath);
+                LibraryIndex = await Builder.CreateFileList(_ViewModel.MUVM.Library, Properties.QuasarSettings.Default.DefaultDir, Properties.QuasarSettings.Default.TransferPath);
                 ViewModel.QuasarLogger.Debug("Got Local File List");
 
                 if (!await GetDistantFileList())
@@ -75,7 +75,6 @@ namespace Quasar.Build.Models
                 if (!await ProcessTransferList())
                     return false;
                 ViewModel.QuasarLogger.Debug("Finished processing transfer list");
-
 
                 //File Operations
                 if (FilesToDelete.Count != 0)
@@ -90,7 +89,7 @@ namespace Quasar.Build.Models
                     ViewModel.QuasarLogger.Debug("No files to delete");
                 }
 
-                if (LibraryIndex.Count != 0)
+                if (FilesToCopy.Count != 0)
                 {
                     if (!await CopyFiles())
                         return false;
@@ -175,7 +174,7 @@ namespace Quasar.Build.Models
             {
                 if (ModLoader != 4)
                 {
-                    File.Copy(Properties.Settings.Default.DefaultDir + "\\Resources\\ModLoaders\\ARCropolis\\arcropolis.toml", Properties.Settings.Default.DefaultDir + "\\Library\\arcropolis.toml", true);
+                    File.Copy(Properties.QuasarSettings.Default.DefaultDir + "\\Resources\\ModLoaders\\ARCropolis\\arcropolis.toml", Properties.QuasarSettings.Default.DefaultDir + "\\Library\\arcropolis.toml", true);
 
                     if (ModLoader == 1)
                     {
@@ -186,9 +185,9 @@ namespace Quasar.Build.Models
                         ARCropolisHelper.ModifyTouchmARCConfig(WorkspaceName);
                     }
 
-                    Writer.SendFile(Properties.Settings.Default.DefaultDir + "\\Library\\arcropolis.toml", "atmosphere\\contents\\01006A800016E000\\romfs\\arcropolis.toml");
+                    Writer.SendFile(Properties.QuasarSettings.Default.DefaultDir + "\\Library\\arcropolis.toml", "atmosphere\\contents\\01006A800016E000\\romfs\\arcropolis.toml");
 
-                    File.Delete(Properties.Settings.Default.DefaultDir + "\\Library\\arcropolis.toml");
+                    File.Delete(Properties.QuasarSettings.Default.DefaultDir + "\\Library\\arcropolis.toml");
                 }
                 ViewModel.BuildLog("Info", "Finished modloader setup");
 
@@ -217,14 +216,7 @@ namespace Quasar.Build.Models
                 //Getting distant hashes
                 GetDistantIndex();
 
-                if (OverwriteSelected)
-                {
-                    getDistantFileList();
-                }
-                else
-                {
-                    DistantFiles = new List<FileReference>();
-                }
+                DistantFiles = new List<FileReference>();
 
                 return true;
             }
@@ -287,8 +279,8 @@ namespace Quasar.Build.Models
         {
             try
             {
-                if (!Writer.CheckFolderExists(Properties.Settings.Default.TransferPath))
-                    Writer.CreateFolder(Properties.Settings.Default.TransferPath);
+                if (!Writer.CheckFolderExists(Properties.QuasarSettings.Default.TransferPath))
+                    Writer.CreateFolder(Properties.QuasarSettings.Default.TransferPath);
 
                 ViewModel.SetStep("Transfering Files");
                 ViewModel.SetProgressionStyle(false);
@@ -308,10 +300,10 @@ namespace Quasar.Build.Models
                             FilesToCopy.Remove(Ferb);
                         }
                         ////Sending ARCadia files
-                        //string ModConfigInputPath = String.Format(@"{0}\Library\Mods\{1}\info.toml", Properties.Settings.Default.DefaultDir, Item.Guid);
+                        //string ModConfigInputPath = String.Format(@"{0}\Library\Mods\{1}\info.toml", Properties.QuasarSettings.Default.DefaultDir, Item.Guid);
                         //string ModConfigOutputPath = String.Format(@"{0}\{1}\info.toml", WorkspacePath, Item.Name.Replace(".", ""));
-                        //string ModScreenInputPath = String.Format(@"{0}\Library\Screenshots\{1}.webp", Properties.Settings.Default.DefaultDir, Item.Guid);
-                        //string ModDefaultScreenInputPath = String.Format(@"{0}\Resources\images\NoScreenshot.webp", Properties.Settings.Default.DefaultDir);
+                        //string ModScreenInputPath = String.Format(@"{0}\Library\Screenshots\{1}.webp", Properties.QuasarSettings.Default.DefaultDir, Item.Guid);
+                        //string ModDefaultScreenInputPath = String.Format(@"{0}\Resources\images\NoScreenshot.webp", Properties.QuasarSettings.Default.DefaultDir);
                         //string ModScreenOutputPath = String.Format(@"{0}\{1}\preview.webp", WorkspacePath, Item.Name.Replace(".", ""));
 
                         //Writer.SendFile(ModConfigInputPath, ModConfigOutputPath);
@@ -359,21 +351,30 @@ namespace Quasar.Build.Models
         public void GetDistantIndex()
         {
             string DistantWorkspacePath = WorkspacePath;
-            string localHashFilePath = Properties.Settings.Default.DefaultDir + @"\Library\Downloads\Files.json";
+            string localHashFilePath = Properties.QuasarSettings.Default.DefaultDir + @"\Library\Downloads\Quasar.json";
 
-            //Getting Workspace Hashes
-            if (Writer.CheckFileExists(DistantWorkspacePath + @"Quasar.json"))
+            if (Writer.CheckFolderExists("ultimate"))
             {
-                Writer.GetFile(DistantWorkspacePath + @"Quasar.json", localHashFilePath);
-                ViewModel.QuasarLogger.Debug(String.Format("Distant Hash File Exists : {0}", DistantWorkspacePath + @"Quasar.json"));
-            }
+                //Getting Workspace Hashes
+                if (Writer.CheckFileExists(@"ultimate\Quasar.json"))
+                {
+                    Writer.GetFile(@"ultimate\Quasar.json", localHashFilePath);
+                    ViewModel.QuasarLogger.Debug(String.Format("Distant Hash File Exists : {0}", @"ultimate\Quasar.json"));
+                }
 
-            //Loading distant Workspace Hashes if found
-            if (File.Exists(localHashFilePath))
-            {
-                //TODO Edit this
-                ViewModel.QuasarLogger.Debug("File Exists, Loading Hashes");
-                //DistantIndex = UserDataManager.GetModFiles();
+                //Loading distant Workspace Hashes if found
+                if (File.Exists(localHashFilePath))
+                {
+                    //TODO Edit this
+                    ViewModel.QuasarLogger.Debug("File Exists, Loading Hashes");
+                    DistantIndex = UserDataManager.GetModFiles(Properties.QuasarSettings.Default.DefaultDir).ToList();
+                }
+                else
+                {
+                    ViewModel.QuasarLogger.Debug("No Remote Hash File");
+                    ViewModel.QuasarLogger.Debug("Hash List Created");
+                    DistantIndex = new List<FileReference>();
+                }
             }
             else
             {
@@ -381,6 +382,7 @@ namespace Quasar.Build.Models
                 ViewModel.QuasarLogger.Debug("Hash List Created");
                 DistantIndex = new List<FileReference>();
             }
+            
         }
         public void getDistantFileList()
         {
@@ -390,10 +392,22 @@ namespace Quasar.Build.Models
 
         public void getCopyFileList()
         {
+            FilesToCopy = new();
+
             if (DistantIndex.Count == 0)
             {
                 //No distant index means first copy
-                FilesToCopy = LibraryIndex;
+                foreach (FileReference FileReference in LibraryIndex)
+                {
+                    FilesToCopy.Add(new FileReference()
+                    {
+                        FileHash = FileReference.FileHash,
+                        LibraryItem = FileReference.LibraryItem,
+                        OutputFilePath = FileReference.OutputFilePath,
+                        OutsideFile = FileReference.OutsideFile,
+                        SourceFilePath = FileReference.SourceFilePath
+                    });
+                }
             }
             else
             {
@@ -419,7 +433,10 @@ namespace Quasar.Build.Models
         }
         public void getDeleteFileList()
         {
-            DistantIndex = new();
+            if (DistantIndex == null)
+            {
+                DistantIndex = new();
+            }
             FilesToDelete = new();
             //No distant hashes means nothing to compare with
             if(DistantIndex.Count != 0)
@@ -437,19 +454,20 @@ namespace Quasar.Build.Models
         public void SaveAndSendIndex()
         {
            //Saving, sending Hashes file
-           string LocalIndexFilePath = Properties.Settings.Default.DefaultDir + @"\Library\Downloads\Quasar.json";
+           string LocalIndexFilePath = Properties.QuasarSettings.Default.DefaultDir + @"\Library\Downloads\Quasar.json";
 
             foreach(FileReference mf in LibraryIndex)
             {
                 mf.SourceFilePath = "";
+                mf.LibraryItem = null;
             }
 
             //TODO Edit This
-            UserDataManager.SaveModFiles(LibraryIndex, "");
+            UserDataManager.SaveModFiles(LibraryIndex, Properties.QuasarSettings.Default.DefaultDir);
             ViewModel.QuasarLogger.Debug("Saved Index");
 
            //Sending Hash Files
-           Writer.SendFile(LocalIndexFilePath, WorkspacePath + @"Quasar.json");
+           Writer.SendFile(LocalIndexFilePath,  @"ultimate\Quasar.json");
 
            ViewModel.QuasarLogger.Debug("Sent Index");
            File.Delete(LocalIndexFilePath);
