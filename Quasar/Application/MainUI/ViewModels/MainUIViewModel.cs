@@ -493,21 +493,21 @@ namespace Quasar.MainUI.ViewModels
                 switch (BootStatus)
                 {
                     case UpdateStatus.ToUpdate:
-                        ModalEvent Meuh = new ModalEvent()
-                        {
-                            Action = "Show",
-                            EventName = "Updating",
-                            Title = Properties.Resources.MainUI_Modal_UpdateProgressTitle,
-                            Content = Properties.Resources.MainUI_Modal_UpdateProgressContent,
-                            OkButtonText = "OK",
-                            Type = ModalType.Loader
-                        };
+                        //ModalEvent Meuh = new ModalEvent()
+                        //{
+                        //    Action = "Show",
+                        //    EventName = "Updating",
+                        //    Title = Properties.Resources.MainUI_Modal_UpdateProgressTitle,
+                        //    Content = Properties.Resources.MainUI_Modal_UpdateProgressContent,
+                        //    OkButtonText = "OK",
+                        //    Type = ModalType.Loader
+                        //};
 
-                        EventSystem.Publish<ModalEvent>(Meuh);
-                        Task.Run(() =>
-                        {
-                            UpdateCommander.LaunchUpdateSequence(QuasarLogger);
-                        });
+                        //EventSystem.Publish<ModalEvent>(Meuh);
+                        //Task.Run(() =>
+                        //{
+                        //    UpdateCommander.LaunchUpdateSequence(QuasarLogger);
+                        //});
                         break;
 
                     case UpdateStatus.PreviouslyInstalled:

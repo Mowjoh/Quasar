@@ -230,6 +230,8 @@ namespace Quasar.Associations.ViewModels
                 UserDataManager.SaveContentItems(MUVM.ContentItems, AppDataPath);
                 UserDataManager.SaveLibrary(MUVM.Library, AppDataPath);
 
+                DisplayContentItems(Grouper.GetAssignmentContents(MUVM.LibraryViewModel.SelectedModListItem.ModViewModel.LibraryItem,MUVM.ContentItems, Properties.QuasarSettings.Default.GroupAssignmentTypes).ToList());
+
                 //Notifying process done
                 EventSystem.Publish<ModalEvent>(new()
                 {
@@ -240,6 +242,8 @@ namespace Quasar.Associations.ViewModels
                     OkButtonText = Properties.Resources.Modal_Label_DefaultOK,
                     Type = ModalType.Loader,
                 });
+
+               
             }
             
         }
