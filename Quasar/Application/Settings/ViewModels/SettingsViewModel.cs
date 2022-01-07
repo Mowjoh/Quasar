@@ -156,19 +156,19 @@ namespace Quasar.Settings.ViewModels
             EventSystem.Subscribe<ModalEvent>(ProcessModalEvent);
             EventSystem.Subscribe<SettingItem>(ProcessSettingChanged);
 
-            ManagementEventWatcher watcher = new ManagementEventWatcher();
-            WqlEventQuery query = new WqlEventQuery("SELECT * FROM Win32_VolumeChangeEvent WHERE EventType = 2 or EventType = 3");
+            //ManagementEventWatcher watcher = new ManagementEventWatcher();
+            //WqlEventQuery query = new WqlEventQuery("SELECT * FROM Win32_VolumeChangeEvent WHERE EventType = 2 or EventType = 3");
 
-            watcher.EventArrived += (s, e) =>
-            {
-                Application.Current.Dispatcher.Invoke((Action)delegate {
+            //watcher.EventArrived += (s, e) =>
+            //{
+            //    Application.Current.Dispatcher.Invoke((Action)delegate {
 
-                    LoadSettings();
-                });
-            };
+            //        LoadSettings();
+            //    });
+            //};
 
-            watcher.Query = query;
-            watcher.Start();
+            //watcher.Query = query;
+            //watcher.Start();
 
         }
 
