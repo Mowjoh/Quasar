@@ -13,7 +13,6 @@
         [Newtonsoft.Json.JsonIgnore]
         public string Slot { get; set; }
         public int GameElementID { get; set; }
-        [Newtonsoft.Json.JsonIgnore]
         public int QuasarModTypeID { get; set; }
         public int QuasarModTypeFileDefinitionID { get; set; }
         [Newtonsoft.Json.JsonIgnore]

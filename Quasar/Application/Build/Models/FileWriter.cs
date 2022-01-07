@@ -307,6 +307,93 @@ namespace Quasar.Build.Models
             return list;
         }
     }
+
+    public class DiskWriter : FileWriter
+    {
+        public string DiskPath { get; set; }
+        LibraryViewModel LVM { get; set; }
+        public ILog Log { get; set; }
+
+        public DiskWriter(LibraryViewModel _BVM)
+        {
+            LVM = _BVM;
+        }
+
+        public override async Task<bool> VerifyOK()
+        {
+            return true;
+        }
+        public override bool CheckFolderExists(string FolderPath)
+        {
+            return Directory.Exists(DiskPath + @"\" +FolderPath);
+        }
+        public override bool CheckFileExists(string FilePath)
+        {
+            return File.Exists(DiskPath + @"\" +FilePath);
+        }
+        public override bool SendFile(string SourceFilePath, string FilePath)
+        {
+            FileOperation.CheckCopyFile(SourceFilePath, DiskPath + @"\" +FilePath);
+            return true;
+        }
+        public override bool DeleteFile(string FilePath)
+        {
+            if (File.Exists(DiskPath + @"\" +FilePath))
+            {
+                File.Delete(DiskPath + @"\" +FilePath);
+            }
+            else
+            {
+
+            }
+            return true;
+        }
+        public override bool CreateFolder(string FolderPath)
+        {
+            try
+            {
+                Directory.CreateDirectory(DiskPath + @"\" +FolderPath);
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+            return true;
+        }
+        public override bool DeleteFolder(string FolderPath)
+        {
+            try
+            {
+                Directory.Delete(DiskPath + @"\" +FolderPath, true);
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+            return true;
+        }
+        public override void GetFile(string Remote, string DestinationFilePath)
+        {
+            File.Copy(DiskPath + @"\" +Remote, DestinationFilePath, true);
+        }
+        public override ObservableCollection<ModFile> GetRemoteFiles(string FolderPath)
+        {
+            ObservableCollection<ModFile> list = new ObservableCollection<ModFile>();
+            if (Directory.Exists(FolderPath))
+            {
+                foreach (string file in Directory.GetFiles(FolderPath, "*", SearchOption.AllDirectories))
+                {
+                    list.Add(new ModFile()
+                    {
+                        DestinationFilePath = file
+                    });
+                }
+            }
+            return list;
+        }
+    }
+
+
     public class MTPWriter : FileWriter
     {
         public string MediaDevice { get; set; }

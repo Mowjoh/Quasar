@@ -732,6 +732,15 @@ namespace Quasar.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Please enter the path of the folder you want Quasar to transfer files to.
+        /// </summary>
+        public static string Settings_Comment_Diskpath {
+            get {
+                return ResourceManager.GetString("Settings_Comment_Diskpath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Enter your Switch&apos;s IP address.
         /// </summary>
         public static string Settings_Comment_FtpIP {
@@ -873,6 +882,15 @@ namespace Quasar.Properties {
         public static string Settings_Label_AppVersion {
             get {
                 return ResourceManager.GetString("Settings_Label_AppVersion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Disk Path.
+        /// </summary>
+        public static string Settings_Label_Diskpath {
+            get {
+                return ResourceManager.GetString("Settings_Label_Diskpath", resourceCulture);
             }
         }
         
@@ -1117,11 +1135,20 @@ namespace Quasar.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Wireless (FTP)=FTP,Wired (SD)=SD.
+        ///   Looks up a localized string similar to Wireless (FTP)=FTP,Wired (SD)=SD,Disk Folder=Disk.
         /// </summary>
         public static string Settings_Values_PreferredTransferMethod {
             get {
                 return ResourceManager.GetString("Settings_Values_PreferredTransferMethod", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The path you have entered does not exist.
+        /// </summary>
+        public static string Transfer_Log_DiskPathUnavailable {
+            get {
+                return ResourceManager.GetString("Transfer_Log_DiskPathUnavailable", resourceCulture);
             }
         }
         
@@ -1203,6 +1230,15 @@ namespace Quasar.Properties {
         public static string Transfer_Log_ProcessStart {
             get {
                 return ResourceManager.GetString("Transfer_Log_ProcessStart", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The SD you have selected is not available.
+        /// </summary>
+        public static string Transfer_Log_SelectedSDUnavailable {
+            get {
+                return ResourceManager.GetString("Transfer_Log_SelectedSDUnavailable", resourceCulture);
             }
         }
         

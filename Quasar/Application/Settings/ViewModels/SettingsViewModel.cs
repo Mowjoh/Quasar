@@ -28,6 +28,8 @@ namespace Quasar.Settings.ViewModels
         ObservableCollection<SettingItemView> _WarningSettings { get; set; }
         ObservableCollection<SettingItemView> _TransferSettings { get; set; }
         private bool _Setup { get; set; }
+        private bool SDSelected => Properties.QuasarSettings.Default.PreferredTransferMethod == "SD";
+        private bool DiskSelected => Properties.QuasarSettings.Default.PreferredTransferMethod == "Disk";
         #endregion
 
         #region Public
@@ -163,8 +165,6 @@ namespace Quasar.Settings.ViewModels
 
                     LoadSettings();
                 });
-
-                
             };
 
             watcher.Query = query;
@@ -197,13 +197,32 @@ namespace Quasar.Settings.ViewModels
             {
                 new("SupressModDeletion", Properties.Resources.Settings_Label_SupressModDeletion, Properties.Resources.Settings_Comment_SupressModDeletion, SettingItemType.Toggle),
             };
+
                 TransferSettings = new ObservableCollection<SettingItemView>
-            {
-                new("TransferPath", Properties.Resources.Settings_Label_ModsPath, Properties.Resources.Settings_Comment_ModsPath, SettingItemType.Input),
-                new("PreferredTransferMethod", Properties.Resources.Settings_Label_PreferredTransferMethod, Properties.Resources.Settings_Comment_PreferredTransferMethod, SettingItemType.List,Properties.Resources.Settings_Values_PreferredTransferMethod),
-                new("SelectedSD", Properties.Resources.Settings_Label_SDSelect, Properties.Resources.Settings_Comment_SDSelect, SettingItemType.List,getSDCards()),
-                new("TransferQuasarFoldersOnly", Properties.Resources.Settings_Label_ManageAllMods, Properties.Resources.Settings_Comment_ManageAllMods, SettingItemType.Toggle)
-            };
+                        {
+                            new("PreferredTransferMethod", Properties.Resources.Settings_Label_PreferredTransferMethod, Properties.Resources.Settings_Comment_PreferredTransferMethod, SettingItemType.List,Properties.Resources.Settings_Values_PreferredTransferMethod),
+                        };
+
+                if (SDSelected)
+                {
+                    TransferSettings.Add(new("TransferPath", Properties.Resources.Settings_Label_ModsPath, Properties.Resources.Settings_Comment_ModsPath, SettingItemType.Input));
+                    TransferSettings.Add(new("SelectedSD", Properties.Resources.Settings_Label_SDSelect, Properties.Resources.Settings_Comment_SDSelect, SettingItemType.List, getSDCards()));
+                }
+                else
+                {
+                    if (DiskSelected)
+                    {
+                        TransferSettings.Add(new("DiskPath", Properties.Resources.Settings_Label_Diskpath, Properties.Resources.Settings_Comment_Diskpath, SettingItemType.Input));
+                    }
+                    else
+                    {
+                        TransferSettings.Add(new("TransferPath", Properties.Resources.Settings_Label_ModsPath, Properties.Resources.Settings_Comment_ModsPath, SettingItemType.Input));
+                    }
+                }
+
+                TransferSettings.Add(new("TransferQuasarFoldersOnly", Properties.Resources.Settings_Label_ManageAllMods, Properties.Resources.Settings_Comment_ManageAllMods, SettingItemType.Toggle));
+                
+                
                 QuasarLogger.Debug(Properties.Resources.Settings_Values_PreferredTransferMethod);
 
                 Setup = false;
@@ -218,17 +237,36 @@ namespace Quasar.Settings.ViewModels
 
         private void ProcessSettingChanged(SettingItem SettingItem)
         {
-            if (SettingItem.SettingName == "Language" && !Setup)
+            if (!Setup)
             {
-                EventSystem.Publish<ModalEvent>(new()
+                switch (SettingItem.SettingName)
                 {
-                    Action = "Show",
-                    Content = Properties.Resources.Settings_Modal_Content_ShutdownWarning,
-                    Title = Properties.Resources.Settings_Modal_Title_ShutdownWarning,
-                    OkButtonText = Properties.Resources.Settings_Modal_Button_ShutdownWarning,
-                    EventName = "ShutdownWarning",
-                    Type = ModalType.Warning
-                });
+                    default:
+                        break;
+                    case "Language":
+                        EventSystem.Publish<ModalEvent>(new()
+                        {
+                            Action = "Show",
+                            Content = Properties.Resources.Settings_Modal_Content_ShutdownWarning,
+                            Title = Properties.Resources.Settings_Modal_Title_ShutdownWarning,
+                            OkButtonText = Properties.Resources.Settings_Modal_Button_ShutdownWarning,
+                            EventName = "ShutdownWarning",
+                            Type = ModalType.Warning
+                        });
+                        break;
+                    case "PreferredTransferMethod":
+                        LoadSettings();
+                        break;
+                    case "TransferPath":
+                        Properties.QuasarSettings.Default.TransferPath = SettingItem.DisplayValue;
+                        Properties.QuasarSettings.Default.Save();
+                        break;
+                    case "DiskPath":
+                        Properties.QuasarSettings.Default.DiskPath = SettingItem.DisplayValue;
+                        Properties.QuasarSettings.Default.Save();
+                        break;
+
+                }
             }
         }
         #endregion

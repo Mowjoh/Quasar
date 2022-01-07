@@ -344,6 +344,9 @@ Quasar will be of no use to you.</value>
   <data name="Settings_Comment_AskMoveInstall" xml:space="preserve">
     <value>Use this button to move all mods to a new location on your computer</value>
   </data>
+  <data name="Settings_Comment_Diskpath" xml:space="preserve">
+    <value>Please enter the path of the folder you want Quasar to transfer files to</value>
+  </data>
   <data name="Settings_Comment_FtpIP" xml:space="preserve">
     <value>Enter the address and port like this : [IP:Port], like so 192.168.1.64:5000</value>
   </data>
@@ -392,6 +395,9 @@ The app will need to be rebooted to see the change</value>
   </data>
   <data name="Settings_Label_AppVersion" xml:space="preserve">
     <value>Application Version</value>
+  </data>
+  <data name="Settings_Label_Diskpath" xml:space="preserve">
+    <value>Disk Path</value>
   </data>
   <data name="Settings_Label_FtpIP" xml:space="preserve">
     <value>FTP Address</value>
@@ -478,7 +484,10 @@ Also check that your FTP server is running</value>
     <value>Invalid Info</value>
   </data>
   <data name="Settings_Values_PreferredTransferMethod" xml:space="preserve">
-    <value>Wireless (FTP)=FTP,Wired (SD)=SD</value>
+    <value>Wireless (FTP)=FTP,Wired (SD)=SD,Disk Folder=Disk</value>
+  </data>
+  <data name="Transfer_Log_DiskPathUnavailable" xml:space="preserve">
+    <value>The path you have entered does not exist</value>
   </data>
   <data name="Transfer_Log_Error" xml:space="preserve">
     <value>Error</value>
@@ -506,6 +515,9 @@ Also check that your FTP server is running</value>
   </data>
   <data name="Transfer_Log_ProcessStart" xml:space="preserve">
     <value>Transfer Process Start :</value>
+  </data>
+  <data name="Transfer_Log_SelectedSDUnavailable" xml:space="preserve">
+    <value>The SD you have selected is not available</value>
   </data>
   <data name="Transfer_Log_TransferFinished" xml:space="preserve">
     <value>Transfer Finished</value>

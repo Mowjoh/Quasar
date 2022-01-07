@@ -42,6 +42,8 @@ namespace Quasar.Build.Models
         string WorkspacePath { get; set; }
 
         List<FileReference> LibraryIndex { get; set; }
+        List<FileReference> AssignedIndex { get; set; }
+        List<FileReference> IgnoredIndex { get; set; }
         List<FileReference> DistantIndex { get; set; }
         List<FileReference> DistantFiles { get; set; }
         List<FileReference> FilesToCopy { get; set; }
@@ -66,6 +68,8 @@ namespace Quasar.Build.Models
             {
 
                 LibraryIndex = await Builder.CreateFileList(_ViewModel.MUVM.Library, Properties.QuasarSettings.Default.DefaultDir, Properties.QuasarSettings.Default.TransferPath);
+                AssignedIndex = await Builder.CreateContentFileList(_ViewModel.MUVM.Library, _ViewModel.MUVM.ContentItems, _ViewModel.MUVM.QuasarModTypes,_ViewModel.MUVM.Games[0], Properties.QuasarSettings.Default.DefaultDir, Properties.QuasarSettings.Default.TransferPath);
+                IgnoredIndex = await Builder.CreateIgnoreFileList(_ViewModel.MUVM.Library, _ViewModel.MUVM.ContentItems, Properties.QuasarSettings.Default.DefaultDir, Properties.QuasarSettings.Default.TransferPath);
                 ViewModel.QuasarLogger.Debug("Got Local File List");
 
                 if (!await GetDistantFileList())
@@ -233,6 +237,14 @@ namespace Quasar.Build.Models
         {
             try
             {
+                FilesToDelete = new();
+
+                //Comparing Library and Assignment Indexes
+                processAssignmentList();
+
+                //Comparing Library and Ignored Indexes
+                processIgnoreList();
+
                 //List files for copy
                 getCopyFileList();
 
@@ -390,6 +402,47 @@ namespace Quasar.Build.Models
             //DistantFiles = Writer.GetRemoteFiles(WorkspacePath);
         }
 
+        public void processAssignmentList()
+        {
+            foreach(FileReference file in AssignedIndex)
+            {
+                FileReference MatchedFile = LibraryIndex.SingleOrDefault(f => f.SourceFilePath.Replace(@"\",@"/") == file.SourceFilePath.Replace(@"\", @"/"));
+                if (file.Status == FileStatus.Edited)
+                {
+                    if(MatchedFile == null)
+                    {
+                        LibraryIndex.Add(file);
+                    }
+                    else
+                    {
+                        FilesToDelete.Add(new FileReference 
+                        {
+                             FileHash = MatchedFile.FileHash,
+                             LibraryItem = MatchedFile.LibraryItem,
+                             OutputFilePath = MatchedFile.OutputFilePath,
+                             OutsideFile = MatchedFile.OutsideFile,
+                             SourceFilePath = MatchedFile.SourceFilePath,
+                             Status = MatchedFile.Status
+                        });
+                        MatchedFile.OutputFilePath = file.OutputFilePath;
+                    }
+                    
+                }
+            }
+        }
+
+        public void processIgnoreList()
+        {
+            foreach (FileReference file in AssignedIndex)
+            {
+                FileReference MatchedFile = LibraryIndex.SingleOrDefault(f => f.SourceFilePath == file.SourceFilePath);
+                if (file.Status == FileStatus.Ignored)
+                {
+                    LibraryIndex.Remove(MatchedFile);
+                }
+
+            }
+        }
         public void getCopyFileList()
         {
             FilesToCopy = new();
@@ -437,8 +490,6 @@ namespace Quasar.Build.Models
             {
                 DistantIndex = new();
             }
-            FilesToDelete = new();
-            //No distant hashes means nothing to compare with
             if(DistantIndex.Count != 0)
             {
                 foreach(FileReference FileReference in DistantIndex)

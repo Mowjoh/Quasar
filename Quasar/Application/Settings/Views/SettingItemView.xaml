@@ -77,7 +77,7 @@
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="50" />
             <ColumnDefinition Width="1*" />
-            <ColumnDefinition Width="200" />
+            <ColumnDefinition Width="300" />
         </Grid.ColumnDefinitions>
 
         <Border Grid.Column="0" Grid.ColumnSpan="4"
@@ -108,8 +108,8 @@
 
         <!--#region Input Mode-->
         <TextBox Grid.Column="3"
-                 HorizontalAlignment="Stretch" VerticalAlignment="Center" HorizontalContentAlignment="Stretch"
-                 Style="{StaticResource SettingsTextBox}" Text="{Binding SettingItem.DisplayValue}" />
+                 HorizontalAlignment="Stretch" VerticalAlignment="Center" HorizontalContentAlignment="Stretch" KeyUp="TextBox_KeyUp"
+                 Style="{StaticResource SettingsTextBox}" Text="{Binding SettingItem.DisplayValue, UpdateSourceTrigger=PropertyChanged}" />
         <!--#endregion-->
 
         <!--#region Choice Mode-->

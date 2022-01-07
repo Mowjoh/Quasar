@@ -285,5 +285,17 @@ namespace Quasar.Properties {
                 this["SelectedSD"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string DiskPath {
+            get {
+                return ((string)(this["DiskPath"]));
+            }
+            set {
+                this["DiskPath"] = value;
+            }
+        }
     }
 }

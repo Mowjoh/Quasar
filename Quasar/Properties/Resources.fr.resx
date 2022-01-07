@@ -345,6 +345,9 @@ les fichiers d'une installation précédente</value>
   <data name="Settings_Comment_AskMoveInstall" xml:space="preserve">
     <value>Utilisez cette option pour déplacer tous les fichiers de mods dans un autre dossier de l'ordinateur</value>
   </data>
+  <data name="Settings_Comment_Diskpath" xml:space="preserve">
+    <value>Veuillez entrer le chemin d'accès au dossier dans lequel Quasar effectuera le transfert de mods</value>
+  </data>
   <data name="Settings_Comment_FtpIP" xml:space="preserve">
     <value>Veuillez remplir ce champ avec l'adresse IP de la Switch</value>
   </data>
@@ -393,6 +396,9 @@ L'app doit être redémarrer pour que le changement soit effectif</value>
   </data>
   <data name="Settings_Label_AppVersion" xml:space="preserve">
     <value>Version de l'application</value>
+  </data>
+  <data name="Settings_Label_Diskpath" xml:space="preserve">
+    <value>Emplacement Disque</value>
   </data>
   <data name="Settings_Label_FtpIP" xml:space="preserve">
     <value>Adresse IP de la Switch</value>
@@ -478,7 +484,10 @@ que la bonne IP et le bon port soient utilisés.</value>
     <value>Informations invalides</value>
   </data>
   <data name="Settings_Values_PreferredTransferMethod" xml:space="preserve">
-    <value>Sans-fil (FTP)=FTP,Local (SD)=SD</value>
+    <value>Sans-fil (FTP)=FTP,Local (SD)=SD, Emplacement Disque=Disk</value>
+  </data>
+  <data name="Transfer_Log_DiskPathUnavailable" xml:space="preserve">
+    <value>Le chemin disque renseigné n'existe pas</value>
   </data>
   <data name="Transfer_Log_Error" xml:space="preserve">
     <value>Erreur</value>
@@ -506,6 +515,9 @@ que la bonne IP et le bon port soient utilisés.</value>
   </data>
   <data name="Transfer_Log_ProcessStart" xml:space="preserve">
     <value>Début du transfert :</value>
+  </data>
+  <data name="Transfer_Log_SelectedSDUnavailable" xml:space="preserve">
+    <value>La SD Sélectionée n'est pas disponible</value>
   </data>
   <data name="Transfer_Log_TransferFinished" xml:space="preserve">
     <value>Transfert terminé</value>

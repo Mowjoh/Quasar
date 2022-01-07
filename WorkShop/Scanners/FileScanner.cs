@@ -17,7 +17,7 @@ namespace Workshop.Scanners
     public static class FileScanner
     {
         //List of files and extensions to filter with
-        public static string[] IgnoreExtensions = { ".csv" };
+        public static string[] IgnoreExtensions = { ".csv", ".jpg" };
         public static string[] IgnoreFiles = { "ModInformation.json" };
         public static string RootFolders = "append|assist|boss|camera|campaign|common|effect|enemy|fighter|finalsmash|item|item|miihat|param|pokemon|prebuilt;|render|snapshot|stream;|sound|spirits|stage|standard|ui";
         
@@ -367,6 +367,97 @@ namespace Workshop.Scanners
             return output;
         }
 
+        public static string ProcessScanFileOutput(ScanFile scan_file, QuasarModType qmt, int SlotNumber, string GameDataItem, bool DLC)
+        {
+            Regex FolderReplacinator = new Regex("{Folder}");
+            Regex PartReplacinator = new Regex("{Part}");
+            Regex GameDataReplacinator = new Regex("{GameData}");
+            Regex SlotReplacinatorSingle = new Regex("{S0}");
+            Regex SlotReplacinatorDouble = new Regex("{S00}");
+            Regex SlotReplacinatorTriple = new Regex("{S000}");
+            Regex AnyReplacinator = new Regex("{AnyFile}");
+
+            QuasarModTypeFileDefinition def = qmt.QuasarModTypeFileDefinitions.Single(d => d.ID == scan_file.QuasarModTypeFileDefinitionID);
+            string OutputFile = def.QuasarModTypeBuilderDefinitions[0].OutputFileName;
+            string OutputPath = def.QuasarModTypeBuilderDefinitions[0].OutputPath;
+
+            Regex fileRegex = new Regex(PrepareRegex(def.SearchFileName));
+            Regex folderRegex = new Regex(PrepareRegex(def.SearchPath));
+
+            Match m = fileRegex.Match(scan_file.FilePath);
+            Match m2 = folderRegex.Match(scan_file.FilePath);
+
+            //Processing File Output
+            if(m.Groups["Part"].Captures.Count > 1)
+            {
+                foreach (string s in m.Groups["Part"].Captures)
+                {
+                    OutputFile = PartReplacinator.Replace(OutputFile, s, 1);
+                }
+            }
+            else
+            {
+                OutputFile = PartReplacinator.Replace(OutputFile, m.Groups["Part"].Value, 1);
+            }
+
+            if (m.Groups["Folder"].Captures.Count > 1)
+            {
+                foreach (string s in m.Groups["Folder"].Captures)
+                {
+                    OutputFile = PartReplacinator.Replace(OutputFile, s, 1);
+                }
+            }
+            else
+            {
+                OutputFile = PartReplacinator.Replace(OutputFile, m.Groups["Folder"].Value, 1);
+            }
+
+            OutputFile = GameDataReplacinator.Replace(OutputFile, GameDataItem, 1);
+
+            OutputFile = SlotReplacinatorSingle.Replace(OutputFile, SlotNumber.ToString("0"), 1);
+            OutputFile = SlotReplacinatorDouble.Replace(OutputFile, SlotNumber.ToString("00"), 1);
+            OutputFile = SlotReplacinatorTriple.Replace(OutputFile, SlotNumber.ToString("000"), 1);
+
+            if(m.Groups["AnyFile"].Success)
+            {
+                OutputFile = AnyReplacinator.Replace(OutputFile,Path.GetFileNameWithoutExtension(scan_file.SourcePath), 1);
+            }
+
+            //Processing Folder Output
+            if (m2.Groups["Part"].Captures.Count > 1)
+            {
+                foreach (string s in m2.Groups["Part"].Captures)
+                {
+                    OutputFile = PartReplacinator.Replace(OutputFile, s, 1);
+                }
+            }
+            else
+            {
+                OutputPath = PartReplacinator.Replace(OutputPath, m.Groups["Part"].Value, 1);
+            }
+            if (m2.Groups["Folder"].Captures.Count > 1)
+            {
+                foreach (string s in m2.Groups["Folder"].Captures)
+                {
+                    OutputPath = PartReplacinator.Replace(OutputPath, s, 1);
+                }
+            }
+            else
+            {
+                OutputPath = PartReplacinator.Replace(OutputPath, m.Groups["Folder"].Value, 1);
+            }
+
+            OutputPath = GameDataReplacinator.Replace(OutputPath, GameDataItem, 1);
+
+            OutputPath = SlotReplacinatorSingle.Replace(OutputPath, SlotNumber.ToString("0"), 1);
+            OutputPath = SlotReplacinatorDouble.Replace(OutputPath, SlotNumber.ToString("00"), 1);
+            OutputPath = SlotReplacinatorTriple.Replace(OutputPath, SlotNumber.ToString("000"), 1);
+
+            OutputPath = OutputPath.Replace("{DLC}", DLC? "_patch" : "");
+
+
+            return OutputPath + @"/" + OutputFile;
+        }
         /// <summary>
         /// Output Scan results to a csv on the user's desktop
         /// </summary>
