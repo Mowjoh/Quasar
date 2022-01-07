@@ -1,10 +1,6 @@
 ﻿using DataModels.Common;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DataModels.User
 {
@@ -22,16 +18,21 @@ namespace DataModels.User
         public int QuasarModTypeID { get; set; }
         [Newtonsoft.Json.JsonProperty]
         public int SlotNumber { get; set; }
+        public int OriginalSlotNumber { get; set; }
+        public int OriginalGameElementID { get; set; }
         [Newtonsoft.Json.JsonProperty]
         public ObservableCollection<ScanFile> ScanFiles { get; set; }
+        public string ParentName { get; set; }
+        public string GroupName { get; set; }
     }
 
-    public class SlotContent
+    public class AssignmentContent
     {
-        public string SlotName { get; set; }
+        public string AssignmentName { get; set; }
 
         public int SlotNumber { get; set; }
-        public ObservableCollection<ContentItem> SlotContentItems { get; set; }
+        public ObservableCollection<ContentItem> AssignmentContentItems { get; set; }
+        public bool Single => AssignmentContentItems.Count == 1;
     }
 
     public class ModFile

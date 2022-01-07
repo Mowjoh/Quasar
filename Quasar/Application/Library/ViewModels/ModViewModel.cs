@@ -4,12 +4,9 @@ using Quasar.Controls.ModManagement.ViewModels;
 using DataModels.Common;
 using DataModels.User;
 using DataModels.Resource;
-using Quasar.FileSystem;
 using Quasar.Helpers;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows;
@@ -17,8 +14,6 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using Quasar.MainUI.ViewModels;
-using Workshop.FileManagement;
 
 namespace Quasar.Controls.Mod.ViewModels
 {
@@ -384,6 +379,7 @@ namespace Quasar.Controls.Mod.ViewModels
         }
         public bool NoContent => ContentStatValue != 3;
         public bool ManualMod => LibraryItem.GBItem == null;
+        public bool Edited { get; set; }
         public bool Smol
         {
             get
@@ -632,7 +628,7 @@ namespace Quasar.Controls.Mod.ViewModels
         {
             if (!_Smol)
             {
-                string imageSource = Properties.Settings.Default.DefaultDir + @"\Library\Screenshots\";
+                string imageSource = Properties.QuasarSettings.Default.DefaultDir + @"\Library\Screenshots\";
                 string[] files = System.IO.Directory.GetFiles(imageSource, LibraryItem.Guid + ".*");
 
                 if (files.Length > 0)
@@ -641,12 +637,12 @@ namespace Quasar.Controls.Mod.ViewModels
                 }
                 else
                 {
-                    ImageSource = new Uri(Properties.Settings.Default.DefaultDir + @"\Resources\images\NoScreenshot.png");
+                    ImageSource = new Uri(Properties.QuasarSettings.Default.DefaultDir + @"\Resources\images\NoScreenshot.png");
                 }
             }
             else
             {
-                ImageSource = new Uri(Properties.Settings.Default.DefaultDir + @"\Resources\images\NoScreenshot.png");
+                ImageSource = new Uri(Properties.QuasarSettings.Default.DefaultDir + @"\Resources\images\NoScreenshot.png");
             }
             
         }
@@ -657,7 +653,11 @@ namespace Quasar.Controls.Mod.ViewModels
         public void LoadStats()
         {
             OnPropertyChanged("LibraryItem");
+            OnPropertyChanged("StandbyNotEditing");
+            OnPropertyChanged("StandbyEditing");
 
+            Edited = MVM.MUVM.ContentItems.Any(ci => ci.LibraryItemGuid == LibraryItem.Guid && (ci.OriginalGameElementID != ci.GameElementID || ci.OriginalSlotNumber != ci.SlotNumber));
+            OnPropertyChanged("Edited");
         }
 
         /// <summary>
@@ -741,11 +741,11 @@ namespace Quasar.Controls.Mod.ViewModels
                 HumanTime = Properties.Resources.ModListItem_Time_Long;
             if (t.TotalDays >= 2)
                 HumanTime = String.Format(Properties.Resources.ModListItem_Time_Days, t.Days);
-            if (t.TotalDays == 1)
+            if (t.TotalDays == 1 && t.TotalDays < 1)
                 HumanTime = String.Format(Properties.Resources.ModListItem_Time_OneDay);
-            if (t.TotalHours >= 2)
+            if (t.TotalHours >= 2 && t.TotalDays < 1)
                 HumanTime = String.Format(Properties.Resources.ModListItem_Time_Hours, t.Hours);
-            if (t.TotalHours == 1)
+            if (t.TotalHours == 1 && t.TotalDays < 1)
                 HumanTime = String.Format(Properties.Resources.ModListItem_Time_OneHour);
 
             

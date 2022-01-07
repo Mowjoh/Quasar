@@ -8,7 +8,7 @@
             <RowDefinition Height="64" />
             <RowDefinition Height="64" />
             <RowDefinition />
-            <RowDefinition Height="1" />
+            <RowDefinition Height="4" />
             <RowDefinition Height="125" />
             <RowDefinition Height="1" />
             <RowDefinition Height="60" />
@@ -35,16 +35,16 @@
                   Width="200" Height="32" Margin="16,32,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
                   Style="{StaticResource ComboBoxFlatStyle}" />
 
-        <Button Width="24" Margin="223,0,0,5" HorizontalAlignment="Left" VerticalAlignment="Bottom"
-                Command="{Binding Path=ResetFilters}" Template="{StaticResource ActionResetFilters}" ToolTip="Reset the filters" />
-
-        <TextBox Width="200" Height="32" Margin="254,32,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
+        <TextBox Width="200" Height="32" Margin="234,32,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
                  Style="{StaticResource CutieTextBoxStyle}" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" />
 
-        <Button Width="200" Margin="480,32,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
+        <Button Width="24" Margin="440,10,0,3" HorizontalAlignment="Left" VerticalAlignment="Bottom"
+                Command="{Binding Path=ResetFilters}" Template="{StaticResource ActionResetFilters}" ToolTip="Reset the filters" />
+
+        <Button Width="200" Margin="530,32,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
                 Command="{Binding Path=AddManual}" Content="{x:Static p:Resources.Library_Button_AddModManually}" Template="{StaticResource CutieSmallButtonTemplate}" />
 
-        <Button Width="200" Margin="690,32,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
+        <Button Width="200" Margin="750,32,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
                 Command="{Binding Path=LauchTransferCommand}" Content="{x:Static p:Resources.Library_Button_StartTransfer}" Template="{StaticResource CutieSmallButtonTemplate}" />
         <!--#endregion-->
 
@@ -64,7 +64,7 @@
 
 
         <CheckBox Margin="0,30,10,0" HorizontalAlignment="Right" VerticalAlignment="Top"
-                  BorderBrush="LightBlue" IsChecked="{Binding OrangeChecked}" Template="{StaticResource CutieCheckBoxOrange}" />
+                  BorderBrush="LightBlue" IsChecked="{Binding BlueChecked}" Template="{StaticResource CutieCheckBoxOrange}" />
 
         <CheckBox Grid.RowSpan="2"
                   Margin="0,55,10,0" HorizontalAlignment="Right" VerticalAlignment="Top"
@@ -173,33 +173,38 @@
               Background="{StaticResource CutieBG06}" Visibility="{Binding TransferWindowVisible, Converter={StaticResource BoolVisi}}" />
         <Grid Grid.Row="4"
               Background="{DynamicResource CutieBG01}" Visibility="{Binding TransferWindowVisible, Converter={StaticResource BoolVisi}}">
+
+            <!--  In/Out Button  -->
+            <Button Margin="10,0,0,0" HorizontalAlignment="Right" VerticalAlignment="Top"
+                    Command="{Binding Path=CloseBuildCommand}" Template="{StaticResource ActionCloseBuildButton}" ToolTip="{x:Static p:Resources.Transfer_Tooltip_CloseWindowButton}" />
+
             <!--#region  Status-->
             <StackPanel Margin="15,10,0,0" HorizontalAlignment="Center" VerticalAlignment="Top"
                         Orientation="Horizontal">
                 <TextBlock HorizontalAlignment="Center"
-                           FontFamily="{StaticResource PoppinsRegular}" FontSize="16" Style="{StaticResource CutieTextBlockStyle}" Text="Transfer Status :  " />
-                <TextBlock Margin="0,1,0,0" HorizontalAlignment="Center"
+                           FontFamily="{StaticResource PoppinsRegular}" FontSize="16" Style="{StaticResource CutieTextBlockStyle}" Text="{x:Static p:Resources.Transfer_Step_Global}" />
+                <TextBlock Margin="5,1,0,0" HorizontalAlignment="Center"
                            FontFamily="{StaticResource PoppinsRegular}" FontSize="16" Style="{StaticResource CutieTextBlockStyle}" Text="{Binding Total}" />
             </StackPanel>
             <!--#endregion-->
 
             <!--#region Information panel-->
             <TextBlock Margin="10,46,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
-                       FontFamily="{StaticResource PoppinsRegular}" FontSize="12" Style="{StaticResource CutieTextBlockStyle}" Text="Step : Transfering Mods" />
+                       FontFamily="{StaticResource PoppinsRegular}" FontSize="12" Style="{StaticResource CutieTextBlockStyle}" Text="{Binding Steps}" />
             <TextBlock Margin="10,75,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
-                       FontFamily="{StaticResource PoppinsRegular}" FontSize="12" Style="{StaticResource CutieTextBlockStyle}" Text="SubStep : Transfering files for `Casino Luigi`" />
+                       FontFamily="{StaticResource PoppinsRegular}" FontSize="12" Style="{StaticResource CutieTextBlockStyle}" Text="{Binding SubStep}" />
 
             <TextBlock Margin="10,46,10,0" HorizontalAlignment="Right" VerticalAlignment="Top"
-                       FontFamily="{StaticResource PoppinsRegular}" FontSize="12" Style="{StaticResource CutieTextBlockStyle}" Text="2 To/s" />
+                       FontFamily="{StaticResource PoppinsRegular}" FontSize="12" Style="{StaticResource CutieTextBlockStyle}" Text="{Binding Speed}" />
             <TextBlock Margin="10,75,10,0" HorizontalAlignment="Right" VerticalAlignment="Top"
-                       FontFamily="{StaticResource PoppinsRegular}" FontSize="12" Style="{StaticResource CutieTextBlockStyle}" Text="500Go / 4 Po" />
+                       FontFamily="{StaticResource PoppinsRegular}" FontSize="12" Style="{StaticResource CutieTextBlockStyle}" Text="{Binding Size}" />
             <!--#endregion-->
 
             <!--  Progress Bar  -->
             <ProgressBar Grid.Row="1"
                          Height="10" Margin="10,105,10,0" VerticalAlignment="Top"
                          IsIndeterminate="{Binding ProgressBarStyle}"
-                         Value="30" />
+                         Value="{Binding BuildProgress}" />
         </Grid>
         <Grid Grid.Row="5"
               Background="{StaticResource CutieBG06}" Visibility="{Binding TransferWindowVisible, Converter={StaticResource BoolVisi}}" />
@@ -207,14 +212,7 @@
               Margin="10,0,0,0"
               Background="{DynamicResource CutieBG00}" Visibility="{Binding TransferWindowVisible, Converter={StaticResource BoolVisi}}">
             <ScrollViewer>
-                <TextBlock FontFamily="{StaticResource PoppinsRegular}" Foreground="{DynamicResource QuasarTextColor}" TextWrapping="Wrap">
-                    <Run Text="Test" />
-                    <LineBreak />
-                    <Run Text="Test 2" />
-                    <LineBreak />
-                    <Run Text="Test 3" />
-                    <LineBreak />
-                </TextBlock>
+                <TextBlock FontFamily="{StaticResource PoppinsRegular}" Foreground="{DynamicResource QuasarTextColor}" Text="{Binding Logs}" TextWrapping="Wrap" />
             </ScrollViewer>
         </Grid>
 

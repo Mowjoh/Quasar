@@ -1,18 +1,9 @@
 ﻿using log4net;
 using log4net.Appender;
-using Quasar.FileSystem;
-using Quasar.Helpers.FileOperations;
 using Quasar.Helpers.Quasar_Management;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Forms;
 using Workshop.Updates;
 
 namespace Quasar.Internal.Tools
@@ -26,7 +17,7 @@ namespace Quasar.Internal.Tools
         public static UpdateStatus CheckUpdateStatus(ILog QuasarLogger)
         {
             //If the loaded conf file is a new update file
-            if (Properties.Settings.Default.UpgradeRequired)
+            if (Properties.QuasarSettings.Default.UpgradeRequired)
             {
                 //Making file up to date with previous data
                 UpgradeSettingFile();
@@ -66,8 +57,8 @@ namespace Quasar.Internal.Tools
                     InstallManager.ChangeInstallLocationSetting();
                     break;
                 case MessageBoxResult.No:
-                    Properties.Settings.Default.DefaultDir = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\Quasar";
-                    Properties.Settings.Default.Save();
+                    Properties.QuasarSettings.Default.DefaultDir = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\Quasar";
+                    Properties.QuasarSettings.Default.Save();
                     break;
             }
 
@@ -100,12 +91,12 @@ namespace Quasar.Internal.Tools
         {
             string executionVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
             executionVersion = executionVersion.Replace(".", "");
-            Properties.Settings.Default.Upgrade();
-            string previous = Properties.Settings.Default.AppVersion;
-            Properties.Settings.Default.UpgradeRequired = false;
-            Properties.Settings.Default.AppVersion = executionVersion;
-            Properties.Settings.Default.PreviousVersion = previous;
-            Properties.Settings.Default.Save();
+            Properties.QuasarSettings.Default.Upgrade();
+            string previous = Properties.QuasarSettings.Default.AppVersion;
+            Properties.QuasarSettings.Default.UpgradeRequired = false;
+            Properties.QuasarSettings.Default.AppVersion = executionVersion;
+            Properties.QuasarSettings.Default.PreviousVersion = previous;
+            Properties.QuasarSettings.Default.Save();
             if (previous == "0000")
             {
                 InitialSetupRequested = true;
@@ -116,7 +107,7 @@ namespace Quasar.Internal.Tools
         {
             QuasarLogger = LogManager.GetLogger("QuasarAppender");
             FileAppender appender = (FileAppender)QuasarLogger.Logger.Repository.GetAppenders()[0];
-            appender.File = Properties.Settings.Default.DefaultDir + "\\Quasar.log";
+            appender.File = Properties.QuasarSettings.Default.DefaultDir + "\\Quasar.log";
             appender.Threshold = log4net.Core.Level.Debug;
 
             appender.ActivateOptions();

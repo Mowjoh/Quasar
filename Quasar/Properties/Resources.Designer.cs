@@ -61,6 +61,88 @@ namespace Quasar.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No Element.
+        /// </summary>
+        public static string Assignment_Label_NoElement {
+            get {
+                return ResourceManager.GetString("Assignment_Label_NoElement", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No Slot.
+        /// </summary>
+        public static string Assignment_Label_NoSlot {
+            get {
+                return ResourceManager.GetString("Assignment_Label_NoSlot", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please wait while Quasar scans the mod&apos;s contents.
+        /// </summary>
+        public static string Assignment_Modal_ScanContent {
+            get {
+                return ResourceManager.GetString("Assignment_Modal_ScanContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Quasar has scanned the mod and it&apos;s 
+        ///editable contents will be displayed here.
+        /// </summary>
+        public static string Assignment_Modal_ScanFinishedContent {
+            get {
+                return ResourceManager.GetString("Assignment_Modal_ScanFinishedContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Scan Finished.
+        /// </summary>
+        public static string Assignment_Modal_ScanFinishedTitle {
+            get {
+                return ResourceManager.GetString("Assignment_Modal_ScanFinishedTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Scanning.
+        /// </summary>
+        public static string Assignment_Modal_ScanTitle {
+            get {
+                return ResourceManager.GetString("Assignment_Modal_ScanTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Scan Files.
+        /// </summary>
+        public static string Assignments_Button_ScanFiles {
+            get {
+                return ResourceManager.GetString("Assignments_Button_ScanFiles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Types Grouped.
+        /// </summary>
+        public static string Assignments_Label_GroupTypes {
+            get {
+                return ResourceManager.GetString("Assignments_Label_GroupTypes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Showing Assignments for : .
+        /// </summary>
+        public static string Assignments_Label_ModName {
+            get {
+                return ResourceManager.GetString("Assignments_Label_ModName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Change files.
         /// </summary>
         public static string FileManagement_Button_ChangeFiles {
@@ -205,6 +287,43 @@ namespace Quasar.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        public static string Library_Modal_DeleteCancel {
+            get {
+                return ResourceManager.GetString("Library_Modal_DeleteCancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Are you sure you want to delete this mod ? 
+        ///It&apos;s file and information will be removed from Quasar..
+        /// </summary>
+        public static string Library_Modal_DeleteContent {
+            get {
+                return ResourceManager.GetString("Library_Modal_DeleteContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to I&apos;m sure.
+        /// </summary>
+        public static string Library_Modal_DeleteOK {
+            get {
+                return ResourceManager.GetString("Library_Modal_DeleteOK", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mod Deletion.
+        /// </summary>
+        public static string Library_Modal_DeleteTitle {
+            get {
+                return ResourceManager.GetString("Library_Modal_DeleteTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Assignments.
         /// </summary>
         public static string MainUI_AssignmentTabHeader {
@@ -228,6 +347,99 @@ namespace Quasar.Properties {
         public static string MainUI_LibraryTabHeader {
             get {
                 return ResourceManager.GetString("MainUI_LibraryTabHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Quasar is an application that will help you manage mod 
+        ///files for you. Modding is only for Switches running 
+        ///Custom Firmware (CFW). If your Switch is not hacked, 
+        ///Quasar will be of no use to you..
+        /// </summary>
+        public static string MainUI_Modal_CFWContent {
+            get {
+                return ResourceManager.GetString("MainUI_Modal_CFWContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to My switch is running CFW.
+        /// </summary>
+        public static string MainUI_Modal_CFWOK {
+            get {
+                return ResourceManager.GetString("MainUI_Modal_CFWOK", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string MainUI_Modal_RecoverFinishedContent {
+            get {
+                return ResourceManager.GetString("MainUI_Modal_RecoverFinishedContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string MainUI_Modal_RecoverFinishedTitle {
+            get {
+                return ResourceManager.GetString("MainUI_Modal_RecoverFinishedTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please be patient, Quasar is looking for previously installed files.
+        /// </summary>
+        public static string MainUI_Modal_RecoverProgressContent {
+            get {
+                return ResourceManager.GetString("MainUI_Modal_RecoverProgressContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Recovering Files and Data.
+        /// </summary>
+        public static string MainUI_Modal_RecoverProgressTitle {
+            get {
+                return ResourceManager.GetString("MainUI_Modal_RecoverProgressTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string MainUI_Modal_UpdateFinishedContent {
+            get {
+                return ResourceManager.GetString("MainUI_Modal_UpdateFinishedContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string MainUI_Modal_UpdateFinishedTitle {
+            get {
+                return ResourceManager.GetString("MainUI_Modal_UpdateFinishedTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please be patient, Quasar is updating.
+        /// </summary>
+        public static string MainUI_Modal_UpdateProgressContent {
+            get {
+                return ResourceManager.GetString("MainUI_Modal_UpdateProgressContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Update Process.
+        /// </summary>
+        public static string MainUI_Modal_UpdateProgressTitle {
+            get {
+                return ResourceManager.GetString("MainUI_Modal_UpdateProgressTitle", resourceCulture);
             }
         }
         
@@ -367,7 +579,7 @@ namespace Quasar.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Edit Files.
+        ///   Looks up a localized string similar to Import Files.
         /// </summary>
         public static string ModListItem_Button_EditFiles {
             get {
@@ -430,7 +642,7 @@ namespace Quasar.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0} hours ago.
+        ///   Looks up a localized string similar to {0} days ago.
         /// </summary>
         public static string ModListItem_Time_Days {
             get {
@@ -520,6 +732,15 @@ namespace Quasar.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Please enter the path of the folder you want Quasar to transfer files to.
+        /// </summary>
+        public static string Settings_Comment_Diskpath {
+            get {
+                return ResourceManager.GetString("Settings_Comment_Diskpath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Enter your Switch&apos;s IP address.
         /// </summary>
         public static string Settings_Comment_FtpIP {
@@ -575,11 +796,29 @@ namespace Quasar.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to You can change where Quasar stores the mods on the SD with this setting.
+        /// </summary>
+        public static string Settings_Comment_ModsPath {
+            get {
+                return ResourceManager.GetString("Settings_Comment_ModsPath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Select if you&apos;d rather transfer files wirelessly through FTP or via a plugged in SD.
         /// </summary>
         public static string Settings_Comment_PreferredTransferMethod {
             get {
                 return ResourceManager.GetString("Settings_Comment_PreferredTransferMethod", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select the SD you want to transfer to.
+        /// </summary>
+        public static string Settings_Comment_SDSelect {
+            get {
+                return ResourceManager.GetString("Settings_Comment_SDSelect", resourceCulture);
             }
         }
         
@@ -647,6 +886,15 @@ namespace Quasar.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Disk Path.
+        /// </summary>
+        public static string Settings_Label_Diskpath {
+            get {
+                return ResourceManager.GetString("Settings_Label_Diskpath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Switch&apos;s IP Address.
         /// </summary>
         public static string Settings_Label_FtpIP {
@@ -701,11 +949,29 @@ namespace Quasar.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to SD Mods Path.
+        /// </summary>
+        public static string Settings_Label_ModsPath {
+            get {
+                return ResourceManager.GetString("Settings_Label_ModsPath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Transfer Method.
         /// </summary>
         public static string Settings_Label_PreferredTransferMethod {
             get {
                 return ResourceManager.GetString("Settings_Label_PreferredTransferMethod", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SD Selection.
+        /// </summary>
+        public static string Settings_Label_SDSelect {
+            get {
+                return ResourceManager.GetString("Settings_Label_SDSelect", resourceCulture);
             }
         }
         
@@ -869,11 +1135,173 @@ namespace Quasar.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Wireless (FTP)=FTP,Wired (SD)=SD.
+        ///   Looks up a localized string similar to Wireless (FTP)=FTP,Wired (SD)=SD,Disk Folder=Disk.
         /// </summary>
         public static string Settings_Values_PreferredTransferMethod {
             get {
                 return ResourceManager.GetString("Settings_Values_PreferredTransferMethod", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The path you have entered does not exist.
+        /// </summary>
+        public static string Transfer_Log_DiskPathUnavailable {
+            get {
+                return ResourceManager.GetString("Transfer_Log_DiskPathUnavailable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error.
+        /// </summary>
+        public static string Transfer_Log_Error {
+            get {
+                return ResourceManager.GetString("Transfer_Log_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not connect..
+        /// </summary>
+        public static string Transfer_Log_FTPConnectionFail {
+            get {
+                return ResourceManager.GetString("Transfer_Log_FTPConnectionFail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Connection successful..
+        /// </summary>
+        public static string Transfer_Log_FTPConnectionSuccess {
+            get {
+                return ResourceManager.GetString("Transfer_Log_FTPConnectionSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Attempting to connect to the Switch....
+        /// </summary>
+        public static string Transfer_Log_FTPConnectionTest {
+            get {
+                return ResourceManager.GetString("Transfer_Log_FTPConnectionTest", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string Transfer_Log_GeneralTransferError {
+            get {
+                return ResourceManager.GetString("Transfer_Log_GeneralTransferError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Info.
+        /// </summary>
+        public static string Transfer_Log_Info {
+            get {
+                return ResourceManager.GetString("Transfer_Log_Info", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not launch the file transfer..
+        /// </summary>
+        public static string Transfer_Log_NoLaunch {
+            get {
+                return ResourceManager.GetString("Transfer_Log_NoLaunch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No SD selected.
+        /// </summary>
+        public static string Transfer_Log_NoSDSelected {
+            get {
+                return ResourceManager.GetString("Transfer_Log_NoSDSelected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Transfer Process Start :.
+        /// </summary>
+        public static string Transfer_Log_ProcessStart {
+            get {
+                return ResourceManager.GetString("Transfer_Log_ProcessStart", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The SD you have selected is not available.
+        /// </summary>
+        public static string Transfer_Log_SelectedSDUnavailable {
+            get {
+                return ResourceManager.GetString("Transfer_Log_SelectedSDUnavailable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Transfer Finished.
+        /// </summary>
+        public static string Transfer_Log_TransferFinished {
+            get {
+                return ResourceManager.GetString("Transfer_Log_TransferFinished", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0}/{1} Files.
+        /// </summary>
+        public static string Transfer_Step_Files {
+            get {
+                return ResourceManager.GetString("Transfer_Step_Files", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Finished.
+        /// </summary>
+        public static string Transfer_Step_FinishedStepText {
+            get {
+                return ResourceManager.GetString("Transfer_Step_FinishedStepText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Transfer Status :.
+        /// </summary>
+        public static string Transfer_Step_Global {
+            get {
+                return ResourceManager.GetString("Transfer_Step_Global", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Step : {0}.
+        /// </summary>
+        public static string Transfer_Step_StepText {
+            get {
+                return ResourceManager.GetString("Transfer_Step_StepText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sub-Step : {0}.
+        /// </summary>
+        public static string Transfer_Step_SubStepText {
+            get {
+                return ResourceManager.GetString("Transfer_Step_SubStepText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Close the transfer window.
+        /// </summary>
+        public static string Transfer_Tooltip_CloseWindowButton {
+            get {
+                return ResourceManager.GetString("Transfer_Tooltip_CloseWindowButton", resourceCulture);
             }
         }
     }

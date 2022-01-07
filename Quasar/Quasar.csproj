@@ -182,8 +182,8 @@
     <PackageReference Include="Microsoft.Windows.Compatibility" Version="5.0.2" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Application\Assignment\Models\" />
     <Folder Include="Application\Common\Views\" />
-    <Folder Include="Application\FileManagement\Models\" />
     <Folder Include="Application\MainUI\Models\" />
     <Folder Include="Resources\ModLoaders\ARCropolis\atmosphere\contents\01006A800016E000\romfs\arcropolis\workspaces\Example\arc\" />
     <Folder Include="Resources\ModLoaders\ARCropolis\atmosphere\contents\01006A800016E000\romfs\arcropolis\workspaces\Example\umm\" />
@@ -193,15 +193,15 @@
     <ProjectReference Include="..\WorkShop\Workshop.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Update="Properties\QuasarSettings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>QuasarSettings.settings</DependentUpon>
+    </Compile>
     <Compile Update="Properties\Resources.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Update="Properties\Settings.Designer.cs">
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -217,9 +217,9 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Update="Properties\Settings.settings">
-      <Generator>PublicSettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    <None Update="Properties\QuasarSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>QuasarSettings.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

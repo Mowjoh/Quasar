@@ -1,0 +1,43 @@
+﻿<UserControl x:Class="Quasar.Associations.Views.ContentListItem"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             Height="50"
+             d:DesignHeight="50" d:DesignWidth="800"
+             mc:Ignorable="d">
+    <Grid>
+        <Border BorderBrush="White" BorderThickness="3" CornerRadius="5">
+            <Grid Background="{StaticResource CutieBG03}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                </Grid.ColumnDefinitions>
+                <Label Grid.Column="0"
+                       HorizontalAlignment="Left" VerticalAlignment="Center"
+                       Content="{Binding AssignmentContent.AssignmentName}" Style="{StaticResource CutieLabelStyle}" />
+
+                <Label Grid.Column="1"
+                       HorizontalAlignment="Left" VerticalAlignment="Center"
+                       Content="{Binding TypeName}" Style="{StaticResource CutieLabelStyle}"  />
+                <Label Grid.Column="2"
+                       HorizontalAlignment="Left" VerticalAlignment="Center"
+                       Content="{Binding Origin}" Style="{StaticResource CutieLabelStyle}"  />
+                <Label Grid.Column="3" Grid.ColumnSpan="2"
+                       HorizontalAlignment="Left" VerticalAlignment="Center"
+                       Content="{Binding ElementName}" Style="{StaticResource CutieLabelStyle}" Visibility="{Binding ElementSelection, Converter={StaticResource BoolVisi}}" />
+
+                <Label Grid.Column="3"
+                       HorizontalAlignment="Left" VerticalAlignment="Center"
+                       Content="{Binding ElementName}" Style="{StaticResource CutieLabelStyle}" Visibility="{Binding SlotSelection, Converter={StaticResource BoolVisi}}" />
+
+
+                <ComboBox ItemsSource="{Binding Options}" SelectedItem="{Binding SelectedOption}" DisplayMemberPath="Value"
+                          Grid.Column="4"
+                          Height="30" Margin="5,0,5,0"
+                          IsEditable="True" Style="{StaticResource ComboBoxFlatStyle}" />
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

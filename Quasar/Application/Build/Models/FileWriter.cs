@@ -1,10 +1,7 @@
 ﻿using FluentFTP;
 using log4net;
 using MediaDevices;
-using Quasar.Build.ViewModels;
-using DataModels.Common;
 using DataModels.User;
-using DataModels.Resource;
 using Quasar.Helpers.FileOperations;
 using System;
 using System.Collections.Generic;
@@ -12,6 +9,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
+using Quasar.Controls.ModManagement.ViewModels;
 
 namespace Quasar.Build.Models
 {
@@ -38,23 +36,23 @@ namespace Quasar.Build.Models
         public string Username { get; set; }
         public string Password { get; set; }
         public Action<FtpProgress> Progress { get; set; }
-        BuildViewModel BVM { get; set; }
+        LibraryViewModel Lvm { get; set; }
 
         public List<Hash> DistantHashes { get; set; }
 
         ObservableCollection<ModFile> list { get; set; }
         public ILog Log { get; set; }
         #endregion
-        public FTPWriter(BuildViewModel _BVM)
+        public FTPWriter(LibraryViewModel _LVM)
         {
-            if (Properties.Settings.Default.FTPValid)
+            if (Properties.QuasarSettings.Default.FTPValid)
             {
-                BVM = _BVM;
+                Lvm = _LVM;
 
-                Adress = Properties.Settings.Default.FtpAddress.Split(':')[0];
-                Port = Properties.Settings.Default.FtpAddress.Split(':')[1];
-                Username = Properties.Settings.Default.FtpUsername;
-                Password = Properties.Settings.Default.FtpPassword;
+                Adress = Properties.QuasarSettings.Default.FtpIP;
+                Port = Properties.QuasarSettings.Default.FtpPort;
+                Username = Properties.QuasarSettings.Default.FtpUsername;
+                Password = Properties.QuasarSettings.Default.FtpPassword;
 
                 Client = new FtpClient(Adress);
                 Client.Port = int.Parse(Port);
@@ -69,7 +67,7 @@ namespace Quasar.Build.Models
                 Progress = delegate (FtpProgress p) {
                     if (p.Progress != 100)
                     {
-                        BVM.SetSpeed(String.Format("{0}/s, {1}%", WriterOperations.BytesToString(p.TransferSpeed), p.Progress.ToString().Substring(0, 2)));
+                        Lvm.SetSpeed(String.Format("{0}/s, {1}%", WriterOperations.BytesToString(p.TransferSpeed), p.Progress.ToString().Substring(0, 2)));
                     }
                 };
 
@@ -77,12 +75,12 @@ namespace Quasar.Build.Models
         }
         public FTPWriter()
         {
-            if (Properties.Settings.Default.FTPValid)
+            if (Properties.QuasarSettings.Default.FTPValid)
             {
-                Adress = Properties.Settings.Default.FtpAddress.Split(':')[0];
-                Port = Properties.Settings.Default.FtpAddress.Split(':')[1];
-                Username = Properties.Settings.Default.FtpUsername;
-                Password = Properties.Settings.Default.FtpPassword;
+                Adress = Properties.QuasarSettings.Default.FtpAddress.Split(':')[0];
+                Port = Properties.QuasarSettings.Default.FtpAddress.Split(':')[1];
+                Username = Properties.QuasarSettings.Default.FtpUsername;
+                Password = Properties.QuasarSettings.Default.FtpPassword;
 
                 Client = new FtpClient(Adress);
                 Client.Port = int.Parse(Port);
@@ -122,13 +120,17 @@ namespace Quasar.Build.Models
         }
         public override bool CheckFileExists(string FilePath)
         {
-            return Client.FileExists(FilePath);
+            return Client.FileExists(FilePath.Replace(@"\", @"/"));
         }
         public override bool SendFile(string SourceFilePath, string FilePath)
         {
-            BVM.SetSize(String.Format("Current File Size : {0}", WriterOperations.BytesToString(new FileInfo(SourceFilePath).Length)));
+            Lvm.SetSize(String.Format("Current File Size : {0}", WriterOperations.BytesToString(new FileInfo(SourceFilePath).Length)));
             Log.Debug(String.Format("Updating File {0} - {1}", SourceFilePath, FilePath));
-            FtpStatus Status = Client.UploadFile(SourceFilePath, FilePath, FtpRemoteExists.Overwrite, true, FtpVerify.None, Progress);
+            string CorrectedPath = FilePath.Replace(@"\", @"/");
+            string Directory =
+                CorrectedPath.Replace(CorrectedPath.Split(@"/")[CorrectedPath.Split(@"/").Length - 1], "");
+            Client.CreateDirectory(Directory);
+            FtpStatus Status = Client.UploadFile(SourceFilePath.Replace(@"\", @"/"), CorrectedPath, FtpRemoteExists.Overwrite, true, FtpVerify.None, Progress);
             return true;
         }
         public override bool DeleteFile(string FilePath)
@@ -225,10 +227,10 @@ namespace Quasar.Build.Models
     public class SDWriter : FileWriter
     {
         public string LetterPath { get; set; }
-        BuildViewModel BVM { get; set; }
+        LibraryViewModel BVM { get; set; }
         public ILog Log { get; set; }
 
-        public SDWriter(BuildViewModel _BVM)
+        public SDWriter(LibraryViewModel _BVM)
         {
             BVM = _BVM;
         }
@@ -305,15 +307,102 @@ namespace Quasar.Build.Models
             return list;
         }
     }
+
+    public class DiskWriter : FileWriter
+    {
+        public string DiskPath { get; set; }
+        LibraryViewModel LVM { get; set; }
+        public ILog Log { get; set; }
+
+        public DiskWriter(LibraryViewModel _BVM)
+        {
+            LVM = _BVM;
+        }
+
+        public override async Task<bool> VerifyOK()
+        {
+            return true;
+        }
+        public override bool CheckFolderExists(string FolderPath)
+        {
+            return Directory.Exists(DiskPath + @"\" +FolderPath);
+        }
+        public override bool CheckFileExists(string FilePath)
+        {
+            return File.Exists(DiskPath + @"\" +FilePath);
+        }
+        public override bool SendFile(string SourceFilePath, string FilePath)
+        {
+            FileOperation.CheckCopyFile(SourceFilePath, DiskPath + @"\" +FilePath);
+            return true;
+        }
+        public override bool DeleteFile(string FilePath)
+        {
+            if (File.Exists(DiskPath + @"\" +FilePath))
+            {
+                File.Delete(DiskPath + @"\" +FilePath);
+            }
+            else
+            {
+
+            }
+            return true;
+        }
+        public override bool CreateFolder(string FolderPath)
+        {
+            try
+            {
+                Directory.CreateDirectory(DiskPath + @"\" +FolderPath);
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+            return true;
+        }
+        public override bool DeleteFolder(string FolderPath)
+        {
+            try
+            {
+                Directory.Delete(DiskPath + @"\" +FolderPath, true);
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+            return true;
+        }
+        public override void GetFile(string Remote, string DestinationFilePath)
+        {
+            File.Copy(DiskPath + @"\" +Remote, DestinationFilePath, true);
+        }
+        public override ObservableCollection<ModFile> GetRemoteFiles(string FolderPath)
+        {
+            ObservableCollection<ModFile> list = new ObservableCollection<ModFile>();
+            if (Directory.Exists(FolderPath))
+            {
+                foreach (string file in Directory.GetFiles(FolderPath, "*", SearchOption.AllDirectories))
+                {
+                    list.Add(new ModFile()
+                    {
+                        DestinationFilePath = file
+                    });
+                }
+            }
+            return list;
+        }
+    }
+
+
     public class MTPWriter : FileWriter
     {
         public string MediaDevice { get; set; }
 
         public MediaDevice MediaD { get; set; }
         public ILog Log { get; set; }
-        BuildViewModel BVM { get; set; }
+        LibraryViewModel BVM { get; set; }
 
-        public MTPWriter(BuildViewModel _BVM)
+        public MTPWriter(LibraryViewModel _BVM)
         {
             BVM = _BVM;
         }

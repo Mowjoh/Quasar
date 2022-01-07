@@ -1,14 +1,8 @@
-﻿using Quasar.Common.Models;
-using DataModels.Common;
-using DataModels.User;
-using DataModels.Resource;
+﻿using DataModels.Common;
 using Quasar.Settings.Models;
 using Quasar.Helpers;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Windows.Input;
 
 namespace Quasar.Settings.ViewModels
 {
@@ -75,11 +69,11 @@ namespace Quasar.Settings.ViewModels
                     NotifySettingChanged();
                 }
 
-                if ((bool)Properties.Settings.Default[SettingItem.SettingName] == value)
+                if ((bool)Properties.QuasarSettings.Default[SettingItem.SettingName] == value)
                     return;
 
-                Properties.Settings.Default[SettingItem.SettingName] = value;
-                Properties.Settings.Default.Save();
+                Properties.QuasarSettings.Default[SettingItem.SettingName] = value;
+                Properties.QuasarSettings.Default.Save();
 
             }
         }
@@ -146,25 +140,14 @@ namespace Quasar.Settings.ViewModels
                 _SelectedBoxValue = value;
                 OnPropertyChanged("SelectedBoxValue");
 
-                if ((string)Properties.Settings.Default[SettingItem.SettingName] == value.Value)
+                if ((string)Properties.QuasarSettings.Default[SettingItem.SettingName] == value.Value)
                     return;
 
-                Properties.Settings.Default[SettingItem.SettingName] = value.Value;
-                Properties.Settings.Default.Save();
+                Properties.QuasarSettings.Default[SettingItem.SettingName] = value.Value;
+                Properties.QuasarSettings.Default.Save();
 
-                if (SettingItem.SettingName == "Language")
-                {
-                    EventSystem.Publish<ModalEvent>(new()
-                    {
-                        Action = "Show",
-                        Content = Properties.Resources.Settings_Modal_Content_ShutdownWarning,
-                        Title = Properties.Resources.Settings_Modal_Title_ShutdownWarning,
-                        OkButtonText = Properties.Resources.Settings_Modal_Button_ShutdownWarning,
-                        EventName = "ShutdownWarning",
-                        Type = ModalType.Warning
-                    });
-                }
-
+                EventSystem.Publish<SettingItem>(SettingItem);
+                
             }
         }
 
@@ -218,7 +201,7 @@ namespace Quasar.Settings.ViewModels
             SettingItem = new SettingItem();
 
             //Parsing setting
-            var ParsedProperty = Properties.Settings.Default[Property];
+            var ParsedProperty = Properties.QuasarSettings.Default[Property];
 
             //Parsing definition values
             SettingItem.SettingName = Property;
@@ -243,21 +226,25 @@ namespace Quasar.Settings.ViewModels
                 //Setting up Combobox View
                 case SettingItemType.List:
                     AvailableValues = new();
-                    foreach (string s in Values.Split(','))
+                    if (Values != "")
                     {
-                        string key = s.Split('=')[0];
-                        string value = s.Split('=')[1];
-                        AvailableValues.Add(new SettingKeyValue(key, value));
-                    }
+                        foreach (string s in Values.Split(','))
+                        {
+                            string key = s.Split('=')[0];
+                            string value = s.Split('=')[1];
+                            AvailableValues.Add(new SettingKeyValue(key, value));
+                        }
 
-                    SelectedBoxValue =
-                        AvailableValues.SingleOrDefault(v => v.Value == Properties.Settings.Default[Property].ToString());
+                        SelectedBoxValue =
+                            AvailableValues.SingleOrDefault(v => v.Value == (Properties.QuasarSettings.Default[Property].ToString() == "en-150" ? "EN" : Properties.QuasarSettings.Default[Property].ToString()));
+
+                    }
                     EnableComboBox = true;
                     break;
 
                 case SettingItemType.Text:
                     EnableValue = true;
-                    SettingItem.DisplayValue = Properties.Settings.Default[Property].ToString();
+                    SettingItem.DisplayValue = Properties.QuasarSettings.Default[Property].ToString();
                     break;
             }
 

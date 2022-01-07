@@ -334,7 +334,7 @@ namespace Quasar.Helpers.Downloading
                         {
                             QuasarLogger.Debug("Getting Screenshot");
                             APIScreenshot ScreenshotInformation = await APIRequest.GetScreenshotInformation(QuasarURL.GamebananaItemID);
-                            await Downloader.DownloadScreenshot(@"https://images.gamebanana.com/img/ss/mods/"+ ScreenshotInformation.Media.Images[0].File, LibraryItem.Guid.ToString(), Properties.Settings.Default.DefaultDir);
+                            await Downloader.DownloadScreenshot(@"https://images.gamebanana.com/img/ss/mods/"+ ScreenshotInformation.Media.Images[0].File, LibraryItem.Guid.ToString(), Properties.QuasarSettings.Default.DefaultDir);
                             ProcessAborted = false;
                         }
                     }

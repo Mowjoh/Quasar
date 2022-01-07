@@ -1,7 +1,4 @@
-﻿using Quasar.Common.Models;
-using DataModels.Common;
-using DataModels.User;
-using DataModels.Resource;
+﻿using DataModels.Common;
 using System.Collections.Generic;
 
 namespace Quasar.Settings.Models

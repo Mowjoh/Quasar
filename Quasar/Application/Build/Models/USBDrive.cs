@@ -1,14 +1,7 @@
 ﻿using MediaDevices;
-using Quasar.Common.Models;
 using DataModels.Common;
-using DataModels.User;
-using DataModels.Resource;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Quasar.Build.Models
 {

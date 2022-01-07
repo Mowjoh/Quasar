@@ -6,8 +6,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Workshop.Builder;
 
 namespace Workshop.FileManagement
 {
@@ -112,18 +111,18 @@ namespace Workshop.FileManagement
 
             return ContentItems;
         }
-        public static ObservableCollection<ModFile> GetModFiles(string _QuasarFolderPath)
+        public static ObservableCollection<FileReference> GetModFiles(string _QuasarFolderPath)
         {
-            ObservableCollection<ModFile> ModFiles = new ObservableCollection<ModFile>();
+            ObservableCollection<FileReference> ModFiles = new ObservableCollection<FileReference>();
 
-            string Path = _QuasarFolderPath + @"\Library\Downloads\Files.json";
+            string Path = _QuasarFolderPath + @"\Library\Downloads\Quasar.json";
 
             if (File.Exists(Path))
             {
                 using (StreamReader file = File.OpenText(Path))
                 {
                     JsonSerializer serializer = new JsonSerializer();
-                    ModFiles = (ObservableCollection<ModFile>)serializer.Deserialize(file, typeof(ObservableCollection<ModFile>));
+                    ModFiles = (ObservableCollection<FileReference>)serializer.Deserialize(file, typeof(ObservableCollection<FileReference>));
                 }
             }
 
@@ -147,9 +146,9 @@ namespace Workshop.FileManagement
         {
             SaveJSonFile(_QuasarFolderPath + @"\Library\ContentItems.json", _ContentItems.OrderBy(i => i.Guid));
         }
-        public static void SaveModFiles(ObservableCollection<ModFile> _ModFiles, string _QuasarFolderPath)
+        public static void SaveModFiles(List<FileReference> _file_references, string _QuasarFolderPath)
         {
-            SaveJSonFile(_QuasarFolderPath + @"\Library\Downloads\Files.json", _ModFiles);
+            SaveJSonFile(_QuasarFolderPath + @"\Library\Downloads\Quasar.json", _file_references);
         }
         public static void SaveSharedWorkspaces(ShareableWorkspace SW, string _DestinationFolderPath)
         {

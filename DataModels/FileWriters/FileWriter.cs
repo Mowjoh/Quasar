@@ -1,8 +1,5 @@
-﻿using DataModels.Common;
-using DataModels.User;
-using DataModels.Resource;
+﻿using DataModels.User;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Security.Cryptography;

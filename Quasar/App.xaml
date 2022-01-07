@@ -162,7 +162,7 @@
         <!--#endregion-->
 
         <!--#region Base Colors-->
-        <SolidColorBrush x:Key="CutiePrimaryColor" Color="#b34637" />
+        <SolidColorBrush x:Key="CutiePrimaryColor" Color="#387357" />
         <SolidColorBrush x:Key="CutieSecondaryColor" Color="#748bf2" />
         <SolidColorBrush x:Key="CutieErrorColor" Color="#CF6679" />
         <SolidColorBrush x:Key="CutieValidationColor" Color="#66CF66" />
@@ -216,8 +216,9 @@
         <!--#region Templates-->
         <ControlTemplate x:Key="CutieButtonTemplate" TargetType="{x:Type Button}">
             <Grid Height="38" MaxHeight="38">
-                <Border Height="38"
-                        Background="{StaticResource CutiePrimaryColor}" CornerRadius="8">
+
+                <Border Height="38" CornerRadius="17">
+
                     <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center">
                         <ContentPresenter.ContentTemplate>
                             <DataTemplate>
@@ -231,7 +232,17 @@
         <ControlTemplate x:Key="CutieSmallButtonTemplate" TargetType="{x:Type Button}">
             <Grid Height="32" MaxHeight="32">
                 <Border Height="32"
-                        Background="{StaticResource CutiePrimaryColor}" CornerRadius="10">
+                        Background="{StaticResource CutiePrimaryColor}" CornerRadius="17">
+                    <Border.Style>
+                        <Style TargetType="Border">
+                            <Setter Property="Background" Value="{StaticResource CutiePrimaryColor}" />
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="Pink" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Border.Style>
                     <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center">
                         <ContentPresenter.ContentTemplate>
                             <DataTemplate>
@@ -517,10 +528,13 @@
             <Setter Property="StrokeThickness" Value="1" />
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Fill" Value="#ccda03" />
+                    <Setter Property="Fill" Value="White" />
                     <Setter Property="Stroke" Value="Black" />
                 </Trigger>
                 <DataTrigger Binding="{Binding LibraryItem.Editing}" Value="True">
+                    <Setter Property="Stroke" Value="#03da2e" />
+                    <Setter Property="Fill" Value="#03da2e" />
+                    <Setter Property="StrokeThickness" Value="3" />
                     <Setter Property="Data" Value="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z" />
                     <Setter Property="ToolTip" Value="{x:Static p:Resources.ModItem_Tooltip_ValidateRename}" />
                 </DataTrigger>
@@ -587,6 +601,19 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
+
+        <Style x:Key="ActionCloseBuildPathStyle" TargetType="{x:Type Path}">
+            <Setter Property="Data" Value="M18.3 5.71c-.39-.39-1.02-.39-1.41 0L12 10.59 7.11 5.7c-.39-.39-1.02-.39-1.41 0-.39.39-.39 1.02 0 1.41L10.59 12 5.7 16.89c-.39.39-.39 1.02 0 1.41.39.39 1.02.39 1.41 0L12 13.41l4.89 4.89c.39.39 1.02.39 1.41 0 .39-.39.39-1.02 0-1.41L13.41 12l4.89-4.89c.38-.38.38-1.02 0-1.4z" />
+            <Setter Property="Fill" Value="{StaticResource ActionButtonColor}" />
+            <Setter Property="Stroke" Value="{StaticResource ActionButtonColor}" />
+            <Setter Property="StrokeThickness" Value="3" />
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Fill" Value="#da036f" />
+                    <Setter Property="Stroke" Value="#da036f" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
         <!--#endregion-->
 
         <!--#region Templates-->
@@ -635,7 +662,11 @@
         <ControlTemplate x:Key="ActionEditNameButton" TargetType="{x:Type Button}">
             <Grid Height="24" MaxHeight="24"
                   Background="Transparent">
-                <Path Style="{StaticResource ActionEditNamePathStyle}" />
+                <Path Style="{StaticResource ActionEditNamePathStyle}">
+                    <Path.RenderTransform>
+                        <ScaleTransform ScaleX="-1.0" />
+                    </Path.RenderTransform>
+                </Path>
             </Grid>
         </ControlTemplate>
 
@@ -659,6 +690,12 @@
             </Grid>
         </ControlTemplate>
 
+        <ControlTemplate x:Key="ActionCloseBuildButton" TargetType="{x:Type Button}">
+            <Grid Height="24" MaxHeight="24"
+                  Background="Transparent">
+                <Path Style="{StaticResource ActionCloseBuildPathStyle}" />
+            </Grid>
+        </ControlTemplate>
         <!--#endregion-->
 
         <!--#endregion-->

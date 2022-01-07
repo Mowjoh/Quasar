@@ -117,6 +117,34 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Assignments_Button_ScanFiles" xml:space="preserve">
+    <value>Scanner les fichiers</value>
+  </data>
+  <data name="Assignments_Label_GroupTypes" xml:space="preserve">
+    <value>Types Groupés</value>
+  </data>
+  <data name="Assignments_Label_ModName" xml:space="preserve">
+    <value>Affichage des attributions pour : </value>
+  </data>
+  <data name="Assignment_Label_NoElement" xml:space="preserve">
+    <value>Pas d'élément</value>
+  </data>
+  <data name="Assignment_Label_NoSlot" xml:space="preserve">
+    <value>Pas de slot</value>
+  </data>
+  <data name="Assignment_Modal_ScanContent" xml:space="preserve">
+    <value>Veuillez attendre que Quasar scanne les contenus du mod</value>
+  </data>
+  <data name="Assignment_Modal_ScanFinishedContent" xml:space="preserve">
+    <value>Quasar  a scanné le mod et ses  
+contenus éditables sont affichés ici</value>
+  </data>
+  <data name="Assignment_Modal_ScanFinishedTitle" xml:space="preserve">
+    <value>Scan terminé</value>
+  </data>
+  <data name="Assignment_Modal_ScanTitle" xml:space="preserve">
+    <value>Scan en cours</value>
+  </data>
   <data name="FileManagement_Button_ChangeFiles" xml:space="preserve">
     <value>Changer les fichiers</value>
   </data>
@@ -165,6 +193,19 @@
   <data name="Library_Label_TransferEnabled" xml:space="preserve">
     <value>Transféré</value>
   </data>
+  <data name="Library_Modal_DeleteCancel" xml:space="preserve">
+    <value>Annuler</value>
+  </data>
+  <data name="Library_Modal_DeleteContent" xml:space="preserve">
+    <value>Etes-vous sûr de vouloir supprimer ce mod ? 
+Ses fichiers et informations seront supprimées de Quasar.</value>
+  </data>
+  <data name="Library_Modal_DeleteOK" xml:space="preserve">
+    <value>Je suis sûr</value>
+  </data>
+  <data name="Library_Modal_DeleteTitle" xml:space="preserve">
+    <value>Suppression de Mod</value>
+  </data>
   <data name="MainUI_AssignmentTabHeader" xml:space="preserve">
     <value>Attributions</value>
   </data>
@@ -173,6 +214,40 @@
   </data>
   <data name="MainUI_LibraryTabHeader" xml:space="preserve">
     <value>Librairie</value>
+  </data>
+  <data name="MainUI_Modal_CFWContent" xml:space="preserve">
+    <value>Quasar est une application qui permet de gérer les 
+fichiers de mods pour vous. Les mods fonctionnent sur des Switch 
+disposant d'un CFW (Firmware custom). Si vous n'en disposez pas,
+Quasar ne pourra rien pour vous.</value>
+  </data>
+  <data name="MainUI_Modal_CFWOK" xml:space="preserve">
+    <value>Ma Switch a un CFW</value>
+  </data>
+  <data name="MainUI_Modal_RecoverFinishedContent" xml:space="preserve">
+    <value />
+  </data>
+  <data name="MainUI_Modal_RecoverFinishedTitle" xml:space="preserve">
+    <value />
+  </data>
+  <data name="MainUI_Modal_RecoverProgressContent" xml:space="preserve">
+    <value>Veuillez patienter, Quasar récupère
+les fichiers d'une installation précédente</value>
+  </data>
+  <data name="MainUI_Modal_RecoverProgressTitle" xml:space="preserve">
+    <value>Récupération de données</value>
+  </data>
+  <data name="MainUI_Modal_UpdateFinishedContent" xml:space="preserve">
+    <value />
+  </data>
+  <data name="MainUI_Modal_UpdateFinishedTitle" xml:space="preserve">
+    <value />
+  </data>
+  <data name="MainUI_Modal_UpdateProgressContent" xml:space="preserve">
+    <value />
+  </data>
+  <data name="MainUI_Modal_UpdateProgressTitle" xml:space="preserve">
+    <value />
   </data>
   <data name="MainUI_SettingsTabHeader" xml:space="preserve">
     <value>Paramètres</value>
@@ -220,7 +295,7 @@
     <value>Sauvegarder le nouveau nom</value>
   </data>
   <data name="ModListItem_Button_EditFiles" xml:space="preserve">
-    <value>Editer les fichiers</value>
+    <value>Importer des fichiers</value>
   </data>
   <data name="ModListItem_Button_UpdateMod" xml:space="preserve">
     <value>Mettre à jour</value>
@@ -270,6 +345,9 @@
   <data name="Settings_Comment_AskMoveInstall" xml:space="preserve">
     <value>Utilisez cette option pour déplacer tous les fichiers de mods dans un autre dossier de l'ordinateur</value>
   </data>
+  <data name="Settings_Comment_Diskpath" xml:space="preserve">
+    <value>Veuillez entrer le chemin d'accès au dossier dans lequel Quasar effectuera le transfert de mods</value>
+  </data>
   <data name="Settings_Comment_FtpIP" xml:space="preserve">
     <value>Veuillez remplir ce champ avec l'adresse IP de la Switch</value>
   </data>
@@ -289,8 +367,14 @@ L'app doit être redémarrer pour que le changement soit effectif</value>
   <data name="Settings_Comment_ManageAllMods" xml:space="preserve">
     <value>Activez cette option pour que le dossier de mods de la Switch soit uniquement géré par Quasar</value>
   </data>
+  <data name="Settings_Comment_ModsPath" xml:space="preserve">
+    <value>Vous pouvez changer l'emplacement des mods sur la SD avec ce champ</value>
+  </data>
   <data name="Settings_Comment_PreferredTransferMethod" xml:space="preserve">
     <value>Veuillez sélectionner si vous préférez transférer les fichiers par FTP sans-fil ou avec un transfert local sur une SD connectée</value>
+  </data>
+  <data name="Settings_Comment_SDSelect" xml:space="preserve">
+    <value>Sélectionnez la SD sur laquelle vous voulez transférer les fichiers</value>
   </data>
   <data name="Settings_Comment_SupressModDeletion" xml:space="preserve">
     <value>Activez cette option pour être prévenu de la supression d'un mod</value>
@@ -313,6 +397,9 @@ L'app doit être redémarrer pour que le changement soit effectif</value>
   <data name="Settings_Label_AppVersion" xml:space="preserve">
     <value>Version de l'application</value>
   </data>
+  <data name="Settings_Label_Diskpath" xml:space="preserve">
+    <value>Emplacement Disque</value>
+  </data>
   <data name="Settings_Label_FtpIP" xml:space="preserve">
     <value>Adresse IP de la Switch</value>
   </data>
@@ -331,8 +418,14 @@ L'app doit être redémarrer pour que le changement soit effectif</value>
   <data name="Settings_Label_ManageAllMods" xml:space="preserve">
     <value>Gérer tous les mods</value>
   </data>
+  <data name="Settings_Label_ModsPath" xml:space="preserve">
+    <value>Répertoire de mods</value>
+  </data>
   <data name="Settings_Label_PreferredTransferMethod" xml:space="preserve">
     <value>Méthode de transfert</value>
+  </data>
+  <data name="Settings_Label_SDSelect" xml:space="preserve">
+    <value>Sélection de SD</value>
   </data>
   <data name="Settings_Label_SupressModDeletion" xml:space="preserve">
     <value>Supression de mods</value>
@@ -391,6 +484,60 @@ que la bonne IP et le bon port soient utilisés.</value>
     <value>Informations invalides</value>
   </data>
   <data name="Settings_Values_PreferredTransferMethod" xml:space="preserve">
-    <value>Sans-fil (FTP)=FTP,Local (SD)=SD</value>
+    <value>Sans-fil (FTP)=FTP,Local (SD)=SD, Emplacement Disque=Disk</value>
+  </data>
+  <data name="Transfer_Log_DiskPathUnavailable" xml:space="preserve">
+    <value>Le chemin disque renseigné n'existe pas</value>
+  </data>
+  <data name="Transfer_Log_Error" xml:space="preserve">
+    <value>Erreur</value>
+  </data>
+  <data name="Transfer_Log_FTPConnectionFail" xml:space="preserve">
+    <value>Echec de la connection.</value>
+  </data>
+  <data name="Transfer_Log_FTPConnectionSuccess" xml:space="preserve">
+    <value>Connection réussie.</value>
+  </data>
+  <data name="Transfer_Log_FTPConnectionTest" xml:space="preserve">
+    <value>Essai de connection à la Switch...</value>
+  </data>
+  <data name="Transfer_Log_GeneralTransferError" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Transfer_Log_Info" xml:space="preserve">
+    <value>Info</value>
+  </data>
+  <data name="Transfer_Log_NoLaunch" xml:space="preserve">
+    <value>Echec de lancement du transfert.</value>
+  </data>
+  <data name="Transfer_Log_NoSDSelected" xml:space="preserve">
+    <value>Aucune SD sélectionnée</value>
+  </data>
+  <data name="Transfer_Log_ProcessStart" xml:space="preserve">
+    <value>Début du transfert :</value>
+  </data>
+  <data name="Transfer_Log_SelectedSDUnavailable" xml:space="preserve">
+    <value>La SD Sélectionée n'est pas disponible</value>
+  </data>
+  <data name="Transfer_Log_TransferFinished" xml:space="preserve">
+    <value>Transfert terminé</value>
+  </data>
+  <data name="Transfer_Step_Files" xml:space="preserve">
+    <value>{0}/{1} Fichiers</value>
+  </data>
+  <data name="Transfer_Step_FinishedStepText" xml:space="preserve">
+    <value>Terminé</value>
+  </data>
+  <data name="Transfer_Step_Global" xml:space="preserve">
+    <value>Statut du transfert :</value>
+  </data>
+  <data name="Transfer_Step_StepText" xml:space="preserve">
+    <value>Etape : {0}</value>
+  </data>
+  <data name="Transfer_Step_SubStepText" xml:space="preserve">
+    <value>Sous-tâche : {0}</value>
+  </data>
+  <data name="Transfer_Tooltip_CloseWindowButton" xml:space="preserve">
+    <value>Fermer la fenêtre de transfert.</value>
   </data>
 </root>

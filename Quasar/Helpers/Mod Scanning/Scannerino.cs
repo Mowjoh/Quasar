@@ -1,7 +1,5 @@
 ﻿using DataModels.User;
-using DataModels.Common;
 using DataModels.Resource;
-using Quasar.Helpers.Tools;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -35,7 +33,7 @@ namespace Quasar.Helpers.ModScanning
         /// <param name="ScannedResults"></param>
         public static void UpdateContents(MainUIViewModel MUVM, LibraryItem li, ObservableCollection<ContentItem> ScannedResults = null)
         {
-            string ModFolder = String.Format(@"{0}\Library\Mods\{1}\", Properties.Settings.Default.DefaultDir, li.Guid);
+            string ModFolder = String.Format(@"{0}\Library\Mods\{1}\", Properties.QuasarSettings.Default.DefaultDir, li.Guid);
 
             //Getting all scanned Content Items
             ObservableCollection<ContentItem> ScanResults;
@@ -107,7 +105,7 @@ namespace Quasar.Helpers.ModScanning
             ObservableCollection<ContentItem> SearchResults = new ObservableCollection<ContentItem>();
 
             ObservableCollection<ScanFile> ScannedFiles = new ObservableCollection<ScanFile>();
-            string ModFolder = String.Format(@"{0}\Library\Mods\{1}\", Properties.Settings.Default.DefaultDir, LibraryItem.Guid);
+            string ModFolder = String.Format(@"{0}\Library\Mods\{1}\", Properties.QuasarSettings.Default.DefaultDir, LibraryItem.Guid);
             ScannedFiles = GetScanFiles(FolderPath, QuasarModTypes, game, ModFolder, FileList);
 
             //Processing Search Results into ContentMappings
@@ -330,14 +328,14 @@ namespace Quasar.Helpers.ModScanning
         /// <returns></returns>
         public static ObservableCollection<ModFile> GetModFiles(QuasarModType qmt, GameElementFamily Family, ContentItem ci, int Slot, int ModLoader, LibraryItem li, Game game)
         {
-            string DefaultDir = Properties.Settings.Default.DefaultDir;
+            string DefaultDir = Properties.QuasarSettings.Default.DefaultDir;
             ObservableCollection<ModFile> PreparedModFiles = new ObservableCollection<ModFile>();
             
             foreach(ScanFile sf in ci.ScanFiles)
             {
                 QuasarModTypeFileDefinition FileDefinition = qmt.QuasarModTypeFileDefinitions.Single(def => def.ID == sf.QuasarModTypeFileDefinitionID);
                 GameElement ge = Family.GameElements.Single(e => e.ID == sf.GameElementID);
-                string ModFolder = Properties.Settings.Default.DefaultDir + @"\Library\Mods\" + li.Guid + @"\";
+                string ModFolder = Properties.QuasarSettings.Default.DefaultDir + @"\Library\Mods\" + li.Guid + @"\";
 
                 ModFile mf = new ModFile()
                 {

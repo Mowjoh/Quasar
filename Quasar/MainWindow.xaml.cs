@@ -1,8 +1,12 @@
-﻿using System.Windows;
-using System.Windows.Controls;
+﻿using System.Collections.ObjectModel;
+using System.Linq;
+using System.Reflection.Metadata;
+using System.Windows;
+using DataModels.User;
 using Quasar.Common.Models;
 using Quasar.Helpers;
 using Quasar.MainUI.ViewModels;
+using Workshop.Associations;
 
 namespace Quasar
 {
@@ -60,13 +64,18 @@ namespace Quasar
         /// <param name="meuh"></param>
         public void ProcessIncomingModalEvent(ModalEvent meuh)
         {
-            if (meuh.EventName == "ShowFile")
-            {
-                NewTabControl.SelectedIndex = 1;
-            }
             if (meuh.EventName == "ShowAssignments")
             {
-                NewTabControl.SelectedIndex = 2;
+                NewTabControl.SelectedIndex = 1;
+
+                MUVM.AVM.ScanFiles();
+                ObservableCollection<AssignmentContent> AssignmentContents =
+                    Grouper.GetAssignmentContents(
+                        MUVM.LibraryViewModel.SelectedModListItem.ModViewModel.LibraryItem, MUVM.ContentItems,
+                        Properties.QuasarSettings.Default.GroupAssignmentTypes);
+
+                MUVM.AVM.DisplayContentItems(AssignmentContents.ToList());
+
             }
 
             if (meuh.EventName == "QuasarClose")

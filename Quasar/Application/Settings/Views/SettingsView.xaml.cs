@@ -1,5 +1,6 @@
 ﻿using Quasar.Settings.ViewModels;
 using System.Windows.Controls;
+using log4net;
 
 namespace Quasar.Settings.Views
 {
@@ -16,9 +17,9 @@ namespace Quasar.Settings.Views
             InitializeComponent();
         }
 
-        public void Load()
+        public void Load(ILog quasar_logger)
         {
-            SVM = new SettingsViewModel();
+            SVM = new SettingsViewModel(quasar_logger);
             DataContext = SVM;
         }
     }

@@ -1,11 +1,6 @@
 ﻿using DataModels.Resource;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DataModels.User
 {
@@ -23,6 +18,8 @@ namespace DataModels.User
         [JsonIgnore] public bool Editing { get; set; } = false;
         public bool Included { get; set; }
         public bool Modified { get; set; }
+
+        public bool Scanned { get; set; }
 
         public string GetFormattedTime()
         {

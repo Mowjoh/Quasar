@@ -5,14 +5,16 @@ using Quasar.Helpers.Quasar_Management;
 using Quasar.Helpers;
 using System;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using DataModels.Common;
-using DataModels.User;
-using DataModels.Resource;
+using log4net;
 using Quasar.Settings.Models;
+using System.Management;
+using System.ComponentModel;
 
 namespace Quasar.Settings.ViewModels
 {
@@ -25,6 +27,9 @@ namespace Quasar.Settings.ViewModels
         ObservableCollection<SettingItemView> _FTPSettings { get; set; }
         ObservableCollection<SettingItemView> _WarningSettings { get; set; }
         ObservableCollection<SettingItemView> _TransferSettings { get; set; }
+        private bool _Setup { get; set; }
+        private bool SDSelected => Properties.QuasarSettings.Default.PreferredTransferMethod == "SD";
+        private bool DiskSelected => Properties.QuasarSettings.Default.PreferredTransferMethod == "Disk";
         #endregion
 
         #region Public
@@ -79,6 +84,19 @@ namespace Quasar.Settings.ViewModels
                 OnPropertyChanged("TransferSettings");
             }
         }
+
+        public bool Setup
+        {
+            get => _Setup;
+            set
+            {
+                if (_Setup == value)
+                    return;
+
+                _Setup = value;
+                OnPropertyChanged("Setup");
+            }
+        }
         #endregion
 
         #endregion
@@ -129,11 +147,28 @@ namespace Quasar.Settings.ViewModels
 
         #endregion
 
-        public SettingsViewModel()
+        public ILog QuasarLogger { get; set; }
+        public SettingsViewModel(ILog quasar_log)
         {
+            QuasarLogger = quasar_log;
             LoadSettings();
 
             EventSystem.Subscribe<ModalEvent>(ProcessModalEvent);
+            EventSystem.Subscribe<SettingItem>(ProcessSettingChanged);
+
+            ManagementEventWatcher watcher = new ManagementEventWatcher();
+            WqlEventQuery query = new WqlEventQuery("SELECT * FROM Win32_VolumeChangeEvent WHERE EventType = 2 or EventType = 3");
+
+            watcher.EventArrived += (s, e) =>
+            {
+                Application.Current.Dispatcher.Invoke((Action)delegate {
+
+                    LoadSettings();
+                });
+            };
+
+            watcher.Query = query;
+            watcher.Start();
 
         }
 
@@ -143,29 +178,97 @@ namespace Quasar.Settings.ViewModels
         /// </summary>
         private void LoadSettings()
         {
-            AppSettings = new ObservableCollection<SettingItemView>
+            try
+            {
+                Setup = true;
+                AppSettings = new ObservableCollection<SettingItemView>
             {
                 new("AppVersion",Properties.Resources.Settings_Label_AppVersion, "", SettingItemType.Text),
                 new("Language", Properties.Resources.Settings_Label_Language,Properties.Resources.Settings_Comment_Language,SettingItemType.List,"English=EN,Français=FR")
             };
-            FTPSettings = new ObservableCollection<SettingItemView>
+                FTPSettings = new ObservableCollection<SettingItemView>
             {
                 new("FtpIP", Properties.Resources.Settings_Label_FtpIP, Properties.Resources.Settings_Comment_FtpIP, SettingItemType.Input),
                 new("FtpPort", Properties.Resources.Settings_Label_FtpPort, Properties.Resources.Settings_Comment_FtpPort, SettingItemType.Input),
                 new("FtpUsername", Properties.Resources.Settings_Label_FtpUsername, Properties.Resources.Settings_Comment_FtpUsername, SettingItemType.Input),
                 new("FtpPassword", Properties.Resources.Settings_Label_FtpPassword, Properties.Resources.Settings_Comment_FtpPassword, SettingItemType.Input),
             };
-            WarningSettings = new ObservableCollection<SettingItemView>
+                WarningSettings = new ObservableCollection<SettingItemView>
             {
                 new("SupressModDeletion", Properties.Resources.Settings_Label_SupressModDeletion, Properties.Resources.Settings_Comment_SupressModDeletion, SettingItemType.Toggle),
             };
-            TransferSettings = new ObservableCollection<SettingItemView>
+
+                TransferSettings = new ObservableCollection<SettingItemView>
+                        {
+                            new("PreferredTransferMethod", Properties.Resources.Settings_Label_PreferredTransferMethod, Properties.Resources.Settings_Comment_PreferredTransferMethod, SettingItemType.List,Properties.Resources.Settings_Values_PreferredTransferMethod),
+                        };
+
+                if (SDSelected)
+                {
+                    TransferSettings.Add(new("TransferPath", Properties.Resources.Settings_Label_ModsPath, Properties.Resources.Settings_Comment_ModsPath, SettingItemType.Input));
+                    TransferSettings.Add(new("SelectedSD", Properties.Resources.Settings_Label_SDSelect, Properties.Resources.Settings_Comment_SDSelect, SettingItemType.List, getSDCards()));
+                }
+                else
+                {
+                    if (DiskSelected)
+                    {
+                        TransferSettings.Add(new("DiskPath", Properties.Resources.Settings_Label_Diskpath, Properties.Resources.Settings_Comment_Diskpath, SettingItemType.Input));
+                    }
+                    else
+                    {
+                        TransferSettings.Add(new("TransferPath", Properties.Resources.Settings_Label_ModsPath, Properties.Resources.Settings_Comment_ModsPath, SettingItemType.Input));
+                    }
+                }
+
+                TransferSettings.Add(new("TransferQuasarFoldersOnly", Properties.Resources.Settings_Label_ManageAllMods, Properties.Resources.Settings_Comment_ManageAllMods, SettingItemType.Toggle));
+                
+                
+                QuasarLogger.Debug(Properties.Resources.Settings_Values_PreferredTransferMethod);
+
+                Setup = false;
+            }
+            catch (Exception e)
             {
-                new("PreferredTransferMethod", Properties.Resources.Settings_Label_PreferredTransferMethod, Properties.Resources.Settings_Comment_PreferredTransferMethod, SettingItemType.List,Properties.Resources.Settings_Values_PreferredTransferMethod),
-                new("TransferQuasarFoldersOnly", Properties.Resources.Settings_Label_ManageAllMods, Properties.Resources.Settings_Comment_ManageAllMods, SettingItemType.Toggle)
-            };
+                QuasarLogger.Error(e.Message);
+                QuasarLogger.Error(e.StackTrace);
+            }
+            
         }
 
+        private void ProcessSettingChanged(SettingItem SettingItem)
+        {
+            if (!Setup)
+            {
+                switch (SettingItem.SettingName)
+                {
+                    default:
+                        break;
+                    case "Language":
+                        EventSystem.Publish<ModalEvent>(new()
+                        {
+                            Action = "Show",
+                            Content = Properties.Resources.Settings_Modal_Content_ShutdownWarning,
+                            Title = Properties.Resources.Settings_Modal_Title_ShutdownWarning,
+                            OkButtonText = Properties.Resources.Settings_Modal_Button_ShutdownWarning,
+                            EventName = "ShutdownWarning",
+                            Type = ModalType.Warning
+                        });
+                        break;
+                    case "PreferredTransferMethod":
+                        LoadSettings();
+                        break;
+                    case "TransferPath":
+                        Properties.QuasarSettings.Default.TransferPath = SettingItem.DisplayValue;
+                        Properties.QuasarSettings.Default.Save();
+                        break;
+                    case "DiskPath":
+                        Properties.QuasarSettings.Default.DiskPath = SettingItem.DisplayValue;
+                        Properties.QuasarSettings.Default.Save();
+                        break;
+
+                }
+            }
+        }
         #endregion
 
         #region User Actions
@@ -180,27 +283,27 @@ namespace Quasar.Settings.ViewModels
                 switch (SIV.ViewModel.SettingItem.SettingName)
                 {
                     case "FtpIP":
-                        Properties.Settings.Default.FtpIP = SIV.ViewModel.SettingItem.DisplayValue;
+                        Properties.QuasarSettings.Default.FtpIP = SIV.ViewModel.SettingItem.DisplayValue;
                         break;
                     case "FtpPort":
-                        Properties.Settings.Default.FtpPort = SIV.ViewModel.SettingItem.DisplayValue;
+                        Properties.QuasarSettings.Default.FtpPort = SIV.ViewModel.SettingItem.DisplayValue;
                         break;
                     case "FtpUsername":
-                        Properties.Settings.Default.FtpUsername = SIV.ViewModel.SettingItem.DisplayValue;
+                        Properties.QuasarSettings.Default.FtpUsername = SIV.ViewModel.SettingItem.DisplayValue;
                         break;
                     case "FtpPassword":
-                        Properties.Settings.Default.FtpPassword = SIV.ViewModel.SettingItem.DisplayValue;
+                        Properties.QuasarSettings.Default.FtpPassword = SIV.ViewModel.SettingItem.DisplayValue;
                         break;
                 }
-                Properties.Settings.Default.Save();
+                Properties.QuasarSettings.Default.Save();
             }
 
             //Validating values
             Regex AddressRegex = new Regex(@"(?'IP'(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}))");
             Regex PortRegex = new Regex(@"(?'Port'(\d{1,5}))");
-            if (Properties.Settings.Default.FtpIP != null && Properties.Settings.Default.FtpPort != null)
+            if (Properties.QuasarSettings.Default.FtpIP != null && Properties.QuasarSettings.Default.FtpPort != null)
             {
-                if (AddressRegex.IsMatch(Properties.Settings.Default.FtpIP) && PortRegex.IsMatch(Properties.Settings.Default.FtpPort))
+                if (AddressRegex.IsMatch(Properties.QuasarSettings.Default.FtpIP) && PortRegex.IsMatch(Properties.QuasarSettings.Default.FtpPort))
                 {
                     //Showing connection Modal
                     ModalEvent Meuh = new ModalEvent()
@@ -215,11 +318,11 @@ namespace Quasar.Settings.ViewModels
                     EventSystem.Publish(Meuh);
 
                     //Configuring FTP Client
-                    FtpClient ftpClient = new FtpClient(Properties.Settings.Default.FtpIP);
-                    ftpClient.Port = int.Parse(Properties.Settings.Default.FtpPort);
-                    if (Properties.Settings.Default.FtpUsername != "")
+                    FtpClient ftpClient = new FtpClient(Properties.QuasarSettings.Default.FtpIP);
+                    ftpClient.Port = int.Parse(Properties.QuasarSettings.Default.FtpPort);
+                    if (Properties.QuasarSettings.Default.FtpUsername != "")
                     {
-                        ftpClient.Credentials = new System.Net.NetworkCredential(Properties.Settings.Default.FtpUsername, Properties.Settings.Default.FtpPassword);
+                        ftpClient.Credentials = new System.Net.NetworkCredential(Properties.QuasarSettings.Default.FtpUsername, Properties.QuasarSettings.Default.FtpPassword);
                     }
 
                     //Launching connection Task
@@ -236,8 +339,8 @@ namespace Quasar.Settings.ViewModels
                             EventSystem.Publish(Meuh);
 
                             //Saving FTP state
-                            Properties.Settings.Default.FTPValid = true;
-                            Properties.Settings.Default.Save();
+                            Properties.QuasarSettings.Default.FTPValid = true;
+                            Properties.QuasarSettings.Default.Save();
                         }
                         catch (Exception e)
                         {
@@ -248,8 +351,8 @@ namespace Quasar.Settings.ViewModels
                             EventSystem.Publish(Meuh);
 
                             //Saving FTP state
-                            Properties.Settings.Default.FTPValid = false;
-                            Properties.Settings.Default.Save();
+                            Properties.QuasarSettings.Default.FTPValid = false;
+                            Properties.QuasarSettings.Default.Save();
                         }
                     });
                 }
@@ -268,8 +371,8 @@ namespace Quasar.Settings.ViewModels
                     EventSystem.Publish(Meuh);
 
                     //Saving FTP state
-                    Properties.Settings.Default.FTPValid = false;
-                    Properties.Settings.Default.Save();
+                    Properties.QuasarSettings.Default.FTPValid = false;
+                    Properties.QuasarSettings.Default.Save();
                 }
             }
             else
@@ -287,8 +390,8 @@ namespace Quasar.Settings.ViewModels
                 EventSystem.Publish(Meuh);
 
                 //Saving FTP state
-                Properties.Settings.Default.FTPValid = false;
-                Properties.Settings.Default.Save();
+                Properties.QuasarSettings.Default.FTPValid = false;
+                Properties.QuasarSettings.Default.Save();
             }
 
         }
@@ -388,6 +491,36 @@ namespace Quasar.Settings.ViewModels
             };
             EventSystem.Publish<ModalEvent>(meuh);
         }
+
+        public string getSDCards()
+        {
+            string DriveString = "";
+
+            DriveInfo[] CurrentDrives = DriveInfo.GetDrives();
+            foreach (DriveInfo di in CurrentDrives)
+            {
+                if (di.DriveType == DriveType.Removable && di.IsReady)
+                {
+                    DriveString += String.Format("{0} ({1})={1}",di.VolumeLabel, di.Name);
+                }
+            }
+
+            return DriveString;
+        }
         #endregion
-    }
+
+        #region USB Detection
+
+        private void DeviceInsertedEvent(object sender, EventArrivedEventArgs e)
+        {
+            LoadSettings();
+        }
+
+        private void DeviceRemovedEvent(object sender, EventArrivedEventArgs e)
+        {
+            LoadSettings();
+        }
+
+    #endregion
+}
 }

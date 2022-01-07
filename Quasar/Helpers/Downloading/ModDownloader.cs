@@ -10,7 +10,7 @@ namespace Quasar.Helpers.Downloading
     class ModDownloader
     {
         //Parsing Default Directory Path
-        readonly string DefaultDirectoryPath = Properties.Settings.Default["DefaultDir"].ToString();
+        readonly string DefaultDirectoryPath = Properties.QuasarSettings.Default["DefaultDir"].ToString();
 
         ModViewModel _modView;
 

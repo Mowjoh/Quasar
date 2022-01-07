@@ -3,8 +3,6 @@ using log4net.Appender;
 using Nett;
 using Quasar.Build.Models;
 using DataModels.User;
-using DataModels.Common;
-using DataModels.Resource;
 using Quasar.Helpers.FileOperations;
 using System;
 using System.IO;
@@ -23,7 +21,7 @@ namespace Quasar.Helpers.Tools
             //Logging setup
             ILog log = LogManager.GetLogger("QuasarAppender");
             FileAppender appender = (FileAppender)log.Logger.Repository.GetAppenders()[0];
-            appender.File = Properties.Settings.Default.DefaultDir + "\\Quasar.log";
+            appender.File = Properties.QuasarSettings.Default.DefaultDir + "\\Quasar.log";
             appender.Threshold = log4net.Core.Level.Debug;
             appender.ActivateOptions();
 
@@ -37,7 +35,7 @@ namespace Quasar.Helpers.Tools
             ModifyTouchmARCConfig(WorkspaceName);
             SendLocalConfigFile(Writer, log);
 
-            File.Delete(Properties.Settings.Default.DefaultDir + "\\Library\\arcropolis.toml");
+            File.Delete(Properties.QuasarSettings.Default.DefaultDir + "\\Library\\arcropolis.toml");
 
         }
 
@@ -50,11 +48,11 @@ namespace Quasar.Helpers.Tools
             //Logging setup
             ILog log = LogManager.GetLogger("QuasarAppender");
             FileAppender appender = (FileAppender)log.Logger.Repository.GetAppenders()[0];
-            appender.File = Properties.Settings.Default.DefaultDir + "\\Quasar.log";
+            appender.File = Properties.QuasarSettings.Default.DefaultDir + "\\Quasar.log";
             appender.Threshold = log4net.Core.Level.Debug;
             appender.ActivateOptions();
 
-            string path = Properties.Settings.Default.DefaultDir + "\\Library\\arcropolis.toml";
+            string path = Properties.QuasarSettings.Default.DefaultDir + "\\Library\\arcropolis.toml";
             try
             {
                 ARCropolisConfiguration config = Toml.ReadFile<ARCropolisConfiguration>(path);
@@ -82,8 +80,8 @@ namespace Quasar.Helpers.Tools
         {
             try
             {
-                Writer.GetFile("atmosphere\\contents\\01006A800016E000\\romfs\\arcropolis.toml", Properties.Settings.Default.DefaultDir + "\\Library\\arcropolis.toml");
-                log.Debug("got file " + Properties.Settings.Default.DefaultDir + "\\Library\\arcropolis.toml");
+                Writer.GetFile("atmosphere\\contents\\01006A800016E000\\romfs\\arcropolis.toml", Properties.QuasarSettings.Default.DefaultDir + "\\Library\\arcropolis.toml");
+                log.Debug("got file " + Properties.QuasarSettings.Default.DefaultDir + "\\Library\\arcropolis.toml");
             }
             catch (Exception e)
             {
@@ -97,8 +95,8 @@ namespace Quasar.Helpers.Tools
         /// <param name="log"></param>
         public static void GetLocalConfigFile(ILog log)
         {
-            string source = Properties.Settings.Default.DefaultDir + "\\Resources\\ModLoaders\\ARCropolis\\arcropolis.toml";
-            string path = Properties.Settings.Default.DefaultDir + "\\Library\\arcropolis.toml";
+            string source = Properties.QuasarSettings.Default.DefaultDir + "\\Resources\\ModLoaders\\ARCropolis\\arcropolis.toml";
+            string path = Properties.QuasarSettings.Default.DefaultDir + "\\Library\\arcropolis.toml";
             FileOperation.CheckCopyFile(source, path);
             log.Debug("Copied file to " + path);
         }
@@ -112,7 +110,7 @@ namespace Quasar.Helpers.Tools
         {
             try
             {
-                Writer.SendFile(Properties.Settings.Default.DefaultDir + "\\Library\\arcropolis.toml", "atmosphere\\contents\\01006A800016E000\\romfs\\arcropolis.toml");
+                Writer.SendFile(Properties.QuasarSettings.Default.DefaultDir + "\\Library\\arcropolis.toml", "atmosphere\\contents\\01006A800016E000\\romfs\\arcropolis.toml");
                 log.Debug("sent file atmosphere\\contents\\01006A800016E000\\romfs\\arcropolis.toml");
             }
             catch (Exception e)
@@ -129,7 +127,7 @@ namespace Quasar.Helpers.Tools
         /// <param name="log"></param>
         public static void SendTouchmARCInstall(FileWriter Writer, ILog log)
         {
-            string BasePath = Properties.Settings.Default.DefaultDir + "\\Resources\\ModLoaders\\ARCropolis";
+            string BasePath = Properties.QuasarSettings.Default.DefaultDir + "\\Resources\\ModLoaders\\ARCropolis";
             foreach (string FilePath in Directory.GetFiles(BasePath, "*",SearchOption.AllDirectories))
             {
                 string destination = FilePath.Replace(BasePath + "\\", "");
@@ -151,7 +149,7 @@ namespace Quasar.Helpers.Tools
         public static void CreateInfoFile(LibraryItem Item,string Decription, string CategoryName = "")
         {
             ARCadiaModInfo info;
-            string output = String.Format(@"{0}\Library\Mods\{1}\info.toml",Properties.Settings.Default.DefaultDir, Item.Guid);
+            string output = String.Format(@"{0}\Library\Mods\{1}\info.toml",Properties.QuasarSettings.Default.DefaultDir, Item.Guid);
             if (!Item.ManualMod)
             {
                 info = new ARCadiaModInfo()
@@ -179,8 +177,8 @@ namespace Quasar.Helpers.Tools
 
         public static void DeleteInfoFile()
         {
-            if (File.Exists(String.Format(@"{0}\Library\info.toml", Properties.Settings.Default.DefaultDir)))
-                File.Delete(String.Format(@"{0}\Library\info.toml", Properties.Settings.Default.DefaultDir));
+            if (File.Exists(String.Format(@"{0}\Library\info.toml", Properties.QuasarSettings.Default.DefaultDir)))
+                File.Delete(String.Format(@"{0}\Library\info.toml", Properties.QuasarSettings.Default.DefaultDir));
         }
     }
 

@@ -65,9 +65,9 @@
                 <MultiDataTrigger>
                     <MultiDataTrigger.Conditions>
                         <Condition Binding="{Binding LibraryItem.Included}" Value="True" />
-                        <Condition Binding="{Binding LibraryItem.Modified}" Value="True" />
+                        <Condition Binding="{Binding Edited}" Value="True" />
                     </MultiDataTrigger.Conditions>
-                    <Setter Property="Fill" Value="#9e168e" />
+                    <Setter Property="Fill" Value="LightBlue" />
                 </MultiDataTrigger>
             </Style.Triggers>
         </Style>
@@ -216,9 +216,11 @@
                 <TextBlock Grid.Column="1"
                            Margin="10,0,0,0" VerticalAlignment="Center"
                            Style="{StaticResource CutieTextBlockStyle}" Text="{Binding Path=LibraryItem.Name}" Visibility="{Binding Path=StandbyNotEditing, Converter={StaticResource BoolVisi}}" />
-                <TextBox Grid.Column="1"
+
+                <TextBox x:Name="NameTextBox"
+                         Grid.Column="1"
                          Margin="10,0,10,0" VerticalAlignment="Center"
-                         Style="{StaticResource CutieTextBoxStyle}" Text="{Binding Path=LibraryItem.Name}" Visibility="{Binding Path=StandbyEditing, Converter={StaticResource BoolVisi}}" />
+                         KeyDown="ModNameKeyDown" Style="{StaticResource CutieTextBoxStyle}" Text="{Binding Path=LibraryItem.Name, UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding Path=StandbyEditing, Converter={StaticResource BoolVisi}}" />
 
 
                 <TextBlock Grid.Column="2"
@@ -267,7 +269,7 @@
                             Command="{Binding Path=AssignCommand}" Template="{StaticResource ActionAssignModButton}" ToolTip="{x:Static p:Resources.ModItem_Tooltip_AssignMod}" />
 
                     <!--  Rename Button  -->
-                    <Button Margin="10,0,0,0"
+                    <Button Margin="30,0,0,0"
                             Command="{Binding Path=RenameCommand}" Template="{StaticResource ActionEditNameButton}" ToolTip="{x:Static p:Resources.ModItem_Tooltip_RenameMod}" Visibility="{Binding Path=LibraryItem.ManualMod, Converter={StaticResource BoolVisi}}" />
 
                 </WrapPanel>
@@ -327,9 +329,9 @@
                            Margin="115,50,0,0" HorizontalAlignment="Left" VerticalAlignment="top"
                            Content="{Binding LibraryItem.GBItem.UpdateCount}" Style="{StaticResource CutieLabelStyle}" />
 
-                    <Button Grid.Column="1"
+                    <!--<Button Grid.Column="1"
                             Width="200" Margin="0,100,0,0" HorizontalAlignment="Center" VerticalAlignment="Top"
-                            Command="{Binding Path=UpdateModCommand}" Content="{x:Static p:Resources.ModListItem_Button_UpdateMod}" Template="{StaticResource CutieSmallButtonTemplate}" />
+                            Command="{Binding Path=UpdateModCommand}" Content="{x:Static p:Resources.ModListItem_Button_UpdateMod}" Template="{StaticResource CutieSmallButtonTemplate}" />-->
 
                 </Grid>
                 <!--#endregion-->
