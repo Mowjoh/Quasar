@@ -212,7 +212,7 @@
               Margin="10,0,0,0"
               Background="{DynamicResource CutieBG00}" Visibility="{Binding TransferWindowVisible, Converter={StaticResource BoolVisi}}">
             <ScrollViewer>
-                <TextBlock FontFamily="{StaticResource PoppinsRegular}" Foreground="{DynamicResource QuasarTextColor}" Text="{Binding Logs}" TextWrapping="Wrap" MouseRightButtonUp="UIElement_OnMouseRightButtonUp" />
+                <TextBlock FontFamily="{StaticResource PoppinsRegular}" Foreground="{DynamicResource QuasarTextColor}" MouseRightButtonUp="UIElement_OnMouseRightButtonUp" Text="{Binding Logs}" TextWrapping="Wrap" />
             </ScrollViewer>
         </Grid>
 

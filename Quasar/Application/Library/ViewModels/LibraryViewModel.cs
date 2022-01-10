@@ -142,6 +142,7 @@ namespace Quasar.Controls.ModManagement.ViewModels
         #region View
 
         #region Private
+
         private string _SearchText { get; set; } = "";
         private bool _BlackChecked { get; set; } = true;
         private bool _RedChecked { get; set; } = true;
@@ -778,8 +779,12 @@ namespace Quasar.Controls.ModManagement.ViewModels
 
         public async void Build()
         {
+            if (Building)
+                return;
+
             TransferWindowVisible = true;
 
+            Building = true;
             //Setting Tab Lock ON
             EventSystem.Publish<SettingItem>(new SettingItem
             {

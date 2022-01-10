@@ -612,6 +612,9 @@
                     <Setter Property="Fill" Value="#da036f" />
                     <Setter Property="Stroke" Value="#da036f" />
                 </Trigger>
+                <DataTrigger Binding="{Binding Building}" Value="True">
+                    <Setter Property="Visibility" Value="Collapsed" />
+                </DataTrigger>
             </Style.Triggers>
         </Style>
         <!--#endregion-->
