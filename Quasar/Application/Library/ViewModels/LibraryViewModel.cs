@@ -21,7 +21,7 @@ using Quasar.MainUI.ViewModels;
 using Microsoft.WindowsAPICodePack.Taskbar;
 using System.Diagnostics;
 using Ookii.Dialogs.Wpf;
-using Quasar.Build.Models;
+using Quasar.Library.Models;
 using Workshop.FileManagement;
 using Workshop.Web;
 using System.IO;
@@ -794,15 +794,47 @@ namespace Quasar.Controls.ModManagement.ViewModels
             bool ok = true;
 
             //Starting the transfer for the selected FileWriter
+            FileWriter FW = await GetFileWriter();
+
+            if (FW != null)
+            {
+                SmashBuilder SmashBuilder = new(FW, this);
+                bool BuildSuccess = false;
+
+                await Task.Run(() =>
+                {
+                    BuildSuccess = SmashBuilder.StartBuild().Result;
+                });
+
+                if (BuildSuccess)
+                {
+                    EndBuildProcess();
+                }
+                else
+                {
+                    BuildLog("Error", "Something went wrong");
+                    EndBuildProcess();
+                }
+            }
+            else
+            {
+                BuildLog(Properties.Resources.Transfer_Log_Error, Properties.Resources.Transfer_Log_NoLaunch);
+                EndBuildProcess();
+            }
+        }
+
+        public async Task<FileWriter> GetFileWriter()
+        {
             FileWriter FW = null;
 
-            switch(Properties.QuasarSettings.Default.PreferredTransferMethod){
+            switch (Properties.QuasarSettings.Default.PreferredTransferMethod)
+            {
                 case "FTP":
                     //FTP FileWriter
                     BuildLog(Properties.Resources.Transfer_Log_Info, Properties.Resources.Transfer_Log_FTPConnectionTest);
                     FW = new FTPWriter(this) { Log = QuasarLogger };
-                    //ok = await FW.VerifyOK();
-                    if (!FW.VerifyOK().Result)
+                    bool ok = await FW.VerifyOK();
+                    if (!ok)
                     {
                         BuildLog(Properties.Resources.Transfer_Log_Error, Properties.Resources.Transfer_Log_FTPConnectionFail);
                     }
@@ -813,26 +845,24 @@ namespace Quasar.Controls.ModManagement.ViewModels
                     break;
                 case "SD":
                     //SD Card FileWriter
-                   
+
                     if (Properties.QuasarSettings.Default.SelectedSD == null)
                     {
                         BuildLog(Properties.Resources.Transfer_Log_Error, Properties.Resources.Transfer_Log_NoSDSelected);
-                        ok = false;
                         FW = null;
                     }
                     else
                     {
-                        if(DriveInfo.GetDrives().Any(d => d.Name == Properties.QuasarSettings.Default.SelectedSD))
+                        if (DriveInfo.GetDrives().Any(d => d.Name == Properties.QuasarSettings.Default.SelectedSD))
                         {
                             FW = new SDWriter(this) { LetterPath = Properties.QuasarSettings.Default.SelectedSD, Log = QuasarLogger };
                         }
                         else
                         {
                             BuildLog(Properties.Resources.Transfer_Log_Error, Properties.Resources.Transfer_Log_NoSDSelected);
-                            ok = false;
                             FW = null;
                         }
-                        
+
                     }
                     break;
                 case "Disk":
@@ -843,48 +873,13 @@ namespace Quasar.Controls.ModManagement.ViewModels
                     else
                     {
                         BuildLog(Properties.Resources.Transfer_Log_Error, Properties.Resources.Transfer_Log_DiskPathUnavailable);
-                        ok = false;
                         FW = null;
                     }
-                    
+
                     break;
             }
 
-            if (ok)
-            {
-                SmashBuilder SB = new(FW, this);
-                bool proceed = true;
-
-                if (proceed)
-                {
-                    bool BuildSuccess = false;
-                    await Task.Run(() =>
-                    {
-                        BuildSuccess = SB.StartBuild().Result;
-                    });
-
-                    if (BuildSuccess)
-                    {
-                        EndBuildProcess();
-                    }
-                    else
-                    {
-                        BuildLog("Error", "Something went wrong");
-                        EndBuildProcess();
-                    }
-                }
-                else
-                {
-                    BuildLog("Error", "Could not launch build");
-                    EndBuildProcess();
-
-                }
-            }
-            else
-            {
-                BuildLog(Properties.Resources.Transfer_Log_Error, Properties.Resources.Transfer_Log_NoLaunch);
-                EndBuildProcess();
-            }
+            return FW;
         }
 
         /// <summary>

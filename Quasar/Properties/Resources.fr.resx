@@ -346,7 +346,7 @@ les fichiers d'une installation précédente</value>
     <value>Utilisez cette option pour déplacer tous les fichiers de mods dans un autre dossier de l'ordinateur</value>
   </data>
   <data name="Settings_Comment_Diskpath" xml:space="preserve">
-    <value>Veuillez entrer le chemin d'accès au dossier dans lequel Quasar effectuera le transfert de mods</value>
+    <value>Veuillez entrer le chemin d'accès au dossier dans lequel Quasar effectuera le transfert de mods. Veuillez appuyer sur Entrée pour valider le nouvel emplacement.</value>
   </data>
   <data name="Settings_Comment_FtpIP" xml:space="preserve">
     <value>Veuillez remplir ce champ avec l'adresse IP de la Switch</value>
@@ -368,7 +368,7 @@ L'app doit être redémarrer pour que le changement soit effectif</value>
     <value>Activez cette option pour que le dossier de mods de la Switch soit uniquement géré par Quasar</value>
   </data>
   <data name="Settings_Comment_ModsPath" xml:space="preserve">
-    <value>Vous pouvez changer l'emplacement des mods sur la SD avec ce champ</value>
+    <value>Vous pouvez changer l'emplacement des mods sur la SD avec ce champ. Veuillez appuyer sur Entrée pour valider le nouvel emplacement.</value>
   </data>
   <data name="Settings_Comment_PreferredTransferMethod" xml:space="preserve">
     <value>Veuillez sélectionner si vous préférez transférer les fichiers par FTP sans-fil ou avec un transfert local sur une SD connectée</value>
@@ -486,11 +486,23 @@ que la bonne IP et le bon port soient utilisés.</value>
   <data name="Settings_Values_PreferredTransferMethod" xml:space="preserve">
     <value>Sans-fil (FTP)=FTP,Local (SD)=SD, Emplacement Disque=Disk</value>
   </data>
+  <data name="Transfer_Log_AllFilesCopied" xml:space="preserve">
+    <value>Tous les fichiers ont été copiés</value>
+  </data>
+  <data name="Transfer_Log_AllFilesDeleted" xml:space="preserve">
+    <value>Toutes les différences ont été supprimées</value>
+  </data>
   <data name="Transfer_Log_DiskPathUnavailable" xml:space="preserve">
     <value>Le chemin disque renseigné n'existe pas</value>
   </data>
   <data name="Transfer_Log_Error" xml:space="preserve">
     <value>Erreur</value>
+  </data>
+  <data name="Transfer_Log_FileError" xml:space="preserve">
+    <value>Erreur de transfert pour certains fichiers</value>
+  </data>
+  <data name="Transfer_Log_FinishedMod" xml:space="preserve">
+    <value>Fichiers transférés pour {0}</value>
   </data>
   <data name="Transfer_Log_FTPConnectionFail" xml:space="preserve">
     <value>Echec de la connection.</value>
@@ -504,14 +516,26 @@ que la bonne IP et le bon port soient utilisés.</value>
   <data name="Transfer_Log_GeneralTransferError" xml:space="preserve">
     <value />
   </data>
+  <data name="Transfer_Log_GlobalError" xml:space="preserve">
+    <value>Erreur de transfert globale</value>
+  </data>
   <data name="Transfer_Log_Info" xml:space="preserve">
     <value>Info</value>
+  </data>
+  <data name="Transfer_Log_NoCopy" xml:space="preserve">
+    <value>Aucun fichier à copier</value>
+  </data>
+  <data name="Transfer_Log_NoDelete" xml:space="preserve">
+    <value>Aucun fichier à supprimer</value>
   </data>
   <data name="Transfer_Log_NoLaunch" xml:space="preserve">
     <value>Echec de lancement du transfert.</value>
   </data>
   <data name="Transfer_Log_NoSDSelected" xml:space="preserve">
     <value>Aucune SD sélectionnée</value>
+  </data>
+  <data name="Transfer_Log_ProcessingLists" xml:space="preserve">
+    <value>Traitement  de ce que Quasar doit faire...</value>
   </data>
   <data name="Transfer_Log_ProcessStart" xml:space="preserve">
     <value>Début du transfert :</value>
@@ -536,6 +560,12 @@ que la bonne IP et le bon port soient utilisés.</value>
   </data>
   <data name="Transfer_Step_SubStepText" xml:space="preserve">
     <value>Sous-tâche : {0}</value>
+  </data>
+  <data name="Transfer_Step_TransferingFilesStepText" xml:space="preserve">
+    <value>Transfert des fichiers</value>
+  </data>
+  <data name="Transfer_Step_TransferingFilesSubStepText" xml:space="preserve">
+    <value>Transfert pour {0}</value>
   </data>
   <data name="Transfer_Tooltip_CloseWindowButton" xml:space="preserve">
     <value>Fermer la fenêtre de transfert.</value>

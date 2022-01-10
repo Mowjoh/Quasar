@@ -311,5 +311,13 @@ namespace Validator.Scanning
             Assert.NotEqual("",SplitStrings[0]);
             Assert.NotEqual("",SplitStrings[1]);
         }
+
+        [Theory]
+        [InlineData("s")]
+        public void Regex_OutputIsProperlyProcessed(string input)
+        {
+            //TODO Do this
+            Assert.True(true);
+        }
     }
 }

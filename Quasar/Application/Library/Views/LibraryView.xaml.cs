@@ -1,4 +1,6 @@
-﻿using System.Windows.Controls;
+﻿using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace Quasar.Controls.ModManagement.Views
 {
@@ -10,6 +12,12 @@ namespace Quasar.Controls.ModManagement.Views
         public LibraryView()
         {
             InitializeComponent();
+        }
+
+        private void UIElement_OnMouseRightButtonUp(object _sender, MouseButtonEventArgs _e)
+        {
+            TextBlock tb = (TextBlock) _sender;
+            Clipboard.SetText(tb.Text);
         }
     }
 }

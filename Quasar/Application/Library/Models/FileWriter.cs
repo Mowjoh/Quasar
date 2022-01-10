@@ -11,7 +11,7 @@ using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Quasar.Controls.ModManagement.ViewModels;
 
-namespace Quasar.Build.Models
+namespace Quasar.Library.Models
 {
     public abstract class FileWriter
     {

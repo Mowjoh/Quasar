@@ -158,8 +158,8 @@ namespace Quasar.Associations.ViewModels
             Instanciating = true;
 
             SelectedOption = Key == "-1" ? 
-                Options.Single(_o => _o.Key == "none") : 
-                Options.Single(_o => _o.Key == Key);
+                Options.SingleOrDefault(_o => _o.Key == "none") : 
+                Options.SingleOrDefault(_o => _o.Key == Key);
 
             Instanciating = false;
 

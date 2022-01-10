@@ -345,7 +345,7 @@ Quasar will be of no use to you.</value>
     <value>Use this button to move all mods to a new location on your computer</value>
   </data>
   <data name="Settings_Comment_Diskpath" xml:space="preserve">
-    <value>Please enter the path of the folder you want Quasar to transfer files to</value>
+    <value>Please enter the path of the folder you want Quasar to transfer files to. Press enter to save the path</value>
   </data>
   <data name="Settings_Comment_FtpIP" xml:space="preserve">
     <value>Enter the address and port like this : [IP:Port], like so 192.168.1.64:5000</value>
@@ -373,7 +373,7 @@ The app will need to be rebooted to see the change</value>
     <value>Select if you'd rather transfer files wirelessly through FTP or via a plugged in SD</value>
   </data>
   <data name="Settings_Comment_SDSelect" xml:space="preserve">
-    <value>Select the SD you want to transfer to</value>
+    <value>Select the SD you want to transfer to. Press enter to save the path</value>
   </data>
   <data name="Settings_Comment_SupressModDeletion" xml:space="preserve">
     <value>Enable this to be warned when deleting Mods</value>
@@ -486,11 +486,23 @@ Also check that your FTP server is running</value>
   <data name="Settings_Values_PreferredTransferMethod" xml:space="preserve">
     <value>Wireless (FTP)=FTP,Wired (SD)=SD,Disk Folder=Disk</value>
   </data>
+  <data name="Transfer_Log_AllFilesCopied" xml:space="preserve">
+    <value>All Files have been copied</value>
+  </data>
+  <data name="Transfer_Log_AllFilesDeleted" xml:space="preserve">
+    <value>All Differences have been deleted</value>
+  </data>
   <data name="Transfer_Log_DiskPathUnavailable" xml:space="preserve">
     <value>The path you have entered does not exist</value>
   </data>
   <data name="Transfer_Log_Error" xml:space="preserve">
     <value>Error</value>
+  </data>
+  <data name="Transfer_Log_FileError" xml:space="preserve">
+    <value>Could not copy some files</value>
+  </data>
+  <data name="Transfer_Log_FinishedMod" xml:space="preserve">
+    <value>Finished copying files for {0}</value>
   </data>
   <data name="Transfer_Log_FTPConnectionFail" xml:space="preserve">
     <value>Could not connect.</value>
@@ -504,14 +516,26 @@ Also check that your FTP server is running</value>
   <data name="Transfer_Log_GeneralTransferError" xml:space="preserve">
     <value />
   </data>
+  <data name="Transfer_Log_GlobalError" xml:space="preserve">
+    <value>Global Build Error</value>
+  </data>
   <data name="Transfer_Log_Info" xml:space="preserve">
     <value>Info</value>
+  </data>
+  <data name="Transfer_Log_NoCopy" xml:space="preserve">
+    <value>No files to copy</value>
+  </data>
+  <data name="Transfer_Log_NoDelete" xml:space="preserve">
+    <value>No files to delete</value>
   </data>
   <data name="Transfer_Log_NoLaunch" xml:space="preserve">
     <value>Could not launch the file transfer.</value>
   </data>
   <data name="Transfer_Log_NoSDSelected" xml:space="preserve">
     <value>No SD selected</value>
+  </data>
+  <data name="Transfer_Log_ProcessingLists" xml:space="preserve">
+    <value>Processing what Quasar has to do...</value>
   </data>
   <data name="Transfer_Log_ProcessStart" xml:space="preserve">
     <value>Transfer Process Start :</value>
@@ -536,6 +560,12 @@ Also check that your FTP server is running</value>
   </data>
   <data name="Transfer_Step_SubStepText" xml:space="preserve">
     <value>Sub-Step : {0}</value>
+  </data>
+  <data name="Transfer_Step_TransferingFilesStepText" xml:space="preserve">
+    <value>Transfering Files</value>
+  </data>
+  <data name="Transfer_Step_TransferingFilesSubStepText" xml:space="preserve">
+    <value>Copying files for {0}</value>
   </data>
   <data name="Transfer_Tooltip_CloseWindowButton" xml:space="preserve">
     <value>Close the transfer window</value>

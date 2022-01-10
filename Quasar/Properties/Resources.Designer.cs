@@ -732,7 +732,7 @@ namespace Quasar.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Please enter the path of the folder you want Quasar to transfer files to.
+        ///   Looks up a localized string similar to Please enter the path of the folder you want Quasar to transfer files to. Press enter to save the path.
         /// </summary>
         public static string Settings_Comment_Diskpath {
             get {
@@ -814,7 +814,7 @@ namespace Quasar.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Select the SD you want to transfer to.
+        ///   Looks up a localized string similar to Select the SD you want to transfer to. Press enter to save the path.
         /// </summary>
         public static string Settings_Comment_SDSelect {
             get {
@@ -1144,6 +1144,24 @@ namespace Quasar.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to All Files have been copied.
+        /// </summary>
+        public static string Transfer_Log_AllFilesCopied {
+            get {
+                return ResourceManager.GetString("Transfer_Log_AllFilesCopied", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to All Differences have been deleted.
+        /// </summary>
+        public static string Transfer_Log_AllFilesDeleted {
+            get {
+                return ResourceManager.GetString("Transfer_Log_AllFilesDeleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The path you have entered does not exist.
         /// </summary>
         public static string Transfer_Log_DiskPathUnavailable {
@@ -1158,6 +1176,24 @@ namespace Quasar.Properties {
         public static string Transfer_Log_Error {
             get {
                 return ResourceManager.GetString("Transfer_Log_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not copy some files.
+        /// </summary>
+        public static string Transfer_Log_FileError {
+            get {
+                return ResourceManager.GetString("Transfer_Log_FileError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Finished copying files for {0}.
+        /// </summary>
+        public static string Transfer_Log_FinishedMod {
+            get {
+                return ResourceManager.GetString("Transfer_Log_FinishedMod", resourceCulture);
             }
         }
         
@@ -1198,11 +1234,38 @@ namespace Quasar.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Global Build Error.
+        /// </summary>
+        public static string Transfer_Log_GlobalError {
+            get {
+                return ResourceManager.GetString("Transfer_Log_GlobalError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Info.
         /// </summary>
         public static string Transfer_Log_Info {
             get {
                 return ResourceManager.GetString("Transfer_Log_Info", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No files to copy.
+        /// </summary>
+        public static string Transfer_Log_NoCopy {
+            get {
+                return ResourceManager.GetString("Transfer_Log_NoCopy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No files to delete.
+        /// </summary>
+        public static string Transfer_Log_NoDelete {
+            get {
+                return ResourceManager.GetString("Transfer_Log_NoDelete", resourceCulture);
             }
         }
         
@@ -1221,6 +1284,15 @@ namespace Quasar.Properties {
         public static string Transfer_Log_NoSDSelected {
             get {
                 return ResourceManager.GetString("Transfer_Log_NoSDSelected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Processing what Quasar has to do....
+        /// </summary>
+        public static string Transfer_Log_ProcessingLists {
+            get {
+                return ResourceManager.GetString("Transfer_Log_ProcessingLists", resourceCulture);
             }
         }
         
@@ -1293,6 +1365,24 @@ namespace Quasar.Properties {
         public static string Transfer_Step_SubStepText {
             get {
                 return ResourceManager.GetString("Transfer_Step_SubStepText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Transfering Files.
+        /// </summary>
+        public static string Transfer_Step_TransferingFilesStepText {
+            get {
+                return ResourceManager.GetString("Transfer_Step_TransferingFilesStepText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Copying files for {0}.
+        /// </summary>
+        public static string Transfer_Step_TransferingFilesSubStepText {
+            get {
+                return ResourceManager.GetString("Transfer_Step_TransferingFilesSubStepText", resourceCulture);
             }
         }
         
