@@ -338,6 +338,9 @@ Quasar will be of no use to you.</value>
   <data name="Settings_Button_MoveInstallFolder" xml:space="preserve">
     <value>Move Installation Folder</value>
   </data>
+  <data name="Settings_Button_Refresh" xml:space="preserve">
+    <value>Refresh drives</value>
+  </data>
   <data name="Settings_Button_ValidateFTP" xml:space="preserve">
     <value>Test and Save FTP Info</value>
   </data>

@@ -714,6 +714,15 @@ namespace Quasar.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Refresh drives.
+        /// </summary>
+        public static string Settings_Button_Refresh {
+            get {
+                return ResourceManager.GetString("Settings_Button_Refresh", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Test and Save FTP Info.
         /// </summary>
         public static string Settings_Button_ValidateFTP {

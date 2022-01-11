@@ -14,7 +14,6 @@ using System.Windows.Input;
 using DataModels.Common;
 using log4net;
 using Quasar.Settings.Models;
-using Usb.Events;
 
 namespace Quasar.Settings.ViewModels
 {
@@ -106,7 +105,7 @@ namespace Quasar.Settings.ViewModels
         #region Private
         private ICommand _ValidateFTPCommand { get; set; }
         private ICommand _MoveInstallCommand { get; set; }
-        private ICommand _OnboardingCommand { get; set; }
+        private ICommand _ReloadCommand { get; set; }
         #endregion
 
         #region Public
@@ -132,15 +131,15 @@ namespace Quasar.Settings.ViewModels
                 return _MoveInstallCommand;
             }
         }
-        public ICommand OnboardingCommand
+        public ICommand ReloadCommand
         {
             get
             {
-                if (_OnboardingCommand == null)
+                if (_ReloadCommand == null)
                 {
-                    _OnboardingCommand = new RelayCommand(param => AskLaunchOnboarding());
+                    _ReloadCommand = new RelayCommand(param => LoadSettings());
                 }
-                return _OnboardingCommand;
+                return _ReloadCommand;
             }
         }
         #endregion
@@ -156,38 +155,8 @@ namespace Quasar.Settings.ViewModels
             EventSystem.Subscribe<ModalEvent>(ProcessModalEvent);
             EventSystem.Subscribe<SettingItem>(ProcessSettingChanged);
 
-            using IUsbEventWatcher usbEventWatcher = new UsbEventWatcher();
-
-            usbEventWatcher.UsbDeviceRemoved += (_, device) =>
-            {
-                Application.Current.Dispatcher.Invoke((Action)delegate {
-                    LoadSettings();
-                }); 
-            };
-
-            usbEventWatcher.UsbDeviceAdded += (_, device) =>
-            {
-                Application.Current.Dispatcher.Invoke((Action)delegate {
-                    LoadSettings();
-                });
-            };
-
-            usbEventWatcher.UsbDriveEjected += (_, path) =>
-            {
-                Application.Current.Dispatcher.Invoke((Action)delegate {
-                    LoadSettings();
-                });
-            };
-
-            usbEventWatcher.UsbDriveMounted += (_, path) =>
-            {
-                Application.Current.Dispatcher.Invoke((Action)delegate {
-                    LoadSettings();
-                });
-            };
-            usbEventWatcher.Start();
-
         }
+
 
         #region Actions
         /// <summary>

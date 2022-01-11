@@ -129,7 +129,6 @@ namespace Quasar.Helpers.Quasar_Management
             try
             {
                 FileOperation.CheckCopyFolder(SourcePath + "\\Library", newPath + "\\Library");
-                FileOperation.CheckCopyFolder(SourcePath + "\\Resources", newPath + "\\Resources");
 
                 File.Copy(SourcePath + "\\Quasar.log", newPath + "\\Quasar.log", true);
             }

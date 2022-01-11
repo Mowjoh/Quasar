@@ -339,6 +339,9 @@ les fichiers d'une installation précédente</value>
   <data name="Settings_Button_MoveInstallFolder" xml:space="preserve">
     <value>Déplacer le dossier d'installation</value>
   </data>
+  <data name="Settings_Button_Refresh" xml:space="preserve">
+    <value>Actualiser les disques</value>
+  </data>
   <data name="Settings_Button_ValidateFTP" xml:space="preserve">
     <value>Tester et valider les paramètres FTP</value>
   </data>
