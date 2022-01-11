@@ -372,7 +372,7 @@ namespace Quasar.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to Quasar finished it&apos;s update process succesfully.
         /// </summary>
         public static string MainUI_Modal_RecoverFinishedContent {
             get {
@@ -381,7 +381,7 @@ namespace Quasar.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to Update Finished.
         /// </summary>
         public static string MainUI_Modal_RecoverFinishedTitle {
             get {
@@ -435,7 +435,7 @@ namespace Quasar.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Update Process.
+        ///   Looks up a localized string similar to Update.
         /// </summary>
         public static string MainUI_Modal_UpdateProgressTitle {
             get {

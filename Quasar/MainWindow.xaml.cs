@@ -20,7 +20,6 @@ namespace Quasar
         public MainWindow()
         {
             MUVM = new MainUIViewModel();
-            
 
             //Aww, here we go again
             InitializeComponent();

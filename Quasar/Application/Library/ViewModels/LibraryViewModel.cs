@@ -532,6 +532,7 @@ namespace Quasar.Controls.ModManagement.ViewModels
         {
             ModListItems = new ObservableCollection<ModListItem>();
 
+
             foreach (LibraryItem li in MUVM.Library)
             {
                 Game gamu = MUVM.Games.Single(g => g.ID == li.GameID);
@@ -540,6 +541,7 @@ namespace Quasar.Controls.ModManagement.ViewModels
                 mli.ModViewModel.LoadStats();
                 ModListItems.Add(mli);
             }
+            
         }
         
         /// <summary>

@@ -121,25 +121,20 @@ namespace Workshop.FileManagement
 
             return ModLoaders;
         }
-        public static GamebananaAPI GetGamebananaAPI(bool External = false, string ExternalPath = "")
+        public static GamebananaAPI GetGamebananaAPI(string QuasarPath = "")
         {
             GamebananaAPI API = new GamebananaAPI();
-            string Path;
-            if (!File.Exists(AppDataPath + @"\Resources\Gamebanana.json"))
+
+            string Path = QuasarPath + @"\Resources\Gamebanana.json";
+            if (!File.Exists(Path))
             {
                 Path = InstallDirectory + @"\Resources\Gamebanana.json";
             }
-            else
-            {
-                Path = AppDataPath + @"\Resources\Gamebanana.json";
-            }
-
             using (StreamReader file = File.OpenText(Path))
             {
                 JsonSerializer serializer = new JsonSerializer();
                 API = (GamebananaAPI)serializer.Deserialize(file, typeof(GamebananaAPI));
             }
-
 
             return API;
         }

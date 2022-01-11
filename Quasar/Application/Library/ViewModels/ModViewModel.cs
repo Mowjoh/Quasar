@@ -637,12 +637,12 @@ namespace Quasar.Controls.Mod.ViewModels
                 }
                 else
                 {
-                    ImageSource = new Uri(Properties.QuasarSettings.Default.DefaultDir + @"\Resources\images\NoScreenshot.png");
+                    ImageSource = new Uri(Properties.QuasarSettings.Default.AppPath + @"\Resources\images\NoScreenshot.png");
                 }
             }
             else
             {
-                ImageSource = new Uri(Properties.QuasarSettings.Default.DefaultDir + @"\Resources\images\NoScreenshot.png");
+                ImageSource = new Uri(Properties.QuasarSettings.Default.AppPath + @"\Resources\images\NoScreenshot.png");
             }
             
         }

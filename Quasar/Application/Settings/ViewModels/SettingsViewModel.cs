@@ -6,6 +6,7 @@ using Quasar.Helpers;
 using System;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Management;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
@@ -13,8 +14,7 @@ using System.Windows.Input;
 using DataModels.Common;
 using log4net;
 using Quasar.Settings.Models;
-using System.Management;
-using System.ComponentModel;
+using Usb.Events;
 
 namespace Quasar.Settings.ViewModels
 {
@@ -27,7 +27,7 @@ namespace Quasar.Settings.ViewModels
         ObservableCollection<SettingItemView> _FTPSettings { get; set; }
         ObservableCollection<SettingItemView> _WarningSettings { get; set; }
         ObservableCollection<SettingItemView> _TransferSettings { get; set; }
-        private bool _Setup { get; set; }
+        private bool _Setup { get; set; } = true;
         private bool SDSelected => Properties.QuasarSettings.Default.PreferredTransferMethod == "SD";
         private bool DiskSelected => Properties.QuasarSettings.Default.PreferredTransferMethod == "Disk";
         #endregion
@@ -156,19 +156,36 @@ namespace Quasar.Settings.ViewModels
             EventSystem.Subscribe<ModalEvent>(ProcessModalEvent);
             EventSystem.Subscribe<SettingItem>(ProcessSettingChanged);
 
-            //ManagementEventWatcher watcher = new ManagementEventWatcher();
-            //WqlEventQuery query = new WqlEventQuery("SELECT * FROM Win32_VolumeChangeEvent WHERE EventType = 2 or EventType = 3");
+            using IUsbEventWatcher usbEventWatcher = new UsbEventWatcher();
 
-            //watcher.EventArrived += (s, e) =>
-            //{
-            //    Application.Current.Dispatcher.Invoke((Action)delegate {
+            usbEventWatcher.UsbDeviceRemoved += (_, device) =>
+            {
+                Application.Current.Dispatcher.Invoke((Action)delegate {
+                    LoadSettings();
+                }); 
+            };
 
-            //        LoadSettings();
-            //    });
-            //};
+            usbEventWatcher.UsbDeviceAdded += (_, device) =>
+            {
+                Application.Current.Dispatcher.Invoke((Action)delegate {
+                    LoadSettings();
+                });
+            };
 
-            //watcher.Query = query;
-            //watcher.Start();
+            usbEventWatcher.UsbDriveEjected += (_, path) =>
+            {
+                Application.Current.Dispatcher.Invoke((Action)delegate {
+                    LoadSettings();
+                });
+            };
+
+            usbEventWatcher.UsbDriveMounted += (_, path) =>
+            {
+                Application.Current.Dispatcher.Invoke((Action)delegate {
+                    LoadSettings();
+                });
+            };
+            usbEventWatcher.Start();
 
         }
 

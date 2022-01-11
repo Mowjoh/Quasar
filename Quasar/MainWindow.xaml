@@ -1,7 +1,7 @@
 ﻿<Window x:Class="Quasar.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2" xmlns:controls="clr-namespace:Quasar.Controls" xmlns:fa="http://schemas.fontawesome.io/icons/" xmlns:local="clr-namespace:Quasar" xmlns:p="clr-namespace:Quasar.Properties" xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase" xmlns:views1="clr-namespace:Quasar.MainUI.Views"
-        x:Name="MainWindow1" Title="{x:Static p:Resources.Quasar_WindowTitle}"
+        xmlns:p="clr-namespace:Quasar.Properties" xmlns:views1="clr-namespace:Quasar.MainUI.Views"
+        Title="{x:Static p:Resources.Quasar_WindowTitle}"
         Width="1280" Height="768" MinWidth="1280" MinHeight="768"
         Closing="AskQuitQuasar" DataContext="{Binding RelativeSource={RelativeSource Self}}" Icon="Quasar.ico" WindowStartupLocation="CenterScreen">
 

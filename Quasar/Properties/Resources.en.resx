@@ -237,16 +237,16 @@ Quasar will be of no use to you.</value>
     <value>Recovering Files and Data</value>
   </data>
   <data name="MainUI_Modal_UpdateFinishedContent" xml:space="preserve">
-    <value />
+    <value>Quasar finished it's update process succesfully</value>
   </data>
   <data name="MainUI_Modal_UpdateFinishedTitle" xml:space="preserve">
-    <value />
+    <value>Update Finished</value>
   </data>
   <data name="MainUI_Modal_UpdateProgressContent" xml:space="preserve">
-    <value />
+    <value>Please be patient, Quasar is updating</value>
   </data>
   <data name="MainUI_Modal_UpdateProgressTitle" xml:space="preserve">
-    <value />
+    <value>Update</value>
   </data>
   <data name="MainUI_SettingsTabHeader" xml:space="preserve">
     <value>Settings</value>

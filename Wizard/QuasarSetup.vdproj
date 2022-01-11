@@ -15,25 +15,13 @@
     {
         "Entry"
         {
-        "MsmKey" = "8:_6B120A915ED34220B3537AB3555896F3"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_79B2B98955AF4F178E4B2196C9F92A5B"
+        "MsmKey" = "8:_45BACDE7D83A43BBBA002B21075EFA78"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_A3FD12F614A241BF801939C10F8A7B6E"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_B8E3309F20634982983DF8740CEDC165"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -214,7 +202,7 @@
             "Name" = "8:#1925"
             "AlwaysCreate" = "11:FALSE"
             "Condition" = "8:"
-            "Transitive" = "11:FALSE"
+            "Transitive" = "11:TRUE"
             "Property" = "8:TARGETDIR"
                 "Folders"
                 {
@@ -247,15 +235,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Quasar"
-        "ProductCode" = "8:{B8E26A46-FEA3-44E7-83AD-8FFB2A099FAA}"
-        "PackageCode" = "8:{E616D606-060B-456E-9C9C-D178B91392E6}"
+        "ProductCode" = "8:{8B82D354-4529-4134-B86E-CED665C903A0}"
+        "PackageCode" = "8:{E44E1DDC-B885-4ABE-8A47-9EAB916A1F53}"
         "UpgradeCode" = "8:{33FBFAE5-777F-41E5-9E5C-1629D77AAA77}"
         "AspNetVersion" = "8:2.0.50727.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:2.5.6"
+        "ProductVersion" = "8:2.5.20"
         "Manufacturer" = "8:Mowjoh"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -265,11 +253,11 @@
         "Keywords" = "8:"
         "ARPCOMMENTS" = "8:"
         "ARPURLINFOABOUT" = "8:"
-        "ARPPRODUCTICON" = "8:"
+        "ARPPRODUCTICON" = "8:_A3FD12F614A241BF801939C10F8A7B6E"
         "ARPIconIndex" = "3:0"
         "SearchPath" = "8:"
         "UseSystemSearchPath" = "11:TRUE"
-        "TargetPlatform" = "3:0"
+        "TargetPlatform" = "3:1"
         "PreBuildEvent" = "8:"
         "PostBuildEvent" = "8:"
         "RunPostBuildEvent" = "3:0"
@@ -462,7 +450,7 @@
         }
         "Shortcut"
         {
-            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_743E2D81BEDA4AE581E03E64FC1D8B9D"
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_49774028215F43B491F755C4CEA2416D"
             {
             "Name" = "8:Quasar"
             "Arguments" = "8:"
@@ -470,13 +458,13 @@
             "ShowCmd" = "3:1"
             "IconIndex" = "3:0"
             "Transitive" = "11:FALSE"
-            "Target" = "8:_6B120A915ED34220B3537AB3555896F3"
+            "Target" = "8:_45BACDE7D83A43BBBA002B21075EFA78"
             "Folder" = "8:_FA8E80E1039F4EEAB16684B3CE90C7CB"
             "WorkingFolder" = "8:_98530811AAC548198210D459D2DE76BD"
             "Icon" = "8:_A3FD12F614A241BF801939C10F8A7B6E"
             "Feature" = "8:"
             }
-            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_78854D635BBE4FB6B8CF95A9103FB2ED"
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_E0612CACC0894C8A976B12D0AB8CD33A"
             {
             "Name" = "8:Quasar"
             "Arguments" = "8:"
@@ -484,7 +472,7 @@
             "ShowCmd" = "3:1"
             "IconIndex" = "3:0"
             "Transitive" = "11:FALSE"
-            "Target" = "8:_6B120A915ED34220B3537AB3555896F3"
+            "Target" = "8:_45BACDE7D83A43BBBA002B21075EFA78"
             "Folder" = "8:_B0D594FFF5D14A2996953B2B9C93B527"
             "WorkingFolder" = "8:_98530811AAC548198210D459D2DE76BD"
             "Icon" = "8:_A3FD12F614A241BF801939C10F8A7B6E"
@@ -917,7 +905,7 @@
                 {
                 }
             }
-            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_6B120A915ED34220B3537AB3555896F3"
+            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_45BACDE7D83A43BBBA002B21075EFA78"
             {
             "SourcePath" = "8:..\\Quasar\\obj\\Debug\\net5.0-windows\\apphost.exe"
             "TargetName" = "8:"
@@ -937,37 +925,9 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             "ProjectOutputGroupRegister" = "3:1"
-            "OutputConfiguration" = "8:"
+            "OutputConfiguration" = "8:Debug|Any CPU"
             "OutputGroupCanonicalName" = "8:PublishItems"
             "OutputProjectGuid" = "8:{688FC6F7-45E8-4E2D-907D-EB2790A8CF7A}"
-            "ShowKeyOutput" = "11:TRUE"
-                "ExcludeFilters"
-                {
-                }
-            }
-            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_79B2B98955AF4F178E4B2196C9F92A5B"
-            {
-            "SourcePath" = "8:..\\DataModels\\obj\\Debug\\net5.0\\DataModels.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_98530811AAC548198210D459D2DE76BD"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            "ProjectOutputGroupRegister" = "3:1"
-            "OutputConfiguration" = "8:"
-            "OutputGroupCanonicalName" = "8:Built"
-            "OutputProjectGuid" = "8:{FD8B24D6-B1EF-4066-B4C3-57BC64F50699}"
             "ShowKeyOutput" = "11:TRUE"
                 "ExcludeFilters"
                 {
@@ -995,62 +955,6 @@
             "ProjectOutputGroupRegister" = "3:1"
             "OutputConfiguration" = "8:"
             "OutputGroupCanonicalName" = "8:XmlSerializer"
-            "OutputProjectGuid" = "8:{688FC6F7-45E8-4E2D-907D-EB2790A8CF7A}"
-            "ShowKeyOutput" = "11:TRUE"
-                "ExcludeFilters"
-                {
-                }
-            }
-            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_B8E3309F20634982983DF8740CEDC165"
-            {
-            "SourcePath" = "8:..\\WorkShop\\obj\\Debug\\net5.0\\Workshop.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_98530811AAC548198210D459D2DE76BD"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            "ProjectOutputGroupRegister" = "3:1"
-            "OutputConfiguration" = "8:"
-            "OutputGroupCanonicalName" = "8:Built"
-            "OutputProjectGuid" = "8:{CF8C6D00-D560-4DBC-A307-E4357FB7F685}"
-            "ShowKeyOutput" = "11:TRUE"
-                "ExcludeFilters"
-                {
-                }
-            }
-            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_D6432BE615494CB3B0FD26DC6690DA15"
-            {
-            "SourcePath" = "8:"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_98530811AAC548198210D459D2DE76BD"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            "ProjectOutputGroupRegister" = "3:1"
-            "OutputConfiguration" = "8:"
-            "OutputGroupCanonicalName" = "8:ContentFiles"
             "OutputProjectGuid" = "8:{688FC6F7-45E8-4E2D-907D-EB2790A8CF7A}"
             "ShowKeyOutput" = "11:TRUE"
                 "ExcludeFilters"

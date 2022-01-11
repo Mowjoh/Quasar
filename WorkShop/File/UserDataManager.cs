@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using Workshop.Builder;
@@ -132,6 +133,9 @@ namespace Workshop.FileManagement
         //User Saves
         public static void SaveLibrary(ObservableCollection<LibraryItem> _LibraryItems, string _QuasarFolderPath)
         {
+            if (Directory.Exists(_QuasarFolderPath + @"\Library"))
+                Directory.CreateDirectory(_QuasarFolderPath + @"\Library");
+
             SaveJSonFile(_QuasarFolderPath + @"\Library\Library.json", _LibraryItems);
         }
         public static void SaveModInformation(ModInformation _ModInformation, string _QuasarModFolder)
@@ -163,6 +167,11 @@ namespace Workshop.FileManagement
         /// <param name="_ExternalPath">Override Destination file path</param>
         private static void SaveJSonFile(string _Fullpath, Object _Source, bool Headless = false)
         {
+            string directory = _Fullpath.Replace(@"/", @"\");
+            directory = _Fullpath.Replace(_Fullpath.Split(@"\")[_Fullpath.Split(@"\").Length - 1], "");
+            if (!Directory.Exists(directory))
+                Directory.CreateDirectory(directory);
+
             using (StreamWriter file = File.CreateText(_Fullpath))
             {
                 JsonSerializer serializer = new JsonSerializer();

@@ -238,16 +238,16 @@ les fichiers d'une installation précédente</value>
     <value>Récupération de données</value>
   </data>
   <data name="MainUI_Modal_UpdateFinishedContent" xml:space="preserve">
-    <value />
+    <value>Quasar à fini son processus de mise à jour avec succès</value>
   </data>
   <data name="MainUI_Modal_UpdateFinishedTitle" xml:space="preserve">
-    <value />
+    <value>Mise à jour terminée</value>
   </data>
   <data name="MainUI_Modal_UpdateProgressContent" xml:space="preserve">
-    <value />
+    <value>Veuillez patienter, Quasar se met à jour</value>
   </data>
   <data name="MainUI_Modal_UpdateProgressTitle" xml:space="preserve">
-    <value />
+    <value>Mise à jour</value>
   </data>
   <data name="MainUI_SettingsTabHeader" xml:space="preserve">
     <value>Paramètres</value>

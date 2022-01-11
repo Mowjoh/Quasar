@@ -225,10 +225,10 @@ Quasar will be of no use to you.</value>
     <value>My switch is running CFW</value>
   </data>
   <data name="MainUI_Modal_RecoverFinishedContent" xml:space="preserve">
-    <value />
+    <value>Quasar finished it's update process succesfully</value>
   </data>
   <data name="MainUI_Modal_RecoverFinishedTitle" xml:space="preserve">
-    <value />
+    <value>Update Finished</value>
   </data>
   <data name="MainUI_Modal_RecoverProgressContent" xml:space="preserve">
     <value>Please be patient, Quasar is looking for previously installed files</value>
@@ -246,7 +246,7 @@ Quasar will be of no use to you.</value>
     <value>Please be patient, Quasar is updating</value>
   </data>
   <data name="MainUI_Modal_UpdateProgressTitle" xml:space="preserve">
-    <value>Update Process</value>
+    <value>Update</value>
   </data>
   <data name="MainUI_SettingsTabHeader" xml:space="preserve">
     <value>Settings</value>
