@@ -194,11 +194,16 @@ namespace Workshop.Builder
                 if (file.Status == FileStatus.CopyEdited)
                 {
                     //If there is a file that should be edited, the output path will be edited
-                    FileReference MatchedFile = transfer_index.SingleOrDefault(f => f.SourceFilePath.Replace(@"\", @"/") == file.SourceFilePath.Replace(@"\", @"/"));
+                    FileReference MatchedFile = transfer_index.SingleOrDefault(f => f.SourceFilePath == file.SourceFilePath.Replace(@"/", @"\"));
 
                     if (MatchedFile == null)
                     {
                         transfer_index.Add(file);
+                    }
+                    else
+                    {
+                        MatchedFile.Status = FileStatus.CopyEdited;
+                        MatchedFile.OutputFilePath = file.OutputFilePath;
                     }
                 }
             }
