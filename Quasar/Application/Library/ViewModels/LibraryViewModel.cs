@@ -1178,7 +1178,6 @@ namespace Quasar.Controls.ModManagement.ViewModels
             //Writing changes
             UserDataManager.SaveLibrary(MUVM.Library, AppDataPath);
             UserDataManager.SaveContentItems(MUVM.ContentItems, AppDataPath);
-            UserDataManager.SaveWorkspaces(MUVM.Workspaces, AppDataPath);
 
             Application.Current.Dispatcher.Invoke((Action)delegate {
                 EventSystem.Publish<string>("RefreshContents");

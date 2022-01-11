@@ -648,30 +648,6 @@ namespace Quasar.MainUI.ViewModels
         }
 
 
-        //Updates
-        /// <summary>
-        /// Shows a Modal to block UI while the app updates
-        /// </summary>
-        public async void ShowUpdateModal()
-        {
-            Application.Current.Dispatcher.Invoke((Action)delegate {
-                Updating = UpdateCommander.ScanRequested;
-            });
-
-            if (UpdateCommander.ScanRequested)
-            {
-                await Task.Run(() => {
-                    Scannerino.ScanAllMods(this);
-                });
-            }
-
-            UserDataManager.SaveWorkspaces(Workspaces, AppDataPath);
-            UserDataManager.SaveContentItems(ContentItems, AppDataPath);
-
-            Application.Current.Dispatcher.Invoke((Action)delegate {
-                UpdateFinished = true;
-            });
-        }
 
         /// <summary>
         /// Sends the OK for the update Modal and refreshes UI
