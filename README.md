@@ -10,6 +10,7 @@ This will allow you to revert easily to your mods before you used Quasar, if tha
 ### Prerequisites
 
 Being on Windows, having Admin rights for the installation.
+You also need the [.net 5.0 runtime here](https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/runtime-desktop-5.0.13-windows-x86-installer)
 
 ### Installing
 
