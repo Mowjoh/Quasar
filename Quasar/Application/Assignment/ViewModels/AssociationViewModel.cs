@@ -257,9 +257,22 @@ namespace Quasar.Associations.ViewModels
             {
                 string Slot = _meuh.SelectedOption.Key;
 
+                //Getting content items with the same LibraryItem
+                List<ContentItem> Matches = MUVM.ContentItems.Where(ci =>
+                    ci.LibraryItemGuid == _meuh.AssignmentContent.AssignmentContentItems[0].LibraryItemGuid).ToList();
+
+                //Assigning slots according to user actions
                 foreach (ContentItem ContentItem in _meuh.AssignmentContent.AssignmentContentItems)
                 {
                     ContentItem.SlotNumber = Slot == "none" ? -1 : int.Parse(Slot);
+                    if (ContentItem.SlotNumber != -1)
+                    {
+                        List<ContentItem> SubMatches = Matches.Where(ci => ci.SlotNumber == ContentItem.SlotNumber && ci.Guid != ContentItem.Guid && ci.QuasarModTypeID == ContentItem.QuasarModTypeID).ToList();
+                        foreach (ContentItem SubMatch in SubMatches)
+                        {
+                            SubMatch.SlotNumber = -1;
+                        }
+                    }
                 }
             }
 
@@ -267,11 +280,19 @@ namespace Quasar.Associations.ViewModels
             {
                 string Element = _meuh.SelectedOption.Key;
 
+                //Assigning elements according to user actions
                 foreach (ContentItem ContentItem in _meuh.AssignmentContent.AssignmentContentItems)
                 {
                     ContentItem.GameElementID = Element == "none" ? -1 : int.Parse(Element);
                 }
             }
+
+            ObservableCollection<AssignmentContent> AssignmentContents =
+                Grouper.GetAssignmentContents(
+                    MUVM.LibraryViewModel.SelectedModListItem.ModViewModel.LibraryItem, MUVM.ContentItems,
+                    Properties.QuasarSettings.Default.GroupAssignmentTypes);
+
+            DisplayContentItems(AssignmentContents.ToList());
 
             UserDataManager.SaveContentItems(MUVM.ContentItems, AppDataPath);
         }

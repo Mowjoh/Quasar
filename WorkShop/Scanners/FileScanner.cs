@@ -284,6 +284,7 @@ namespace Workshop.Scanners
                             //If there is no content item related
                             ContentItem ci = new ContentItem()
                             {
+                                Guid = Guid.NewGuid(),
                                 GameElementID = sf.GameElementID,
                                 OriginalGameElementID = sf.GameElementID,
                                 QuasarModTypeID = sf.QuasarModTypeID,
@@ -313,6 +314,7 @@ namespace Workshop.Scanners
                                 //If there is no related parent
                                 ContentItem ci = new ContentItem()
                                 {
+                                    Guid = Guid.NewGuid(),
                                     GameElementID = sf.GameElementID,
                                     OriginalGameElementID = sf.GameElementID,
                                     QuasarModTypeID = sf.QuasarModTypeID,
