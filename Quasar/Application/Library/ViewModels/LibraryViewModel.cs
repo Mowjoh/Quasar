@@ -1170,19 +1170,7 @@ namespace Quasar.Controls.ModManagement.ViewModels
             List<ContentItem> relatedMappings = MUVM.ContentItems.Where(cm => cm.LibraryItemGuid == item.ModViewModel.LibraryItem.Guid).ToList();
             foreach (ContentItem ci in relatedMappings)
             {
-                foreach (Workspace w in MUVM.Workspaces)
-                {
-                    List<Association> associations = w.Associations.Where(ass => ass.ContentItemGuid == ci.Guid).ToList();
-                    if (associations != null)
-                    {
-                        foreach (Association ass in associations)
-                        {
-                            w.Associations.Remove(ass);
-                        }
-                    }
-                    MUVM.ContentItems.Remove(ci);
-                }
-
+                MUVM.ContentItems.Remove(ci);
             }
 
             ModListItems.Remove(item);
