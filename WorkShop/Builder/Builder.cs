@@ -219,7 +219,7 @@ namespace Workshop.Builder
                 if (file.Status == FileStatus.Ignored)
                 {
                     //If there is a content item saying this file should be ignored, ignoring it
-                    FileReference MatchedFile = transfer_index.SingleOrDefault(f => f.SourceFilePath == file.SourceFilePath);
+                    FileReference MatchedFile = transfer_index.SingleOrDefault(f => f.SourceFilePath == file.SourceFilePath.Replace(@"/", @"\"));
                     if(MatchedFile != null)
                         MatchedFile.Status = FileStatus.Ignored;
                 }
@@ -245,8 +245,16 @@ namespace Workshop.Builder
                     {
                         foreach (FileReference FileReference in MatchedFile)
                         {
-                            //If there is a file with the same output path and hash, ignoring it
-                            FileReference.Status = FileStatus.Ignored;
+                            if (FileReference.Status == FileStatus.Ignored)
+                            {
+                                //If the file was meant to be ignored, deleting remote instead
+                                FileReference.Status = FileStatus.Delete;
+                            }
+                            if (FileReference.Status == FileStatus.Copy)
+                            {
+                                //If the file was meant to be copied, ignoring instead
+                                FileReference.Status = FileStatus.Ignored;
+                            }
                         }
                         
                     }
