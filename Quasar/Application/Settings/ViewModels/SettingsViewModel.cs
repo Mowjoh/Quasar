@@ -166,6 +166,7 @@ namespace Quasar.Settings.ViewModels
         {
             try
             {
+                QuasarLogger.Info("Settings Load");
                 Setup = true;
                 AppSettings = new ObservableCollection<SettingItemView>
             {
@@ -209,9 +210,8 @@ namespace Quasar.Settings.ViewModels
                 TransferSettings.Add(new("TransferQuasarFoldersOnly", Properties.Resources.Settings_Label_ManageAllMods, Properties.Resources.Settings_Comment_ManageAllMods, SettingItemType.Toggle));
                 
                 
-                QuasarLogger.Debug(Properties.Resources.Settings_Values_PreferredTransferMethod);
-
                 Setup = false;
+                QuasarLogger.Info("Settings Load Finished");
             }
             catch (Exception e)
             {

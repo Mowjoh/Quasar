@@ -225,7 +225,7 @@ namespace Workshop.Scanners
                         }
                         else
                         {
-                            FileToMatch.OriginPath = FileToMatch.SourcePath.Replace("\\" + folderMatch.Value.Replace('/', '\\'), "");
+                            FileToMatch.OriginPath = FileToMatch.SourcePath.Replace("\\" + folderMatch.Value , "");
                         }
                         FileToMatch.OriginPath = FileToMatch.OriginPath.Replace(fileMatch.Value, "|");
                         FileToMatch.OriginPath = FileToMatch.OriginPath.Split('|')[0];
@@ -382,9 +382,13 @@ namespace Workshop.Scanners
             QuasarModTypeFileDefinition def = qmt.QuasarModTypeFileDefinitions.Single(d => d.ID == scan_file.QuasarModTypeFileDefinitionID);
             string OutputFile = def.QuasarModTypeBuilderDefinitions[0].OutputFileName;
             string OutputPath = def.QuasarModTypeBuilderDefinitions[0].OutputPath;
+            OutputPath = OutputPath.Replace("{DLC}", DLC ? "_patch" : "");
 
-            Regex fileRegex = new Regex(PrepareRegex(def.SearchFileName));
-            Regex folderRegex = new Regex(PrepareRegex(def.SearchPath));
+            string searchFile = def.SearchFileName;
+            string searchPath = def.SearchPath;
+            searchPath = def.SearchPath.Replace(@"/", @"\");
+            Regex fileRegex = new Regex(PrepareRegex(searchFile));
+            Regex folderRegex = new Regex(PrepareRegex(searchPath));
 
             Match m = fileRegex.Match(scan_file.FilePath);
             Match m2 = folderRegex.Match(scan_file.FilePath);
@@ -406,12 +410,12 @@ namespace Workshop.Scanners
             {
                 foreach (string s in m.Groups["Folder"].Captures)
                 {
-                    OutputFile = PartReplacinator.Replace(OutputFile, s, 1);
+                    OutputFile = FolderReplacinator.Replace(OutputFile, s, 1);
                 }
             }
             else
             {
-                OutputFile = PartReplacinator.Replace(OutputFile, m.Groups["Folder"].Value, 1);
+                OutputFile = FolderReplacinator.Replace(OutputFile, m.Groups["Folder"].Value, 1);
             }
 
             OutputFile = GameDataReplacinator.Replace(OutputFile, GameDataItem, 1);
@@ -437,16 +441,17 @@ namespace Workshop.Scanners
             {
                 OutputPath = PartReplacinator.Replace(OutputPath, m.Groups["Part"].Value, 1);
             }
+
             if (m2.Groups["Folder"].Captures.Count > 1)
             {
                 foreach (string s in m2.Groups["Folder"].Captures)
                 {
-                    OutputPath = PartReplacinator.Replace(OutputPath, s, 1);
+                    OutputPath = FolderReplacinator.Replace(OutputPath, s, 1);
                 }
             }
             else
             {
-                OutputPath = PartReplacinator.Replace(OutputPath, m.Groups["Folder"].Value, 1);
+                OutputPath = FolderReplacinator.Replace(OutputPath, m.Groups["Folder"].Value, 1);
             }
 
             OutputPath = GameDataReplacinator.Replace(OutputPath, GameDataItem, 1);
