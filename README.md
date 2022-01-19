@@ -1,6 +1,6 @@
 # Quasar
 Mod downloader, manager, updater for Super Smash Bros Ultimate
-![image](https://user-images.githubusercontent.com/12461420/115962420-98220b00-a51b-11eb-9e0e-10e1f858bd00.png)
+![image](https://user-images.githubusercontent.com/12461420/150200259-59ca4c6b-dd2a-4642-8ab2-c2a802e41fe5.png)
 
 ## Getting Started
 
