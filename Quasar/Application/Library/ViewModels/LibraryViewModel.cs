@@ -480,7 +480,6 @@ namespace Quasar.Controls.ModManagement.ViewModels
                 return _LaunchTransfer;
             }
         }
-
         public ICommand CloseBuildCommand
         {
             get
@@ -993,6 +992,9 @@ namespace Quasar.Controls.ModManagement.ViewModels
                 case "Update":
                     UpdateMod(MLI);
                     break;
+                case "Editing":
+                    EditingName(MLI);
+                    break;
                 default:
                     break;
             }
@@ -1118,6 +1120,17 @@ namespace Quasar.Controls.ModManagement.ViewModels
         public void SaveLibrary(ModListItem MLI)
         {
             UserDataManager.SaveLibrary(MUVM.Library,AppDataPath);
+        }
+
+        public void EditingName(ModListItem MLI)
+        {
+            foreach (ModListItem ModListItem in ModListItems)
+            {
+                if (ModListItem != MLI && ModListItem.ModViewModel.LibraryItem.Editing)
+                {
+                    ModListItem.ModViewModel.RenameMod();
+                }
+            }
         }
         #endregion
 
