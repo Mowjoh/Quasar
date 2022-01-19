@@ -475,7 +475,7 @@ namespace Quasar.Controls.ModManagement.ViewModels
             {
                 if (_LaunchTransfer == null)
                 {
-                    _LaunchTransfer = new RelayCommand(param => Build());
+                    _LaunchTransfer = new RelayCommand(param => AskBuild());
                 }
                 return _LaunchTransfer;
             }
@@ -778,6 +778,32 @@ namespace Quasar.Controls.ModManagement.ViewModels
 
         #region Transfers
 
+        public async void AskBuild()
+        {
+            if (Building)
+                return;
+
+            if (Properties.QuasarSettings.Default.TransferQuasarFoldersOnly && Properties.QuasarSettings.Default.SuppressManageWarning)
+            {
+                ModalEvent meuh = new ModalEvent()
+                {
+                    EventName = "TransferWarning",
+                    Type = ModalType.OkCancel,
+                    Action = "Show",
+                    Title = Properties.Resources.Library_Modal_TransferWarningTitle,
+                    Content = Properties.Resources.Library_Modal_TransferWarningContent,
+                    OkButtonText = Properties.Resources.Library_Modal_TransferWarningOK,
+                    CancelButtonText = Properties.Resources.Library_Modal_TransferWarningCancel
+
+                };
+
+                EventSystem.Publish<ModalEvent>(meuh);
+            }
+            else
+            {
+                Build();
+            }
+        }
         public async void Build()
         {
             if (Building)
@@ -1162,6 +1188,18 @@ namespace Quasar.Controls.ModManagement.ViewModels
                 {
                     case "OK":
                         DeleteMod(mliToDelete);
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            if (me.EventName == "TransferWarning")
+            {
+                switch (me.Action)
+                {
+                    case "OK":
+                        Build();
                         break;
                     default:
                         break;

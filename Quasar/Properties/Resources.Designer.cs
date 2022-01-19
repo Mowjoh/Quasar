@@ -19,7 +19,7 @@ namespace Quasar.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -320,6 +320,44 @@ namespace Quasar.Properties {
         public static string Library_Modal_DeleteTitle {
             get {
                 return ResourceManager.GetString("Library_Modal_DeleteTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Don&apos;t delete anything.
+        /// </summary>
+        public static string Library_Modal_TransferWarningCancel {
+            get {
+                return ResourceManager.GetString("Library_Modal_TransferWarningCancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You&apos;ve selected the &quot;Manage all Mods&quot; option. 
+        ///This will tell Quasar to delete all mod files it hasn&apos;t put there itself.
+        ///All mods added without Quasar will be deleted.
+        /// </summary>
+        public static string Library_Modal_TransferWarningContent {
+            get {
+                return ResourceManager.GetString("Library_Modal_TransferWarningContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to I&apos;m sure I want this.
+        /// </summary>
+        public static string Library_Modal_TransferWarningOK {
+            get {
+                return ResourceManager.GetString("Library_Modal_TransferWarningOK", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Transfer Warning.
+        /// </summary>
+        public static string Library_Modal_TransferWarningTitle {
+            get {
+                return ResourceManager.GetString("Library_Modal_TransferWarningTitle", resourceCulture);
             }
         }
         
@@ -832,6 +870,15 @@ namespace Quasar.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Enable this to be warned when Mods will be cleaned up.
+        /// </summary>
+        public static string Settings_Comment_SuppressManageWarning {
+            get {
+                return ResourceManager.GetString("Settings_Comment_SuppressManageWarning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Enable this to be warned when deleting Mods.
         /// </summary>
         public static string Settings_Comment_SupressModDeletion {
@@ -981,6 +1028,15 @@ namespace Quasar.Properties {
         public static string Settings_Label_SDSelect {
             get {
                 return ResourceManager.GetString("Settings_Label_SDSelect", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Manage all mods cleanup.
+        /// </summary>
+        public static string Settings_Label_SuppressManageWarning {
+            get {
+                return ResourceManager.GetString("Settings_Label_SuppressManageWarning", resourceCulture);
             }
         }
         
@@ -1167,6 +1223,15 @@ namespace Quasar.Properties {
         public static string Transfer_Log_AllFilesDeleted {
             get {
                 return ResourceManager.GetString("Transfer_Log_AllFilesDeleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cleaning up mod folder.
+        /// </summary>
+        public static string Transfer_Log_Cleanup {
+            get {
+                return ResourceManager.GetString("Transfer_Log_Cleanup", resourceCulture);
             }
         }
         

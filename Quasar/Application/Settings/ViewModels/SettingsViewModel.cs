@@ -183,6 +183,7 @@ namespace Quasar.Settings.ViewModels
                 WarningSettings = new ObservableCollection<SettingItemView>
             {
                 new("SupressModDeletion", Properties.Resources.Settings_Label_SupressModDeletion, Properties.Resources.Settings_Comment_SupressModDeletion, SettingItemType.Toggle),
+                new("SuppressManageWarning", Properties.Resources.Settings_Label_SuppressManageWarning, Properties.Resources.Settings_Comment_SuppressManageWarning, SettingItemType.Toggle),
             };
 
                 TransferSettings = new ObservableCollection<SettingItemView>
