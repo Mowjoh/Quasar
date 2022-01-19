@@ -232,20 +232,31 @@ namespace Workshop.Builder
         {
             foreach (FileReference file in distant_index)
             {
-                
-                FileReference MatchedFile = transfer_index.SingleOrDefault(f => f.OutputFilePath == file.OutputFilePath);
-                if (MatchedFile == null)
+                try
                 {
-                    //If there is no file with the same output path and hash, deleting it
-                    file.Status = FileStatus.Delete;
-                    transfer_index.Add(file);
+                    List<FileReference> MatchedFile = transfer_index.Where(f => f.OutputFilePath == file.OutputFilePath).ToList();
+                    if (MatchedFile.Count == 0)
+                    {
+                        //If there is no file with the same output path and hash, deleting it
+                        file.Status = FileStatus.Delete;
+                        transfer_index.Add(file);
+                    }
+                    else
+                    {
+                        foreach (FileReference FileReference in MatchedFile)
+                        {
+                            //If there is a file with the same output path and hash, ignoring it
+                            FileReference.Status = FileStatus.Ignored;
+                        }
+                        
+                    }
+
                 }
-                else
+                catch (Exception ex)
                 {
-                    //If there is a file with the same output path and hash, ignoring it
-                    MatchedFile.Status = FileStatus.Ignored;
+                    Console.Write(ex.StackTrace);
                 }
-                
+               
             }
             return transfer_index;
         }

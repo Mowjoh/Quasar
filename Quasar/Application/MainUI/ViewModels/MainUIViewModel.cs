@@ -471,14 +471,15 @@ namespace Quasar.MainUI.ViewModels
 
                 if (BootStatus == UpdateStatus.FirstBoot)
                 {
+                    QuasarLogger.Debug("First Boot behavior started");
                     UpdateCommander.LaunchFirstBootSequence();
                     if (File.Exists(Properties.QuasarSettings.Default.DefaultDir + @"\Library\Library.json"))
                     {
                         BootStatus = UpdateStatus.ToUpdate;
                     }
                 }
-                    
 
+                QuasarLogger.Debug("Loading Data");
                 LoadData();
 
                 QuasarLogger.Info("Loading Views");
@@ -494,6 +495,7 @@ namespace Quasar.MainUI.ViewModels
                 switch (BootStatus)
                 {
                     case UpdateStatus.ToUpdate:
+                        QuasarLogger.Debug("Update Status is To Update");
                         ModalEvent Meuh = new ModalEvent()
                         {
                             Action = "Show",
@@ -513,6 +515,7 @@ namespace Quasar.MainUI.ViewModels
                         break;
 
                     case UpdateStatus.PreviouslyInstalled:
+                        QuasarLogger.Debug("Update Status is Previously installed");
                         ModalEvent Meuhdeux = new ModalEvent()
                         {
                             Action = "Show",
@@ -530,6 +533,7 @@ namespace Quasar.MainUI.ViewModels
                         });
                         break;
                     case UpdateStatus.Regular:
+                        QuasarLogger.Debug("Update Status is Regular Boot");
                         BackupRestoreUserData(UserDataLoaded);
                         break;
                 }
@@ -672,37 +676,6 @@ namespace Quasar.MainUI.ViewModels
         {
             switch (me.EventName)
             {
-                case "Hacked":
-                    if ((me.Action ?? "") == "OK")
-                    {
-                        Properties.QuasarSettings.Default.CFWAcknowledged = true;
-                        Properties.QuasarSettings.Default.Save();
-                        //if (!Properties.QuasarSettings.Default.Onboarded)
-                        if(false)
-                        {
-                            ModalEvent meuh = new ModalEvent()
-                            {
-                                EventName = "Onboarding",
-                                Action = "Show",
-                                Type = ModalType.OkCancel,
-                                Title = "DO YOU NEED HELP?",
-                                Content = "If it's your first time using Quasar, or if you want\ra tour of what you can do, you can have a little demo.",
-                                OkButtonText = "Yes, please show me around",
-                                CancelButtonText = "No, I don't need help"
-
-                            };
-                            EventSystem.Publish<ModalEvent>(meuh);
-                        }
-                    }
-                    break;
-                case "Onboarding":
-                    Onboarding(me.Action == "OK");
-                    if (me.Action == "KO")
-                    {
-                        Properties.QuasarSettings.Default.Onboarded = true;
-                        Properties.QuasarSettings.Default.Save();
-                    }
-                    break;
                 case "Updating":
                     if(me.Action == "OK")
                     {
@@ -741,7 +714,6 @@ namespace Quasar.MainUI.ViewModels
                 FileManagerTabActive = false;
                 SelectedTabItem = TabItems[1];
                 SelectedModListItem = _SelectedModListItem;
-                //AVM.GetRefreshed("RefreshContents");
             }
         }
 

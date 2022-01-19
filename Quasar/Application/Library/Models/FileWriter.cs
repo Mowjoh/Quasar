@@ -125,7 +125,7 @@ namespace Quasar.Library.Models
         public override bool SendFile(string SourceFilePath, string FilePath)
         {
             Lvm.SetSize(String.Format("Current File Size : {0}", WriterOperations.BytesToString(new FileInfo(SourceFilePath).Length)));
-            Log.Debug(String.Format("Updating File {0} - {1}", SourceFilePath, FilePath));
+            Log.Debug(String.Format("Sending File {0} \r\n {1}", SourceFilePath, FilePath));
             string CorrectedPath = FilePath.Replace(@"\", @"/");
             string Directory =
                 CorrectedPath.Replace(CorrectedPath.Split(@"/")[CorrectedPath.Split(@"/").Length - 1], "");
@@ -249,6 +249,7 @@ namespace Quasar.Library.Models
         }
         public override bool SendFile(string SourceFilePath, string FilePath)
         {
+            Log.Debug(String.Format("Sending File {0} \r\n {1}", SourceFilePath, FilePath));
             FileOperation.CheckCopyFile(SourceFilePath, LetterPath + FilePath);
             return true;
         }
@@ -256,6 +257,7 @@ namespace Quasar.Library.Models
         {
             if (File.Exists(LetterPath + FilePath))
             {
+                Log.Debug(String.Format("Deleting File {0}", FilePath));
                 File.Delete(LetterPath + FilePath);
             }
             else
@@ -333,6 +335,7 @@ namespace Quasar.Library.Models
         }
         public override bool SendFile(string SourceFilePath, string FilePath)
         {
+            Log.Debug(String.Format("Sending File {0} \r\n {1}", SourceFilePath, FilePath));
             FileOperation.CheckCopyFile(SourceFilePath, DiskPath + @"\" +FilePath);
             return true;
         }
@@ -340,6 +343,7 @@ namespace Quasar.Library.Models
         {
             if (File.Exists(DiskPath + @"\" +FilePath))
             {
+                Log.Debug(String.Format("Deleting File {0}", FilePath));
                 File.Delete(DiskPath + @"\" +FilePath);
             }
             else
