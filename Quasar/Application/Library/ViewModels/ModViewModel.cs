@@ -863,6 +863,8 @@ namespace Quasar.Controls.Mod.ViewModels
                 OnPropertyChanged("LibraryItem");
                 OnPropertyChanged("StandbyNotEditing");
                 OnPropertyChanged("StandbyEditing");
+                ActionRequested = "Editing";
+                EventSystem.Publish<ModViewModel>(this);
             }
             
         }

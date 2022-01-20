@@ -206,6 +206,20 @@ It's file and information will be removed from Quasar.</value>
   <data name="Library_Modal_DeleteTitle" xml:space="preserve">
     <value>Mod Deletion</value>
   </data>
+  <data name="Library_Modal_TransferWarningCancel" xml:space="preserve">
+    <value>Don't delete anything</value>
+  </data>
+  <data name="Library_Modal_TransferWarningContent" xml:space="preserve">
+    <value>You've selected the "Manage all Mods" option. 
+This will tell Quasar to delete all mod files it hasn't put there itself.
+All mods added without Quasar will be deleted</value>
+  </data>
+  <data name="Library_Modal_TransferWarningOK" xml:space="preserve">
+    <value>I'm sure I want this</value>
+  </data>
+  <data name="Library_Modal_TransferWarningTitle" xml:space="preserve">
+    <value>Transfer Warning</value>
+  </data>
   <data name="MainUI_AssignmentTabHeader" xml:space="preserve">
     <value>Assignments</value>
   </data>
@@ -378,6 +392,9 @@ The app will need to be rebooted to see the change</value>
   <data name="Settings_Comment_SDSelect" xml:space="preserve">
     <value>Select the SD you want to transfer to. Press enter to save the path</value>
   </data>
+  <data name="Settings_Comment_SuppressManageWarning" xml:space="preserve">
+    <value>Enable this to be warned when Mods will be cleaned up</value>
+  </data>
   <data name="Settings_Comment_SupressModDeletion" xml:space="preserve">
     <value>Enable this to be warned when deleting Mods</value>
   </data>
@@ -428,6 +445,9 @@ The app will need to be rebooted to see the change</value>
   </data>
   <data name="Settings_Label_SDSelect" xml:space="preserve">
     <value>SD Selection</value>
+  </data>
+  <data name="Settings_Label_SuppressManageWarning" xml:space="preserve">
+    <value>Manage all mods cleanup</value>
   </data>
   <data name="Settings_Label_SupressModDeletion" xml:space="preserve">
     <value>Mod Deletion</value>
@@ -494,6 +514,9 @@ Also check that your FTP server is running</value>
   </data>
   <data name="Transfer_Log_AllFilesDeleted" xml:space="preserve">
     <value>All Differences have been deleted</value>
+  </data>
+  <data name="Transfer_Log_Cleanup" xml:space="preserve">
+    <value>Cleaning up mod folder</value>
   </data>
   <data name="Transfer_Log_DiskPathUnavailable" xml:space="preserve">
     <value>The path you have entered does not exist</value>

@@ -475,12 +475,11 @@ namespace Quasar.Controls.ModManagement.ViewModels
             {
                 if (_LaunchTransfer == null)
                 {
-                    _LaunchTransfer = new RelayCommand(param => Build());
+                    _LaunchTransfer = new RelayCommand(param => AskBuild());
                 }
                 return _LaunchTransfer;
             }
         }
-
         public ICommand CloseBuildCommand
         {
             get
@@ -779,11 +778,37 @@ namespace Quasar.Controls.ModManagement.ViewModels
 
         #region Transfers
 
-        public async void Build()
+        public async void AskBuild()
         {
             if (Building)
                 return;
 
+            if (Properties.QuasarSettings.Default.TransferQuasarFoldersOnly && Properties.QuasarSettings.Default.SuppressManageWarning)
+            {
+                ModalEvent meuh = new ModalEvent()
+                {
+                    EventName = "TransferWarning",
+                    Type = ModalType.OkCancel,
+                    Action = "Show",
+                    Title = Properties.Resources.Library_Modal_TransferWarningTitle,
+                    Content = Properties.Resources.Library_Modal_TransferWarningContent,
+                    OkButtonText = Properties.Resources.Library_Modal_TransferWarningOK,
+                    CancelButtonText = Properties.Resources.Library_Modal_TransferWarningCancel
+
+                };
+
+                EventSystem.Publish<ModalEvent>(meuh);
+            }
+            else
+            {
+                Build();
+            }
+        }
+        public async void Build()
+        {
+            if (Building)
+                return;
+            QuasarLogger.Info("Transfer Started");
             TransferWindowVisible = true;
 
             Building = true;
@@ -837,6 +862,7 @@ namespace Quasar.Controls.ModManagement.ViewModels
             switch (Properties.QuasarSettings.Default.PreferredTransferMethod)
             {
                 case "FTP":
+                    QuasarLogger.Info("FTP Transfer wanted");
                     //FTP FileWriter
                     BuildLog(Properties.Resources.Transfer_Log_Info, Properties.Resources.Transfer_Log_FTPConnectionTest);
                     FW = new FTPWriter(this) { Log = QuasarLogger };
@@ -847,19 +873,24 @@ namespace Quasar.Controls.ModManagement.ViewModels
                     }
                     else
                     {
+                        QuasarLogger.Info($"FTP Settings are : {Properties.QuasarSettings.Default.FtpIP}:{Properties.QuasarSettings.Default.FtpPort}");
                         BuildLog(Properties.Resources.Transfer_Log_Info, Properties.Resources.Transfer_Log_FTPConnectionSuccess);
                     }
                     break;
                 case "SD":
+                    QuasarLogger.Info("SD Transfer wanted");
+
                     //SD Card FileWriter
 
                     if (Properties.QuasarSettings.Default.SelectedSD == null)
                     {
+                        QuasarLogger.Info($"SelectedSD not present");
                         BuildLog(Properties.Resources.Transfer_Log_Error, Properties.Resources.Transfer_Log_NoSDSelected);
                         FW = null;
                     }
                     else
                     {
+                        QuasarLogger.Info($"SD is {Properties.QuasarSettings.Default.SelectedSD}");
                         if (DriveInfo.GetDrives().Any(d => d.Name == Properties.QuasarSettings.Default.SelectedSD))
                         {
                             FW = new SDWriter(this) { LetterPath = Properties.QuasarSettings.Default.SelectedSD, Log = QuasarLogger };
@@ -873,6 +904,8 @@ namespace Quasar.Controls.ModManagement.ViewModels
                     }
                     break;
                 case "Disk":
+                    QuasarLogger.Info("Disk Transfer wanted");
+                    QuasarLogger.Info($"Path is {Properties.QuasarSettings.Default.DiskPath}");
                     if (Directory.Exists(Properties.QuasarSettings.Default.DiskPath))
                     {
                         FW = new DiskWriter(this) { DiskPath = Properties.QuasarSettings.Default.DiskPath, Log = QuasarLogger };
@@ -993,6 +1026,9 @@ namespace Quasar.Controls.ModManagement.ViewModels
                 case "Update":
                     UpdateMod(MLI);
                     break;
+                case "Editing":
+                    EditingName(MLI);
+                    break;
                 default:
                     break;
             }
@@ -1034,6 +1070,7 @@ namespace Quasar.Controls.ModManagement.ViewModels
         /// <param name="MLI"></param>
         public void AddToTransferList(ModListItem MLI)
         {
+            QuasarLogger.Info($"Adding Mod to transfer list : '{MLI.ModViewModel.LibraryItem.Name}'");
             MUVM.Library.Single(li => li.Guid == MLI.ModViewModel.LibraryItem.Guid).Included = true;
             UserDataManager.SaveLibrary(MUVM.Library, AppDataPath);
             ReloadAllStats();
@@ -1046,6 +1083,7 @@ namespace Quasar.Controls.ModManagement.ViewModels
         /// <param name="MLI"></param>
         public void RemoveMod(ModListItem MLI)
         {
+            QuasarLogger.Info($"Removing Mod from transfer list : '{MLI.ModViewModel.LibraryItem.Name}'");
             MUVM.Library.Single(li => li.Guid == MLI.ModViewModel.LibraryItem.Guid).Included = false;
             UserDataManager.SaveLibrary(MUVM.Library, AppDataPath);
             ReloadAllStats();
@@ -1073,6 +1111,7 @@ namespace Quasar.Controls.ModManagement.ViewModels
         /// <param name="MLI"></param>
         public void EditModFiles(ModListItem MLI)
         {
+            QuasarLogger.Info($"Editing Mod files for : '{MLI.ModViewModel.LibraryItem.Name}'");
             if (SelectedModListItem == null)
                 return;
 
@@ -1094,6 +1133,8 @@ namespace Quasar.Controls.ModManagement.ViewModels
             if (newDialog.SelectedPath == "")
                 return;
 
+            QuasarLogger.Info($"Selected path is : '{newDialog.SelectedPath}'");
+
             //Importing files
             string NewInstallPath = newDialog.SelectedPath;
             FileManager.ImportFolder(NewInstallPath);
@@ -1107,6 +1148,7 @@ namespace Quasar.Controls.ModManagement.ViewModels
                 OkButtonText = Properties.Resources.Modal_Label_DefaultOK,
                 Type = ModalType.Loader
             });
+            QuasarLogger.Info($"Finished importing files");
         }
 
         public void ShowModAssignments(ModListItem MLI)
@@ -1118,6 +1160,17 @@ namespace Quasar.Controls.ModManagement.ViewModels
         public void SaveLibrary(ModListItem MLI)
         {
             UserDataManager.SaveLibrary(MUVM.Library,AppDataPath);
+        }
+
+        public void EditingName(ModListItem MLI)
+        {
+            foreach (ModListItem ModListItem in ModListItems)
+            {
+                if (ModListItem != MLI && ModListItem.ModViewModel.LibraryItem.Editing)
+                {
+                    ModListItem.ModViewModel.RenameMod();
+                }
+            }
         }
         #endregion
 
@@ -1141,6 +1194,18 @@ namespace Quasar.Controls.ModManagement.ViewModels
                 }
             }
 
+            if (me.EventName == "TransferWarning")
+            {
+                switch (me.Action)
+                {
+                    case "OK":
+                        Build();
+                        break;
+                    default:
+                        break;
+                }
+            }
+
         }
 
         /// <summary>
@@ -1149,6 +1214,7 @@ namespace Quasar.Controls.ModManagement.ViewModels
         /// <param name="item"></param>
         public void DeleteMod(ModListItem item)
         {
+            QuasarLogger.Info($"Deleting Mod : '{item.ModViewModel.LibraryItem.Name}'");
             //Removing Files
             ModFileManager mfm = new ModFileManager(item.ModViewModel.LibraryItem);
             mfm.DeleteFiles();
@@ -1157,19 +1223,7 @@ namespace Quasar.Controls.ModManagement.ViewModels
             List<ContentItem> relatedMappings = MUVM.ContentItems.Where(cm => cm.LibraryItemGuid == item.ModViewModel.LibraryItem.Guid).ToList();
             foreach (ContentItem ci in relatedMappings)
             {
-                foreach (Workspace w in MUVM.Workspaces)
-                {
-                    List<Association> associations = w.Associations.Where(ass => ass.ContentItemGuid == ci.Guid).ToList();
-                    if (associations != null)
-                    {
-                        foreach (Association ass in associations)
-                        {
-                            w.Associations.Remove(ass);
-                        }
-                    }
-                    MUVM.ContentItems.Remove(ci);
-                }
-
+                MUVM.ContentItems.Remove(ci);
             }
 
             ModListItems.Remove(item);

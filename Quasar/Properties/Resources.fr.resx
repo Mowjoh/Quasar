@@ -206,6 +206,20 @@ Ses fichiers et informations seront supprimées de Quasar.</value>
   <data name="Library_Modal_DeleteTitle" xml:space="preserve">
     <value>Suppression de Mod</value>
   </data>
+  <data name="Library_Modal_TransferWarningCancel" xml:space="preserve">
+    <value>Annuler</value>
+  </data>
+  <data name="Library_Modal_TransferWarningContent" xml:space="preserve">
+    <value>Vous avez sélectionné l'option "Gérer tous les mods"
+Cela indique à Quasar de supprimer tous les fichiers qu'il ne gère pas.
+Tous les mods non transférés par Quasar seront supprimés</value>
+  </data>
+  <data name="Library_Modal_TransferWarningOK" xml:space="preserve">
+    <value>Je suis sûr</value>
+  </data>
+  <data name="Library_Modal_TransferWarningTitle" xml:space="preserve">
+    <value>Avertissement de transfert</value>
+  </data>
   <data name="MainUI_AssignmentTabHeader" xml:space="preserve">
     <value>Attributions</value>
   </data>
@@ -379,6 +393,9 @@ L'app doit être redémarrer pour que le changement soit effectif</value>
   <data name="Settings_Comment_SDSelect" xml:space="preserve">
     <value>Sélectionnez la SD sur laquelle vous voulez transférer les fichiers</value>
   </data>
+  <data name="Settings_Comment_SuppressManageWarning" xml:space="preserve">
+    <value>Activez ceci pour être prévenu lorsque le nettoyage du dossier de mods sera fait</value>
+  </data>
   <data name="Settings_Comment_SupressModDeletion" xml:space="preserve">
     <value>Activez cette option pour être prévenu de la supression d'un mod</value>
   </data>
@@ -429,6 +446,9 @@ L'app doit être redémarrer pour que le changement soit effectif</value>
   </data>
   <data name="Settings_Label_SDSelect" xml:space="preserve">
     <value>Sélection de SD</value>
+  </data>
+  <data name="Settings_Label_SuppressManageWarning" xml:space="preserve">
+    <value>Gestion de tous les mods</value>
   </data>
   <data name="Settings_Label_SupressModDeletion" xml:space="preserve">
     <value>Supression de mods</value>
@@ -494,6 +514,9 @@ que la bonne IP et le bon port soient utilisés.</value>
   </data>
   <data name="Transfer_Log_AllFilesDeleted" xml:space="preserve">
     <value>Toutes les différences ont été supprimées</value>
+  </data>
+  <data name="Transfer_Log_Cleanup" xml:space="preserve">
+    <value>Nettoyage du dossier de mod</value>
   </data>
   <data name="Transfer_Log_DiskPathUnavailable" xml:space="preserve">
     <value>Le chemin disque renseigné n'existe pas</value>

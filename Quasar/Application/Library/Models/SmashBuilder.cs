@@ -72,6 +72,14 @@ namespace Quasar.Library.Models
                     return false;
                 ViewModel.QuasarLogger.Debug("Finished processing transfer list");
 
+                if (Properties.QuasarSettings.Default.TransferQuasarFoldersOnly && (_DistantIndex.Count == 0 || (_DistantIndex.Count != 0 && Properties.QuasarSettings.Default.CleanupMade == false)))
+                {
+                    //Cleanup requested with no distant index
+                    ViewModel.BuildLog(Properties.Resources.Transfer_Log_Info, Properties.Resources.Transfer_Log_Cleanup);
+                    ViewModel.QuasarLogger.Debug("cleaning files");
+                    await CleanupModDirectory();
+                }
+
                 //File Operations
                 if (TransferIndex.Any(_f => _f.Status == FileStatus.Delete))
                 {
@@ -252,6 +260,15 @@ namespace Quasar.Library.Models
 
 
 
+        }
+
+        public async Task<bool> CleanupModDirectory()
+        {
+            Writer.DeleteFolder(Properties.QuasarSettings.Default.TransferPath);
+            Writer.CreateFolder(Properties.QuasarSettings.Default.TransferPath);
+            Properties.QuasarSettings.Default.CleanupMade = true;
+            Properties.QuasarSettings.Default.Save();
+            return true;
         }
         #endregion
 

@@ -12,7 +12,7 @@ namespace Quasar.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.10.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.0.3.0")]
     internal sealed partial class QuasarSettings : global::System.Configuration.ApplicationSettingsBase {
         
         private static QuasarSettings defaultInstance = ((QuasarSettings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new QuasarSettings())));
@@ -97,7 +97,7 @@ namespace Quasar.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool SupressModDeletion {
             get {
                 return ((bool)(this["SupressModDeletion"]));
@@ -295,6 +295,30 @@ namespace Quasar.Properties {
             }
             set {
                 this["DiskPath"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool CleanupMade {
+            get {
+                return ((bool)(this["CleanupMade"]));
+            }
+            set {
+                this["CleanupMade"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool SuppressManageWarning {
+            get {
+                return ((bool)(this["SuppressManageWarning"]));
+            }
+            set {
+                this["SuppressManageWarning"] = value;
             }
         }
     }
