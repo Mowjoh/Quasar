@@ -20,7 +20,18 @@ namespace Workshop.Web
 
             using (WebClient cli = new WebClient())
             {
-                await Task.Run(() => cli.DownloadFile(new Uri(ScreenshotURL), imageSource));
+                int tries = 0;
+                while(tries < 3)
+                try
+                {
+                    await Task.Run(() => cli.DownloadFile(new Uri(ScreenshotURL), imageSource));
+                    tries = 3;
+                }
+                catch (Exception e)
+                {
+                    tries++;
+                }
+                
             }
 
 
