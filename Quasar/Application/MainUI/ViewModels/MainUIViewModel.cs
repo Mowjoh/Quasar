@@ -479,6 +479,9 @@ namespace Quasar.MainUI.ViewModels
                     }
                 }
 
+                BootStatus = UpdateCommander.CheckPreviousInstall(QuasarLogger, BootStatus,
+                    Properties.QuasarSettings.Default.DefaultDir);
+
                 QuasarLogger.Debug("Loading Data");
                 LoadData();
 
@@ -530,7 +533,9 @@ namespace Quasar.MainUI.ViewModels
                         Task.Run(() =>
                         {
                             Library = UpdateCommander.LaunchInstallRecoverySequence(Library, API);
+                            UserDataManager.SaveLibrary(Library, AppDataPath);
                         });
+                        
                         break;
                     case UpdateStatus.Regular:
                         QuasarLogger.Debug("Update Status is Regular Boot");
@@ -694,7 +699,9 @@ namespace Quasar.MainUI.ViewModels
                 case "RecoverMods":
                     if (me.Action == "OK")
                     {
-                        SetupViews();
+                        Application.Current.Dispatcher.Invoke((Action)delegate {
+                            LibraryViewModel.ViewRefresh();
+                        });
                     }
                     break;
                 default:

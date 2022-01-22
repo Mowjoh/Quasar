@@ -1,4 +1,6 @@
-﻿namespace Workshop.Updates
+﻿using System.IO;
+
+namespace Workshop.Updates
 {
     public static class Updater
     {
@@ -27,8 +29,13 @@
 
         }
 
-        public static bool CheckForValidData()
+        public static bool CheckForValidData(string path)
         {
+            string ModsDirectory = path + @"\Library\Mods\";
+            if (Directory.Exists(ModsDirectory))
+            {
+                return true;
+            }
             return false;
         }
 

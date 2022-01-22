@@ -36,12 +36,7 @@ namespace Quasar.Internal.Tools
                 //If it's Quasar's first launch
                 if (InitialSetupRequested)
                 {
-                    //If files are already there and valid
-                    if (Updater.CheckForValidData())
-                    {
-                        QuasarLogger.Debug("previous install detected");
-                        return UpdateStatus.PreviouslyInstalled;
-                    }
+                    
 
                     QuasarLogger.Debug("First Boot detected");
                     return UpdateStatus.FirstBoot;
@@ -55,6 +50,21 @@ namespace Quasar.Internal.Tools
 
             QuasarLogger.Debug("No Update");
             return UpdateStatus.Regular;
+        }
+
+        public static UpdateStatus CheckPreviousInstall(ILog QuasarLogger, UpdateStatus prev_status, string PathToSearch)
+        {
+            if (prev_status == UpdateStatus.FirstBoot)
+            {
+                //If files are already there and valid
+                if (Updater.CheckForValidData(PathToSearch))
+                {
+                    QuasarLogger.Debug("previous install detected");
+                    return UpdateStatus.PreviouslyInstalled;
+                }
+            }
+
+            return prev_status;
         }
 
         public static void LaunchFirstBootSequence()

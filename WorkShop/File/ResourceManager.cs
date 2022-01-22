@@ -164,7 +164,7 @@ namespace Workshop.FileManagement
             else
             {
                 GamebananaRootCategory LocalRC = API.Games[0].RootCategories.Single(c => c.Guid == RootCategory.Guid);
-                if(LocalRC.SubCategories.Any(c => c.Guid == RootCategory.SubCategories[0].Guid))
+                if(!LocalRC.SubCategories.Any(c => c.Guid == RootCategory.SubCategories[0].Guid))
                 {
                     API.Games[0].RootCategories.Single(c => c.Guid == RootCategory.Guid).SubCategories.Add(RootCategory.SubCategories[0]);
                 }
