@@ -451,7 +451,7 @@ namespace Workshop.Scanners
             }
             else
             {
-                OutputPath = FolderReplacinator.Replace(OutputPath, m.Groups["Folder"].Value, 1);
+                OutputPath = FolderReplacinator.Replace(OutputPath, m2.Groups["Folder"].Value, 1);
             }
 
             OutputPath = GameDataReplacinator.Replace(OutputPath, GameDataItem, 1);

@@ -7,6 +7,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
+using log4net;
 using Workshop.Builder;
 
 namespace Workshop.FileManagement
@@ -296,24 +297,37 @@ namespace Workshop.FileManagement
 
         }
 
-        public static ObservableCollection<LibraryItem> RecoverMods(string _QuasarFolderPath,string _AppDataPath, ObservableCollection<LibraryItem> Library, GamebananaAPI API)
+        public static ObservableCollection<LibraryItem> RecoverMods(string _QuasarFolderPath,string _AppDataPath, ObservableCollection<LibraryItem> Library, GamebananaAPI API, ILog QuasarLogger)
         {
             string[] ModFolders = Directory.GetDirectories(_QuasarFolderPath + @"\Library\Mods\", "*", SearchOption.TopDirectoryOnly);
 
             foreach(string ModFolder in ModFolders)
             {
-                string ModInfoPath = ModFolder + @"\ModInformation.json";
-                if (File.Exists(ModInfoPath))
+                try
                 {
-                    ModInformation mi = GetModInformation(ModInfoPath);
-                    LibraryItem li = mi.LibraryItem;
-
-                    if(!Library.Any(l => l.GBItem.GamebananaItemID == li.GBItem.GamebananaItemID))
+                    string ModInfoPath = ModFolder + @"\ModInformation.json";
+                    if (File.Exists(ModInfoPath))
                     {
-                        Library.Add(li);
+                        QuasarLogger.Debug("Mod Info path is : "+ModInfoPath);
+
+                        ModInformation mi = GetModInformation(ModInfoPath);
+                        LibraryItem li = mi.LibraryItem;
+
+                        QuasarLogger.Debug("Item Parsed : " + li.Name);
+                        if (!Library.Any(l => l.GBItem.GamebananaItemID == li.GBItem.GamebananaItemID))
+                        {
+                            Library.Add(li);
+                        }
+                        API = ResourceManager.UpdateGamebananaAPI(mi.GamebananaRootCategory, API);
+                        QuasarLogger.Debug("Item Successfully processed");
                     }
-                    API = ResourceManager.UpdateGamebananaAPI(mi.GamebananaRootCategory, API);
                 }
+                catch(Exception e)
+                {
+                    QuasarLogger.Error(e.Message);
+                    QuasarLogger.Error(e.StackTrace);
+                }
+                
             }
             ResourceManager.SaveGamebananaAPI(API, _AppDataPath);
 

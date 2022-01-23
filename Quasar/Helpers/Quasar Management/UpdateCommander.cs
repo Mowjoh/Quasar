@@ -110,13 +110,13 @@ namespace Quasar.Internal.Tools
             EventSystem.Publish<ModalEvent>(Meuh);
         }
 
-        public static ObservableCollection<LibraryItem> LaunchInstallRecoverySequence(ObservableCollection<LibraryItem> Library, GamebananaAPI API)
+        public static ObservableCollection<LibraryItem> LaunchInstallRecoverySequence(ObservableCollection<LibraryItem> Library, GamebananaAPI API, ILog QuasarLogger)
         {
             string ModsPath = Properties.QuasarSettings.Default.DefaultDir + @"\Library\Mods\";
             string[] ModFolders = Directory.GetDirectories(ModsPath, "*", SearchOption.TopDirectoryOnly);
 
             bool FoundRecoverableMods = false;
-
+            QuasarLogger.Debug("Found Recoverable mods " + FoundRecoverableMods);
             if (ModFolders.Length > 0)
             {
 
@@ -141,7 +141,7 @@ namespace Quasar.Internal.Tools
                 };
 
                 EventSystem.Publish<ModalEvent>(meuh);
-                Library = UserDataManager.RecoverMods(Properties.QuasarSettings.Default.DefaultDir, AppDataPath, Library, API);
+                Library = UserDataManager.RecoverMods(Properties.QuasarSettings.Default.DefaultDir, AppDataPath, Library, API, QuasarLogger);
 
                 meuh.Action = "LoadOK";
                 EventSystem.Publish<ModalEvent>(meuh);

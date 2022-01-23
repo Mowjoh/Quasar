@@ -138,8 +138,8 @@ namespace Quasar.Associations.ViewModels
             foreach (AssignmentContent AssignmentContent in _assignment_contents)
             {
                 QuasarModType Qmt = MUVM.QuasarModTypes.Single(_t => _t.ID == AssignmentContent.AssignmentContentItems[0].QuasarModTypeID);
-                GameElement Ge = MUVM.Games[0].GameElementFamilies.Single(_f => _f.ID == Qmt.GameElementFamilyID)
-                    .GameElements.Single(_e => _e.ID == AssignmentContent.AssignmentContentItems[0].GameElementID);
+                GameElement Ge = MUVM.Games[0].GameElementFamilies.SingleOrDefault(_f => _f.ID == Qmt.GameElementFamilyID)
+                    .GameElements.SingleOrDefault(_e => _e.ID == AssignmentContent.AssignmentContentItems[0].GameElementID);
 
                 if (Ge != null) 
                 {
@@ -186,65 +186,90 @@ namespace Quasar.Associations.ViewModels
         #region User Actions
         public void ScanFiles(bool overrideScan = false)
         {
-            if (overrideScan || !MUVM.LibraryViewModel.SelectedModListItem.ModViewModel.LibraryItem.Scanned)
+            try
             {
-                //Notifying process start
-                EventSystem.Publish<ModalEvent>(new()
+                if (overrideScan || !MUVM.LibraryViewModel.SelectedModListItem.ModViewModel.LibraryItem.Scanned)
                 {
-                    EventName = "ScanningMod",
-                    Title = Properties.Resources.Assignment_Modal_ScanTitle,
-                    Content = Properties.Resources.Assignment_Modal_ScanContent,
-                    Action = "Show",
-                    OkButtonText = Properties.Resources.Modal_Label_DefaultOK,
-                    Type = ModalType.Loader,
-                });
+                    //Notifying process start
+                    EventSystem.Publish<ModalEvent>(new()
+                    {
+                        EventName = "ScanningMod",
+                        Title = Properties.Resources.Assignment_Modal_ScanTitle,
+                        Content = Properties.Resources.Assignment_Modal_ScanContent,
+                        Action = "Show",
+                        OkButtonText = Properties.Resources.Modal_Label_DefaultOK,
+                        Type = ModalType.Loader,
+                    });
 
-                //Removing Old Content Items
-                foreach (ContentItem ContentItem in MUVM.ContentItems.Where(_ci =>
-                    _ci.LibraryItemGuid == MUVM.LibraryViewModel.SelectedModListItem.ModViewModel.LibraryItem.Guid).ToList())
-                {
-                    MUVM.ContentItems.Remove(ContentItem);
+                    //Removing Old Content Items
+                    foreach (ContentItem ContentItem in MUVM.ContentItems.Where(_ci =>
+                                 _ci.LibraryItemGuid == MUVM.LibraryViewModel.SelectedModListItem.ModViewModel
+                                     .LibraryItem.Guid).ToList())
+                    {
+                        MUVM.ContentItems.Remove(ContentItem);
+                    }
+
+                    //Getting and filtering files
+                    string LibraryContentFolderPath = Properties.QuasarSettings.Default.DefaultDir +
+                                                      "\\Library\\Mods\\" + MUVM.LibraryViewModel.SelectedModListItem
+                                                          .ModViewModel.LibraryItem.Guid + "\\";
+                    ObservableCollection<ScanFile> Files = FileScanner.GetScanFiles(LibraryContentFolderPath);
+                    Files = FileScanner.FilterIgnoredFiles(Files);
+
+                    //Scanning and matching files to ContentItems
+                    Files = FileScanner.MatchScanFiles(Files, MUVM.QuasarModTypes, MUVM.Games[0],
+                        LibraryContentFolderPath);
+                    ObservableCollection<ContentItem> Contents = FileScanner.ParseContentItems(Files,
+                        MUVM.LibraryViewModel.SelectedModListItem.ModViewModel.LibraryItem);
+
+                    //Adding them to the library
+                    foreach (ContentItem ContentItem in Contents)
+                    {
+                        MUVM.ContentItems.Add((ContentItem));
+                    }
+
+
+
+                    MUVM.LibraryViewModel.SelectedModListItem.ModViewModel.LibraryItem.Scanned = true;
+
+                    //Saving
+                    UserDataManager.SaveContentItems(MUVM.ContentItems, AppDataPath);
+                    UserDataManager.SaveLibrary(MUVM.Library, AppDataPath);
+
+                    DisplayContentItems(Grouper
+                        .GetAssignmentContents(MUVM.LibraryViewModel.SelectedModListItem.ModViewModel.LibraryItem,
+                            MUVM.ContentItems, Properties.QuasarSettings.Default.GroupAssignmentTypes).ToList());
+
+                    //Notifying process done
+                    EventSystem.Publish<ModalEvent>(new()
+                    {
+                        EventName = "ScanningMod",
+                        Title = Properties.Resources.Assignment_Modal_ScanFinishedTitle,
+                        Content = Properties.Resources.Assignment_Modal_ScanFinishedContent,
+                        Action = "LoadOK",
+                        OkButtonText = Properties.Resources.Modal_Label_DefaultOK,
+                        Type = ModalType.Loader,
+                    });
+
+
                 }
-
-                //Getting and filtering files
-                string LibraryContentFolderPath = Properties.QuasarSettings.Default.DefaultDir + "\\Library\\Mods\\" + MUVM.LibraryViewModel.SelectedModListItem.ModViewModel.LibraryItem.Guid + "\\";
-                ObservableCollection<ScanFile> Files = FileScanner.GetScanFiles(LibraryContentFolderPath);
-                Files = FileScanner.FilterIgnoredFiles(Files);
-
-                //Scanning and matching files to ContentItems
-                Files = FileScanner.MatchScanFiles(Files, MUVM.QuasarModTypes, MUVM.Games[0], LibraryContentFolderPath);
-                ObservableCollection<ContentItem> Contents = FileScanner.ParseContentItems(Files,
-                    MUVM.LibraryViewModel.SelectedModListItem.ModViewModel.LibraryItem);
-
-                //Adding them to the library
-                foreach (ContentItem ContentItem in Contents)
-                {
-                    MUVM.ContentItems.Add((ContentItem));
-                }
-
-               
-
-                MUVM.LibraryViewModel.SelectedModListItem.ModViewModel.LibraryItem.Scanned = true;
-
-                //Saving
-                UserDataManager.SaveContentItems(MUVM.ContentItems, AppDataPath);
-                UserDataManager.SaveLibrary(MUVM.Library, AppDataPath);
-
-                DisplayContentItems(Grouper.GetAssignmentContents(MUVM.LibraryViewModel.SelectedModListItem.ModViewModel.LibraryItem,MUVM.ContentItems, Properties.QuasarSettings.Default.GroupAssignmentTypes).ToList());
-
+            }
+            catch (Exception e)
+            {
                 //Notifying process done
                 EventSystem.Publish<ModalEvent>(new()
                 {
                     EventName = "ScanningMod",
                     Title = Properties.Resources.Assignment_Modal_ScanFinishedTitle,
                     Content = Properties.Resources.Assignment_Modal_ScanFinishedContent,
-                    Action = "LoadOK",
+                    Action = "LoadKO",
                     OkButtonText = Properties.Resources.Modal_Label_DefaultOK,
                     Type = ModalType.Loader,
                 });
-
-               
+                QuasarLogger.Error(e.Message);
+                QuasarLogger.Error(e.StackTrace);
             }
+            
             
         }
         #endregion

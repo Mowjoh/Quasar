@@ -532,7 +532,7 @@ namespace Quasar.MainUI.ViewModels
                         EventSystem.Publish<ModalEvent>(Meuhdeux);
                         Task.Run(() =>
                         {
-                            Library = UpdateCommander.LaunchInstallRecoverySequence(Library, API);
+                            Library = UpdateCommander.LaunchInstallRecoverySequence(Library, API, QuasarLogger);
                             UserDataManager.SaveLibrary(Library, AppDataPath);
                         });
                         
