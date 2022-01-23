@@ -135,6 +135,13 @@
   <data name="Assignment_Modal_ScanContent" xml:space="preserve">
     <value>Please wait while Quasar scans the mod's contents</value>
   </data>
+  <data name="Assignment_Modal_ScanErrorContent" xml:space="preserve">
+    <value>Something wrong happened during the scan.
+Either there are no files to scan or an unexpected behavior occured</value>
+  </data>
+  <data name="Assignment_Modal_ScanErrorTitle" xml:space="preserve">
+    <value>Scan error</value>
+  </data>
   <data name="Assignment_Modal_ScanFinishedContent" xml:space="preserve">
     <value>Quasar has scanned the mod and it's 
 editable contents will be displayed here</value>

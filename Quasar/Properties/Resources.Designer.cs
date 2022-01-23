@@ -88,6 +88,25 @@ namespace Quasar.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Something wrong happened during the scan.
+        ///Either there are no files to scan or an unexpected behavior occured.
+        /// </summary>
+        public static string Assignment_Modal_ScanErrorContent {
+            get {
+                return ResourceManager.GetString("Assignment_Modal_ScanErrorContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Scan error.
+        /// </summary>
+        public static string Assignment_Modal_ScanErrorTitle {
+            get {
+                return ResourceManager.GetString("Assignment_Modal_ScanErrorTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Quasar has scanned the mod and it&apos;s 
         ///editable contents will be displayed here.
         /// </summary>

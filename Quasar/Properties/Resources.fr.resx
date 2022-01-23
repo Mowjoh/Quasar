@@ -135,6 +135,13 @@
   <data name="Assignment_Modal_ScanContent" xml:space="preserve">
     <value>Veuillez attendre que Quasar scanne les contenus du mod</value>
   </data>
+  <data name="Assignment_Modal_ScanErrorContent" xml:space="preserve">
+    <value>Une erreur inattendue est survenue.
+Il n'y a peut être pas de fichiers à scanner ou une erreur inattendue s'est produite.</value>
+  </data>
+  <data name="Assignment_Modal_ScanErrorTitle" xml:space="preserve">
+    <value>Erreur de scan</value>
+  </data>
   <data name="Assignment_Modal_ScanFinishedContent" xml:space="preserve">
     <value>Quasar  a scanné le mod et ses  
 contenus éditables sont affichés ici</value>

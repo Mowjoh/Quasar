@@ -260,8 +260,8 @@ namespace Quasar.Associations.ViewModels
                 EventSystem.Publish<ModalEvent>(new()
                 {
                     EventName = "ScanningMod",
-                    Title = Properties.Resources.Assignment_Modal_ScanFinishedTitle,
-                    Content = Properties.Resources.Assignment_Modal_ScanFinishedContent,
+                    Title = Properties.Resources.Assignment_Modal_ScanErrorTitle,
+                    Content = Properties.Resources.Assignment_Modal_ScanErrorContent,
                     Action = "LoadKO",
                     OkButtonText = Properties.Resources.Modal_Label_DefaultOK,
                     Type = ModalType.Loader,
