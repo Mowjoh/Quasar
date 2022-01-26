@@ -10,7 +10,6 @@ namespace Workshop.FileManagement
 {
     public class ResourceManager
     {
-        static string InstallDirectory = @"C:\Program Files (x86)\Quasar";
         static string AppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\Quasar";
 
         //Resource Saves
@@ -56,19 +55,10 @@ namespace Workshop.FileManagement
         }
 
         //Resource Loads
-        public static ObservableCollection<Game> GetGames(bool External = false, string ExternalPath = "")
+        public static ObservableCollection<Game> GetGames(string InstallDirectory)
         {
             ObservableCollection<Game> Games = new ObservableCollection<Game>();
-            string Path;
-            if (!External)
-            {
-                Path = InstallDirectory + @"\Resources\Games.json";
-            }
-            else
-            {
-                Path = ExternalPath;
-            }
-
+            string Path = InstallDirectory + @"\Resources\Games.json";
 
             using (StreamReader file = File.OpenText(Path))
             {
@@ -78,18 +68,10 @@ namespace Workshop.FileManagement
 
             return Games;
         }
-        public static ObservableCollection<QuasarModType> GetQuasarModTypes(bool External = false, string ExternalPath = "")
+        public static ObservableCollection<QuasarModType> GetQuasarModTypes(string InstallDirectory)
         {
             ObservableCollection<QuasarModType> QuasarModTypes = new ObservableCollection<QuasarModType>();
-            string Path;
-            if (!External)
-            {
-                Path = InstallDirectory + @"\Resources\ModTypes.json";
-            }
-            else
-            {
-                Path = ExternalPath;
-            }
+            string Path = InstallDirectory + @"\Resources\ModTypes.json";
 
             using (StreamReader file = File.OpenText(Path))
             {
@@ -99,18 +81,10 @@ namespace Workshop.FileManagement
 
             return QuasarModTypes;
         }
-        public static ObservableCollection<ModLoader> GetModLoaders(bool External = false, string ExternalPath = "")
+        public static ObservableCollection<ModLoader> GetModLoaders(string InstallDirectory)
         {
             ObservableCollection<ModLoader> ModLoaders = new ObservableCollection<ModLoader>();
-            string Path;
-            if (!External)
-            {
-                Path = InstallDirectory + @"\Resources\ModLoaders.json";
-            }
-            else
-            {
-                Path = ExternalPath;
-            }
+            string Path = InstallDirectory + @"\Resources\ModLoaders.json";
 
             using (StreamReader file = File.OpenText(Path))
             {
@@ -121,7 +95,7 @@ namespace Workshop.FileManagement
 
             return ModLoaders;
         }
-        public static GamebananaAPI GetGamebananaAPI(string QuasarPath = "")
+        public static GamebananaAPI GetGamebananaAPI(string InstallDirectory, string QuasarPath = "")
         {
             GamebananaAPI API = new GamebananaAPI();
 

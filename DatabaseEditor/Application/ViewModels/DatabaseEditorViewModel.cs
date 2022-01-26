@@ -113,13 +113,13 @@ namespace DatabaseEditor.ViewModels
         #endregion
         public DatabaseEditorViewModel() {
 
-            Games = ResourceManager.GetGames();
-            Library = UserDataManager.GetLibrary(AppDataPath);
-            ContentItems = UserDataManager.GetContentItems(AppDataPath);
-            Workspaces = UserDataManager.GetWorkspaces(AppDataPath);
-            ModLoaders = ResourceManager.GetModLoaders();
-            QuasarModTypes = ResourceManager.GetQuasarModTypes();
-            API = ResourceManager.GetGamebananaAPI();
+            //Games = ResourceManager.GetGames(Properties.);
+            //Library = UserDataManager.GetLibrary(AppDataPath);
+            //ContentItems = UserDataManager.GetContentItems(AppDataPath);
+            //Workspaces = UserDataManager.GetWorkspaces(AppDataPath);
+            //ModLoaders = ResourceManager.GetModLoaders();
+            //QuasarModTypes = ResourceManager.GetQuasarModTypes();
+            //API = ResourceManager.GetGamebananaAPI();
 
             CollectionViewSource = new CollectionViewSource();
 

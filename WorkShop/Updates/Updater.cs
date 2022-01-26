@@ -34,7 +34,10 @@ namespace Workshop.Updates
             string ModsDirectory = path + @"\Library\Mods\";
             if (Directory.Exists(ModsDirectory))
             {
-                return true;
+                if (Directory.GetDirectories(ModsDirectory).Length > 0)
+                {
+                    return true;
+                }
             }
             return false;
         }

@@ -473,11 +473,11 @@ namespace Quasar.MainUI.ViewModels
             }
 
             //Loading Resource Data
-            Games = ResourceManager.GetGames();
+            Games = ResourceManager.GetGames(Properties.QuasarSettings.Default.AppPath);
             CurrentGame = Games[0];
-            QuasarModTypes = ResourceManager.GetQuasarModTypes();
-            ModLoaders = ResourceManager.GetModLoaders();
-            API = ResourceManager.GetGamebananaAPI(AppDataPath);
+            QuasarModTypes = ResourceManager.GetQuasarModTypes(Properties.QuasarSettings.Default.AppPath);
+            ModLoaders = ResourceManager.GetModLoaders(Properties.QuasarSettings.Default.AppPath);
+            API = ResourceManager.GetGamebananaAPI(Properties.QuasarSettings.Default.AppPath,AppDataPath);
 
             API = ResourceManager.CleanGamebananaAPIFile(API, Library);
             ResourceManager.SaveGamebananaAPI(API, AppDataPath);
