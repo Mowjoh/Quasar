@@ -127,7 +127,7 @@ namespace Quasar.Associations.ViewModels
         }
         public string RequestedAction { get; set; }
         public bool Instanciating { get; set; }
-        
+
         #endregion
 
         #endregion
@@ -144,6 +144,15 @@ namespace Quasar.Associations.ViewModels
 
         #endregion
 
+        /// <summary>
+        /// Constructor for a Content List Item ViewModel
+        /// </summary>
+        /// <param name="_assignment_content">Contents associated with the element</param>
+        /// <param name="_type_name">Name to display for the type</param>
+        /// <param name="_element_name">Name to display for the element</param>
+        /// <param name="origin">Name to display for the original assignment</param>
+        /// <param name="_type">Trigger for the type of element to display</param>
+        /// <param name="_options">List of options that can be selected</param>
         public ContentListItemViewModel(AssignmentContent _assignment_content, string _type_name, string _element_name,string origin, ContentTypes _type, List<Option> _options)
         {
             AssignmentContent = _assignment_content;
@@ -167,12 +176,18 @@ namespace Quasar.Associations.ViewModels
 
         #region Actions
 
+        /// <summary>
+        /// Sends the event for a selected slot
+        /// </summary>
         public void SlotSelected()
         {
             RequestedAction = "SlotChange";
             EventSystem.Publish<ContentListItemViewModel>(this);
         }
 
+        /// <summary>
+        /// Sends the event for a selected element
+        /// </summary>
         public void ElementSelected()
         {
             RequestedAction = "ElementChange";

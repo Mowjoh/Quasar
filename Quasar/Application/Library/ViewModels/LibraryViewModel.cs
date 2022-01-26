@@ -603,6 +603,9 @@ namespace Quasar.Controls.ModManagement.ViewModels
             CollectionViewSource.View.Refresh();
         }
         
+        /// <summary>
+        /// Flashes the task bar to notify the user that it's working
+        /// </summary>
         public void Flash()
         {
             TaskbarManager.Instance.SetProgressValue(100, 100, Process.GetCurrentProcess().MainWindowHandle);
@@ -778,6 +781,9 @@ namespace Quasar.Controls.ModManagement.ViewModels
 
         #region Transfers
 
+        /// <summary>
+        /// Asks the user if he really wants to clear the mods folder before sending
+        /// </summary>
         public async void AskBuild()
         {
             if (Building)
@@ -804,6 +810,10 @@ namespace Quasar.Controls.ModManagement.ViewModels
                 Build();
             }
         }
+
+        /// <summary>
+        /// Starts the transfer process
+        /// </summary>
         public async void Build()
         {
             if (Building)
@@ -855,6 +865,10 @@ namespace Quasar.Controls.ModManagement.ViewModels
             }
         }
 
+        /// <summary>
+        /// Gets the FileWriter used for the transfer
+        /// </summary>
+        /// <returns>The initialized FileWriter </returns>
         public async Task<FileWriter> GetFileWriter()
         {
             FileWriter FW = null;
@@ -987,6 +1001,9 @@ namespace Quasar.Controls.ModManagement.ViewModels
             OnPropertyChanged("SearchText");
         }
 
+        /// <summary>
+        /// Closes the Build Window UI
+        /// </summary>
         public void CloseBuildWindow()
         {
             TransferWindowVisible = false;
@@ -1151,17 +1168,29 @@ namespace Quasar.Controls.ModManagement.ViewModels
             QuasarLogger.Info($"Finished importing files");
         }
 
+        /// <summary>
+        /// Triggers the UI to show the assignments for a certain mod
+        /// </summary>
+        /// <param name="MLI">The corresponding ModListItem</param>
         public void ShowModAssignments(ModListItem MLI)
         {
             SelectedModListItem = MLI;
             EventSystem.Publish<ModalEvent>(new(){ EventName = "ShowAssignments"});
         }
 
+        /// <summary>
+        /// Saves the Library
+        /// </summary>
+        /// <param name="MLI"></param>
         public void SaveLibrary(ModListItem MLI)
         {
             UserDataManager.SaveLibrary(MUVM.Library,AppDataPath);
         }
 
+        /// <summary>
+        /// Saves the Library after the mod's been renamed
+        /// </summary>
+        /// <param name="MLI"></param>
         public void EditingName(ModListItem MLI)
         {
             foreach (ModListItem ModListItem in ModListItems)

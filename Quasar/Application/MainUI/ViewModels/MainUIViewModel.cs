@@ -351,107 +351,9 @@ namespace Quasar.MainUI.ViewModels
 
         #endregion
 
-        //TO CLEANUP ELSEWHERE
-        #region Commands
-
-        #region Private
-
-        private ICommand _OnboardingCancel { get; set; }
-        private ICommand _OnboardingNext { get; set; }
-        private ICommand _OnboardingPrevious { get; set; }
-        #endregion
-
-        #region Public
-        public ICommand OnboardingCancel
-        {
-            get
-            {
-                if (_OnboardingCancel == null)
-                {
-                    _OnboardingCancel = new RelayCommand(param => Onboarding(false));
-                }
-                return _OnboardingCancel;
-            }
-        }
-        public ICommand OnboardingNext
-        {
-            get
-            {
-                if (_OnboardingNext == null)
-                {
-                    _OnboardingNext = new RelayCommand(param => nextStep());
-                }
-                return _OnboardingNext;
-            }
-        }
-        public ICommand OnboardingPrevious
-        {
-            get
-            {
-                if (_OnboardingPrevious == null)
-                {
-                    _OnboardingPrevious = new RelayCommand(param => previousStep());
-                }
-                return _OnboardingPrevious;
-            }
-        }
-        #endregion
-
-        #endregion
-
-        //TO CLEANUP ELSEWHERE
-        #region Onboarding
-        private bool _OnboardingVisible { get; set; } = false;
-        public bool OnboardingVisible
-        {
-            get => _OnboardingVisible;
-            set
-            {
-                _OnboardingVisible = value;
-                OnPropertyChanged("OnboardingVisible");
-            }
-        }
-        private int _OnboardingStep { get; set; } = 0;
-        public int OnboardingStep
-        {
-            get => _OnboardingStep;
-            set
-            {
-                _OnboardingStep = value;
-                OnPropertyChanged("OnboardingStep");
-            }
-        }
-
-        public void nextStep()
-        {
-            switch (OnboardingStep)
-            {
-                default:
-                    break;
-                case 2:
-                    LibraryViewModel.SelectedModListItem = LibraryViewModel.ModListItems[1];
-                    break;
-            }
-            if (OnboardingStep < 3)
-                OnboardingStep++;
-        }
-        public void previousStep()
-        {
-            if(OnboardingStep > 1)
-                OnboardingStep--;
-        }
-        public void Onboarding(bool visible)
-        {
-            OnboardingVisible = visible;
-            OnboardingStep = visible ? 1 : 0;
-            if (!visible)
-            {
-                Properties.QuasarSettings.Default.Onboarded = true;
-                Properties.QuasarSettings.Default.Save();
-            }
-        }
-        #endregion
-
+        /// <summary>
+        /// Constructor for the MainUI ViewModel
+        /// </summary>
         public MainUIViewModel()
         {
             TaskbarProgressState = TaskbarItemProgressState.None;
@@ -552,7 +454,6 @@ namespace Quasar.MainUI.ViewModels
 
         #region Actions
 
-        //Startup
         /// <summary>
         /// Loads Reference and User Data
         /// </summary>
@@ -645,6 +546,7 @@ namespace Quasar.MainUI.ViewModels
 
             SettingsView.Load(QuasarLogger);
         }
+
         /// <summary>
         /// Sets up Quasar as a client or server 
         /// Depends on if a Quasar instance is already running
@@ -655,8 +557,6 @@ namespace Quasar.MainUI.ViewModels
             //serverMutex = PipeHelper.CheckExecuteInstance(serverMutex, QuasarLogger);
             serverMutex = IPCHandler.CheckExecuteInstance(serverMutex, QuasarLogger);
         }
-
-
 
         /// <summary>
         /// Sends the OK for the update Modal and refreshes UI

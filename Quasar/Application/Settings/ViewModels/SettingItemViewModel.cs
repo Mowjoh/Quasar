@@ -262,10 +262,6 @@ namespace Quasar.Settings.ViewModels
         }
         #endregion
 
-        #region User Action
-
-        #endregion
-
     }
 
     public enum SettingItemType { Toggle, Input, List, Text}

@@ -130,6 +130,10 @@ namespace Quasar.Associations.ViewModels
         }
 
         #region Actions
+        /// <summary>
+        /// Regenerates and displays the contents in the assignment tab
+        /// </summary>
+        /// <param name="_assignment_contents">The assignment contents to display</param>
         public void DisplayContentItems(List<AssignmentContent> _assignment_contents)
         {
             //Clearing Collection
@@ -184,6 +188,10 @@ namespace Quasar.Associations.ViewModels
         #endregion
 
         #region User Actions
+        /// <summary>
+        /// Scans the mod's files to be able to reassign them
+        /// </summary>
+        /// <param name="overrideScan">Overrides the initial check and stops the scan if enabled</param>
         public void ScanFiles(bool overrideScan = false)
         {
             try
@@ -276,41 +284,75 @@ namespace Quasar.Associations.ViewModels
 
         #region Events
 
-        private void ProcessIncomingModalEvent(ContentListItemViewModel _meuh)
+        /// <summary>
+        /// Reacts to an incoming Modal Event and processes data accordingly
+        /// </summary>
+        /// <param name="_content_list_item_view_model">ViewModel Associated with the event</param>
+        private void ProcessIncomingModalEvent(ContentListItemViewModel _content_list_item_view_model)
         {
-            if (_meuh.RequestedAction == "SlotChange")
+            if (_content_list_item_view_model.RequestedAction == "SlotChange")
             {
-                string Slot = _meuh.SelectedOption.Key;
+                SlotChangedEvent(_content_list_item_view_model);
+            }
 
-                //Getting content items with the same LibraryItem
-                List<ContentItem> Matches = MUVM.ContentItems.Where(ci =>
-                    ci.LibraryItemGuid == _meuh.AssignmentContent.AssignmentContentItems[0].LibraryItemGuid).ToList();
+            if (_content_list_item_view_model.RequestedAction == "ElementChange")
+            {
+                ElementChangedEvent(_content_list_item_view_model);
+            }
 
-                //Assigning slots according to user actions
-                foreach (ContentItem ContentItem in _meuh.AssignmentContent.AssignmentContentItems)
+            SaveAndReload();
+        }
+
+        /// <summary>
+        /// Assigns the new slot to the Content Items
+        /// </summary>
+        /// <param name="_content_list_item_view_model">ViewModel Associated with the event</param>
+        private void SlotChangedEvent(ContentListItemViewModel _content_list_item_view_model)
+        {
+            string Slot = _content_list_item_view_model.SelectedOption.Key;
+
+            //Getting content items with the same LibraryItem
+            List<ContentItem> Matches = MUVM.ContentItems.Where(ci =>
+                ci.LibraryItemGuid == _content_list_item_view_model.AssignmentContent.AssignmentContentItems[0].LibraryItemGuid).ToList();
+
+            //Assigning slots according to user actions
+            foreach (ContentItem ContentItem in _content_list_item_view_model.AssignmentContent.AssignmentContentItems)
+            {
+                ContentItem.SlotNumber = Slot == "none" ? -1 : int.Parse(Slot);
+                if (ContentItem.SlotNumber != -1)
                 {
-                    ContentItem.SlotNumber = Slot == "none" ? -1 : int.Parse(Slot);
-                    if (ContentItem.SlotNumber != -1)
+                    List<ContentItem> SubMatches = Matches.Where(ci => ci.SlotNumber == ContentItem.SlotNumber && ci.Guid != ContentItem.Guid && ci.QuasarModTypeID == ContentItem.QuasarModTypeID).ToList();
+                    foreach (ContentItem SubMatch in SubMatches)
                     {
-                        List<ContentItem> SubMatches = Matches.Where(ci => ci.SlotNumber == ContentItem.SlotNumber && ci.Guid != ContentItem.Guid && ci.QuasarModTypeID == ContentItem.QuasarModTypeID).ToList();
-                        foreach (ContentItem SubMatch in SubMatches)
-                        {
-                            SubMatch.SlotNumber = -1;
-                        }
+                        SubMatch.SlotNumber = -1;
                     }
                 }
             }
 
-            if (_meuh.RequestedAction == "ElementChange")
-            {
-                string Element = _meuh.SelectedOption.Key;
+            
+        }
 
-                //Assigning elements according to user actions
-                foreach (ContentItem ContentItem in _meuh.AssignmentContent.AssignmentContentItems)
-                {
-                    ContentItem.GameElementID = Element == "none" ? -1 : int.Parse(Element);
-                }
+        /// <summary>
+        /// Assigns the new element to the Content Items
+        /// </summary>
+        /// <param name="_content_list_item_view_model">ViewModel Associated with the event</param>
+        private void ElementChangedEvent(ContentListItemViewModel _content_list_item_view_model)
+        {
+            string Element = _content_list_item_view_model.SelectedOption.Key;
+
+            //Assigning elements according to user actions
+            foreach (ContentItem ContentItem in _content_list_item_view_model.AssignmentContent.AssignmentContentItems)
+            {
+                ContentItem.GameElementID = Element == "none" ? -1 : int.Parse(Element);
             }
+        }
+
+        /// <summary>
+        /// Saves the content items then reloads the UI
+        /// </summary>
+        private void SaveAndReload()
+        {
+            UserDataManager.SaveContentItems(MUVM.ContentItems, AppDataPath);
 
             ObservableCollection<AssignmentContent> AssignmentContents =
                 Grouper.GetAssignmentContents(
@@ -318,8 +360,6 @@ namespace Quasar.Associations.ViewModels
                     Properties.QuasarSettings.Default.GroupAssignmentTypes);
 
             DisplayContentItems(AssignmentContents.ToList());
-
-            UserDataManager.SaveContentItems(MUVM.ContentItems, AppDataPath);
         }
         #endregion
 

@@ -566,14 +566,14 @@ namespace Quasar.Controls.Mod.ViewModels
 
         ILog QuasarLogger { get; set; }
 
-        public ModViewModel()
-        {
-            Downloading = true;
-            Smol = true;
-
-            EventSystem.Subscribe<LibraryItem>(Refresh);
-        }
-
+        /// <summary>
+        /// Constructor for an existing Mod
+        /// </summary>
+        /// <param name="Mod">Library Item to link</param>
+        /// <param name="Gamu">Game associated with the mod</param>
+        /// <param name="model">Library's ViewModel for interactions</param>
+        /// <param name="_QuasarLogger">Logger</param>
+        /// <param name="_Downloading">Downloading status of the mod</param>
         public ModViewModel(LibraryItem Mod, Game Gamu, LibraryViewModel model, ILog _QuasarLogger, bool _Downloading = false)
         {
             QuasarLogger = _QuasarLogger;
@@ -590,6 +590,14 @@ namespace Quasar.Controls.Mod.ViewModels
             EventSystem.Subscribe<LibraryItem>(Refresh);
         }
 
+        /// <summary>
+        /// Constructor for a new, downloaded mod
+        /// </summary>
+        /// <param name="QuasarURL">URL of the mod to download</param>
+        /// <param name="_Games">Potential games</param>
+        /// <param name="_Mods">Potential mods</param>
+        /// <param name="model">Library's ViewModel for interactions</param>
+        /// <param name="_QuasarLogger">Logger</param>
         public ModViewModel(string QuasarURL, ObservableCollection<Game> _Games, ObservableCollection<LibraryItem> _Mods, LibraryViewModel model, ILog _QuasarLogger)
         {
             QuasarLogger = _QuasarLogger;
@@ -731,6 +739,9 @@ namespace Quasar.Controls.Mod.ViewModels
 
         }
 
+        /// <summary>
+        /// Provides text for the Time in a human friendly manner
+        /// </summary>
         public void GetHumanTime()
         {
             TimeSpan t = DateTime.Now - LibraryItem.Time;
@@ -846,6 +857,9 @@ namespace Quasar.Controls.Mod.ViewModels
 
         }
 
+        /// <summary>
+        /// Triggers the interface for renaming or saving a mod's name
+        /// </summary>
         public void RenameMod()
         {
             if (LibraryItem.Editing)

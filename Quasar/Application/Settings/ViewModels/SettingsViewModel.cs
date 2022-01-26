@@ -147,6 +147,10 @@ namespace Quasar.Settings.ViewModels
         #endregion
 
         public ILog QuasarLogger { get; set; }
+        /// <summary>
+        /// Constructor for the Settings ViewModel
+        /// </summary>
+        /// <param name="quasar_log">Logger to use</param>
         public SettingsViewModel(ILog quasar_log)
         {
             QuasarLogger = quasar_log;
@@ -160,7 +164,7 @@ namespace Quasar.Settings.ViewModels
 
         #region Actions
         /// <summary>
-        /// Adds specific settings to the collection
+        /// Adds specific settings to the collection for them to be displayed
         /// </summary>
         private void LoadSettings()
         {
@@ -222,6 +226,10 @@ namespace Quasar.Settings.ViewModels
             
         }
 
+        /// <summary>
+        /// Triggers some actions when some settings are changed
+        /// </summary>
+        /// <param name="SettingItem">The changed SettingItem</param>
         private void ProcessSettingChanged(SettingItem SettingItem)
         {
             if (!Setup)
@@ -461,24 +469,9 @@ namespace Quasar.Settings.ViewModels
         }
 
         /// <summary>
-        /// Asks the user if he wants to see the onboarding demonstration
+        /// Gets the list of plugged in flash drives for use within Quasar
         /// </summary>
-        public void AskLaunchOnboarding()
-        {
-            ModalEvent meuh = new ModalEvent()
-            {
-                EventName = "Onboarding",
-                Action = "Show",
-                Type = ModalType.OkCancel,
-                Title = "Do you want to see the demo again?",
-                Content = "If it's your first time using Quasar, or if you want\ra tour of what you can do, you can have a little demo.",
-                OkButtonText = "Yes, please show me around",
-                CancelButtonText = "On second thoughts, no"
-
-            };
-            EventSystem.Publish<ModalEvent>(meuh);
-        }
-
+        /// <returns></returns>
         public string getSDCards()
         {
             string DriveString = "";
@@ -496,18 +489,6 @@ namespace Quasar.Settings.ViewModels
         }
         #endregion
 
-        #region USB Detection
-
-        private void DeviceInsertedEvent(object sender, EventArrivedEventArgs e)
-        {
-            LoadSettings();
-        }
-
-        private void DeviceRemovedEvent(object sender, EventArrivedEventArgs e)
-        {
-            LoadSettings();
-        }
-
-    #endregion
-}
+        
+    }
 }
