@@ -178,6 +178,20 @@ namespace Quasar.Associations.ViewModels
 
                     }
                 }
+                else
+                {
+                    if (Qmt.ID == 8)
+                    {
+                        List<Option> MusicOptions = new() { new Option() { Key = "none", Value = Properties.Resources.Assignment_Label_NoElement } };
+                        foreach (GameElement GameElement in MUVM.Games[0].GameElementFamilies[2].GameElements)
+                        {
+                            MusicOptions.Add(new Option() { Key = GameElement.ID.ToString(), Value = GameElement.Name });
+                        }
+                        string Element = MUVM.Games[0].GameElementFamilies[2].GameElements.Single(e => e.ID == AssignmentContent.AssignmentContentItems[0].OriginalGameElementID).Name;
+
+                        ItemCollection.Add(new ContentListItem(AssignmentContent, Qmt.Name, Properties.Resources.Assignment_Label_NoElement, Element, ContentTypes.ElementSelected, MusicOptions));
+                    }
+                }
                 
 
                 
