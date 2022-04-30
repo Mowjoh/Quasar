@@ -29,7 +29,7 @@ namespace Workshop.Updates
 
         }
 
-        public static bool CheckForValidData(string path)
+        public static bool CheckForRecoverableData(string path)
         {
             string ModsDirectory = path + @"\Library\Mods\";
             if (Directory.Exists(ModsDirectory))

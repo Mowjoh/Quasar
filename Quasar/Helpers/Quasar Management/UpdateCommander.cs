@@ -57,7 +57,7 @@ namespace Quasar.Internal.Tools
             if (prev_status == UpdateStatus.FirstBoot)
             {
                 //If files are already there and valid
-                if (Updater.CheckForValidData(PathToSearch))
+                if (Updater.CheckForRecoverableData(PathToSearch))
                 {
                     QuasarLogger.Debug("previous install detected");
                     return UpdateStatus.PreviouslyInstalled;
