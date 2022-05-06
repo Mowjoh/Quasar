@@ -1,0 +1,34 @@
+﻿<UserControl x:Class="Quasar.Skins.Views.CharacterItem"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Quasar.Skins.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="80" d:DesignWidth="80" Height="75" Width="95">
+    <Grid Margin="5">
+        <Button Command="{Binding Selected}">
+            <Button.Template>
+                <ControlTemplate>
+                    <Border BorderBrush="{StaticResource CutieBG24}" BorderThickness="1" CornerRadius="5" >
+                        <Border.Style>
+                            <Style TargetType="Border">
+                                <Setter Property="Background" Value="{StaticResource CutieBG08}"></Setter>
+                                <Setter Property="BorderBrush" Value="#c1c1c1"></Setter>
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="#c1c1c1"></Setter>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Border.Style>
+                        <Grid Background="Transparent">
+                            <Image Width="60" Height="60" Source="{Binding Slot0String}"></Image>
+                        </Grid>
+                    </Border>
+                </ControlTemplate>
+            </Button.Template>
+        </Button>
+        
+    </Grid>
+</UserControl>

@@ -28,6 +28,10 @@ using Helpers.IPC;
 using System.IO;
 using System.Globalization;
 using System.Windows.Threading;
+using Quasar.Music.Views;
+using Quasar.Settings.ViewModels;
+using Quasar.Skins.Views;
+using Quasar.Stages.Views;
 
 namespace Quasar.MainUI.ViewModels
 {
@@ -93,6 +97,10 @@ namespace Quasar.MainUI.ViewModels
         private LibraryView _LibraryView { get; set; }
         private LibraryViewModel _LibraryViewModel { get; set; }
         private AssignmentView _AssignmentView { get; set; }
+
+        private SkinManagementView _SkinManagementView { get; set; }
+        private StageManagementView _StageManagementView { get; set; }
+        private MusicManagerView _MusicManagementView { get; set; }
         private AssociationViewModel _AVM { get; set; }
         private SettingsView _SettingsView { get; set; }
         private ModalPopupViewModel _ModalPopupViewModel { get; set; }
@@ -214,6 +222,43 @@ namespace Quasar.MainUI.ViewModels
             }
         }
 
+        public SkinManagementView SkinManagementView
+        {
+            get => _SkinManagementView;
+            set
+            {
+                if (_SkinManagementView == value)
+                    return;
+
+                _SkinManagementView = value;
+                OnPropertyChanged("SkinManagementView");
+            }
+        }
+        public StageManagementView StageManagementView
+        {
+            get => _StageManagementView;
+            set
+            {
+                if (_StageManagementView == value)
+                    return;
+
+                _StageManagementView = value;
+                OnPropertyChanged("StageManagementView");
+            }
+        }
+
+        public MusicManagerView MusicManagementView
+        {
+            get => _MusicManagementView;
+            set
+            {
+                if (_MusicManagementView == value)
+                    return;
+
+                _MusicManagementView = value;
+                OnPropertyChanged("MusicManagementView");
+            }
+        }
         public SettingsView SettingsView
         {
             get => _SettingsView;
@@ -538,6 +583,15 @@ namespace Quasar.MainUI.ViewModels
             AssignmentView = new AssignmentView() { AssignmentViewModel = AVM };
             AssignmentView.DataContext = AVM;
             TabItems.Add(new TabItem() { Content = AssignmentView, Header = Properties.Resources.MainUI_AssignmentTabHeader, Foreground = new SolidColorBrush() { Color = Colors.White } });
+
+            SkinManagementView = new(this,QuasarLogger);
+            TabItems.Add(new TabItem(){Content = SkinManagementView , Header = "Skin", Foreground = new SolidColorBrush() { Color = Colors.White } });
+
+            StageManagementView = new(this, QuasarLogger);
+            TabItems.Add(new TabItem() { Content = StageManagementView, Header = "Stage", Foreground = new SolidColorBrush() { Color = Colors.White } });
+
+            MusicManagementView = new(this, QuasarLogger);
+            TabItems.Add(new TabItem() { Content = MusicManagementView, Header = "Music", Foreground = new SolidColorBrush() { Color = Colors.White } });
 
             SettingsView = new SettingsView();
             TabItems.Add(new TabItem() { Content = SettingsView, Header = Properties.Resources.MainUI_SettingsTabHeader, Foreground = new SolidColorBrush() { Color = Colors.White } });
