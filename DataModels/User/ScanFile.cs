@@ -15,6 +15,11 @@
         public int GameElementID { get; set; }
         public int QuasarModTypeID { get; set; }
         public int QuasarModTypeFileDefinitionID { get; set; }
+
+        [Newtonsoft.Json.JsonIgnore]
+        public string QuasarModTypeName { get; set; }
+        [Newtonsoft.Json.JsonIgnore]
+        public string QuasarModTypeFileRule { get; set; }
         [Newtonsoft.Json.JsonIgnore]
         public bool Scanned { get; set; }
         [Newtonsoft.Json.JsonIgnore]

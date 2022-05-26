@@ -29,17 +29,9 @@ namespace Workshop.FileManagement
         {
             SaveJSonFile(SpecificFolder + @"\Games.json", _Games.OrderBy(i => i.ID));
         }
-        public static void SaveQuasarModTypes(ObservableCollection<QuasarModType> _QuasarModTypes, string _ExternalPath = "")
+        public static void SaveQuasarModTypes(ObservableCollection<QuasarModType> _QuasarModTypes, string SpecificFolder)
         {
-            /*
-            if (_ExternalPath != "")
-            {
-                SaveJSonFile(@"\Resources\ModTypes.json", _QuasarModTypes.OrderBy(i => i.TypePriority), _ExternalPath);
-            }
-            else
-            {
-                SaveJSonFile(@"\Resources\ModTypes.json", _QuasarModTypes.OrderBy(i => i.TypePriority));
-            }*/
+            SaveJSonFile(SpecificFolder+ @"\Resources\ModTypes.json", _QuasarModTypes.OrderBy(i => i.TypePriority));
         }
         public static void SaveModLoaders(ObservableCollection<ModLoader> _ModLoaders, string _ExternalPath = "")
         {

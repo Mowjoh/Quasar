@@ -61,6 +61,8 @@ namespace DataModels.Resource
         public int ID { get; set; }
         public string SearchPath { get; set; }
         public string SearchFileName { get; set; }
+        public string OutputPath { get; set; }
+        public bool FolderMatch => @"{ModName}/" + SearchPath == OutputPath;
         public int FilePriority { get; set; }
         public ObservableCollection<QuasarModTypeBuilderDefinition> QuasarModTypeBuilderDefinitions { get; set; }
     }

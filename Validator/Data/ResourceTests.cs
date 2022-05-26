@@ -44,7 +44,7 @@ namespace Validator.Data
         [Fact]
         public void Loading_GamebananaFileLoadsAndContainsData()
         {
-            GamebananaAPI Resource = ResourceManager.GetGamebananaAPI();
+            GamebananaAPI Resource = ResourceManager.GetGamebananaAPI(_appDataLocalPath);
 
             Assert.True(Resource.Games.Count > 0);
 
@@ -57,7 +57,7 @@ namespace Validator.Data
         [Fact]
         public void Loading_GamesFileLoadsAndContainsData()
         {
-            ObservableCollection<Game> Resource = ResourceManager.GetGames();
+            ObservableCollection<Game> Resource = ResourceManager.GetGames(_appDataLocalPath);
 
             Assert.True(Resource.Count > 0);
 
@@ -70,7 +70,7 @@ namespace Validator.Data
         [Fact]
         public void Loading_ModLoadersFileLoadsAndContainsData()
         {
-            ObservableCollection<ModLoader> Resource = ResourceManager.GetModLoaders();
+            ObservableCollection<ModLoader> Resource = ResourceManager.GetModLoaders(_appDataLocalPath);
 
             Assert.True(Resource.Count == 3);
 
@@ -85,7 +85,7 @@ namespace Validator.Data
         [Fact]
         public void Loading_ModTypesFileLoadsAndContainsData()
         {
-            ObservableCollection<QuasarModType> Resource = ResourceManager.GetQuasarModTypes();
+            ObservableCollection<QuasarModType> Resource = ResourceManager.GetQuasarModTypes(_appDataLocalPath);
             
             Assert.True(Resource.Count > 0);
         }

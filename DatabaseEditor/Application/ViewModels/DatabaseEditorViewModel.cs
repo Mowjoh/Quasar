@@ -3,14 +3,20 @@ using DataModels.Resource;
 using DataModels.User;
 using Quasar.Common.Models;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Security.Principal;
+using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Data;
+using System.Windows.Documents;
 using System.Windows.Forms;
 using System.Windows.Input;
 using Workshop.FileManagement;
 using Workshop.Scanners;
+using Application = System.Windows.Application;
+using MessageBox = System.Windows.MessageBox;
 
 namespace DatabaseEditor.ViewModels
 {
@@ -19,11 +25,31 @@ namespace DatabaseEditor.ViewModels
         public static string AppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\Quasar";
         public static string InstallDirectory = @"C:\Program Files (x86)\Quasar";
 
-        
-        
         #region Commands
+
+        #region Private
         //Game Editor Tab
         private ICommand _AddFamilyCommand { get; set; }
+        private ICommand _AddElementCommand { get; set; }
+        private ICommand _SaveGameCommand { get; set; }
+
+        //Scanner Tab
+        private ICommand _PickPathCommand { get; set; }
+        private ICommand _ScanModCommand { get; set; }
+        private ICommand _ScanPathCommand { get; set; }
+
+        //QMT Tab
+        private ICommand _SaveQMTCommand { get; set; }
+
+        private ICommand _EmptyQMTCommand { get; set; }
+        private ICommand _AddQMTFCommand { get; set; }
+
+        //Paths Tab
+        private ICommand _SavePathCommand { get; set; }
+        #endregion
+
+        #region Public
+        //Game Editor Tab
         public ICommand AddFamilyCommand
         {
             get
@@ -35,7 +61,6 @@ namespace DatabaseEditor.ViewModels
                 return _AddFamilyCommand;
             }
         }
-        private ICommand _AddElementCommand { get; set; }
         public ICommand AddElementCommand
         {
             get
@@ -47,7 +72,6 @@ namespace DatabaseEditor.ViewModels
                 return _AddElementCommand;
             }
         }
-        private ICommand _SaveGameCommand { get; set; }
         public ICommand SaveGameCommand
         {
             get
@@ -61,7 +85,6 @@ namespace DatabaseEditor.ViewModels
         }
 
         //Scanner Tab
-        private ICommand _PickPathCommand { get; set; }
         public ICommand PickPathCommand
         {
             get
@@ -73,7 +96,6 @@ namespace DatabaseEditor.ViewModels
                 return _PickPathCommand;
             }
         }
-        private ICommand _ScanModCommand { get; set; }
         public ICommand ScanModCommand
         {
             get
@@ -85,7 +107,6 @@ namespace DatabaseEditor.ViewModels
                 return _ScanModCommand;
             }
         }
-        private ICommand _ScanPathCommand { get; set; }
         public ICommand ScanPathCommand
         {
             get
@@ -97,8 +118,44 @@ namespace DatabaseEditor.ViewModels
                 return _ScanPathCommand;
             }
         }
+
+        //QMT Tab
+        public ICommand SaveQMTCommand
+        {
+            get
+            {
+                if (_SaveQMTCommand == null)
+                {
+                    _SaveQMTCommand = new RelayCommand(param => SaveQuasarModTypes());
+                }
+                return _SaveQMTCommand;
+            }
+        }
+
+        public ICommand EmptyQMTCommand
+        {
+            get
+            {
+                if (_EmptyQMTCommand == null)
+                {
+                    _EmptyQMTCommand = new RelayCommand(param => EmptyQuasarModTypes());
+                }
+                return _EmptyQMTCommand;
+            }
+        }
+        public ICommand AddQMTFCommand
+        {
+            get
+            {
+                if (_AddQMTFCommand == null)
+                {
+                    _AddQMTFCommand = new RelayCommand(param => AddQuasarModTypeFileDefinition());
+                }
+                return _AddQMTFCommand;
+            }
+        }
+
         //Paths Tab
-        private ICommand _SavePathCommand { get; set; }
         public ICommand SavePathCommand
         {
             get
@@ -111,40 +168,12 @@ namespace DatabaseEditor.ViewModels
             }
         }
         #endregion
-        public DatabaseEditorViewModel() {
 
-            //Games = ResourceManager.GetGames(Properties.);
-            //Library = UserDataManager.GetLibrary(AppDataPath);
-            //ContentItems = UserDataManager.GetContentItems(AppDataPath);
-            //Workspaces = UserDataManager.GetWorkspaces(AppDataPath);
-            //ModLoaders = ResourceManager.GetModLoaders();
-            //QuasarModTypes = ResourceManager.GetQuasarModTypes();
-            //API = ResourceManager.GetGamebananaAPI();
+        #endregion
 
-            CollectionViewSource = new CollectionViewSource();
+        #region Data
 
-            CollectionViewSource.Source = TestResults;
-            CollectionViewSource.Filter += CollectionViewSource_Filter;
-            RepoPath = Properties.Settings.Default.RepoPath;
-
-            IsAdmin = new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator);
-        }
-
-        private void CollectionViewSource_Filter(object sender, FilterEventArgs e)
-        {
-            ScanTestResult result = e.Item as ScanTestResult;
-            
-            if (UnrecognizedFilter && result.ScanFile.Scanned == false || !UnrecognizedFilter)
-            {
-                e.Accepted = true;
-            }
-            else
-            {
-                e.Accepted = false;
-            }
-        }
-
-        #region Private Members
+        #region Private
         //Games
         private ObservableCollection<Game> _Games { get; set; }
         private Game _SelectedGame { get; set; }
@@ -181,14 +210,12 @@ namespace DatabaseEditor.ViewModels
         //Paths
         private CollectionViewSource _CollectionViewSource { get; set; }
         private string _RepoPath { get; set; }
-        private string _ScanPathText { get; set; }
-        private bool _UnrecognizedFilter { get; set; }
+        
 
-        //Admin status
-        private bool _IsAdmin { get; set; }
+        
         #endregion
 
-        #region View
+        #region Public
         //Games
         public ObservableCollection<Game> Games
         {
@@ -344,8 +371,9 @@ namespace DatabaseEditor.ViewModels
                         _SelectedQuasarModType.QuasarModTypeFileDefinitions.Add(new QuasarModTypeFileDefinition()
                         {
                             ID = 0,
-                            SearchFileName = "Filename",
-                            SearchPath = "Path",
+                            SearchFileName = "{AnyFile}.{AnyExtension}",
+                            OutputPath = @"ModName}/",
+                            FilePriority = 10,
                             QuasarModTypeBuilderDefinitions = new ObservableCollection<QuasarModTypeBuilderDefinition>(),
                         });
                     }
@@ -363,7 +391,7 @@ namespace DatabaseEditor.ViewModels
             set
             {
                 _SelectedQuasarModTypeFileDefinition = value;
-                if (value != null)
+                /*if (value != null)
                 {
                     bool processed = false;
                     if (_SelectedQuasarModTypeFileDefinition.QuasarModTypeBuilderDefinitions == null)
@@ -392,7 +420,7 @@ namespace DatabaseEditor.ViewModels
                         _SelectedQuasarModTypeFileDefinition.QuasarModTypeBuilderDefinitions[1].OutputPath = _SelectedQuasarModTypeFileDefinition.QuasarModTypeBuilderDefinitions[3].OutputPath;
 
                     }
-                }
+                }*/
 
 
                 OnPropertyChanged("SelectedQuasarModTypeFileDefinition");
@@ -425,6 +453,28 @@ namespace DatabaseEditor.ViewModels
                 OnPropertyChanged("TestResults");
             }
         }
+
+
+
+        #endregion
+
+        #endregion
+
+        #region View
+
+        #region Private
+        private string _ScanPathText { get; set; } = @"O:\Super Smash Bros Ultimate\ARC Data\Scan Tests";
+        private bool _UnrecognizedFilter { get; set; }
+        private bool _Scanning { get; set; }
+        private string _HumanTime { get; set; } = "00:00:00";
+        private int _Seconds { get; set; }
+
+        //Admin status
+        private bool _IsAdmin { get; set; }
+
+        #endregion
+
+        #region Public
 
         public CollectionViewSource CVS { get; set; }
         public double ProgressValue
@@ -488,6 +538,26 @@ namespace DatabaseEditor.ViewModels
             }
         }
 
+        public bool Scanning
+        {
+            get => _Scanning;
+            set
+            {
+                _Scanning = value;
+                OnPropertyChanged("Scanning");
+            }
+        }
+
+        public string HumanTime
+        {
+            get => _HumanTime;
+            set
+            {
+                _HumanTime = value;
+                OnPropertyChanged("HumanTime");
+            }
+        }
+
         public bool IsAdmin
         {
             get => _IsAdmin;
@@ -499,8 +569,34 @@ namespace DatabaseEditor.ViewModels
         }
         #endregion
 
-        #region Actions
-        //Game Editor Tab
+        #endregion
+
+        public DatabaseEditorViewModel() {
+
+            //Loading referentials from the app and the user's Quasar folders
+            Games = ResourceManager.GetGames(InstallDirectory);
+            Library = UserDataManager.GetLibrary(AppDataPath);
+            ContentItems = UserDataManager.GetContentItems(AppDataPath);
+            //Workspaces = UserDataManager.GetWorkspaces(AppDataPath);
+            ModLoaders = ResourceManager.GetModLoaders(InstallDirectory);
+            QuasarModTypes = ResourceManager.GetQuasarModTypes(InstallDirectory);
+            API = ResourceManager.GetGamebananaAPI(AppDataPath);
+
+            //Setting up the Test Result Source
+            CollectionViewSource = new CollectionViewSource();
+            CollectionViewSource.Source = TestResults;
+            CollectionViewSource.Filter += CollectionViewSource_Filter;
+            RepoPath = Properties.Settings.Default.RepoPath;
+
+            //Showing Admin warning if necessary
+            IsAdmin = new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator);
+        }
+
+        #region Game Editor Actions
+
+        /// <summary>
+        /// Adds an empty Family to the Game File
+        /// </summary>
         public void AddFamily()
         {
             if (SelectedGame != null)
@@ -519,6 +615,10 @@ namespace DatabaseEditor.ViewModels
             }
 
         }
+
+        /// <summary>
+        /// Adds a empty Element to the selected Family
+        /// </summary>
         public void AddElement()
         {
             if (SelectedGameElementFamily != null)
@@ -538,6 +638,10 @@ namespace DatabaseEditor.ViewModels
             }
 
         }
+
+        /// <summary>
+        /// Saves the Game File
+        /// </summary>
         public void SaveGameFile()
         {
             if (RepoPath != "")
@@ -551,7 +655,13 @@ namespace DatabaseEditor.ViewModels
             }
         }
 
-        //Scanner Tab
+        #endregion
+
+        #region Scanner Actions
+
+        /// <summary>
+        /// Prompts the user to pick a path to scan
+        /// </summary>
         public void PickPath()
         {
             using (var fbd = new FolderBrowserDialog())
@@ -564,28 +674,102 @@ namespace DatabaseEditor.ViewModels
                 }
             }
         }
-        public void ScanMod()
+
+        /// <summary>
+        /// Scans the selected mod
+        /// </summary>
+        public async void ScanMod()
         {
-            string DocumentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\Quasar\";
-            string ModPath = String.Format(@"{0}\Library\Mods\{1}\", DocumentsPath, SelectedTestLibraryItem.Guid);
-            ObservableCollection<ScanFile> ScanResults = FileScanner.GetScanFiles(ModPath);
-            ScanResults = FileScanner.FilterIgnoredFiles(ScanResults);
-            ScanResults = FileScanner.MatchScanFiles(ScanResults, QuasarModTypes, Games[0], ModPath);
-            ProcessScan(ScanResults);
-        }
-        public void ScanPath()
-        {
-            ObservableCollection<ScanFile> ScanResults = FileScanner.GetScanFiles(ScanPathText);
-            ScanResults = FileScanner.FilterIgnoredFiles(ScanResults);
-            ScanResults = FileScanner.MatchScanFiles(ScanResults, QuasarModTypes, Games[0], ScanPathText);
-            ProcessScan(ScanResults);
+            
+            if (SelectedTestLibraryItem == null)
+            {
+                MessageBox.Show("Select a mod first maybe?", "Dumb Dumb", MessageBoxButton.OK,MessageBoxImage.Warning);
+            }
+            else
+            {
+                _Seconds = 0;
+                HumanTime = "00:00:00";
+                string DocumentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\Quasar";
+                string ModPath = String.Format(@"{0}\Library\Mods\{1}\", DocumentsPath, SelectedTestLibraryItem.Guid);
+                Timer ZaWardo = new Timer();
+                ZaWardo.Interval = 1000;
+                ZaWardo.Tick += ZaWardo_Tick;
+
+                ZaWardo.Start();
+                Scanning = true;
+
+                await Task.Run(() => Scan(ModPath));
+
+                Scanning = false;
+                ZaWardo.Stop();
+            }
             
         }
 
+        /// <summary>
+        /// Scans the selectd path
+        /// </summary>
+        public async void ScanPath()
+        {
+            _Seconds = 0;
+            HumanTime = "00:00:00";
+            Timer ZaWardo = new Timer();
+            ZaWardo.Interval = 1000;
+            ZaWardo.Tick += ZaWardo_Tick;
+
+            ZaWardo.Start();
+            Scanning = true;
+
+            await Task.Run(() => Scan(ScanPathText));
+
+            Scanning = false;
+            ZaWardo.Stop();
+        }
+
+        /// <summary>
+        /// Scan Task
+        /// </summary>
+        /// <param name="Path">path to scan</param>
+        /// <returns></returns>
+        public async Task<int> Scan(string Path)
+        {
+            ObservableCollection<ScanFile> ScanResults = FileScanner.GetScanFiles(Path);
+            ScanResults = FileScanner.FilterIgnoredFiles(ScanResults);
+            ScanResults = FileScanner.MatchScanFiles(ScanResults, QuasarModTypes, Games[0], ScanPathText);
+
+            Application.Current.Dispatcher.Invoke((Action)delegate {
+
+                ProcessScan(ScanResults);
+            });
+
+
+            return 0;
+        }
+
+        /// <summary>
+        /// Event to tick the clock when a second passes during scanning
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ZaWardo_Tick(object sender, EventArgs e)
+        {
+            _Seconds++;
+
+            int Hours = _Seconds / 3600;
+            int Minutes = (_Seconds - (Hours * 3600)) / 60;
+            int Seconds = _Seconds % 60;
+
+            HumanTime = String.Format("{0}:{1}:{2}", Hours.ToString("D2"), Minutes.ToString("D2"), Seconds.ToString("D2"));
+        }
+
+        /// <summary>
+        /// Processes the scan results into useable data for the interface
+        /// </summary>
+        /// <param name="ScanResults"></param>
         public void ProcessScan(ObservableCollection<ScanFile> ScanResults)
         {
             TestResults = new ObservableCollection<ScanTestResult>();
-            foreach(ScanFile Scan in ScanResults)
+            foreach (ScanFile Scan in ScanResults)
             {
                 TestResults.Add(new ScanTestResult()
                 {
@@ -596,17 +780,101 @@ namespace DatabaseEditor.ViewModels
             CollectionViewSource.View.Refresh();
         }
 
-        //Paths Tab
+        /// <summary>
+        /// Filters the Test Results to ignore Scanned files
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void CollectionViewSource_Filter(object sender, FilterEventArgs e)
+        {
+            ScanTestResult result = e.Item as ScanTestResult;
+
+            if (UnrecognizedFilter && result.ScanFile.Scanned == false || !UnrecognizedFilter)
+            {
+                e.Accepted = true;
+            }
+            else
+            {
+                e.Accepted = false;
+            }
+        }
+
+        #endregion
+
+        #region Quasar Mod Types Actions
+
+        /// <summary>
+        /// Saves the Quasar Mod Types File
+        /// </summary>
+        public void SaveQuasarModTypes()
+        {
+            ResourceManager.SaveQuasarModTypes(QuasarModTypes, InstallDirectory);
+            ResourceManager.SaveQuasarModTypes(QuasarModTypes, RepoPath);
+        }
+
+        /// <summary>
+        /// Empties the useless entries within the Quasar Mod Types File
+        /// </summary>
+        public void EmptyQuasarModTypes()
+        {
+
+            foreach (QuasarModType quasarModType in QuasarModTypes)
+            {
+                List<QuasarModTypeFileDefinition> ToDelete = new();
+
+                foreach (QuasarModTypeFileDefinition quasarModTypeFileDefinition in quasarModType.QuasarModTypeFileDefinitions)
+                {
+                    if (string.IsNullOrEmpty(quasarModTypeFileDefinition.SearchPath) && string.IsNullOrEmpty(quasarModTypeFileDefinition.SearchFileName))
+                    {
+                        ToDelete.Add(quasarModTypeFileDefinition);
+
+                    }
+                }
+
+                foreach (QuasarModTypeFileDefinition quasarModTypeFileDefinition in ToDelete)
+                {
+                    quasarModType.QuasarModTypeFileDefinitions.Remove(quasarModTypeFileDefinition);
+                }
+            }
+        }
+
+        public void AddQuasarModTypeFileDefinition()
+        {
+            int IDMax = -1;
+            foreach (QuasarModTypeFileDefinition quasarModTypeFileDefinition in SelectedQuasarModType.QuasarModTypeFileDefinitions)
+            {
+                if (quasarModTypeFileDefinition.ID > IDMax)
+                {
+                    IDMax = quasarModTypeFileDefinition.ID;
+                }
+            }
+
+            SelectedQuasarModType.QuasarModTypeFileDefinitions.Add(new()
+            {
+                ID = IDMax +1,
+                SearchPath = "",
+                SearchFileName = @"{AnyFile}.{AnyExtension}",
+                FilePriority = ((SelectedQuasarModType.QuasarModTypeFileDefinitions.Count + 1 ) * 10),
+                OutputPath = @"{ModName}/"
+            });
+        }
+
+        #endregion
+
+        #region Paths Actions
+
+        /// <summary>
+        /// Saves the user path to it's Quasar Data
+        /// </summary>
         public void SavePath()
         {
             Properties.Settings.Default.RepoPath = RepoPath;
             Properties.Settings.Default.Save();
         }
 
-        
         #endregion
 
     }
 
-    
+
 }

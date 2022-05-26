@@ -226,8 +226,8 @@ namespace Validator.Scanning
         [Fact]
         public void Scanning_Specific_FilesAreFlaggedAsScanned()
         {
-            ObservableCollection<Game> Games = ResourceManager.GetGames();
-            ObservableCollection<QuasarModType> QuasarModTypes = ResourceManager.GetQuasarModTypes();
+            ObservableCollection<Game> Games = ResourceManager.GetGames(AppDataLocalPath);
+            ObservableCollection<QuasarModType> QuasarModTypes = ResourceManager.GetQuasarModTypes(AppDataLocalPath);
             LibraryItem LibraryItem = new() {Guid = Guid.Parse("5f649369-b260-48e5-ae28-b808590e6ba7")};
             string ModFolder = @"C:\Users\Test\Documents\Quasar\Library\Mods\5f649369-b260-48e5-ae28-b808590e6ba7";
 
@@ -271,6 +271,7 @@ namespace Validator.Scanning
         [Theory]
         [InlineData(@"{Empty}", @"")]
         [InlineData(@"{AnyFile}", @"(?'AnyFile'[a-zA-Z0-9\\_]*)")]
+        [InlineData(@"{AnyExtension}", @"(?'Extension'[a-zA-Z0-9\\_]*)")]
         [InlineData(@"{Folder}", @"(?'Folder'[^\\\\\\/]*)")]
         [InlineData(@"{Part}", @"(?'Part'[a-zA-Z0-9]*)")]
         [InlineData(@"{GameData}", @"(?'GameData'[a-zA-Z0-9\\_]*)")]
@@ -317,7 +318,7 @@ namespace Validator.Scanning
         public void Regex_OutputIsProperlyProcessed(string input)
         {
             //TODO Do this
-            Assert.True(true);
+            Assert.True(false);
         }
     }
 }

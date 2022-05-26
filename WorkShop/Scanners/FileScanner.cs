@@ -22,7 +22,7 @@ namespace Workshop.Scanners
         public static string RootFolders = "append|assist|boss|camera|campaign|common|effect|enemy|fighter|finalsmash|item|item|miihat|param|pokemon|prebuilt;|render|snapshot|stream;|sound|spirits|stage|standard|ui";
         
         /// <summary>
-        /// Scans a Library Mod
+        /// Unused for now - Scans a Library Mod
         /// </summary>
         /// <param name="_folder_path"></param>
         /// <param name="_quasar_mod_types"></param>
@@ -129,7 +129,7 @@ namespace Workshop.Scanners
             ObservableCollection<ScanFile> ScanResults = new ObservableCollection<ScanFile>();
             ObservableCollection<ScanFile> ScannedFiles = new ObservableCollection<ScanFile>();
 
-            //Scanning Files
+            //Scanning Files by type priority then file priority
             foreach (QuasarModType qmt in _QuasarModTypes.OrderBy(i => i.TypePriority))
             {
                 foreach (QuasarModTypeFileDefinition FileDefinition in qmt.QuasarModTypeFileDefinitions.OrderBy(o => o.FilePriority).ToList())
@@ -162,7 +162,7 @@ namespace Workshop.Scanners
         }
 
         /// <summary>
-        /// Matches all scan files to a game entry
+        /// Matches all scan files to a file definition and game entries
         /// </summary>
         /// <param name="_FilesToMatch"></param>
         /// <param name="_FileDefinition"></param>
@@ -210,10 +210,12 @@ namespace Workshop.Scanners
                     }
 
                     //Match Validation
-                    if ((RecognisedFileGameData != null || RecognisedFolderGameData != null) && (_FileDefinition.SearchPath == "" || folderMatch.Success) && fileMatch.Success)
+                    if ((RecognisedFileGameData != null || RecognisedFolderGameData != null ) && (_FileDefinition.SearchPath == "" || folderMatch.Success) && fileMatch.Success)
                     {
                         FileToMatch.QuasarModTypeID = _QuasarModType.ID;
+                        FileToMatch.QuasarModTypeName = _QuasarModType.GroupName + " | " + _QuasarModType.Name;
                         FileToMatch.QuasarModTypeFileDefinitionID = _FileDefinition.ID;
+                        FileToMatch.QuasarModTypeFileRule = _FileDefinition.SearchPath + "/" + _FileDefinition.SearchFileName;
                         FileToMatch.GameElementID = RecognisedFolderGameData != null ? RecognisedFolderGameData.ID : RecognisedFileGameData.ID;
                         FileToMatch.Slot = FolderSlot != "" ? FolderSlot : FileSlot != "" ? FileSlot : "00";
 
@@ -226,6 +228,31 @@ namespace Workshop.Scanners
                         else
                         {
                             FileToMatch.OriginPath = FileToMatch.SourcePath.Replace("\\" + folderMatch.Value , "");
+                        }
+                        FileToMatch.OriginPath = FileToMatch.OriginPath.Replace(fileMatch.Value, "|");
+                        FileToMatch.OriginPath = FileToMatch.OriginPath.Split('|')[0];
+                        FileToMatch.Scanned = true;
+                    }
+
+                    if (_QuasarModType.NoGameElement && (_FileDefinition.SearchPath == "" || folderMatch.Success) &&
+                        fileMatch.Success)
+                    {
+                        FileToMatch.QuasarModTypeID = _QuasarModType.ID;
+                        FileToMatch.QuasarModTypeName = _QuasarModType.GroupName + " | " + _QuasarModType.Name;
+                        FileToMatch.QuasarModTypeFileDefinitionID = _FileDefinition.ID;
+                        FileToMatch.QuasarModTypeFileRule = _FileDefinition.SearchPath + "/" + _FileDefinition.SearchFileName;
+                        FileToMatch.GameElementID = 0;
+                        FileToMatch.Slot = FolderSlot != "" ? FolderSlot : FileSlot != "" ? FileSlot : "00";
+
+                        //Processing paths
+                        FileToMatch.SourcePath = FileToMatch.SourcePath.Replace('/', '\\').Replace(_ModFolder, "");
+                        if (folderMatch.Value == "")
+                        {
+                            FileToMatch.OriginPath = FileToMatch.SourcePath;
+                        }
+                        else
+                        {
+                            FileToMatch.OriginPath = FileToMatch.SourcePath.Replace("\\" + folderMatch.Value, "");
                         }
                         FileToMatch.OriginPath = FileToMatch.OriginPath.Replace(fileMatch.Value, "|");
                         FileToMatch.OriginPath = FileToMatch.OriginPath.Split('|')[0];
@@ -353,6 +380,7 @@ namespace Workshop.Scanners
             output = output.Replace(@"{Part}", @"(?'Part'[a-zA-Z0-9]*)");
             output = output.Replace(@"{AnyFile}", @"(?'AnyFile'[a-zA-Z0-9\_]*)");
             output = output.Replace(@"{GameData}", @"(?'GameData'[a-zA-Z0-9\_]*)");
+            output = output.Replace(@"{AnyExtension}", @"(?'AnyExtension'[a-zA-Z0-9\_]*)");
 
             //Replacing backslashes for regex interpretation
             output = output.Replace(@"\", @"\\");
@@ -369,8 +397,18 @@ namespace Workshop.Scanners
             return output;
         }
 
+        /// <summary>
+        /// Processes the final path to transfer the file to
+        /// </summary>
+        /// <param name="scan_file"></param>
+        /// <param name="qmt"></param>
+        /// <param name="SlotNumber"></param>
+        /// <param name="GameDataItem"></param>
+        /// <param name="DLC"></param>
+        /// <returns></returns>
         public static string ProcessScanFileOutput(ScanFile scan_file, QuasarModType qmt, int SlotNumber, string GameDataItem, bool DLC)
         {
+            //Setting up variables
             Regex FolderReplacinator = new Regex("{Folder}");
             Regex PartReplacinator = new Regex("{Part}");
             Regex GameDataReplacinator = new Regex("{GameData}");
@@ -378,6 +416,7 @@ namespace Workshop.Scanners
             Regex SlotReplacinatorDouble = new Regex("{S00}");
             Regex SlotReplacinatorTriple = new Regex("{S000}");
             Regex AnyReplacinator = new Regex("{AnyFile}");
+            Regex AnyExtReplacinator = new Regex("{AnyExtension}");
 
             QuasarModTypeFileDefinition def = qmt.QuasarModTypeFileDefinitions.Single(d => d.ID == scan_file.QuasarModTypeFileDefinitionID);
             string OutputFile = def.QuasarModTypeBuilderDefinitions[0].OutputFileName;
@@ -394,6 +433,8 @@ namespace Workshop.Scanners
             Match m2 = folderRegex.Match(scan_file.FilePath);
 
             //Processing File Output
+
+            //Replacing {Part} tags
             if(m.Groups["Part"].Captures.Count > 1)
             {
                 foreach (string s in m.Groups["Part"].Captures)
@@ -406,6 +447,7 @@ namespace Workshop.Scanners
                 OutputFile = PartReplacinator.Replace(OutputFile, m.Groups["Part"].Value, 1);
             }
 
+            //Replacing {Folder} tags
             if (m.Groups["Folder"].Captures.Count > 1)
             {
                 foreach (string s in m.Groups["Folder"].Captures)
@@ -418,6 +460,7 @@ namespace Workshop.Scanners
                 OutputFile = FolderReplacinator.Replace(OutputFile, m.Groups["Folder"].Value, 1);
             }
 
+            //Replacing other tags
             OutputFile = GameDataReplacinator.Replace(OutputFile, GameDataItem, 1);
 
             OutputFile = SlotReplacinatorSingle.Replace(OutputFile, SlotNumber.ToString("0"), 1);
@@ -427,6 +470,11 @@ namespace Workshop.Scanners
             if(m.Groups["AnyFile"].Success)
             {
                 OutputFile = AnyReplacinator.Replace(OutputFile,Path.GetFileNameWithoutExtension(scan_file.SourcePath), 1);
+            }
+
+            if (m.Groups["AnyExtension"].Success)
+            {
+                OutputFile = AnyExtReplacinator.Replace(OutputFile, Path.GetExtension(scan_file.SourcePath).Replace(".",""), 1);
             }
 
             //Processing Folder Output
