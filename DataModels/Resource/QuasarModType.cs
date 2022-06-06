@@ -11,6 +11,7 @@ namespace DataModels.Resource
         public string Name { get; set; }
         public string GroupName { get; set; }
         public int GameElementFamilyID { get; set; }
+        public bool BasicSearch { get; set; }
         public bool IgnoreGameElementFamily { get; set; }
         public bool NoGameElement { get; set; }
         public bool IsExternal { get; set; }
@@ -64,12 +65,6 @@ namespace DataModels.Resource
         public string OutputPath { get; set; }
         public bool FolderMatch => @"{ModName}/" + SearchPath == OutputPath;
         public int FilePriority { get; set; }
-        public ObservableCollection<QuasarModTypeBuilderDefinition> QuasarModTypeBuilderDefinitions { get; set; }
     }
-    public class QuasarModTypeBuilderDefinition
-    {
-        public int ModLoaderID { get; set; }
-        public string OutputPath { get; set; }
-        public string OutputFileName { get; set; }
-    }
+
 }

@@ -459,7 +459,6 @@ namespace Quasar.Controls.Mod.ViewModels
 
         #region Private
         private ICommand _UpdateModCommand { get; set; }
-        private ICommand _AssignCommand { get; set; }
         private ICommand _DeleteModCommand { get; set; }
         private ICommand _AddModCommand { get; set; }
         private ICommand _ShowContentsCommand { get; set; }
@@ -478,17 +477,6 @@ namespace Quasar.Controls.Mod.ViewModels
                     _UpdateModCommand = new RelayCommand(param => UpdateMod());
                 }
                 return _UpdateModCommand;
-            }
-        }
-        public ICommand AssignCommand
-        {
-            get
-            {
-                if (_AssignCommand == null)
-                {
-                    _AssignCommand = new RelayCommand(param => ShowAssignmentTab());
-                }
-                return _AssignCommand;
             }
         }
         public ICommand DeleteModCommand
@@ -512,17 +500,6 @@ namespace Quasar.Controls.Mod.ViewModels
                     _AddModCommand = new RelayCommand(param => AddorRemoveFromWorkspace());
                 }
                 return _AddModCommand;
-            }
-        }
-        public ICommand ShowContentsCommand
-        {
-            get
-            {
-                if (_ShowContentsCommand == null)
-                {
-                    _ShowContentsCommand = new RelayCommand(param => ShowModContents());
-                }
-                return _ShowContentsCommand;
             }
         }
         public ICommand RetryDownloadCommand
@@ -778,15 +755,6 @@ namespace Quasar.Controls.Mod.ViewModels
         }
 
         /// <summary>
-        /// Triggers the file view window
-        /// </summary>
-        public void ShowAssignmentTab()
-        {
-            ActionRequested = "ShowAssignments";
-            EventSystem.Publish<ModViewModel>(this);
-        }
-
-        /// <summary>
         /// Triggers this mod's update process
         /// </summary>
         public void UpdateMod()
@@ -829,15 +797,6 @@ namespace Quasar.Controls.Mod.ViewModels
         public void RetryDownload()
         {
             ActionRequested = "RetryDownload";
-            EventSystem.Publish<ModViewModel>(this);
-        }
-
-        /// <summary>
-        /// Shows this mod's contents in the Contents tab
-        /// </summary>
-        public void ShowModContents()
-        {
-            ActionRequested = "ShowContents";
             EventSystem.Publish<ModViewModel>(this);
         }
 

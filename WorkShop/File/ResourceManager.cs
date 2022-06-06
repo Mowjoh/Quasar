@@ -13,18 +13,7 @@ namespace Workshop.FileManagement
         static string AppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\Quasar";
 
         //Resource Saves
-        /// <summary>
-        /// Saves the Gamebanana API resource file to the specific path
-        /// </summary>
-        /// <param name="_API">The resource to save</param>
-        /// <param name="_AppDataPath">the user's App Data Path</param>
-        public static void SaveGamebananaAPI(GamebananaAPI _API, string _AppDataPath)
-        {
-            if (!Directory.Exists(_AppDataPath + @"\Resources\"))
-                Directory.CreateDirectory(_AppDataPath + @"\Resources\");
-
-            SaveJSonFile(_AppDataPath + @"\Resources\Gamebanana.json", _API);
-        }
+        
         public static void SaveGamesFile(ObservableCollection<Game> _Games, string SpecificFolder)
         {
             SaveJSonFile(SpecificFolder + @"\Games.json", _Games.OrderBy(i => i.ID));
@@ -32,18 +21,6 @@ namespace Workshop.FileManagement
         public static void SaveQuasarModTypes(ObservableCollection<QuasarModType> _QuasarModTypes, string SpecificFolder)
         {
             SaveJSonFile(SpecificFolder+ @"\Resources\ModTypes.json", _QuasarModTypes.OrderBy(i => i.TypePriority));
-        }
-        public static void SaveModLoaders(ObservableCollection<ModLoader> _ModLoaders, string _ExternalPath = "")
-        {
-            /*
-            if (_ExternalPath != "")
-            {
-                SaveJSonFile(@"\Resources\ModLoaders.json", _ModLoaders.OrderBy(i => i.ID), _ExternalPath);
-            }
-            else
-            {
-                SaveJSonFile(@"\Resources\ModLoaders.json", _ModLoaders.OrderBy(i => i.ID));
-            }*/
         }
 
         //Resource Loads
@@ -73,37 +50,8 @@ namespace Workshop.FileManagement
 
             return QuasarModTypes;
         }
-        public static ObservableCollection<ModLoader> GetModLoaders(string InstallDirectory)
-        {
-            ObservableCollection<ModLoader> ModLoaders = new ObservableCollection<ModLoader>();
-            string Path = InstallDirectory + @"\Resources\ModLoaders.json";
 
-            using (StreamReader file = File.OpenText(Path))
-            {
-                JsonSerializer serializer = new JsonSerializer();
-                ModLoaders = (ObservableCollection<ModLoader>)serializer.Deserialize(file, typeof(ObservableCollection<ModLoader>));
-            }
-
-
-            return ModLoaders;
-        }
-        public static GamebananaAPI GetGamebananaAPI(string InstallDirectory, string QuasarPath = "")
-        {
-            GamebananaAPI API = new GamebananaAPI();
-
-            string Path = QuasarPath + @"\Resources\Gamebanana.json";
-            if (!File.Exists(Path))
-            {
-                Path = InstallDirectory + @"\Resources\Gamebanana.json";
-            }
-            using (StreamReader file = File.OpenText(Path))
-            {
-                JsonSerializer serializer = new JsonSerializer();
-                API = (GamebananaAPI)serializer.Deserialize(file, typeof(GamebananaAPI));
-            }
-
-            return API;
-        }
+        
 
         /// <summary>
         /// Saves a collection to a JSon File

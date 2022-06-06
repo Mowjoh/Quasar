@@ -1,7 +1,6 @@
 ﻿using DataModels.User;
 using DataModels.Common;
 using DataModels.Resource;
-using Quasar.Helpers.ModScanning;
 using Quasar.Helpers.Tools;
 using System;
 using System.Collections.Generic;

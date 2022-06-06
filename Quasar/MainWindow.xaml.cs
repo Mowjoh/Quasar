@@ -63,19 +63,6 @@ namespace Quasar
         /// <param name="meuh"></param>
         public void ProcessIncomingModalEvent(ModalEvent meuh)
         {
-            if (meuh.EventName == "ShowAssignments")
-            {
-                NewTabControl.SelectedIndex = 1;
-
-                MUVM.AVM.ScanFiles();
-                ObservableCollection<AssignmentContent> AssignmentContents =
-                    Grouper.GetAssignmentContents(
-                        MUVM.LibraryViewModel.SelectedModListItem.ModViewModel.LibraryItem, MUVM.ContentItems,
-                        Properties.QuasarSettings.Default.GroupAssignmentTypes);
-
-                MUVM.AVM.DisplayContentItems(AssignmentContents.ToList());
-
-            }
 
             if (meuh.EventName == "QuasarClose")
             {

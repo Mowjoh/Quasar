@@ -8,6 +8,7 @@
         [Newtonsoft.Json.JsonIgnore]
         public string RootPath { get; set; }
         public string FilePath { get; set; }
+        public string PreProcessedOutputFilePath { get; set; }
         [Newtonsoft.Json.JsonIgnore]
         public string Hash { get; set; }
         [Newtonsoft.Json.JsonIgnore]

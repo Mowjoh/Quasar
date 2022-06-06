@@ -12,25 +12,25 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using DataModels.Resource;
-using Quasar.Skins.ViewModels;
+using DataModels.User;
+using Quasar.Common.ViewModels;
 
-namespace Quasar.Skins.Views
+namespace Quasar.Common.Views
 {
     /// <summary>
-    /// Interaction logic for CharacterItem.xaml
+    /// Interaction logic for ContentItemView.xaml
     /// </summary>
-    public partial class CharacterItem : UserControl
+    public partial class ContentItemView : UserControl
     {
-        public CharacterItemViewModel CIVM { get; set; }
-        public CharacterItem(GameElement ch)
+        public ContentItemViewModel ViewModel { get; set; }
+
+        public ContentItemView(AssignmentContent _assignment)
         {
-            
-            CIVM = new CharacterItemViewModel(ch);
+            ViewModel = new(_assignment);
 
             InitializeComponent();
 
-            this.DataContext = CIVM;
+            this.DataContext = ViewModel;
         }
     }
 }

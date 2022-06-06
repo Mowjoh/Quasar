@@ -21,7 +21,7 @@ namespace Validator.Data
         [Fact]
         public void Loading_LibraryFileLoadsAndContainsData()
         {
-            ObservableCollection<LibraryItem> LibraryItems = UserDataManager.GetLibrary(AppDataLocalPath);
+            ObservableCollection<LibraryItem> LibraryItems = UserDataManager.GetSingleFileLibrary(AppDataLocalPath);
             Assert.True(LibraryItems.Count > 0);
         }
         [Fact]
@@ -33,7 +33,7 @@ namespace Validator.Data
         [Fact]
         public void Loading_ContentItemsFileLoadsAndContainsData()
         {
-            ObservableCollection<ContentItem> ContentItems = UserDataManager.GetContentItems(AppDataLocalPath);
+            ObservableCollection<ContentItem> ContentItems = UserDataManager.GetSingleFileContentItems(AppDataLocalPath);
             Assert.True(ContentItems.Count > 0);
         }
 

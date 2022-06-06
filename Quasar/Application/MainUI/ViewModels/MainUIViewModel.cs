@@ -5,7 +5,6 @@ using Quasar.Common.Models;
 using Quasar.Controls.ModManagement.ViewModels;
 using Quasar.Controls.ModManagement.Views;
 using Quasar.Settings.Models;
-using Quasar.Helpers.ModScanning;
 using Quasar.Helpers;
 using Quasar.Internal.Tools;
 using DataModels.Common;
@@ -21,14 +20,13 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using Quasar.Settings.Views;
-using Quasar.Associations.Views;
-using Quasar.Associations.ViewModels;
 using System.Windows.Shell;
 using Helpers.IPC;
 using System.IO;
 using System.Globalization;
 using System.Windows.Threading;
 using Quasar.Music.Views;
+using Quasar.Other.Views;
 using Quasar.Settings.ViewModels;
 using Quasar.Skins.Views;
 using Quasar.Stages.Views;
@@ -76,7 +74,6 @@ namespace Quasar.MainUI.ViewModels
         public ObservableCollection<Game> Games { get; set; }
         public Game CurrentGame { get; set; }
         public ObservableCollection<QuasarModType> QuasarModTypes { get; set; }
-        public ObservableCollection<ModLoader> ModLoaders { get; set; }
         public GamebananaAPI API { get; set; }
         #endregion
 
@@ -96,20 +93,13 @@ namespace Quasar.MainUI.ViewModels
         private int _SelectedTabIndex { get; set; }
         private LibraryView _LibraryView { get; set; }
         private LibraryViewModel _LibraryViewModel { get; set; }
-        private AssignmentView _AssignmentView { get; set; }
-
         private SkinManagementView _SkinManagementView { get; set; }
         private StageManagementView _StageManagementView { get; set; }
         private MusicManagerView _MusicManagementView { get; set; }
-        private AssociationViewModel _AVM { get; set; }
+        private OtherManagementView _OtherManagementView { get; set; }
         private SettingsView _SettingsView { get; set; }
         private ModalPopupViewModel _ModalPopupViewModel { get; set; }
 
-        private bool _BeginGameChoice { get; set; }
-        private bool _StopGameChoice { get; set; }
-
-        private bool _CreatorMode { get; set; }
-        private bool _AdvancedMode { get; set; }
         private bool _Updating { get; set; } = false;
         private bool _UpdateFinished { get; set; } = false;
 
@@ -197,31 +187,6 @@ namespace Quasar.MainUI.ViewModels
             }
         }
 
-        public AssignmentView AssignmentView
-        {
-            get => _AssignmentView;
-            set
-            {
-                if (_AssignmentView == value)
-                    return;
-
-                _AssignmentView = value;
-                OnPropertyChanged("AssignmentView");
-            }
-        }
-        public AssociationViewModel AVM
-        {
-            get => _AVM;
-            set
-            {
-                if (_AVM == value)
-                    return;
-
-                _AVM = value;
-                OnPropertyChanged("AVM");
-            }
-        }
-
         public SkinManagementView SkinManagementView
         {
             get => _SkinManagementView;
@@ -246,6 +211,20 @@ namespace Quasar.MainUI.ViewModels
                 OnPropertyChanged("StageManagementView");
             }
         }
+
+        public OtherManagementView OtherManagementView
+        {
+            get => _OtherManagementView;
+            set
+            {
+                if (_OtherManagementView == value)
+                    return;
+
+                _OtherManagementView = value;
+                OnPropertyChanged("OtherManagementView");
+            }
+        }
+
 
         public MusicManagerView MusicManagementView
         {
@@ -282,55 +261,6 @@ namespace Quasar.MainUI.ViewModels
 
                 _ModalPopupViewModel = value;
                 OnPropertyChanged("ModalPopupViewModel");
-            }
-        }
-        public bool BeginGameChoice
-        {
-            get => _BeginGameChoice;
-            set
-            {
-                if (_BeginGameChoice == value)
-                    return;
-
-                _BeginGameChoice = value;
-                OnPropertyChanged("BeginGameChoice");
-            }
-        }
-        public bool StopGameChoice
-        {
-            get => _StopGameChoice;
-            set
-            {
-                if (_StopGameChoice == value)
-                    return;
-
-                _StopGameChoice = value;
-                OnPropertyChanged("StopGameChoice");
-            }
-        }
-
-        public bool CreatorMode
-
-        {
-            get => _CreatorMode;
-            set
-            {
-                if (_CreatorMode == value)
-                    return;
-
-
-                _CreatorMode = value;
-                OnPropertyChanged("CreatorMode");
-            }
-        }
-        public bool AdvancedMode
-
-        {
-            get => _AdvancedMode;
-            set
-            {
-                _AdvancedMode = value;
-                OnPropertyChanged("AdvancedMode");
             }
         }
         public bool FileManagerTabActive
@@ -407,86 +337,25 @@ namespace Quasar.MainUI.ViewModels
 
             try
             {
-                
-                QuasarLogger.Info("Tunnel Setup");
-                SetupClientOrServer();
+                //Doing initial tasks
+                UpdateStatus BootStatus = StartupActions();
 
-                QuasarLogger.Info("Update Process Started");
-                UpdateStatus BootStatus = UpdateCommander.CheckUpdateStatus(QuasarLogger);
-
-                CultureInfo.CurrentUICulture = new CultureInfo(Properties.QuasarSettings.Default.Language, false);
-
-                if (BootStatus == UpdateStatus.FirstBoot)
-                {
-                    QuasarLogger.Debug("First Boot behavior started");
-                    UpdateCommander.LaunchFirstBootSequence();
-                    if (File.Exists(Properties.QuasarSettings.Default.DefaultDir + @"\Library\Library.json"))
-                    {
-                        BootStatus = UpdateStatus.ToUpdate;
-                    }
-                }
-
-                BootStatus = UpdateCommander.CheckPreviousInstall(QuasarLogger, BootStatus,
-                    Properties.QuasarSettings.Default.DefaultDir);
-
-                QuasarLogger.Debug("Loading Data");
-                LoadData();
-
-                QuasarLogger.Info("Loading Views");
-                SetupViews();
-
-                AdvancedMode = false;
-                CreatorMode = false;
-
-                EventSystem.Subscribe<ModListItem>(ModListItemEvent);
-                EventSystem.Subscribe<ModalEvent>(ProcessModalEvent);
+                //Loading data referentials and setting up views
+                DataSetup();
 
                 //Bootup actions based on update status
                 switch (BootStatus)
                 {
                     case UpdateStatus.ToUpdate:
-                        QuasarLogger.Debug("Update Status is To Update");
-                        ModalEvent Meuh = new ModalEvent()
-                        {
-                            Action = "Show",
-                            EventName = "Updating",
-                            Title = Properties.Resources.MainUI_Modal_UpdateProgressTitle,
-                            Content = Properties.Resources.MainUI_Modal_UpdateProgressContent,
-                            OkButtonText = "OK",
-                            Type = ModalType.Loader
-                        };
-
-                        EventSystem.Publish<ModalEvent>(Meuh);
-                        Task.Run(() =>
-                        {
-                            UpdateCommander.LaunchUpdateSequence(QuasarLogger, Library, API);
-                        });
-
+                        UpdateTask();
                         break;
 
                     case UpdateStatus.PreviouslyInstalled:
-                        QuasarLogger.Debug("Update Status is Previously installed");
-                        ModalEvent Meuhdeux = new ModalEvent()
-                        {
-                            Action = "Show",
-                            EventName = "RecoveringInstallation",
-                            Title = Properties.Resources.MainUI_Modal_RecoverProgressTitle,
-                            Content = Properties.Resources.MainUI_Modal_RecoverProgressContent,
-                            OkButtonText = "OK",
-                            Type = ModalType.Loader
-                        };
-
-                        EventSystem.Publish<ModalEvent>(Meuhdeux);
-                        Task.Run(() =>
-                        {
-                            Library = UpdateCommander.LaunchInstallRecoverySequence(Library, API, QuasarLogger);
-                            UserDataManager.SaveLibrary(Library, AppDataPath);
-                        });
-                        
+                        PreviousInstallTask();
                         break;
+
                     case UpdateStatus.Regular:
                         QuasarLogger.Debug("Update Status is Regular Boot");
-                        BackupRestoreUserData(UserDataLoaded);
                         break;
                 }
             }
@@ -497,7 +366,19 @@ namespace Quasar.MainUI.ViewModels
             }
         }
 
-        #region Actions
+        #region Loads
+
+        public void DataSetup()
+        {
+            QuasarLogger.Debug("Loading Data");
+            LoadData();
+
+            QuasarLogger.Info("Loading Views");
+            SetupViews();
+
+            EventSystem.Subscribe<ModListItem>(ModListItemEvent);
+            EventSystem.Subscribe<ModalEvent>(ProcessModalEvent);
+        }
 
         /// <summary>
         /// Loads Reference and User Data
@@ -507,9 +388,9 @@ namespace Quasar.MainUI.ViewModels
             //Loading User Data
             try
             {
-                Library = UserDataManager.GetLibrary(AppDataPath);
-                ContentItems = UserDataManager.GetContentItems(AppDataPath);
-                
+                Library = UserDataManager.GetSeparatedLibrary(Properties.QuasarSettings.Default.DefaultDir);
+                ContentItems = UserDataManager.GetSeparatedContentItems(Properties.QuasarSettings.Default.DefaultDir);
+                API = UserDataManager.GetSeparatedGamebananaApi(Properties.QuasarSettings.Default.DefaultDir);
                 UserDataLoaded = true;
             }
             catch (Exception e)
@@ -521,47 +402,7 @@ namespace Quasar.MainUI.ViewModels
             Games = ResourceManager.GetGames(Properties.QuasarSettings.Default.AppPath);
             CurrentGame = Games[0];
             QuasarModTypes = ResourceManager.GetQuasarModTypes(Properties.QuasarSettings.Default.AppPath);
-            ModLoaders = ResourceManager.GetModLoaders(Properties.QuasarSettings.Default.AppPath);
-            API = ResourceManager.GetGamebananaAPI(Properties.QuasarSettings.Default.AppPath,AppDataPath);
-
-            API = ResourceManager.CleanGamebananaAPIFile(API, Library);
-            ResourceManager.SaveGamebananaAPI(API, AppDataPath);
-
-        }
-
-        /// <summary>
-        /// Backs up data or restores it depending on the User Data Load success
-        /// </summary>
-        /// <param name="LoadSuccess">User Data Load success state</param>
-        public void BackupRestoreUserData(bool LoadSuccess)
-        {
-            if (LoadSuccess)
-            {
-                UserDataManager.BackupUserDataFiles(AppDataPath);
-                Properties.QuasarSettings.Default.BackupDate = DateTime.Now;
-                Properties.QuasarSettings.Default.Save();
-            }
-            else
-            {
-                //Sending modal event to warn the user
-                ModalEvent meuh = new ModalEvent()
-                {
-                    EventName = "LoadTrouble",
-                    Action = "Show",
-                    Type = ModalType.Warning,
-                    Title = "Data Corruption",
-                    Content = String.Format("Quasar could not load your data. \rA backup will be loaded instead \r(Made on : {0})",Properties.QuasarSettings.Default.BackupDate.ToLongDateString()),
-                    OkButtonText = "I understand"
-                };
-
-                EventSystem.Publish<ModalEvent>(meuh);
-
-                //Restoring data
-                UserDataManager.RestoreUserDataFiles(AppDataPath);
-
-                //Loading Data
-                LoadData();
-            }
+            
         }
 
         /// <summary>
@@ -579,11 +420,6 @@ namespace Quasar.MainUI.ViewModels
             LibraryView.DataContext = LibraryViewModel;
             TabItems.Add(new TabItem() { Content = LibraryView, Header = Properties.Resources.MainUI_LibraryTabHeader, Foreground = new SolidColorBrush() { Color = Colors.White } });
 
-            AVM = new AssociationViewModel(this, QuasarLogger);
-            AssignmentView = new AssignmentView() { AssignmentViewModel = AVM };
-            AssignmentView.DataContext = AVM;
-            TabItems.Add(new TabItem() { Content = AssignmentView, Header = Properties.Resources.MainUI_AssignmentTabHeader, Foreground = new SolidColorBrush() { Color = Colors.White } });
-
             SkinManagementView = new(this,QuasarLogger);
             TabItems.Add(new TabItem(){Content = SkinManagementView , Header = "Skin", Foreground = new SolidColorBrush() { Color = Colors.White } });
 
@@ -593,12 +429,44 @@ namespace Quasar.MainUI.ViewModels
             MusicManagementView = new(this, QuasarLogger);
             TabItems.Add(new TabItem() { Content = MusicManagementView, Header = "Music", Foreground = new SolidColorBrush() { Color = Colors.White } });
 
+            OtherManagementView = new(this, QuasarLogger);
+            TabItems.Add(new TabItem() { Content = OtherManagementView, Header = "Other", Foreground = new SolidColorBrush() { Color = Colors.White } });
+
             SettingsView = new SettingsView();
             TabItems.Add(new TabItem() { Content = SettingsView, Header = Properties.Resources.MainUI_SettingsTabHeader, Foreground = new SolidColorBrush() { Color = Colors.White } });
 
             ModalPopupViewModel = new ModalPopupViewModel(QuasarLogger);
 
             SettingsView.Load(QuasarLogger);
+        }
+
+        #endregion
+
+        #region Startup Tasks
+        public UpdateStatus StartupActions()
+        {
+            QuasarLogger.Info("Tunnel Setup");
+            SetupClientOrServer();
+
+            QuasarLogger.Info("Update Process Started");
+            UpdateStatus BootStatus = UpdateCommander.CheckUpdateStatus(QuasarLogger);
+
+            CultureInfo.CurrentUICulture = new CultureInfo(Properties.QuasarSettings.Default.Language, false);
+
+            if (BootStatus == UpdateStatus.FirstBoot)
+            {
+                QuasarLogger.Debug("First Boot behavior started");
+                UpdateCommander.LaunchFirstBootSequence();
+                if (File.Exists(Properties.QuasarSettings.Default.DefaultDir + @"\Library\Library.json"))
+                {
+                    BootStatus = UpdateStatus.ToUpdate;
+                }
+            }
+
+            BootStatus = UpdateCommander.CheckPreviousInstall(QuasarLogger, BootStatus,
+                Properties.QuasarSettings.Default.DefaultDir);
+
+            return BootStatus;
         }
 
         /// <summary>
@@ -612,18 +480,58 @@ namespace Quasar.MainUI.ViewModels
             serverMutex = IPCHandler.CheckExecuteInstance(serverMutex, QuasarLogger);
         }
 
+        public void UpdateTask()
+        {
+            QuasarLogger.Debug("Update Status is To Update");
+            ModalEvent Meuh = new ModalEvent()
+            {
+                Action = "Show",
+                EventName = "Updating",
+                Title = Properties.Resources.MainUI_Modal_UpdateProgressTitle,
+                Content = Properties.Resources.MainUI_Modal_UpdateProgressContent,
+                OkButtonText = "OK",
+                Type = ModalType.Loader
+            };
+
+            EventSystem.Publish<ModalEvent>(Meuh);
+            Task.Run(() =>
+            {
+                UpdateCommander.LaunchUpdateSequence(QuasarLogger, Library, API);
+            });
+        }
+
+        public void PreviousInstallTask()
+        {
+            QuasarLogger.Debug("Update Status is Previously installed");
+            ModalEvent Meuhdeux = new ModalEvent()
+            {
+                Action = "Show",
+                EventName = "RecoveringInstallation",
+                Title = Properties.Resources.MainUI_Modal_RecoverProgressTitle,
+                Content = Properties.Resources.MainUI_Modal_RecoverProgressContent,
+                OkButtonText = "OK",
+                Type = ModalType.Loader
+            };
+
+            //EventSystem.Publish<ModalEvent>(Meuhdeux);
+            //Task.Run(() =>
+            //{
+            //    Library = UpdateCommander.LaunchInstallRecoverySequence(Library, API, QuasarLogger);
+            //    UserDataManager.SaveLibrary(Library, AppDataPath);
+            //});
+        }
+
         /// <summary>
         /// Sends the OK for the update Modal and refreshes UI
         /// </summary>
         public void UpdateOK()
-        { 
+        {
 
             LibraryViewModel.CollectionViewSource.View.Refresh();
             LibraryViewModel.ReloadAllStats();
 
             Updating = false;
         }
-
         #endregion
 
         #region Events
@@ -692,14 +600,6 @@ namespace Quasar.MainUI.ViewModels
                     SelectedTabItem = TabItems[0];
                 }
                 TabLocked = Setting.IsChecked;
-            }
-            if (Setting.SettingName == "EnableCreator")
-            {
-                CreatorMode = Setting.IsChecked;
-            }
-            if (Setting.SettingName == "EnableAdvanced")
-            {
-                AdvancedMode = Setting.IsChecked;
             }
         }
         #endregion

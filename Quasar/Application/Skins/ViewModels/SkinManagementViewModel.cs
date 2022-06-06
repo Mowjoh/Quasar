@@ -7,10 +7,13 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using DataModels.Common;
 using DataModels.Resource;
+using DataModels.User;
 using Quasar.Common.Models;
+using Quasar.Common.Views;
 using Quasar.Helpers;
 using Quasar.MainUI.ViewModels;
 using Quasar.Skins.Views;
+using Workshop.Associations;
 
 namespace Quasar.Skins.ViewModels
 {
@@ -20,6 +23,8 @@ namespace Quasar.Skins.ViewModels
 
         #region Private
         private CharacterItem _SelectedCharacterItem { get; set; }
+        private SlotModel _SourceSlot { get; set; }
+        private ObservableCollection<SlotModel> _Slots { get; set; }
         #endregion
 
         #region Public
@@ -43,6 +48,25 @@ namespace Quasar.Skins.ViewModels
                 }
             }
         }
+        public SlotModel SourceSlot
+        {
+            get => _SourceSlot;
+            set
+            {
+                _SourceSlot = value;
+                OnPropertyChanged("SourceSlot");
+            }
+        }
+
+        public ObservableCollection<SlotModel> Slots
+        {
+            get => _Slots;
+            set
+            {
+                _Slots = value;
+                OnPropertyChanged("Slots");
+            }
+        }
         #endregion
 
         #endregion
@@ -52,6 +76,7 @@ namespace Quasar.Skins.ViewModels
         #region Private
         private ObservableCollection<CharacterItem> _CharacterItems { get; set; }
         private bool _SelectionViewActive { get; set; }
+        private bool _Grouped { get; set; } = true;
         
         #endregion
 
@@ -78,13 +103,22 @@ namespace Quasar.Skins.ViewModels
             }
         }
         public bool DisplayViewActive => !_SelectionViewActive;
+
+        public bool Grouped
+        {
+            get => _Grouped;
+            set
+            {
+                _Grouped = value;
+                OnPropertyChanged("Grouped");
+                RefreshSlots();
+            }
+        }
         #endregion
 
         #endregion
 
         #region Commands
-        
-
         
         #region Private
         private ICommand _GoBack { get; set; }
@@ -109,98 +143,29 @@ namespace Quasar.Skins.ViewModels
         public SkinManagementViewModel(MainUIViewModel _MUVM)
         {
             MUVM = _MUVM;
-            CharacterItems = new()
-            {
-                new CharacterItem("mario"),
-                new CharacterItem("donkey"),
-                new CharacterItem("link"),
-                new CharacterItem("samus"),
-                new CharacterItem("samusd"),
-                new CharacterItem("yoshi"),
-                new CharacterItem("kirby"),
-                new CharacterItem("fox"),
-                new CharacterItem("pikachu"),
-                new CharacterItem("luigi"),
-                new CharacterItem("ness"),
-                new CharacterItem("captain"),
-                new CharacterItem("purin"),
-                new CharacterItem("peach"),
-                new CharacterItem("daisy"),
-                new CharacterItem("koopa"),
-                new CharacterItem("ice_climber"),
-                new CharacterItem("sheik"),
-                new CharacterItem("zelda"),
-                new CharacterItem("mariod"),
-                new CharacterItem("pichu"),
-                new CharacterItem("falco"),
-                new CharacterItem("marth"),
-                new CharacterItem("lucina"),
-                new CharacterItem("younglink"),
-                new CharacterItem("ganon"),
-                new CharacterItem("mewtwo"),
-                new CharacterItem("roy"),
-                new CharacterItem("chrom"),
-                new CharacterItem("gamewatch"),
-                new CharacterItem("metaknight"),
-                new CharacterItem("pit"),
-                new CharacterItem("pitb"),
-                new CharacterItem("szerosuit"),
-                new CharacterItem("wario"),
-                new CharacterItem("snake"),
-                new CharacterItem("ike"),
-                new CharacterItem("ptrainer"),
-                new CharacterItem("diddy"),
-                new CharacterItem("lucas"),
-                new CharacterItem("sonic"),
-                new CharacterItem("dedede"),
-                new CharacterItem("pikmin"),
-                new CharacterItem("lucario"),
-                new CharacterItem("robot"),
-                new CharacterItem("toonlink"),
-                new CharacterItem("wolf"),
-                new CharacterItem("murabito"),
-                new CharacterItem("rockman"),
-                new CharacterItem("wiifit"),
-                new CharacterItem("rosetta"),
-                new CharacterItem("littlemac"),
-                new CharacterItem("gekkouga"),
-                new CharacterItem("palutena"),
-                new CharacterItem("pacman"),
-                new CharacterItem("reflet"),
-                new CharacterItem("shulk"),
-                new CharacterItem("koopajr"),
-                new CharacterItem("duckhunt"),
-                new CharacterItem("ryu"),
-                new CharacterItem("ken"),
-                new CharacterItem("cloud"),
-                new CharacterItem("kamui"),
-                new CharacterItem("bayonetta"),
-                new CharacterItem("inkling"),
-                new CharacterItem("ridley"),
-                new CharacterItem("simon"),
-                new CharacterItem("richter"),
-                new CharacterItem("krool"),
-                new CharacterItem("shizue"),
-                new CharacterItem("gaogaen"),
-                new CharacterItem("packun"),
-                new CharacterItem("jack"),
-                new CharacterItem("brave"),
-                new CharacterItem("buddy"),
-                new CharacterItem("dolly"),
-                new CharacterItem("master"),
-                new CharacterItem("tantan"),
-                new CharacterItem("pickel"),
-                new CharacterItem("edge"),
-                new CharacterItem("elight"),
-                new CharacterItem("demon"),
-                new CharacterItem("trail"),
-                new CharacterItem("miifighter"),
-                new CharacterItem("miiswordsman"),
-                new CharacterItem("miigunner")
-            };
+            CharacterItems = GetCharacterItems();
 
             EventSystem.Subscribe<CharacterItemViewModel>(GetSelectedCharacterItem);
             SelectionViewActive = true;
+
+            SourceSlot = new()
+            {
+                Contents = new(),
+                GameElement = null,
+                ModTypes = MUVM.QuasarModTypes.Where(t => t.GameElementFamilyID == 1).ToList(),
+                Slots = new List<int>() {0, 1, 2, 3, 4, 5, 6, 7}
+            };
+            Slots = new();
+            for (int i = 0; i < 8; i++)
+            {
+                Slots.Add(new()
+                {
+                    Contents = new(),
+                    GameElement = null,
+                    ModTypes = MUVM.QuasarModTypes.Where(t => t.GameElementFamilyID == 1).ToList(),
+                    Slots = new(){i}
+                });
+            }
 
         }
 
@@ -208,11 +173,116 @@ namespace Quasar.Skins.ViewModels
         {
             CharacterItem cis = CharacterItems.Single(c => c.CIVM == ci);
             SelectedCharacterItem = cis;
+            RefreshSlots();
         }
-
         public void ResetSelectedCharacterItem()
         {
             SelectedCharacterItem = null;
+        }
+
+        public ObservableCollection<CharacterItem> GetCharacterItems()
+        {
+            return new()
+            {
+                new CharacterItem(MUVM.CurrentGame.GameElementFamilies[0].GameElements.SingleOrDefault(e => e.GameFolderName == "mario")),
+                new CharacterItem(MUVM.CurrentGame.GameElementFamilies[0].GameElements.SingleOrDefault(e => e.GameFolderName == "donkey")),
+                new CharacterItem(MUVM.CurrentGame.GameElementFamilies[0].GameElements.SingleOrDefault(e => e.GameFolderName == "link")),
+                new CharacterItem(MUVM.CurrentGame.GameElementFamilies[0].GameElements.SingleOrDefault(e => e.GameFolderName == "samus")),
+                new CharacterItem(MUVM.CurrentGame.GameElementFamilies[0].GameElements.SingleOrDefault(e => e.GameFolderName == "samusd")),
+                new CharacterItem(MUVM.CurrentGame.GameElementFamilies[0].GameElements.SingleOrDefault(e => e.GameFolderName == "yoshi")),
+                new CharacterItem(MUVM.CurrentGame.GameElementFamilies[0].GameElements.SingleOrDefault(e => e.GameFolderName == "kirby")),
+                new CharacterItem(MUVM.CurrentGame.GameElementFamilies[0].GameElements.SingleOrDefault(e => e.GameFolderName == "fox")),
+                new CharacterItem(MUVM.CurrentGame.GameElementFamilies[0].GameElements.SingleOrDefault(e => e.GameFolderName == "pikachu")),
+                new CharacterItem(MUVM.CurrentGame.GameElementFamilies[0].GameElements.SingleOrDefault(e => e.GameFolderName == "luigi")),
+                new CharacterItem(MUVM.CurrentGame.GameElementFamilies[0].GameElements.SingleOrDefault(e => e.GameFolderName == "ness")),
+                new CharacterItem(MUVM.CurrentGame.GameElementFamilies[0].GameElements.SingleOrDefault(e => e.GameFolderName == "captain")),
+                new CharacterItem(MUVM.CurrentGame.GameElementFamilies[0].GameElements.SingleOrDefault(e => e.GameFolderName == "purin")),
+                new CharacterItem(MUVM.CurrentGame.GameElementFamilies[0].GameElements.SingleOrDefault(e => e.GameFolderName == "peach")),
+                new CharacterItem(MUVM.CurrentGame.GameElementFamilies[0].GameElements.SingleOrDefault(e => e.GameFolderName == "daisy")),
+                new CharacterItem(MUVM.CurrentGame.GameElementFamilies[0].GameElements.SingleOrDefault(e => e.GameFolderName == "koopa")),
+                new CharacterItem(MUVM.CurrentGame.GameElementFamilies[0].GameElements.SingleOrDefault(e => e.GameFolderName.Contains("ice_climber"))),
+                new CharacterItem(MUVM.CurrentGame.GameElementFamilies[0].GameElements.SingleOrDefault(e => e.GameFolderName == "sheik")),
+                new CharacterItem(MUVM.CurrentGame.GameElementFamilies[0].GameElements.SingleOrDefault(e => e.GameFolderName == "zelda")),
+                new CharacterItem(MUVM.CurrentGame.GameElementFamilies[0].GameElements.SingleOrDefault(e => e.GameFolderName == "mariod")),
+                new CharacterItem(MUVM.CurrentGame.GameElementFamilies[0].GameElements.SingleOrDefault(e => e.GameFolderName == "pichu")),
+                new CharacterItem(MUVM.CurrentGame.GameElementFamilies[0].GameElements.SingleOrDefault(e => e.GameFolderName == "falco")),
+                new CharacterItem(MUVM.CurrentGame.GameElementFamilies[0].GameElements.SingleOrDefault(e => e.GameFolderName == "marth")),
+                new CharacterItem(MUVM.CurrentGame.GameElementFamilies[0].GameElements.SingleOrDefault(e => e.GameFolderName == "lucina")),
+                new CharacterItem(MUVM.CurrentGame.GameElementFamilies[0].GameElements.SingleOrDefault(e => e.GameFolderName == "younglink")),
+                new CharacterItem(MUVM.CurrentGame.GameElementFamilies[0].GameElements.SingleOrDefault(e => e.GameFolderName == "ganon")),
+                new CharacterItem(MUVM.CurrentGame.GameElementFamilies[0].GameElements.SingleOrDefault(e => e.GameFolderName == "mewtwo")),
+                new CharacterItem(MUVM.CurrentGame.GameElementFamilies[0].GameElements.SingleOrDefault(e => e.GameFolderName == "roy")),
+                new CharacterItem(MUVM.CurrentGame.GameElementFamilies[0].GameElements.SingleOrDefault(e => e.GameFolderName == "chrom")),
+                new CharacterItem(MUVM.CurrentGame.GameElementFamilies[0].GameElements.SingleOrDefault(e => e.GameFolderName == "gamewatch")),
+                new CharacterItem(MUVM.CurrentGame.GameElementFamilies[0].GameElements.SingleOrDefault(e => e.GameFolderName == "metaknight")),
+                new CharacterItem(MUVM.CurrentGame.GameElementFamilies[0].GameElements.SingleOrDefault(e => e.GameFolderName == "pit")),
+                new CharacterItem(MUVM.CurrentGame.GameElementFamilies[0].GameElements.SingleOrDefault(e => e.GameFolderName == "pitb")),
+                new CharacterItem(MUVM.CurrentGame.GameElementFamilies[0].GameElements.SingleOrDefault(e => e.GameFolderName == "szerosuit")),
+                new CharacterItem(MUVM.CurrentGame.GameElementFamilies[0].GameElements.SingleOrDefault(e => e.GameFolderName == "wario")),
+                new CharacterItem(MUVM.CurrentGame.GameElementFamilies[0].GameElements.SingleOrDefault(e => e.GameFolderName == "snake")),
+                new CharacterItem(MUVM.CurrentGame.GameElementFamilies[0].GameElements.SingleOrDefault(e => e.GameFolderName == "ike")),
+                new CharacterItem(MUVM.CurrentGame.GameElementFamilies[0].GameElements.SingleOrDefault(e => e.GameFolderName.Contains("ptrainer;pfushigisou;plizardon;pzenigame"))),
+                new CharacterItem(MUVM.CurrentGame.GameElementFamilies[0].GameElements.SingleOrDefault(e => e.GameFolderName == "diddy")),
+                new CharacterItem(MUVM.CurrentGame.GameElementFamilies[0].GameElements.SingleOrDefault(e => e.GameFolderName == "lucas")),
+                new CharacterItem(MUVM.CurrentGame.GameElementFamilies[0].GameElements.SingleOrDefault(e => e.GameFolderName == "sonic")),
+                new CharacterItem(MUVM.CurrentGame.GameElementFamilies[0].GameElements.SingleOrDefault(e => e.GameFolderName == "dedede")),
+                new CharacterItem(MUVM.CurrentGame.GameElementFamilies[0].GameElements.SingleOrDefault(e => e.GameFolderName == "pikmin")),
+                new CharacterItem(MUVM.CurrentGame.GameElementFamilies[0].GameElements.SingleOrDefault(e => e.GameFolderName == "lucario")),
+                new CharacterItem(MUVM.CurrentGame.GameElementFamilies[0].GameElements.SingleOrDefault(e => e.GameFolderName == "robot")),
+                new CharacterItem(MUVM.CurrentGame.GameElementFamilies[0].GameElements.SingleOrDefault(e => e.GameFolderName == "toonlink")),
+                new CharacterItem(MUVM.CurrentGame.GameElementFamilies[0].GameElements.SingleOrDefault(e => e.GameFolderName == "wolf")),
+                new CharacterItem(MUVM.CurrentGame.GameElementFamilies[0].GameElements.SingleOrDefault(e => e.GameFolderName == "murabito")),
+                new CharacterItem(MUVM.CurrentGame.GameElementFamilies[0].GameElements.SingleOrDefault(e => e.GameFolderName == "rockman")),
+                new CharacterItem(MUVM.CurrentGame.GameElementFamilies[0].GameElements.SingleOrDefault(e => e.GameFolderName == "wiifit")),
+                new CharacterItem(MUVM.CurrentGame.GameElementFamilies[0].GameElements.SingleOrDefault(e => e.GameFolderName == "rosetta")),
+                new CharacterItem(MUVM.CurrentGame.GameElementFamilies[0].GameElements.SingleOrDefault(e => e.GameFolderName == "littlemac")),
+                new CharacterItem(MUVM.CurrentGame.GameElementFamilies[0].GameElements.SingleOrDefault(e => e.GameFolderName == "gekkouga")),
+                new CharacterItem(MUVM.CurrentGame.GameElementFamilies[0].GameElements.SingleOrDefault(e => e.GameFolderName == "palutena")),
+                new CharacterItem(MUVM.CurrentGame.GameElementFamilies[0].GameElements.SingleOrDefault(e => e.GameFolderName == "pacman")),
+                new CharacterItem(MUVM.CurrentGame.GameElementFamilies[0].GameElements.SingleOrDefault(e => e.GameFolderName == "reflet")),
+                new CharacterItem(MUVM.CurrentGame.GameElementFamilies[0].GameElements.SingleOrDefault(e => e.GameFolderName == "shulk")),
+                new CharacterItem(MUVM.CurrentGame.GameElementFamilies[0].GameElements.SingleOrDefault(e => e.GameFolderName == "koopajr")),
+                new CharacterItem(MUVM.CurrentGame.GameElementFamilies[0].GameElements.SingleOrDefault(e => e.GameFolderName == "duckhunt")),
+                new CharacterItem(MUVM.CurrentGame.GameElementFamilies[0].GameElements.SingleOrDefault(e => e.GameFolderName == "ryu")),
+                new CharacterItem(MUVM.CurrentGame.GameElementFamilies[0].GameElements.SingleOrDefault(e => e.GameFolderName == "ken")),
+                new CharacterItem(MUVM.CurrentGame.GameElementFamilies[0].GameElements.SingleOrDefault(e => e.GameFolderName == "cloud")),
+                new CharacterItem(MUVM.CurrentGame.GameElementFamilies[0].GameElements.SingleOrDefault(e => e.GameFolderName == "kamui")),
+                new CharacterItem(MUVM.CurrentGame.GameElementFamilies[0].GameElements.SingleOrDefault(e => e.GameFolderName == "bayonetta")),
+                new CharacterItem(MUVM.CurrentGame.GameElementFamilies[0].GameElements.SingleOrDefault(e => e.GameFolderName == "inkling")),
+                new CharacterItem(MUVM.CurrentGame.GameElementFamilies[0].GameElements.SingleOrDefault(e => e.GameFolderName == "ridley")),
+                new CharacterItem(MUVM.CurrentGame.GameElementFamilies[0].GameElements.SingleOrDefault(e => e.GameFolderName == "simon")),
+                new CharacterItem(MUVM.CurrentGame.GameElementFamilies[0].GameElements.SingleOrDefault(e => e.GameFolderName == "richter")),
+                new CharacterItem(MUVM.CurrentGame.GameElementFamilies[0].GameElements.SingleOrDefault(e => e.GameFolderName == "krool")),
+                new CharacterItem(MUVM.CurrentGame.GameElementFamilies[0].GameElements.SingleOrDefault(e => e.GameFolderName == "shizue")),
+                new CharacterItem(MUVM.CurrentGame.GameElementFamilies[0].GameElements.SingleOrDefault(e => e.GameFolderName == "gaogaen")),
+                new CharacterItem(MUVM.CurrentGame.GameElementFamilies[0].GameElements.SingleOrDefault(e => e.GameFolderName == "packun")),
+                new CharacterItem(MUVM.CurrentGame.GameElementFamilies[0].GameElements.SingleOrDefault(e => e.GameFolderName == "jack")),
+                new CharacterItem(MUVM.CurrentGame.GameElementFamilies[0].GameElements.SingleOrDefault(e => e.GameFolderName == "brave")),
+                new CharacterItem(MUVM.CurrentGame.GameElementFamilies[0].GameElements.SingleOrDefault(e => e.GameFolderName == "buddy")),
+                new CharacterItem(MUVM.CurrentGame.GameElementFamilies[0].GameElements.SingleOrDefault(e => e.GameFolderName == "dolly")),
+                new CharacterItem(MUVM.CurrentGame.GameElementFamilies[0].GameElements.SingleOrDefault(e => e.GameFolderName == "master")),
+                new CharacterItem(MUVM.CurrentGame.GameElementFamilies[0].GameElements.SingleOrDefault(e => e.GameFolderName == "tantan")),
+                new CharacterItem(MUVM.CurrentGame.GameElementFamilies[0].GameElements.SingleOrDefault(e => e.GameFolderName == "pickel")),
+                new CharacterItem(MUVM.CurrentGame.GameElementFamilies[0].GameElements.SingleOrDefault(e => e.GameFolderName == "edge")),
+                new CharacterItem(MUVM.CurrentGame.GameElementFamilies[0].GameElements.SingleOrDefault(e => e.GameFolderName.Contains("elight"))),
+                new CharacterItem(MUVM.CurrentGame.GameElementFamilies[0].GameElements.SingleOrDefault(e => e.GameFolderName == "demon")),
+                new CharacterItem(MUVM.CurrentGame.GameElementFamilies[0].GameElements.SingleOrDefault(e => e.GameFolderName == "trail")),
+                new CharacterItem(MUVM.CurrentGame.GameElementFamilies[0].GameElements.SingleOrDefault(e => e.GameFolderName == "miifighter")),
+                new CharacterItem(MUVM.CurrentGame.GameElementFamilies[0].GameElements.SingleOrDefault(e => e.GameFolderName == "miiswordsman")),
+                new CharacterItem(MUVM.CurrentGame.GameElementFamilies[0].GameElements.SingleOrDefault(e => e.GameFolderName == "miigunner"))
+            };
+        }
+
+        public void RefreshSlots()
+        {
+            SourceSlot.GameElement = SelectedCharacterItem.CIVM.GameElement;
+            SourceSlot.GetMatchingContents(MUVM.ContentItems, Grouped);
+
+            foreach (SlotModel slotModel in Slots)
+            {
+                slotModel.GameElement = SelectedCharacterItem.CIVM.GameElement;
+                slotModel.GetMatchingContents(MUVM.ContentItems, Grouped);
+            }
         }
     }
 }

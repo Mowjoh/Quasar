@@ -633,150 +633,152 @@ namespace Quasar.Controls.ModManagement.ViewModels
         /// <summary>
         /// Download process
         /// </summary>
-        /// <param name="QuasarURL"></param>
+        /// <param name="_quasar_url"></param>
         /// <returns></returns>
-        public async Task<bool> DownloadMod(string QuasarURL)
+        public async Task<bool> DownloadMod(string _quasar_url)
         {
+            ModManager manager = new ModManager(_quasar_url);
 
-            ModManager MM = new ModManager(QuasarURL);
-            //If there is no Mod Manager already doing something for this mod
-            if (!ActiveModManagers.Any(m => m.QuasarURL.GamebananaItemID == MM.QuasarURL.GamebananaItemID))
+            if (!TryLaunchDownload(manager))
+                return false;
+
+            //Evaluating if something needs to be done
+            bool result = await manager.EvaluateActionNeeded(MUVM);
+
+            if (result && manager.ActionNeeded)
             {
-                if (ActiveModManagers.Count == 0)
+                try
                 {
-                    EventSystem.Publish<SettingItem>(new SettingItem
+                    manager.ModListItem = GetModListItem(manager);
+
+                    //Executing tasks for this mod
+                    await manager.TakeAction(QuasarLogger, MUVM.QuasarModTypes, MUVM.CurrentGame);
+
+                    foreach (ContentItem managerScannedContent in manager.ScannedContents)
                     {
-                        IsChecked = true,
-                        SettingName = "TabLock",
-                        DisplayValue = "Mod"
-                    });
-                }
-
-                //Adding it to the active list
-                ActiveModManagers.Add(MM);
-
-                //Evaluating if something needs to be done
-                bool result = await MM.EvaluateActionNeeded(MUVM);
-                if (result)
-                {
-                    if (MM.ActionNeeded)
-                    {
-                        ModListItem MLI = null;
-                        try
-                        {
-                            if (MM.DownloadNeeded)
-                            {
-                                QuasarLogger.Debug("New Item");
-                                //Creating new Mod List Item
-                                Application.Current.Dispatcher.Invoke((Action)delegate {
-                                    MLI = new ModListItem(this, QuasarLogger, MM.LibraryItem, MUVM.Games[0], true);
-                                    ModListItems.Add(MLI);
-                                });
-
-                            }
-                            else
-                            {
-                                QuasarLogger.Debug("Existing Item");
-                                //Parsing Existing Mod List Item
-                                MLI = ModListItems.Single(i => i.ModViewModel.LibraryItem.GBItem.GamebananaItemID.ToString() == MM.QuasarURL.GamebananaItemID);
-                            }
-                            MM.ModListItem = MLI;
-
-                            //Executing tasks for this mod
-                            await MM.TakeAction(QuasarLogger);
-
-                            //Updating Library
-                            if (MM.DownloadNeeded)
-                            {
-                                QuasarLogger.Debug("Adding to Library");
-                                //If the mod is new and downloaded
-                                MM.LibraryItem.Included = true;
-                                MUVM.Library.Add(MM.LibraryItem);
-                                UserDataManager.SaveLibrary(MUVM.Library, AppDataPath);
-
-                                GamebananaRootCategory RC = MUVM.API.Games[0].RootCategories.Single(c => c.Guid == MM.LibraryItem.GBItem.RootCategoryGuid);
-                                GamebananaSubCategory SC = RC.SubCategories.Single(c => c.Guid == MM.LibraryItem.GBItem.SubCategoryGuid);
-                                ModInformation MI = new ModInformation()
-                                {
-                                    LibraryItem = MM.LibraryItem,
-                                    GamebananaRootCategory = new GamebananaRootCategory()
-                                    {
-                                        Guid = RC.Guid,
-                                        Name = RC.Name,
-                                        SubCategories = new ObservableCollection<GamebananaSubCategory>()
-                                        {
-                                            new GamebananaSubCategory()
-                                            {
-                                                Guid = SC.Guid,
-                                                ID = SC.ID,
-                                                Name = SC.Name
-                                            }
-                                        }
-                                    }
-                                };
-                                UserDataManager.SaveModInformation(MI, Properties.QuasarSettings.Default.DefaultDir);
-                            }
-                            else
-                            {
-                                QuasarLogger.Debug("Editing Library");
-                                //If the mod is updated
-                                LibraryItem li = MUVM.Library.Single(i => i.Guid == MM.LibraryItem.Guid);
-                                li = MM.LibraryItem;
-                                UserDataManager.SaveLibrary(MUVM.Library, AppDataPath);
-
-                                GamebananaRootCategory RC = MUVM.API.Games[0].RootCategories.Single(c => c.Guid == MM.LibraryItem.GBItem.RootCategoryGuid);
-                                GamebananaSubCategory SC = RC.SubCategories.Single(c => c.Guid == MM.LibraryItem.GBItem.SubCategoryGuid);
-                                ModInformation MI = new ModInformation()
-                                {
-                                    LibraryItem = MM.LibraryItem,
-                                    GamebananaRootCategory = new GamebananaRootCategory()
-                                    {
-                                        Guid = RC.Guid,
-                                        Name = RC.Name,
-                                        SubCategories = new ObservableCollection<GamebananaSubCategory>()
-                                        {
-                                            new GamebananaSubCategory()
-                                            {
-                                                Guid = SC.Guid,
-                                                ID = SC.ID,
-                                                Name = SC.Name
-                                            }
-                                        }
-                                    }
-                                };
-                                UserDataManager.SaveModInformation(MI, Properties.QuasarSettings.Default.DefaultDir);
-                            }
-
-                            ReloadAllStats();
-                        }
-                        catch (Exception e)
-                        {
-                            MLI.ModViewModel.DownloadFailed = true;
-
-                            QuasarLogger.Error("Could not download mod");
-                            QuasarLogger.Error(e.Message);
-                            QuasarLogger.Error(e.StackTrace);
-                        }
-
-
-                        MLI.ModViewModel.Downloading = false;
+                        MUVM.ContentItems.Add(managerScannedContent);
                     }
+                    UserDataManager.SaveSeparatedContentItems(MUVM.ContentItems, Properties.QuasarSettings.Default.DefaultDir);
+                    //Updating Library
+                    if (manager.DownloadNeeded)
+                    {
+                        AddToLibrary(manager);
+                    }
+                    else
+                    {
+                        EditLibrary(manager);
+                    }
+
+                    ReloadAllStats();
+                }
+                catch (Exception e)
+                {
+                    manager.ModListItem.ModViewModel.DownloadFailed = true;
+
+                    QuasarLogger.Error("Could not download mod");
+                    QuasarLogger.Error(e.Message);
+                    QuasarLogger.Error(e.StackTrace);
                 }
 
-                ActiveModManagers.Remove(MM);
-                if (ActiveModManagers.Count == 0)
-                {
-                    EventSystem.Publish<SettingItem>(new SettingItem
-                    {
-                        IsChecked = false,
-                        SettingName = "TabLock"
-                    });
-                }
+
+                manager.ModListItem.ModViewModel.Downloading = false;
             }
+
+            ActiveModManagers.Remove(manager);
+
+            //Unlocking tabs if necessary
+            if (ActiveModManagers.Count == 0)
+                SendTabLock(false);
 
             return true;
         }
 
+        public ModListItem GetModListItem(ModManager _manager)
+        {
+            ModListItem modListItem = null;
+
+            if (_manager.DownloadNeeded)
+            {
+                QuasarLogger.Debug("New Item");
+                //Creating new Mod List Item
+                Application.Current.Dispatcher.Invoke((Action)delegate {
+                    modListItem = new ModListItem(this, QuasarLogger, _manager.LibraryItem, MUVM.Games[0], true);
+                    ModListItems.Add(modListItem);
+                });
+
+            }
+            else
+            {
+                QuasarLogger.Debug("Existing Item");
+                //Parsing Existing Mod List Item
+                modListItem = ModListItems.Single(i => i.ModViewModel.LibraryItem.GBItem.GamebananaItemID.ToString() == _manager.QuasarURL.GamebananaItemID);
+            }
+
+            return modListItem;
+        }
+
+        public void AddToLibrary(ModManager _manager)
+        {
+            QuasarLogger.Debug("Adding to Library");
+            //If the mod is new and downloaded
+            _manager.LibraryItem.Included = true;
+            MUVM.Library.Add(_manager.LibraryItem);
+            UserDataManager.SaveLibrary(MUVM.Library, Properties.QuasarSettings.Default.DefaultDir);
+            //Saving changes
+            UserDataManager.SaveSeparatedGamebananaApi(MUVM.API, MUVM.Library, Properties.QuasarSettings.Default.DefaultDir);
+
+            GamebananaRootCategory RC = MUVM.API.Games[0].RootCategories.Single(c => c.Guid == _manager.LibraryItem.GBItem.RootCategoryGuid);
+            GamebananaSubCategory SC = RC.SubCategories.Single(c => c.Guid == _manager.LibraryItem.GBItem.SubCategoryGuid);
+            APIData MI = new APIData()
+            {
+                GamebananaItemID = _manager.QuasarURL.GamebananaItemID,
+                GamebananaModType = _manager.QuasarURL.APICategoryName
+            };
+            UserDataManager.SaveAPIData(MI, Properties.QuasarSettings.Default.DefaultDir, _manager.LibraryItem.Guid.ToString());
+        }
+
+        public void EditLibrary(ModManager _manager)
+        {
+            QuasarLogger.Debug("Editing Library");
+            //If the mod is updated
+            LibraryItem li = MUVM.Library.Single(i => i.Guid == _manager.LibraryItem.Guid);
+            li = _manager.LibraryItem;
+            UserDataManager.SaveLibrary(MUVM.Library, Properties.QuasarSettings.Default.DefaultDir);
+            //Saving changes
+            UserDataManager.SaveSeparatedGamebananaApi(MUVM.API, MUVM.Library, Properties.QuasarSettings.Default.DefaultDir);
+
+            GamebananaRootCategory RC = MUVM.API.Games[0].RootCategories.Single(c => c.Guid == _manager.LibraryItem.GBItem.RootCategoryGuid);
+            GamebananaSubCategory SC = RC.SubCategories.Single(c => c.Guid == _manager.LibraryItem.GBItem.SubCategoryGuid);
+            APIData MI = new APIData()
+            {
+                GamebananaItemID = _manager.QuasarURL.GamebananaItemID,
+                GamebananaModType = _manager.QuasarURL.APICategoryName
+            };
+            UserDataManager.SaveAPIData(MI, Properties.QuasarSettings.Default.DefaultDir, _manager.LibraryItem.Guid.ToString());
+        }
+
+        public bool TryLaunchDownload(ModManager _manager)
+        {
+            bool ManagerAvailable = !ActiveModManagers.Any(m => m.QuasarURL.GamebananaItemID == _manager.QuasarURL.GamebananaItemID);
+            
+            if (!ManagerAvailable) 
+                return false;
+
+            ActiveModManagers.Add(_manager);
+            SendTabLock(true);
+
+            return true;
+        }
+
+        public void SendTabLock(bool Active)
+        {
+            EventSystem.Publish<SettingItem>(new SettingItem
+            {
+                IsChecked = Active,
+                SettingName = "TabLock",
+                DisplayValue = "Mod"
+            });
+        }
         #endregion
 
         #region Transfers
@@ -784,7 +786,7 @@ namespace Quasar.Controls.ModManagement.ViewModels
         /// <summary>
         /// Asks the user if he really wants to clear the mods folder before sending
         /// </summary>
-        public async void AskBuild()
+        public void AskBuild()
         {
             if (Building)
                 return;
@@ -818,6 +820,26 @@ namespace Quasar.Controls.ModManagement.ViewModels
         {
             if (Building)
                 return;
+
+            StartBuildProcess();
+
+            //Starting the transfer for the selected FileWriter
+            FileWriter FW = await GetFileWriter();
+
+            if (FW == null)
+            {
+                BuildLog(Properties.Resources.Transfer_Log_Error, Properties.Resources.Transfer_Log_NoLaunch);
+                EndBuildProcess();
+                return;
+            }
+
+            await BuildProcess(FW);
+
+            EndBuildProcess();
+        }
+
+        public void StartBuildProcess()
+        {
             QuasarLogger.Info("Transfer Started");
             TransferWindowVisible = true;
 
@@ -833,36 +855,44 @@ namespace Quasar.Controls.ModManagement.ViewModels
 
             //Everything is in prepared to start the transfer
             BuildLog(Properties.Resources.Transfer_Log_Info, Properties.Resources.Transfer_Log_ProcessStart);
-            bool ok = true;
+        }
 
-            //Starting the transfer for the selected FileWriter
-            FileWriter FW = await GetFileWriter();
+        public void EndBuildProcess()
+        {
+            QuasarLogger.Info(Properties.Resources.Transfer_Log_TransferFinished);
+            SetStep(Properties.Resources.Transfer_Step_FinishedStepText);
+            SetSubStep("");
+            SetProgression(100);
+            SetProgressionStyle(false);
+            SetSize("");
+            SetSpeed("");
+            SetTotal("0", "0");
+            TaskbarManager.Instance.SetProgressValue(100, 100, Process.GetCurrentProcess().MainWindowHandle);
+            Building = false;
+            BuildLog(Properties.Resources.Transfer_Log_Info, Properties.Resources.Transfer_Log_TransferFinished);
 
-            if (FW != null)
+            EventSystem.Publish<SettingItem>(new SettingItem
             {
-                SmashBuilder SmashBuilder = new(FW, this);
-                bool BuildSuccess = false;
+                IsChecked = false,
+                SettingName = "TabLock"
+            });
 
-                await Task.Run(() =>
-                {
-                    BuildSuccess = SmashBuilder.StartBuild().Result;
-                });
+        }
 
-                if (BuildSuccess)
-                {
-                    EndBuildProcess();
-                }
-                else
-                {
-                    BuildLog("Error", "Something went wrong");
-                    EndBuildProcess();
-                }
-            }
-            else
+        public async Task<bool> BuildProcess(FileWriter _writer)
+        {
+            SmashBuilder SmashBuilder = new(_writer, this);
+            bool BuildSuccess = false;
+
+            await Task.Run(() =>
             {
-                BuildLog(Properties.Resources.Transfer_Log_Error, Properties.Resources.Transfer_Log_NoLaunch);
-                EndBuildProcess();
-            }
+                BuildSuccess = SmashBuilder.StartBuild().Result;
+            });
+
+            if (!BuildSuccess)
+                BuildLog("Error", "Something went wrong");
+
+            return BuildSuccess;
         }
 
         /// <summary>
@@ -939,27 +969,7 @@ namespace Quasar.Controls.ModManagement.ViewModels
         /// <summary>
         /// Sets UI for the end build process
         /// </summary>
-        public async void EndBuildProcess()
-        {
-            QuasarLogger.Info(Properties.Resources.Transfer_Log_TransferFinished);
-            SetStep(Properties.Resources.Transfer_Step_FinishedStepText);
-            SetSubStep("");
-            SetProgression(100);
-            SetProgressionStyle(false);
-            SetSize("");
-            SetSpeed("");
-            SetTotal("0", "0");
-            TaskbarManager.Instance.SetProgressValue(100, 100, Process.GetCurrentProcess().MainWindowHandle);
-            Building = false;
-            BuildLog(Properties.Resources.Transfer_Log_Info, Properties.Resources.Transfer_Log_TransferFinished);
-
-            EventSystem.Publish<SettingItem>(new SettingItem
-            {
-                IsChecked = false,
-                SettingName = "TabLock"
-            });
-
-        }
+        
 
         #endregion
 
@@ -983,7 +993,7 @@ namespace Quasar.Controls.ModManagement.ViewModels
             MUVM.Library.Add(li);
             ModListItems.Add(mli);
             CollectionViewSource.View.Refresh();
-            UserDataManager.SaveLibrary(MUVM.Library, AppDataPath);
+            UserDataManager.SaveLibrary(MUVM.Library, Properties.QuasarSettings.Default.DefaultDir);
             SelectedModListItem = mli;
             mli.ModViewModel.RenameMod();
 
@@ -1089,7 +1099,7 @@ namespace Quasar.Controls.ModManagement.ViewModels
         {
             QuasarLogger.Info($"Adding Mod to transfer list : '{MLI.ModViewModel.LibraryItem.Name}'");
             MUVM.Library.Single(li => li.Guid == MLI.ModViewModel.LibraryItem.Guid).Included = true;
-            UserDataManager.SaveLibrary(MUVM.Library, AppDataPath);
+            UserDataManager.SaveLibrary(MUVM.Library, Properties.QuasarSettings.Default.DefaultDir);
             ReloadAllStats();
             CollectionViewSource.View.Refresh();
         }
@@ -1102,7 +1112,7 @@ namespace Quasar.Controls.ModManagement.ViewModels
         {
             QuasarLogger.Info($"Removing Mod from transfer list : '{MLI.ModViewModel.LibraryItem.Name}'");
             MUVM.Library.Single(li => li.Guid == MLI.ModViewModel.LibraryItem.Guid).Included = false;
-            UserDataManager.SaveLibrary(MUVM.Library, AppDataPath);
+            UserDataManager.SaveLibrary(MUVM.Library, Properties.QuasarSettings.Default.DefaultDir);
             ReloadAllStats();
             CollectionViewSource.View.Refresh();
 
@@ -1184,7 +1194,7 @@ namespace Quasar.Controls.ModManagement.ViewModels
         /// <param name="MLI"></param>
         public void SaveLibrary(ModListItem MLI)
         {
-            UserDataManager.SaveLibrary(MUVM.Library,AppDataPath);
+            UserDataManager.SaveLibrary(MUVM.Library, Properties.QuasarSettings.Default.DefaultDir);
         }
 
         /// <summary>
@@ -1208,12 +1218,12 @@ namespace Quasar.Controls.ModManagement.ViewModels
         /// <summary>
         /// Trigger when an incoming ModalEvent is received
         /// </summary>
-        /// <param name="me"></param>
-        public void ProcessIncomingModalEvent(ModalEvent me)
+        /// <param name="_modal_event"></param>
+        public void ProcessIncomingModalEvent(ModalEvent _modal_event)
         {
-            if (me.EventName == "DeleteMod")
+            if (_modal_event.EventName == "DeleteMod")
             {
-                switch (me.Action)
+                switch (_modal_event.Action)
                 {
                     case "OK":
                         DeleteMod(mliToDelete);
@@ -1223,9 +1233,9 @@ namespace Quasar.Controls.ModManagement.ViewModels
                 }
             }
 
-            if (me.EventName == "TransferWarning")
+            if (_modal_event.EventName == "TransferWarning")
             {
-                switch (me.Action)
+                switch (_modal_event.Action)
                 {
                     case "OK":
                         Build();
@@ -1240,27 +1250,28 @@ namespace Quasar.Controls.ModManagement.ViewModels
         /// <summary>
         /// Deletes the mod from the Library
         /// </summary>
-        /// <param name="item"></param>
-        public void DeleteMod(ModListItem item)
+        /// <param name="_mod_list_item"></param>
+        public void DeleteMod(ModListItem _mod_list_item)
         {
-            QuasarLogger.Info($"Deleting Mod : '{item.ModViewModel.LibraryItem.Name}'");
+            QuasarLogger.Info($"Deleting Mod : '{_mod_list_item.ModViewModel.LibraryItem.Name}'");
+
             //Removing Files
-            ModFileManager mfm = new ModFileManager(item.ModViewModel.LibraryItem);
-            mfm.DeleteFiles();
+            ModFileManager modFileManager = new ModFileManager(_mod_list_item.ModViewModel.LibraryItem);
+            modFileManager.DeleteFiles();
 
             //Removing from ContentMappings
-            List<ContentItem> relatedMappings = MUVM.ContentItems.Where(cm => cm.LibraryItemGuid == item.ModViewModel.LibraryItem.Guid).ToList();
+            List<ContentItem> relatedMappings = MUVM.ContentItems.Where(cm => cm.LibraryItemGuid == _mod_list_item.ModViewModel.LibraryItem.Guid).ToList();
             foreach (ContentItem ci in relatedMappings)
             {
                 MUVM.ContentItems.Remove(ci);
             }
 
-            ModListItems.Remove(item);
-            MUVM.Library.Remove(item.ModViewModel.LibraryItem);
+            ModListItems.Remove(_mod_list_item);
+            MUVM.Library.Remove(_mod_list_item.ModViewModel.LibraryItem);
 
             //Writing changes
-            UserDataManager.SaveLibrary(MUVM.Library, AppDataPath);
-            UserDataManager.SaveContentItems(MUVM.ContentItems, AppDataPath);
+            UserDataManager.SaveLibrary(MUVM.Library, Properties.QuasarSettings.Default.DefaultDir);
+            UserDataManager.SaveSeparatedContentItems(MUVM.ContentItems, Properties.QuasarSettings.Default.DefaultDir);
 
             Application.Current.Dispatcher.Invoke((Action)delegate {
                 EventSystem.Publish<string>("RefreshContents");

@@ -1,48 +1,11 @@
-﻿<Window x:Class="DatabaseEditor.MainWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:local="clr-namespace:DatabaseEditor" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" Title="Quasar Data Editor" Width="1500" Height="900" mc:Ignorable="d">
+﻿<Window x:Class="DatabaseEditor.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:local="clr-namespace:DatabaseEditor" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        Title="Quasar Data Editor"
+        Width="1500" Height="900"
+        mc:Ignorable="d">
     <Grid Background="#212121">
         <TabControl x:Name="ApplicationTabControl">
-            <TabItem Foreground="White" Header="Workspace Viewer"
-                     Template="{StaticResource TabItemControl}"
-                     Visibility="Collapsed">
-                <Grid Background="#212121">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1*" />
-                        <ColumnDefinition Width="1*" />
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="130" />
-                        <RowDefinition Height="1*" />
-                    </Grid.RowDefinitions>
-
-                    <Grid x:Name="WorkspaceSelectionGrid" Grid.Row="0" Grid.Column="0">
-                        <Label Margin="15,15,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Workspace :" />
-                        <ComboBox ItemsSource="{Binding Workspaces}"
-                                  SelectedItem="{Binding SelectedWorkspace}"
-                                  Height="25" Margin="100,17,0,0" VerticalAlignment="Top" DisplayMemberPath="Name" />
-                    </Grid>
-                    <Grid x:Name="WorkspacePropertyGrid" Grid.Row="0" Grid.Column="1">
-                        <TextBlock Margin="15,20,0,0">
-                            <Run Text="GUID :  " /><Run Text="{Binding SelectedWorkspace.Guid, Mode=OneWay}" /><LineBreak />
-                            <Run Text="Sharing GUID :  " /><Run Text="{Binding SelectedWorkspace.UniqueShareID, Mode=OneWay}" /><LineBreak />
-                            <Run Text="Build Date :  " /><Run Text="{Binding SelectedWorkspace.BuildDate, Mode=OneWay}" /><LineBreak />
-                            <Run Text="Shared :  " /><Run Text="{Binding SelectedWorkspace.Shared, Mode=OneWay}" /><LineBreak />
-                            <Run Text="Associations Count :  " /><Run Text="{Binding SelectedWorkspace.Associations.Count, Mode=OneWay}" /><LineBreak />
-
-                        </TextBlock>
-                    </Grid>
-
-
-                    <DataGrid ItemsSource="{Binding SelectedWorkspace.Associations}"
-                              Grid.Row="2" Grid.ColumnSpan="2" AutoGenerateColumns="False">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Width="20*" Binding="{Binding ContentItemGuid}" Header="Content Item Guid" />
-                            <DataGridTextColumn Width="20*" Binding="{Binding GameElementID}" Header="Game Element ID" />
-                            <DataGridTextColumn Width="20*" Binding="{Binding QuasarModTypeID}" Header="Quasar Mod Type ID" />
-                            <DataGridTextColumn Width="20*" Binding="{Binding SlotNumber}" Header="Slot" />
-                        </DataGrid.Columns>
-                    </DataGrid>
-                </Grid>
-            </TabItem>
             <TabItem Foreground="White" Header="Library Viewer">
                 <Grid Background="#212121">
                     <Grid.RowDefinitions>
@@ -50,20 +13,32 @@
                         <RowDefinition Height="1*" />
                     </Grid.RowDefinitions>
 
-                    <DataGrid ItemsSource="{Binding Library}" SelectedItem="{Binding SelectedLibraryItem}" AutoGenerateColumns="False">
+                    <DataGrid ItemsSource="{Binding Library}"
+                              SelectedItem="{Binding SelectedLibraryItem}"
+                              AutoGenerateColumns="False">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Width="20*" Binding="{Binding Guid}" Header="Library Item Guid" />
-                            <DataGridTextColumn Width="20*" Binding="{Binding Name}" Header="Name" />
-                            <DataGridTextColumn Width="20*" Binding="{Binding Time}" Header="Date Added" />
-                            <DataGridTextColumn Width="20*" Binding="{Binding ManualMod}" Header="Manual">
+                            <DataGridTextColumn Width="20*"
+                                                Binding="{Binding Guid}"
+                                                Header="Library Item Guid" />
+                            <DataGridTextColumn Width="20*"
+                                                Binding="{Binding Name}"
+                                                Header="Name" />
+                            <DataGridTextColumn Width="20*"
+                                                Binding="{Binding Time}"
+                                                Header="Date Added" />
+                            <DataGridTextColumn Width="20*"
+                                                Binding="{Binding ManualMod}"
+                                                Header="Manual">
                                 <DataGridTextColumn.CellStyle>
                                     <Style TargetType="{x:Type DataGridCell}">
                                         <Setter Property="Background" Value="#414141" />
                                         <Style.Triggers>
-                                            <DataTrigger Binding="{Binding ViewType}" Value="False">
+                                            <DataTrigger Binding="{Binding ViewType}"
+                                                         Value="False">
                                                 <Setter Property="Background" Value="{StaticResource AccentPink}" />
                                             </DataTrigger>
-                                            <DataTrigger Binding="{Binding ViewType}" Value="True">
+                                            <DataTrigger Binding="{Binding ViewType}"
+                                                         Value="True">
                                                 <Setter Property="Background" Value="{StaticResource AccentBlue}" />
                                             </DataTrigger>
                                         </Style.Triggers>
@@ -72,7 +47,8 @@
                             </DataGridTextColumn>
                         </DataGrid.Columns>
                     </DataGrid>
-                    <TextBlock Grid.Row="1" Margin="15,20,0,0">
+                    <TextBlock Grid.Row="1"
+                               Margin="15,20,0,0">
                         <Run Text="GB Item ID :  " /><Run Text="{Binding SelectedLibraryItem.GBItem.GamebananaItemID, Mode=OneWay}" /><LineBreak />
                         <Run Text="Root Cat GUID :  " /><Run Text="{Binding SelectedLibraryItem.GBItem.RootCategoryGuid, Mode=OneWay}" /><LineBreak />
                         <Run Text="Root Cat Name :  " /><Run Text="{Binding AssociatedRootCategory.Name, Mode=OneWay}" /><LineBreak />
@@ -92,25 +68,55 @@
                         <RowDefinition Height="1*" />
                     </Grid.RowDefinitions>
 
-                    <DataGrid ItemsSource="{Binding ContentItems}" SelectedItem="{Binding SelectedContentItem}" AutoGenerateColumns="False">
+                    <DataGrid ItemsSource="{Binding ContentItems}"
+                              SelectedItem="{Binding SelectedContentItem}"
+                              AutoGenerateColumns="False">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Width="250" Binding="{Binding Guid}" Header="Guid" />
-                            <DataGridTextColumn Width="250" Binding="{Binding LibraryItemGuid}" Header="Library Item" />
-                            <DataGridTextColumn Width="1*" Binding="{Binding Name}" Header="Name" />
-                            <DataGridTextColumn Width="50" Binding="{Binding QuasarModTypeID}" Header="QMT ID" />
-                            <DataGridTextColumn Width="50" Binding="{Binding SlotNumber}" Header="Slot" />
-                            <DataGridTextColumn Width="50" Binding="{Binding OriginalSlotNumber}" Header="OSlot" />
-                            <DataGridTextColumn Width="50" Binding="{Binding GameElementID}" Header="GE ID" />
-                            <DataGridTextColumn Width="50" Binding="{Binding OriginalGameElementID}" Header="OGE ID" />
+                            <DataGridTextColumn Width="250"
+                                                Binding="{Binding Guid}"
+                                                Header="Guid" />
+                            <DataGridTextColumn Width="250"
+                                                Binding="{Binding LibraryItemGuid}"
+                                                Header="Library Item" />
+                            <DataGridTextColumn Width="1*"
+                                                Binding="{Binding Name}"
+                                                Header="Name" />
+                            <DataGridTextColumn Width="50"
+                                                Binding="{Binding QuasarModTypeID}"
+                                                Header="QMT ID" />
+                            <DataGridTextColumn Width="50"
+                                                Binding="{Binding SlotNumber}"
+                                                Header="Slot" />
+                            <DataGridTextColumn Width="50"
+                                                Binding="{Binding OriginalSlotNumber}"
+                                                Header="OSlot" />
+                            <DataGridTextColumn Width="50"
+                                                Binding="{Binding GameElementID}"
+                                                Header="GE ID" />
+                            <DataGridTextColumn Width="50"
+                                                Binding="{Binding OriginalGameElementID}"
+                                                Header="OGE ID" />
                         </DataGrid.Columns>
                     </DataGrid>
-                    <DataGrid ItemsSource="{Binding SelectedContentItem.ScanFiles}" Grid.Row="1" AutoGenerateColumns="False">
+                    <DataGrid ItemsSource="{Binding SelectedContentItem.ScanFiles}"
+                              Grid.Row="1"
+                              AutoGenerateColumns="False">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Width="1*" Binding="{Binding SourcePath}" Header="Source" />
-                            <DataGridTextColumn Width="1*" Binding="{Binding OriginPath}" Header="Origin" />
-                            <DataGridTextColumn Width="50" Binding="{Binding GameElementID}" Header="GE" />
-                            <DataGridTextColumn Width="50" Binding="{Binding QuasarModTypeID}" Header="QMT" />
-                            <DataGridTextColumn Width="50" Binding="{Binding QuasarModTypeFileDefinitionID}" Header="QMTF" />
+                            <DataGridTextColumn Width="1*"
+                                                Binding="{Binding SourcePath}"
+                                                Header="Source" />
+                            <DataGridTextColumn Width="1*"
+                                                Binding="{Binding OriginPath}"
+                                                Header="Origin" />
+                            <DataGridTextColumn Width="50"
+                                                Binding="{Binding GameElementID}"
+                                                Header="GE" />
+                            <DataGridTextColumn Width="50"
+                                                Binding="{Binding QuasarModTypeID}"
+                                                Header="QMT" />
+                            <DataGridTextColumn Width="50"
+                                                Binding="{Binding QuasarModTypeFileDefinitionID}"
+                                                Header="QMTF" />
 
                         </DataGrid.Columns>
                     </DataGrid>
@@ -129,53 +135,89 @@
 
                     <ComboBox ItemsSource="{Binding Games}"
                               SelectedItem="{Binding SelectedGame}"
-                              Grid.Row="0" Grid.Column="0" Width="200" Margin="15,15" HorizontalAlignment="Left" VerticalAlignment="Top" DisplayMemberPath="Name" />
-                    <Button Grid.Column="1" Width="150" Margin="15,15,15,15" HorizontalAlignment="Right" VerticalAlignment="Top" Background="#FF640F0F"
+                              Grid.Row="0" Grid.Column="0"
+                              Width="200"
+                              Margin="15,15" HorizontalAlignment="Left" VerticalAlignment="Top"
+                              DisplayMemberPath="Name" />
+                    <Button Grid.Column="1"
+                            Width="150"
+                            Margin="15,15,15,15" HorizontalAlignment="Right" VerticalAlignment="Top"
+                            Background="#FF640F0F"
                             Command="{Binding SaveGameCommand}"
                             Content="Save" Foreground="#FFBF7E7E" />
-                    <Button Grid.Column="0" Width="150" Margin="250,15,15,15" HorizontalAlignment="Left" VerticalAlignment="Top" Background="#FF640F0F"
+                    <Button Grid.Column="0"
+                            Width="150"
+                            Margin="250,15,15,15" HorizontalAlignment="Left" VerticalAlignment="Top"
+                            Background="#FF640F0F"
                             Command="{Binding AddFamilyCommand}"
                             Content="Add Family" Foreground="#FFBF7E7E" />
-                    <Button Grid.Column="0" Width="150" Margin="450,15,15,15" HorizontalAlignment="Left" VerticalAlignment="Top" Background="#FF640F0F"
+                    <Button Grid.Column="0"
+                            Width="150"
+                            Margin="450,15,15,15" HorizontalAlignment="Left" VerticalAlignment="Top"
+                            Background="#FF640F0F"
                             Command="{Binding AddElementCommand}"
                             Content="Add Element" Foreground="#FFBF7E7E" />
                     <DataGrid ItemsSource="{Binding SelectedGame.GameElementFamilies}"
                               SelectedItem="{Binding SelectedGameElementFamily}"
-                              Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,50,0,0" AutoGenerateColumns="False" CanUserAddRows="False">
+                              Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
+                              Margin="0,50,0,0"
+                              AutoGenerateColumns="False" CanUserAddRows="False">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Width="30" Binding="{Binding ID}" Header="ID" />
-                            <DataGridTextColumn Width="1*" Binding="{Binding Name}" Header="Family Name" />
-                            <DataGridTextColumn Width="150" Binding="{Binding ViewType}" Header="View Type">
+                            <DataGridTextColumn Width="30"
+                                                Binding="{Binding ID}"
+                                                Header="ID" />
+                            <DataGridTextColumn Width="1*"
+                                                Binding="{Binding Name}"
+                                                Header="Family Name" />
+                            <DataGridTextColumn Width="150"
+                                                Binding="{Binding ViewType}"
+                                                Header="View Type">
                                 <DataGridTextColumn.CellStyle>
                                     <Style TargetType="{x:Type DataGridCell}">
                                         <Setter Property="Background" Value="#414141" />
                                         <Style.Triggers>
-                                            <DataTrigger Binding="{Binding ViewType}" Value="Detailed">
+                                            <DataTrigger Binding="{Binding ViewType}"
+                                                         Value="Detailed">
                                                 <Setter Property="Background" Value="{StaticResource AccentOrange}" />
                                             </DataTrigger>
-                                            <DataTrigger Binding="{Binding ViewType}" Value="Multi">
+                                            <DataTrigger Binding="{Binding ViewType}"
+                                                         Value="Multi">
                                                 <Setter Property="Background" Value="{StaticResource AccentBlue}" />
                                             </DataTrigger>
                                         </Style.Triggers>
                                     </Style>
                                 </DataGridTextColumn.CellStyle>
                             </DataGridTextColumn>
-                            <DataGridTextColumn Width="150" Binding="{Binding FilterName}" Header="Filter Name" />
+                            <DataGridTextColumn Width="150"
+                                                Binding="{Binding FilterName}"
+                                                Header="Filter Name" />
                         </DataGrid.Columns>
                     </DataGrid>
                     <DataGrid ItemsSource="{Binding SelectedGameElementFamily.GameElements}"
-                              Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" AutoGenerateColumns="False" CanUserAddRows="False">
+                              Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                              AutoGenerateColumns="False" CanUserAddRows="False">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Width="30" Binding="{Binding ID}" Header="ID" />
-                            <DataGridTextColumn Width="1*" Binding="{Binding Name}" Header="Element Name" />
-                            <DataGridTextColumn Width="1*" Binding="{Binding GameFolderName}" Header="Element Folder Name(s)" />
-                            <DataGridTextColumn Width="150" Binding="{Binding FilterValue}" Header="Filter Value" />
-                            <DataGridCheckBoxColumn Width="50" Binding="{Binding isDLC}" Header="DLC">
+                            <DataGridTextColumn Width="30"
+                                                Binding="{Binding ID}"
+                                                Header="ID" />
+                            <DataGridTextColumn Width="1*"
+                                                Binding="{Binding Name}"
+                                                Header="Element Name" />
+                            <DataGridTextColumn Width="1*"
+                                                Binding="{Binding GameFolderName}"
+                                                Header="Element Folder Name(s)" />
+                            <DataGridTextColumn Width="150"
+                                                Binding="{Binding FilterValue}"
+                                                Header="Filter Value" />
+                            <DataGridCheckBoxColumn Width="50"
+                                                    Binding="{Binding isDLC}"
+                                                    Header="DLC">
                                 <DataGridCheckBoxColumn.CellStyle>
                                     <Style TargetType="{x:Type DataGridCell}">
                                         <Setter Property="Background" Value="{StaticResource UnCheckedCellColor}" />
                                         <Style.Triggers>
-                                            <DataTrigger Binding="{Binding isDLC}" Value="True">
+                                            <DataTrigger Binding="{Binding isDLC}"
+                                                         Value="True">
                                                 <Setter Property="Background" Value="{StaticResource CheckedCellColor}" />
                                             </DataTrigger>
                                         </Style.Triggers>
@@ -193,99 +235,158 @@
                         <RowDefinition Height="1*" />
                     </Grid.RowDefinitions>
 
-                    <Button Width="200" Margin="15,15,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Background="Aquamarine"
+                    <Button Width="200"
+                            Margin="15,15,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
+                            Background="Aquamarine"
                             Command="{Binding SaveQMTCommand}"
                             Content="Save Quasar Mod Types" />
 
-                    <Button Width="200" Margin="230,15,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Background="Aquamarine"
+                    <Button Width="200"
+                            Margin="230,15,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
+                            Background="Aquamarine"
                             Command="{Binding EmptyQMTCommand}"
                             Content="Cleanup Empty Definitions" />
 
-                    <Button Width="200" Margin="445,15,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Background="Aquamarine"
+                    <Button Width="200"
+                            Margin="445,15,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
+                            Background="Aquamarine"
                             Command="{Binding AddQMTFCommand}"
                             Content="Add QMT File" />
 
                     <DataGrid ItemsSource="{Binding QuasarModTypes}"
                               SelectedItem="{Binding SelectedQuasarModType}"
-                              Grid.Row="0" Margin="0,50,0,0" AutoGenerateColumns="False" CanUserSortColumns="True">
+                              Grid.Row="0"
+                              Margin="0,50,0,0"
+                              AutoGenerateColumns="False" CanUserSortColumns="True">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Width="30" Binding="{Binding ID}" Header="ID" />
-                            <DataGridTextColumn Width="50" Binding="{Binding SlotCount}" Header="Slots" />
-                            <DataGridTextColumn Width="50" Binding="{Binding TypePriority}" Header="Priority" />
-                            <DataGridTextColumn Width="200" Binding="{Binding GroupName}" Header="Group" />
-                            <DataGridTextColumn Width="200" Binding="{Binding Name}" Header="Name" />
-                            <DataGridTextColumn Width="70" Binding="{Binding GameElementFamilyID}" Header="Family ID" />
-                            <DataGridCheckBoxColumn Width="95" Binding="{Binding IgnoreGameElementFamily}" Header="Ignore Family">
+                            <DataGridTextColumn Width="30"
+                                                Binding="{Binding ID}"
+                                                Header="ID" />
+                            <DataGridTextColumn Width="50"
+                                                Binding="{Binding SlotCount}"
+                                                Header="Slots" />
+                            <DataGridTextColumn Width="50"
+                                                Binding="{Binding TypePriority}"
+                                                Header="Priority" />
+                            <DataGridTextColumn Width="200"
+                                                Binding="{Binding GroupName}"
+                                                Header="Group" />
+                            <DataGridTextColumn Width="200"
+                                                Binding="{Binding Name}"
+                                                Header="Name" />
+                            <DataGridTextColumn Width="70"
+                                                Binding="{Binding GameElementFamilyID}"
+                                                Header="Family ID" />
+                            <DataGridCheckBoxColumn Width="95"
+                                                    Binding="{Binding BasicSearch}"
+                                                    Header="Basic Search">
                                 <DataGridCheckBoxColumn.CellStyle>
                                     <Style TargetType="{x:Type DataGridCell}">
                                         <Setter Property="Background" Value="{StaticResource UnCheckedCellColor}" />
                                         <Style.Triggers>
-                                            <DataTrigger Binding="{Binding IgnoreGameElementFamily}" Value="True">
+                                            <DataTrigger Binding="{Binding BasicSearch}"
+                                                         Value="True">
                                                 <Setter Property="Background" Value="{StaticResource CheckedCellColor}" />
                                             </DataTrigger>
                                         </Style.Triggers>
                                     </Style>
                                 </DataGridCheckBoxColumn.CellStyle>
                             </DataGridCheckBoxColumn>
-                            <DataGridCheckBoxColumn Width="95" Binding="{Binding NoGameElement}" Header="No Elements">
+                            <DataGridCheckBoxColumn Width="95"
+                                                    Binding="{Binding IgnoreGameElementFamily}"
+                                                    Header="Ignore Family">
                                 <DataGridCheckBoxColumn.CellStyle>
                                     <Style TargetType="{x:Type DataGridCell}">
                                         <Setter Property="Background" Value="{StaticResource UnCheckedCellColor}" />
                                         <Style.Triggers>
-                                            <DataTrigger Binding="{Binding NoGameElement}" Value="True">
+                                            <DataTrigger Binding="{Binding IgnoreGameElementFamily}"
+                                                         Value="True">
                                                 <Setter Property="Background" Value="{StaticResource CheckedCellColor}" />
                                             </DataTrigger>
                                         </Style.Triggers>
                                     </Style>
                                 </DataGridCheckBoxColumn.CellStyle>
                             </DataGridCheckBoxColumn>
-                            <DataGridCheckBoxColumn Width="75" Binding="{Binding IsExternal}" Header="External">
+                            <DataGridCheckBoxColumn Width="95"
+                                                    Binding="{Binding NoGameElement}"
+                                                    Header="No Elements">
                                 <DataGridCheckBoxColumn.CellStyle>
                                     <Style TargetType="{x:Type DataGridCell}">
                                         <Setter Property="Background" Value="{StaticResource UnCheckedCellColor}" />
                                         <Style.Triggers>
-                                            <DataTrigger Binding="{Binding IsExternal}" Value="True">
+                                            <DataTrigger Binding="{Binding NoGameElement}"
+                                                         Value="True">
                                                 <Setter Property="Background" Value="{StaticResource CheckedCellColor}" />
                                             </DataTrigger>
                                         </Style.Triggers>
                                     </Style>
                                 </DataGridCheckBoxColumn.CellStyle>
                             </DataGridCheckBoxColumn>
-                            <DataGridTextColumn Width="1*" Binding="{Binding ExternalFolderPath}" Header="External Path" />
+                            <DataGridCheckBoxColumn Width="75"
+                                                    Binding="{Binding IsExternal}"
+                                                    Header="External">
+                                <DataGridCheckBoxColumn.CellStyle>
+                                    <Style TargetType="{x:Type DataGridCell}">
+                                        <Setter Property="Background" Value="{StaticResource UnCheckedCellColor}" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsExternal}"
+                                                         Value="True">
+                                                <Setter Property="Background" Value="{StaticResource CheckedCellColor}" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </DataGridCheckBoxColumn.CellStyle>
+                            </DataGridCheckBoxColumn>
+                            <DataGridTextColumn Width="1*"
+                                                Binding="{Binding ExternalFolderPath}"
+                                                Header="External Path" />
                         </DataGrid.Columns>
                     </DataGrid>
 
                     <DataGrid ItemsSource="{Binding SelectedQuasarModType.QuasarModTypeFileDefinitions}"
                               SelectedItem="{Binding SelectedQuasarModTypeFileDefinition}"
-                              Grid.Row="1" AutoGenerateColumns="False">
+                              Grid.Row="1"
+                              AutoGenerateColumns="False">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Width="75" Binding="{Binding FilePriority}" Header="Priority" />
-                            <DataGridTextColumn Width="50" Binding="{Binding ID}" Header="ID" />
-                            <DataGridTextColumn Width="1*" Binding="{Binding SearchPath}" Header="Path">
+                            <DataGridTextColumn Width="75"
+                                                Binding="{Binding FilePriority}"
+                                                Header="Priority" />
+                            <DataGridTextColumn Width="50"
+                                                Binding="{Binding ID}"
+                                                Header="ID" />
+                            <DataGridTextColumn Width="1*"
+                                                Binding="{Binding SearchPath}"
+                                                Header="Path">
                                 <DataGridTextColumn.CellStyle>
                                     <Style TargetType="{x:Type DataGridCell}">
                                         <Setter Property="Background" Value="{StaticResource AccentOrange}" />
                                         <Style.Triggers>
-                                            <DataTrigger Binding="{Binding FolderMatch}" Value="True">
+                                            <DataTrigger Binding="{Binding FolderMatch}"
+                                                         Value="True">
                                                 <Setter Property="Background" Value="{StaticResource AccentGreen}" />
                                             </DataTrigger>
                                         </Style.Triggers>
                                     </Style>
                                 </DataGridTextColumn.CellStyle>
                             </DataGridTextColumn>
-                            <DataGridTextColumn Width="1*" Binding="{Binding OutputPath}" Header="Output Path">
+                            <DataGridTextColumn Width="1*"
+                                                Binding="{Binding OutputPath}"
+                                                Header="Output Path">
                                 <DataGridTextColumn.CellStyle>
                                     <Style TargetType="{x:Type DataGridCell}">
                                         <Setter Property="Background" Value="{StaticResource AccentOrange}" />
                                         <Style.Triggers>
-                                            <DataTrigger Binding="{Binding FolderMatch}" Value="True">
+                                            <DataTrigger Binding="{Binding FolderMatch}"
+                                                         Value="True">
                                                 <Setter Property="Background" Value="{StaticResource AccentGreen}" />
                                             </DataTrigger>
                                         </Style.Triggers>
                                     </Style>
                                 </DataGridTextColumn.CellStyle>
                             </DataGridTextColumn>
-                            <DataGridTextColumn Width="1*" Binding="{Binding SearchFileName}" Header="File Name" />
+                            <DataGridTextColumn Width="1*"
+                                                Binding="{Binding SearchFileName}"
+                                                Header="File Name" />
                         </DataGrid.Columns>
                     </DataGrid>
 
@@ -299,40 +400,53 @@
                             <Style TargetType="Grid">
                                 <Setter Property="Visibility" Value="Collapsed" />
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding Scanning}" Value="True">
+                                    <DataTrigger Binding="{Binding Scanning}"
+                                                 Value="True">
                                         <Setter Property="Visibility" Value="Visible" />
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
                         </Grid.Style>
-                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="150" Foreground="White" TextAlignment="Center">
+                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"
+                                   FontSize="150" Foreground="White" TextAlignment="Center">
                             <Run Text="Scanning Files" />
                             <LineBreak />
                             <Run Text="{Binding HumanTime}" />
                         </TextBlock>
                     </Grid>
 
-                    <GroupBox Height="150" Margin="15,15,15,0" VerticalAlignment="Top" Header="Setup">
+                    <GroupBox Height="150"
+                              Margin="15,15,15,0" VerticalAlignment="Top"
+                              Header="Setup">
 
                         <Grid>
-                            <Label HorizontalAlignment="Left" VerticalAlignment="Top" Content="Mod Select" />
+                            <Label HorizontalAlignment="Left" VerticalAlignment="Top"
+                                   Content="Mod Select" />
 
                             <ComboBox ItemsSource="{Binding Library}"
                                       SelectedItem="{Binding SelectedTestLibraryItem}"
-                                      Height="30" Margin="150,0,0,0" VerticalAlignment="Top" DisplayMemberPath="Name" />
-                            <Label Margin="0,40,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Path Select" />
-                            <TextBox Height="20" Margin="150,45,120,0" VerticalAlignment="Top"
+                                      Height="30"
+                                      Margin="150,0,0,0" VerticalAlignment="Top"
+                                      DisplayMemberPath="Name" />
+                            <Label Margin="0,40,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
+                                   Content="Path Select" />
+                            <TextBox Height="20"
+                                     Margin="150,45,120,0" VerticalAlignment="Top"
                                      Text="{Binding ScanPathText, Mode=Default}" />
-                            <Button Width="100" Height="20" Margin="0,0,0,59" HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                            <Button Width="100" Height="20"
+                                    Margin="0,0,0,59" HorizontalAlignment="Right" VerticalAlignment="Bottom"
                                     Command="{Binding PickPathCommand}"
                                     Content="Pick" />
-                            <Button Width="200" Height="20" Margin="5,0,5,5" HorizontalAlignment="Left" VerticalAlignment="Bottom"
+                            <Button Width="200" Height="20"
+                                    Margin="5,0,5,5" HorizontalAlignment="Left" VerticalAlignment="Bottom"
                                     Command="{Binding ScanModCommand}"
                                     Content="Scan Selected Mod" />
-                            <Button Width="200" Height="20" Margin="5,0,5,5" HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                            <Button Width="200" Height="20"
+                                    Margin="5,0,5,5" HorizontalAlignment="Right" VerticalAlignment="Bottom"
                                     Command="{Binding ScanPathCommand}"
                                     Content="Scan Selected Path" />
-                            <CheckBox Margin="250,0,0,5" HorizontalAlignment="Left" VerticalAlignment="Bottom" Content="Unrecognized files only" Foreground="White"
+                            <CheckBox Margin="250,0,0,5" HorizontalAlignment="Left" VerticalAlignment="Bottom"
+                                      Content="Unrecognized files only" Foreground="White"
                                       IsChecked="{Binding UnrecognizedFilter}" />
                             <TextBlock Margin="0,0,300,0" HorizontalAlignment="Right" VerticalAlignment="Bottom">
                                 <Run Text="Last Scan Time : " />
@@ -340,15 +454,31 @@
                             </TextBlock>
                         </Grid>
                     </GroupBox>
-                    <DataGrid ItemsSource="{Binding CollectionViewSource.View}" Margin="0,175,0,0" AutoGenerateColumns="False">
+                    <DataGrid ItemsSource="{Binding CollectionViewSource.View}"
+                              Margin="0,175,0,0"
+                              AutoGenerateColumns="False">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Width="1*" Binding="{Binding ScanFile.SourcePath}" Header="File Path" />
-                            <DataGridTextColumn Width="1*" Binding="{Binding ScanFile.OriginPath}" Header="Origin Path" />
-                            <DataGridTextColumn Width="1*" Binding="{Binding ScanFile.DestinationPath}" Header="Destination" />
-                            <DataGridTextColumn Width="1*" Binding="{Binding ScanFile.QuasarModTypeName}" Header="QMT" />
-                            <DataGridTextColumn Width="1*" Binding="{Binding ScanFile.QuasarModTypeFileRule}" Header="FID" />
-                            <DataGridTextColumn Width="50" Binding="{Binding ScanFile.Slot}" Header="Slot" />
-                            <DataGridTextColumn Width="Auto" Binding="{Binding ScanFile.Scanned}" Header="Scanned" />
+                            <DataGridTextColumn Width="1*"
+                                                Binding="{Binding ScanFile.SourcePath}"
+                                                Header="File Path" />
+                            <DataGridTextColumn Width="1*"
+                                                Binding="{Binding ScanFile.OriginPath}"
+                                                Header="Origin Path" />
+                            <DataGridTextColumn Width="1*"
+                                                Binding="{Binding ScanFile.DestinationPath}"
+                                                Header="Destination" />
+                            <DataGridTextColumn Width="1*"
+                                                Binding="{Binding ScanFile.QuasarModTypeName}"
+                                                Header="QMT" />
+                            <DataGridTextColumn Width="1*"
+                                                Binding="{Binding ScanFile.QuasarModTypeFileRule}"
+                                                Header="FID" />
+                            <DataGridTextColumn Width="50"
+                                                Binding="{Binding ScanFile.Slot}"
+                                                Header="Slot" />
+                            <DataGridTextColumn Width="Auto"
+                                                Binding="{Binding ScanFile.Scanned}"
+                                                Header="Scanned" />
                         </DataGrid.Columns>
                         <DataGrid.RowStyle>
                             <Style TargetType="DataGridRow">
@@ -389,29 +519,36 @@
             </TabItem>
             <TabItem Foreground="White" Header="Paths">
                 <Grid Background="#212121">
-                    <Label Margin="15,15,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Repo" />
-                    <TextBox Width="500" Margin="115,20,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
+                    <Label Margin="15,15,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
+                           Content="Repo" />
+                    <TextBox Width="500"
+                             Margin="115,20,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
                              Text="{Binding RepoPath}" />
 
-                    <Button Width="200" Margin="15,115,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Background="#FF931010"
+                    <Button Width="200"
+                            Margin="15,115,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
+                            Background="#FF931010"
                             Command="{Binding SavePathCommand}"
                             Content="Save" />
 
                 </Grid>
             </TabItem>
 
-            <TabItem Foreground="Red" Header="Not ADMIN" Template="{StaticResource TabItemControl}">
+            <TabItem Foreground="Red" Header="Not ADMIN"
+                     Template="{StaticResource TabItemControl}">
                 <TabItem.Style>
                     <Style TargetType="TabItem">
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding IsAdmin}" Value="true">
+                            <DataTrigger Binding="{Binding IsAdmin}"
+                                         Value="true">
                                 <Setter Property="Visibility" Value="Collapsed" />
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>
                 </TabItem.Style>
                 <Grid Background="Black">
-                    <Label HorizontalAlignment="Center" VerticalAlignment="Center" Content="YOU ARE NOT ADMIN" FontSize="44" Foreground="Red" />
+                    <Label HorizontalAlignment="Center" VerticalAlignment="Center"
+                           Content="YOU ARE NOT ADMIN" FontSize="44" Foreground="Red" />
                 </Grid>
             </TabItem>
         </TabControl>

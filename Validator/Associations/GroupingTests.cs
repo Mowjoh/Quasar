@@ -146,7 +146,7 @@ namespace Validator.Grouping
                 }
             };
 
-            ObservableCollection<AssignmentContent> AssignmentContents = Grouper.GetAssignmentContents(LibraryItem, TestContentItems, false);
+            ObservableCollection<AssignmentContent> AssignmentContents = Grouper.GetAssignmentContents(TestContentItems, false);
 
             //There should only be the first three contents
             Assert.True(AssignmentContents.Count == 3);
@@ -319,7 +319,7 @@ namespace Validator.Grouping
                 },
             };
 
-            ObservableCollection<AssignmentContent> AssignmentContents = Grouper.GetAssignmentContents(LibraryItem, TestContentItems, true);
+            ObservableCollection<AssignmentContent> AssignmentContents = Grouper.GetAssignmentContents(TestContentItems, true);
 
             Assert.True(AssignmentContents.Count == 5);
             Assert.True(AssignmentContents[0].AssignmentContentItems.Count == 2);

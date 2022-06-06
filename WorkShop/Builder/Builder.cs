@@ -39,7 +39,7 @@ namespace Workshop.Builder
 
                         if (Directory.Exists(LibraryContentFolderPath))
                         {
-                            ObservableCollection<ScanFile> ScanFiles = FileScanner.GetScanFiles(LibraryContentFolderPath);
+                            List<ScanFile> ScanFiles = FileScanner.GetScanFiles(LibraryContentFolderPath);
                             ScanFiles = FileScanner.FilterIgnoredFiles(ScanFiles);
 
                             foreach (ScanFile ScanFile in ScanFiles)

@@ -7,7 +7,8 @@
         <Style TargetType="{x:Type UserControl}">
             <Setter Property="Height" Value="44" />
             <Style.Triggers>
-                <DataTrigger Binding="{Binding Smol}" Value="false">
+                <DataTrigger Binding="{Binding Smol}"
+                             Value="false">
                     <Setter Property="Height" Value="217" />
                 </DataTrigger>
             </Style.Triggers>
@@ -17,28 +18,33 @@
     <UserControl.Resources>
 
         <Style x:Key="FinishedLabel"
-               BasedOn="{StaticResource CutieLabelStyle}" TargetType="{x:Type Label}">
+               BasedOn="{StaticResource CutieLabelStyle}"
+               TargetType="{x:Type Label}">
             <Setter Property="FontSize" Value="14" />
             <Setter Property="Visibility" Value="Visible" />
             <Style.Triggers>
-                <DataTrigger Binding="{Binding Downloading}" Value="True">
+                <DataTrigger Binding="{Binding Downloading}"
+                             Value="True">
                     <Setter Property="Visibility" Value="Hidden" />
                 </DataTrigger>
             </Style.Triggers>
         </Style>
 
         <Style x:Key="DownloadingLabel"
-               BasedOn="{StaticResource CutieLabelStyle}" TargetType="{x:Type Label}">
+               BasedOn="{StaticResource CutieLabelStyle}"
+               TargetType="{x:Type Label}">
             <Setter Property="FontSize" Value="14" />
             <Setter Property="Visibility" Value="Hidden" />
             <Style.Triggers>
-                <DataTrigger Binding="{Binding Downloading}" Value="True">
+                <DataTrigger Binding="{Binding Downloading}"
+                             Value="True">
                     <Setter Property="Visibility" Value="Visible" />
                 </DataTrigger>
             </Style.Triggers>
         </Style>
 
-        <Style x:Key="DownloadBar" TargetType="{x:Type ProgressBar}">
+        <Style x:Key="DownloadBar"
+               TargetType="{x:Type ProgressBar}">
             <Setter Property="Background" Value="#6B000000" />
             <Setter Property="BorderBrush" Value="{x:Null}" />
             <Setter Property="BorderThickness" Value="0" />
@@ -46,20 +52,24 @@
             <Setter Property="Height" Value="10" />
             <Setter Property="Visibility" Value="Hidden" />
             <Style.Triggers>
-                <DataTrigger Binding="{Binding Downloading}" Value="True">
+                <DataTrigger Binding="{Binding Downloading}"
+                             Value="True">
                     <Setter Property="Visibility" Value="Visible" />
                 </DataTrigger>
             </Style.Triggers>
         </Style>
 
-        <Style x:Key="StateColor" TargetType="{x:Type Path}">
+        <Style x:Key="StateColor"
+               TargetType="{x:Type Path}">
             <Setter Property="Fill" Value="{StaticResource DefaultColor}" />
             <Setter Property="Stroke" Value="AliceBlue" />
             <Style.Triggers>
-                <DataTrigger Binding="{Binding LibraryItem.Included}" Value="True">
+                <DataTrigger Binding="{Binding LibraryItem.Included}"
+                             Value="True">
                     <Setter Property="Fill" Value="green" />
                 </DataTrigger>
-                <DataTrigger Binding="{Binding LibraryItem.Included}" Value="False">
+                <DataTrigger Binding="{Binding LibraryItem.Included}"
+                             Value="False">
                     <Setter Property="Fill" Value="Red" />
                 </DataTrigger>
                 <MultiDataTrigger>
@@ -72,62 +82,119 @@
             </Style.Triggers>
         </Style>
 
-        <Style x:Key="ModColor" TargetType="{x:Type Path}">
+        <Style x:Key="ModColor"
+               TargetType="{x:Type Path}">
             <Setter Property="Fill" Value="{StaticResource DefaultDarkColor}" />
             <Setter Property="Stroke" Value="AliceBlue" />
             <Style.Triggers>
-                <DataTrigger Binding="{Binding AssociatedRootCategory.Name}" Value="Skins">
+                <DataTrigger Binding="{Binding AssociatedRootCategory.Name}"
+                             Value="Skins">
                     <Setter Property="Fill" Value="{StaticResource SkinDarkColor}" />
                 </DataTrigger>
-                <DataTrigger Binding="{Binding AssociatedRootCategory.Name}" Value="Stages">
+                <DataTrigger Binding="{Binding AssociatedRootCategory.Name}"
+                             Value="Stages">
                     <Setter Property="Fill" Value="{StaticResource MapDarkColor}" />
                 </DataTrigger>
-                <DataTrigger Binding="{Binding AssociatedRootCategory.Name}" Value="Other/Misc">
+                <DataTrigger Binding="{Binding AssociatedRootCategory.Name}"
+                             Value="Other/Misc">
                     <Setter Property="Fill" Value="{StaticResource OtherDarkColor}" />
                 </DataTrigger>
-                <DataTrigger Binding="{Binding AssociatedRootCategory.Name}" Value="Effects">
+                <DataTrigger Binding="{Binding AssociatedRootCategory.Name}"
+                             Value="Effects">
                     <Setter Property="Fill" Value="{StaticResource EffectDarkColor}" />
                 </DataTrigger>
-                <DataTrigger Binding="{Binding AssociatedRootCategory.Name}" Value="Skyline">
+                <DataTrigger Binding="{Binding AssociatedRootCategory.Name}"
+                             Value="Skyline">
                     <Setter Property="Fill" Value="{StaticResource SkylineDarkColor}" />
                 </DataTrigger>
-                <DataTrigger Binding="{Binding AssociatedRootCategory.Name}" Value="Animation">
+                <DataTrigger Binding="{Binding AssociatedRootCategory.Name}"
+                             Value="Animation">
                     <Setter Property="Fill" Value="{StaticResource AnimationDarkColor}" />
                 </DataTrigger>
-                <DataTrigger Binding="{Binding AssociatedRootCategory.Name}" Value="Sound">
+                <DataTrigger Binding="{Binding AssociatedRootCategory.Name}"
+                             Value="Sound">
                     <Setter Property="Fill" Value="{StaticResource SoundDarkColor}" />
                 </DataTrigger>
-                <DataTrigger Binding="{Binding AssociatedRootCategory.Name}" Value="UI">
+                <DataTrigger Binding="{Binding AssociatedRootCategory.Name}"
+                             Value="UI">
                     <Setter Property="Fill" Value="{StaticResource GUIDarkColor}" />
                 </DataTrigger>
             </Style.Triggers>
         </Style>
 
-        <Style x:Key="ModListItemBackground" TargetType="{x:Type Grid}">
-            <Setter Property="Background" Value="{DynamicResource DefaultDarkColor}" />
+        <Style x:Key="ModGridColor"
+               TargetType="{x:Type Grid}">
+            <Setter Property="Background" Value="{StaticResource DefaultDarkColor}" />
             <Style.Triggers>
-                <DataTrigger Binding="{Binding AssociatedRootCategory.Name}" Value="Skins">
+                <DataTrigger Binding="{Binding AssociatedRootCategory.Name}"
+                             Value="Skins">
                     <Setter Property="Background" Value="{StaticResource SkinDarkColor}" />
                 </DataTrigger>
-                <DataTrigger Binding="{Binding AssociatedRootCategory.Name}" Value="Stages">
+                <DataTrigger Binding="{Binding AssociatedRootCategory.Name}"
+                             Value="Stages">
                     <Setter Property="Background" Value="{StaticResource MapDarkColor}" />
                 </DataTrigger>
-                <DataTrigger Binding="{Binding AssociatedRootCategory.Name}" Value="Other/Misc">
+                <DataTrigger Binding="{Binding AssociatedRootCategory.Name}"
+                             Value="Other/Misc">
                     <Setter Property="Background" Value="{StaticResource OtherDarkColor}" />
                 </DataTrigger>
-                <DataTrigger Binding="{Binding AssociatedRootCategory.Name}" Value="Effects">
+                <DataTrigger Binding="{Binding AssociatedRootCategory.Name}"
+                             Value="Effects">
                     <Setter Property="Background" Value="{StaticResource EffectDarkColor}" />
                 </DataTrigger>
-                <DataTrigger Binding="{Binding AssociatedRootCategory.Name}" Value="Skyline">
+                <DataTrigger Binding="{Binding AssociatedRootCategory.Name}"
+                             Value="Skyline">
                     <Setter Property="Background" Value="{StaticResource SkylineDarkColor}" />
                 </DataTrigger>
-                <DataTrigger Binding="{Binding AssociatedRootCategory.Name}" Value="Animation">
+                <DataTrigger Binding="{Binding AssociatedRootCategory.Name}"
+                             Value="Animation">
                     <Setter Property="Background" Value="{StaticResource AnimationDarkColor}" />
                 </DataTrigger>
-                <DataTrigger Binding="{Binding AssociatedRootCategory.Name}" Value="Sound">
+                <DataTrigger Binding="{Binding AssociatedRootCategory.Name}"
+                             Value="Sound">
                     <Setter Property="Background" Value="{StaticResource SoundDarkColor}" />
                 </DataTrigger>
-                <DataTrigger Binding="{Binding AssociatedRootCategory.Name}" Value="UI">
+                <DataTrigger Binding="{Binding AssociatedRootCategory.Name}"
+                             Value="UI">
+                    <Setter Property="Background" Value="{StaticResource GUIDarkColor}" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="ModListItemBackground"
+               TargetType="{x:Type Grid}">
+            <Setter Property="Background" Value="{DynamicResource DefaultDarkColor}" />
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding AssociatedRootCategory.Name}"
+                             Value="Skins">
+                    <Setter Property="Background" Value="{StaticResource SkinDarkColor}" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding AssociatedRootCategory.Name}"
+                             Value="Stages">
+                    <Setter Property="Background" Value="{StaticResource MapDarkColor}" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding AssociatedRootCategory.Name}"
+                             Value="Other/Misc">
+                    <Setter Property="Background" Value="{StaticResource OtherDarkColor}" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding AssociatedRootCategory.Name}"
+                             Value="Effects">
+                    <Setter Property="Background" Value="{StaticResource EffectDarkColor}" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding AssociatedRootCategory.Name}"
+                             Value="Skyline">
+                    <Setter Property="Background" Value="{StaticResource SkylineDarkColor}" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding AssociatedRootCategory.Name}"
+                             Value="Animation">
+                    <Setter Property="Background" Value="{StaticResource AnimationDarkColor}" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding AssociatedRootCategory.Name}"
+                             Value="Sound">
+                    <Setter Property="Background" Value="{StaticResource SoundDarkColor}" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding AssociatedRootCategory.Name}"
+                             Value="UI">
                     <Setter Property="Background" Value="{StaticResource GUIDarkColor}" />
                 </DataTrigger>
 
@@ -136,7 +203,8 @@
 
     </UserControl.Resources>
 
-    <Grid Width="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBox}}, Path=ActualWidth}" Background="Transparent">
+    <Grid Width="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBox}}, Path=ActualWidth}"
+          Background="Transparent">
 
         <Grid Margin="0,0,30,0">
 
@@ -154,10 +222,13 @@
             <!--  Left Side Color  -->
             <Path x:Name="BorderColor"
                   Grid.RowSpan="3" Grid.ColumnSpan="2"
-                  Stroke="{StaticResource CutieBG01}" StrokeThickness="2" Style="{DynamicResource ModColor}">
+                  Stroke="{StaticResource CutieBG01}"
+                  StrokeThickness="2"
+                  Style="{DynamicResource ModColor}">
 
                 <Path.Data>
-                    <RectangleGeometry RadiusX="5" RadiusY="5" Rect="{Binding Rekt}" />
+                    <RectangleGeometry RadiusX="5" RadiusY="5"
+                                       Rect="{Binding Rekt}" />
                 </Path.Data>
 
             </Path>
@@ -166,10 +237,13 @@
             <Path x:Name="SateColorPath"
                   Grid.RowSpan="3" Grid.Column="3"
                   Margin="-40,0,0,0"
-                  Stroke="{StaticResource CutieBG01}" StrokeThickness="2" Style="{DynamicResource StateColor}">
+                  Stroke="{StaticResource CutieBG01}"
+                  StrokeThickness="2"
+                  Style="{DynamicResource StateColor}">
 
                 <Path.Data>
-                    <RectangleGeometry RadiusX="5" RadiusY="5" Rect="{Binding Rekta}" />
+                    <RectangleGeometry RadiusX="5" RadiusY="5"
+                                       Rect="{Binding Rekta}" />
                 </Path.Data>
 
             </Path>
@@ -177,18 +251,22 @@
             <!--  Download Fail Action Grid  -->
             <Grid Grid.Row="0" Grid.RowSpan="2" Grid.Column="1"
                   Panel.ZIndex="100"
-                  Background="{StaticResource CutieBG08}" Visibility="{Binding DownloadFailed, Converter={StaticResource BoolVisi}}">
+                  Background="{StaticResource CutieBG08}"
+                  Visibility="{Binding DownloadFailed, Converter={StaticResource BoolVisi}}">
 
                 <Label HorizontalAlignment="Center" VerticalAlignment="Center"
-                       Content="Download Failed" Style="{StaticResource CutieLabelStyle}" />
+                       Content="Download Failed"
+                       Style="{StaticResource CutieLabelStyle}" />
 
                 <StackPanel FlowDirection="RightToLeft" Orientation="Horizontal">
 
                     <Button Margin="10,0,0,0"
-                            Command="{Binding Path=DeleteModCommand}" Template="{StaticResource ActionTrashButton}" />
+                            Command="{Binding Path=DeleteModCommand}"
+                            Template="{StaticResource ActionTrashButton}" />
 
                     <Button Margin="10,0,0,0"
-                            Command="{Binding Path=RetryDownloadCommand}" Template="{StaticResource ActionRetryButton}" />
+                            Command="{Binding Path=RetryDownloadCommand}"
+                            Template="{StaticResource ActionRetryButton}" />
 
                 </StackPanel>
 
@@ -197,7 +275,7 @@
             <!--  Top Grid  -->
             <Grid x:Name="TopGrid"
                   Grid.Row="0" Grid.Column="1"
-                  Style="{DynamicResource ModListItemBackground}">
+                  Style="{DynamicResource ModGridColor}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="30" />
                     <ColumnDefinition Width="30*" />
@@ -210,40 +288,56 @@
                 <!--  Expand Retract Arrow  -->
                 <Button Grid.Column="0"
                         VerticalAlignment="Center"
-                        Command="{Binding Path=BigSmolCommand}" Template="{StaticResource ActionArrowButton}" />
+                        Command="{Binding Path=BigSmolCommand}"
+                        Template="{StaticResource ActionArrowButton}" />
 
                 <!--#region  Normal Mod UI-->
                 <TextBlock Grid.Column="1"
                            Margin="10,0,0,0" VerticalAlignment="Center"
-                           Style="{StaticResource CutieTextBlockStyle}" Text="{Binding Path=LibraryItem.Name}" Visibility="{Binding Path=StandbyNotEditing, Converter={StaticResource BoolVisi}}" />
+                           Style="{StaticResource CutieTextBlockStyle}"
+                           Text="{Binding Path=LibraryItem.Name}"
+                           Visibility="{Binding Path=StandbyNotEditing, Converter={StaticResource BoolVisi}}" />
 
                 <TextBox x:Name="NameTextBox"
                          Grid.Column="1"
                          Margin="10,0,10,0" VerticalAlignment="Center"
-                         KeyDown="ModNameKeyDown" Style="{StaticResource CutieTextBoxStyle}" Text="{Binding Path=LibraryItem.Name, UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding Path=StandbyEditing, Converter={StaticResource BoolVisi}}" />
+                         KeyDown="ModNameKeyDown"
+                         Style="{StaticResource CutieTextBoxStyle}"
+                         Text="{Binding Path=LibraryItem.Name, UpdateSourceTrigger=PropertyChanged}"
+                         Visibility="{Binding Path=StandbyEditing, Converter={StaticResource BoolVisi}}" />
 
 
                 <TextBlock Grid.Column="2"
                            VerticalAlignment="Center"
-                           Style="{StaticResource CutieTextBlockStyle}" Text="{Binding Path=APICategoryName}" Visibility="{Binding Path=Standby, Converter={StaticResource BoolVisi}}" />
+                           Style="{StaticResource CutieTextBlockStyle}"
+                           Text="{Binding Path=APICategoryName}"
+                           Visibility="{Binding Path=Standby, Converter={StaticResource BoolVisi}}" />
 
                 <TextBlock Grid.Column="3"
                            VerticalAlignment="Center"
-                           Style="{StaticResource CutieTextBlockStyle}" Text="{Binding Path=APISubCategoryName}" Visibility="{Binding Path=Standby, Converter={StaticResource BoolVisi}}" />
+                           Style="{StaticResource CutieTextBlockStyle}"
+                           Text="{Binding Path=APISubCategoryName}"
+                           Visibility="{Binding Path=Standby, Converter={StaticResource BoolVisi}}" />
 
                 <TextBlock Grid.Column="4"
                            VerticalAlignment="Center"
-                           Style="{StaticResource CutieTextBlockStyle}" Text="{Binding Path=HumanTime}" Visibility="{Binding Path=Standby, Converter={StaticResource BoolVisi}}" />
+                           Style="{StaticResource CutieTextBlockStyle}"
+                           Text="{Binding Path=HumanTime}"
+                           Visibility="{Binding Path=Standby, Converter={StaticResource BoolVisi}}" />
                 <!--#endregion-->
 
                 <!--#region  Download UI-->
                 <TextBlock Grid.Column="1"
                            Margin="0,0,15,0" HorizontalAlignment="right" VerticalAlignment="Center"
-                           Style="{StaticResource CutieTextBlockStyle}" Text="{Binding ModStatusValue}" Visibility="{Binding Path=Downloading, Converter={StaticResource BoolVisi}}" />
+                           Style="{StaticResource CutieTextBlockStyle}"
+                           Text="{Binding ModStatusValue}"
+                           Visibility="{Binding Path=Downloading, Converter={StaticResource BoolVisi}}" />
 
                 <TextBlock Grid.Column="2" Grid.ColumnSpan="3"
                            HorizontalAlignment="Center" VerticalAlignment="Center" Panel.ZIndex="100"
-                           Style="{StaticResource CutieTextBlockStyle}" Text="{Binding ModStatusTextValue}" Visibility="{Binding Path=Downloading, Converter={StaticResource BoolVisi}}" />
+                           Style="{StaticResource CutieTextBlockStyle}"
+                           Text="{Binding ModStatusTextValue}"
+                           Visibility="{Binding Path=Downloading, Converter={StaticResource BoolVisi}}" />
 
                 <ProgressBar Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="3"
                              VerticalAlignment="Center"
@@ -254,32 +348,37 @@
                 <!--  Actions  -->
                 <WrapPanel Grid.Column="5"
                            Height="30"
-                           FlowDirection="RightToLeft" Visibility="{Binding Path=Standby, Converter={StaticResource BoolVisi}}">
+                           FlowDirection="RightToLeft"
+                           Visibility="{Binding Path=Standby, Converter={StaticResource BoolVisi}}">
 
                     <!--  Delete Button  -->
                     <Button Margin="10,0,0,0"
-                            Command="{Binding Path=DeleteModCommand}" Template="{StaticResource ActionTrashButton}" ToolTip="{x:Static p:Resources.ModItem_Tooltip_DeleteMod}" />
+                            Command="{Binding Path=DeleteModCommand}"
+                            Template="{StaticResource ActionTrashButton}"
+                            ToolTip="{x:Static p:Resources.ModItem_Tooltip_DeleteMod}" />
 
                     <!--  In/Out Button  -->
                     <Button Margin="10,0,0,0"
-                            Command="{Binding Path=AddModCommand}" Template="{StaticResource ActionProcessModButton}" ToolTip="{x:Static p:Resources.ModItem_Tooltip_RemoveMod}" />
-
-                    <!--  Reassign Button  -->
-                    <Button Margin="10,0,0,0"
-                            Command="{Binding Path=AssignCommand}" Template="{StaticResource ActionAssignModButton}" ToolTip="{x:Static p:Resources.ModItem_Tooltip_AssignMod}" />
+                            Command="{Binding Path=AddModCommand}"
+                            Template="{StaticResource ActionProcessModButton}"
+                            ToolTip="{x:Static p:Resources.ModItem_Tooltip_RemoveMod}" />
 
                     <!--  Rename Button  -->
                     <Button Margin="30,0,0,0"
-                            Command="{Binding Path=RenameCommand}" Template="{StaticResource ActionEditNameButton}" ToolTip="{x:Static p:Resources.ModItem_Tooltip_RenameMod}" Visibility="{Binding Path=LibraryItem.ManualMod, Converter={StaticResource BoolVisi}}" />
+                            Command="{Binding Path=RenameCommand}"
+                            Template="{StaticResource ActionEditNameButton}"
+                            ToolTip="{x:Static p:Resources.ModItem_Tooltip_RenameMod}"
+                            Visibility="{Binding Path=LibraryItem.ManualMod, Converter={StaticResource BoolVisi}}" />
 
                 </WrapPanel>
 
             </Grid>
 
             <Grid Grid.Row="1" Grid.Column="1"
-                  Background="{StaticResource CutieBG08}">
+                  Style="{DynamicResource ModGridColor}">
 
-                <Grid Height="1" Margin="30,0" VerticalAlignment="Top"
+                <Grid Height="1"
+                      Margin="30,0" VerticalAlignment="Top"
                       Background="#6C6C6C" />
 
             </Grid>
@@ -287,7 +386,7 @@
             <!--  Bottom Grid  -->
             <Grid x:Name="BottomGrid"
                   Grid.Row="2" Grid.Column="1"
-                  Background="{DynamicResource CutieBG08}">
+                  Style="{DynamicResource ModGridColor}">
 
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="225" />
@@ -309,7 +408,8 @@
                         <Style TargetType="Grid">
                             <Setter Property="Visibility" Value="Collapsed" />
                             <Style.Triggers>
-                                <DataTrigger Binding="{Binding LibraryItem.ManualMod}" Value="False">
+                                <DataTrigger Binding="{Binding LibraryItem.ManualMod}"
+                                             Value="False">
                                     <Setter Property="Visibility" Value="Visible" />
                                 </DataTrigger>
                             </Style.Triggers>
@@ -319,15 +419,18 @@
                     <!--  Version Control  -->
                     <Label Grid.Column="1"
                            HorizontalAlignment="Center" VerticalAlignment="top"
-                           Content="{x:Static p:Resources.ModListItem_Label_VersionControl}" Style="{StaticResource CutieLabelStyle}" />
+                           Content="{x:Static p:Resources.ModListItem_Label_VersionControl}"
+                           Style="{StaticResource CutieLabelStyle}" />
 
                     <Label Grid.Column="1"
                            Margin="16,50,0,0" HorizontalAlignment="Left" VerticalAlignment="top"
-                           Content="{x:Static p:Resources.ModListItem_Label_UpdateCount}" Style="{StaticResource CutieLabelStyle}" />
+                           Content="{x:Static p:Resources.ModListItem_Label_UpdateCount}"
+                           Style="{StaticResource CutieLabelStyle}" />
 
                     <Label Grid.Column="1"
                            Margin="115,50,0,0" HorizontalAlignment="Left" VerticalAlignment="top"
-                           Content="{Binding LibraryItem.GBItem.UpdateCount}" Style="{StaticResource CutieLabelStyle}" />
+                           Content="{Binding LibraryItem.GBItem.UpdateCount}"
+                           Style="{StaticResource CutieLabelStyle}" />
 
                     <!--<Button Grid.Column="1"
                             Width="200" Margin="0,100,0,0" HorizontalAlignment="Center" VerticalAlignment="Top"
@@ -343,7 +446,8 @@
                         <Style TargetType="Grid">
                             <Setter Property="Visibility" Value="Collapsed" />
                             <Style.Triggers>
-                                <DataTrigger Binding="{Binding LibraryItem.ManualMod}" Value="True">
+                                <DataTrigger Binding="{Binding LibraryItem.ManualMod}"
+                                             Value="True">
                                     <Setter Property="Visibility" Value="Visible" />
                                 </DataTrigger>
                             </Style.Triggers>
@@ -353,32 +457,38 @@
                     <!--  Manual Control  -->
                     <Label Grid.Column="1"
                            HorizontalAlignment="Center" VerticalAlignment="top"
-                           Content="Options" Style="{StaticResource CutieLabelStyle}" />
+                           Content="Options"
+                           Style="{StaticResource CutieLabelStyle}" />
 
                     <Button Grid.Column="1"
-                            Width="200" Margin="0,100,0,0" HorizontalAlignment="Center" VerticalAlignment="Top"
-                            Command="{Binding Path=ShowContentsCommand}" Content="{x:Static p:Resources.ModListItem_Button_EditFiles}" Template="{StaticResource CutieSmallButtonTemplate}" />
+                            Width="200"
+                            Margin="0,100,0,0" HorizontalAlignment="Center" VerticalAlignment="Top"
+                            Command="{Binding Path=ShowContentsCommand}"
+                            Content="{x:Static p:Resources.ModListItem_Button_EditFiles}"
+                            Template="{StaticResource CutieSmallButtonTemplate}" />
 
                 </Grid>
                 <!--#endregion-->
 
                 <!--  Separator  -->
                 <Grid Grid.Column="1"
-                      Width="1" Height="130" HorizontalAlignment="Right" VerticalAlignment="Center"
+                      Width="1" Height="130"
+                      HorizontalAlignment="Right" VerticalAlignment="Center"
                       Background="#6C6C6C" />
 
                 <!--#region  Authors Panel-->
                 <Label Grid.Column="2" Grid.ColumnSpan="2"
                        HorizontalAlignment="Center" VerticalAlignment="top"
-                       Content="{x:Static p:Resources.ModListItem_Label_Author}" Style="{StaticResource CutieLabelStyle}" />
+                       Content="{x:Static p:Resources.ModListItem_Label_Author}"
+                       Style="{StaticResource CutieLabelStyle}" />
 
-                <ItemsControl ItemsSource="{Binding Authors}"
-                              x:Name="AutorNameStackPanel"
+                <ItemsControl x:Name="AutorNameStackPanel"
+                              ItemsSource="{Binding Authors}"
                               Grid.Column="2"
                               Margin="10,30,0,0" />
 
-                <ItemsControl ItemsSource="{Binding Roles}"
-                              x:Name="AutorRoleStackPanel"
+                <ItemsControl x:Name="AutorRoleStackPanel"
+                              ItemsSource="{Binding Roles}"
                               Grid.Column="3"
                               Margin="0,30,0,0" />
                 <!--#endregion-->

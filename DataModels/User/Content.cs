@@ -29,9 +29,11 @@ namespace DataModels.User
     public class AssignmentContent
     {
         public string AssignmentName { get; set; }
-
+        public string AssignmentType { get; set; }
         public int SlotNumber { get; set; }
+        public int HumanSlotNumber => (SlotNumber + 1);
         public ObservableCollection<ContentItem> AssignmentContentItems { get; set; }
+        public ContentItem DefaultContentItem => AssignmentContentItems[0];
         public bool Single => AssignmentContentItems.Count == 1;
     }
 

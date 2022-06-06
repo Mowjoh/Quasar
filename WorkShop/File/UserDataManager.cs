@@ -15,7 +15,12 @@ namespace Workshop.FileManagement
     public class UserDataManager
     {
         //User Loads
-        public static ObservableCollection<LibraryItem> GetLibrary(string _QuasarFolderPath)
+        public static void GetSeparatedContent()
+        {
+
+        }
+
+        public static ObservableCollection<LibraryItem> GetSingleFileLibrary(string _QuasarFolderPath)
         {
             ObservableCollection<LibraryItem> Library = new ObservableCollection<LibraryItem>();
 
@@ -40,9 +45,36 @@ namespace Workshop.FileManagement
             return Library;
         }
 
-        public static ModInformation GetModInformation(string _ModInformationPath)
+        public static ObservableCollection<LibraryItem> GetSeparatedLibrary(string _library_folder_path)
         {
-            ModInformation Item = new ModInformation();
+            ObservableCollection<LibraryItem> Library = new ObservableCollection<LibraryItem>();
+
+            string Path = _library_folder_path + @"\Library\Mods";
+
+            foreach (string LibraryFile in Directory.GetFiles(Path, "LibraryData.json", SearchOption.AllDirectories))
+            {
+                try
+                {
+                    if (File.Exists(LibraryFile))
+                    {
+                        using (StreamReader file = File.OpenText(LibraryFile))
+                        {
+                            JsonSerializer serializer = new JsonSerializer();
+                            Library.Add((LibraryItem)serializer.Deserialize(file, typeof(LibraryItem)));
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+
+                }
+            }
+
+            return Library;
+        }
+        public static APIData GetAPIData(string _ModInformationPath)
+        {
+            APIData Item = new APIData();
             try
             {
                 if (File.Exists(_ModInformationPath))
@@ -50,7 +82,7 @@ namespace Workshop.FileManagement
                     using (StreamReader file = File.OpenText(_ModInformationPath))
                     {
                         JsonSerializer serializer = new JsonSerializer();
-                        Item = (ModInformation)serializer.Deserialize(file, typeof(ModInformation));
+                        Item = (APIData)serializer.Deserialize(file, typeof(APIData));
                     }
                 }
             }
@@ -62,41 +94,7 @@ namespace Workshop.FileManagement
             return Item;
         }
 
-        public static ObservableCollection<Workspace> GetWorkspaces(string _QuasarFolderPath)
-        {
-            ObservableCollection<Workspace> Workspaces = new ObservableCollection<Workspace>();
-
-            string Path = _QuasarFolderPath + @"\Library\Workspaces.json";
-
-            if (File.Exists(Path))
-            {
-                using (StreamReader file = File.OpenText(Path))
-                {
-                    JsonSerializer serializer = new JsonSerializer();
-                    Workspaces = (ObservableCollection<Workspace>)serializer.Deserialize(file, typeof(ObservableCollection<Workspace>));
-                }
-            }
-
-            return Workspaces;
-        }
-        public static ShareableWorkspace GetSharedWorkspace(string _QuasarFolderPath)
-        {
-            ShareableWorkspace SW = new ShareableWorkspace();
-
-            string Path = _QuasarFolderPath + @"\Library\Workspaces.json";
-
-            if (File.Exists(Path))
-            {
-                using (StreamReader file = File.OpenText(Path))
-                {
-                    JsonSerializer serializer = new JsonSerializer();
-                    SW = (ShareableWorkspace)serializer.Deserialize(file, typeof(ShareableWorkspace));
-                }
-            }
-
-            return SW;
-        }
-        public static ObservableCollection<ContentItem> GetContentItems(string _QuasarFolderPath)
+        public static ObservableCollection<ContentItem> GetSingleFileContentItems(string _QuasarFolderPath)
         {
             ObservableCollection<ContentItem> ContentItems = new ObservableCollection<ContentItem>();
 
@@ -112,6 +110,110 @@ namespace Workshop.FileManagement
             }
 
             return ContentItems;
+        }
+        public static ObservableCollection<ContentItem> GetSeparatedContentItems(string _library_folder_path)
+        {
+            ObservableCollection<ContentItem> ContentItems = new ObservableCollection<ContentItem>();
+
+            string Path = _library_folder_path + @"\Library\Mods";
+
+            foreach (string ContentDataFile in Directory.GetFiles(Path, "ContentData.json", SearchOption.AllDirectories))
+            {
+                try
+                {
+                    if (File.Exists(ContentDataFile))
+                    {
+                        using (StreamReader file = File.OpenText(ContentDataFile))
+                        {
+                            JsonSerializer serializer = new JsonSerializer();
+                            foreach (ContentItem ci in (List<ContentItem>)serializer.Deserialize(file, typeof(List<ContentItem>)))
+                            {
+                                ContentItems.Add(ci);
+                            }
+                            
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+
+                }
+            }
+
+            return ContentItems;
+        }
+        public static GamebananaAPI GetSingleFileGamebananaApi(string InstallDirectory, string QuasarPath = "")
+        {
+            GamebananaAPI API = new GamebananaAPI();
+
+            string Path = QuasarPath + @"\Resources\Gamebanana.json";
+            if (!File.Exists(Path))
+            {
+                Path = InstallDirectory + @"\Resources\Gamebanana.json";
+            }
+            using (StreamReader file = File.OpenText(Path))
+            {
+                JsonSerializer serializer = new JsonSerializer();
+                API = (GamebananaAPI)serializer.Deserialize(file, typeof(GamebananaAPI));
+            }
+
+            return API;
+        }
+        public static GamebananaAPI GetSeparatedGamebananaApi(string _library_folder_path)
+        {
+            GamebananaAPI API = new GamebananaAPI()
+            {
+                Games = new()
+                {
+                    new GamebananaGame()
+                    {
+                        Guid = new Guid("923429c3-6e2c-4d66-850d-16177d097106"),
+                        RootCategories = new ObservableCollection<GamebananaRootCategory>(),
+                        ID = 6498,
+                        Name = @"Super Smash Bros. Ultimate"
+                    }
+                }
+            };
+
+            string Path = _library_folder_path + @"\Library\Mods";
+
+            foreach (string APIDataFile in Directory.GetFiles(Path, "Gamebanana.json", SearchOption.AllDirectories))
+            {
+                try
+                {
+                    if (File.Exists(APIDataFile))
+                    {
+                        using (StreamReader file = File.OpenText(APIDataFile))
+                        {
+                            JsonSerializer serializer = new JsonSerializer();
+
+                            GamebananaRootCategory RootCategory = (GamebananaRootCategory) serializer.Deserialize(file, typeof(GamebananaRootCategory));
+
+                            GamebananaRootCategory FoundCategory = API.Games[0].RootCategories
+                                .SingleOrDefault(rc => rc.Guid == RootCategory.Guid);
+
+                            if (FoundCategory != null)
+                            {
+                                if (!FoundCategory.SubCategories.Any(sc =>
+                                        sc.Guid == RootCategory.SubCategories[0].Guid))
+                                    FoundCategory.SubCategories.Add(RootCategory.SubCategories[0]);
+                            }
+                            else
+                            {
+                                API.Games[0].RootCategories.Add(RootCategory);
+                            }
+
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+
+                }
+
+            }
+
+            return API;
         }
         public static ObservableCollection<FileReference> GetModFiles(string _QuasarFolderPath)
         {
@@ -130,26 +232,44 @@ namespace Workshop.FileManagement
 
             return ModFiles;
         }
+        
+
 
         //User Saves
-        public static void SaveLibrary(ObservableCollection<LibraryItem> _LibraryItems, string _QuasarFolderPath)
+        public static void SaveLibrary(ObservableCollection<LibraryItem> _LibraryItems, string _LibraryPath)
         {
-            if (Directory.Exists(_QuasarFolderPath + @"\Library"))
-                Directory.CreateDirectory(_QuasarFolderPath + @"\Library");
-
-            SaveJSonFile(_QuasarFolderPath + @"\Library\Library.json", _LibraryItems);
+            foreach (LibraryItem libraryItem in _LibraryItems)
+            {
+                string modpath = $@"{_LibraryPath}\Library\Mods\{libraryItem.Guid}\LibraryData.json";
+                SaveJSonFile(modpath , libraryItem);
+            }
         }
-        public static void SaveModInformation(ModInformation _ModInformation, string _QuasarModFolder)
+        public static void SaveAPIData(APIData _api_data, string _library_folder, string _library_item_guid)
         {
-            SaveJSonFile(_QuasarModFolder + String.Format(@"\Library\Mods\{0}\ModInformation.json",_ModInformation.LibraryItem.Guid), _ModInformation);
-        }
-        public static void SaveWorkspaces(ObservableCollection<Workspace> _Workspaces, string _QuasarFolderPath)
-        {
-            SaveJSonFile(_QuasarFolderPath + @"\Library\Workspaces.json", _Workspaces.OrderBy(i => i.Guid));
+            SaveJSonFile(_library_folder + String.Format(@"\Library\Mods\{0}\APIData.json", _library_item_guid), _api_data);
         }
         public static void SaveContentItems(ObservableCollection<ContentItem> _ContentItems, string _QuasarFolderPath)
         {
             SaveJSonFile(_QuasarFolderPath + @"\Library\ContentItems.json", _ContentItems.OrderBy(i => i.Guid));
+        }
+        public static void SaveSeparatedContentItems(ObservableCollection<ContentItem> _ContentItems, string _LibraryPath)
+        {
+            List<ContentItem> Workload = _ContentItems.ToList();
+
+            while(Workload.Count > 0)
+            {
+
+                List<ContentItem> Contents = Workload.Where(c => c.LibraryItemGuid == Workload[0].LibraryItemGuid).ToList();
+                string modpath = $@"{_LibraryPath}\Library\Mods\{Contents[0].LibraryItemGuid}\ContentData.json";
+                SaveJSonFile(modpath, Contents);
+
+                foreach (ContentItem contentItem in Contents)
+                {
+                    Workload.Remove(contentItem);
+                }
+
+            }
+            
         }
         public static void SaveModFiles(List<FileReference> _file_references, string _QuasarFolderPath)
         {
@@ -159,6 +279,35 @@ namespace Workshop.FileManagement
         {
             SaveJSonFile(_DestinationFolderPath + @"\SharedWorkspace.json", SW);
         }
+
+        /// <summary>
+        /// Saves the Gamebanana API resource file to the specific path
+        /// </summary>
+        /// <param name="_API">The resource to save</param>
+        /// <param name="_AppDataPath">the user's App Data Path</param>
+        public static void SaveSeparatedGamebananaApi(GamebananaAPI _API, ObservableCollection<LibraryItem> _LibraryItems, string _LibraryPath)
+        {
+            foreach (LibraryItem libraryItem in _LibraryItems)
+            {
+                string modpath = $@"{_LibraryPath}\Library\Mods\{libraryItem.Guid}\Gamebanana.json";
+                GamebananaRootCategory RootCategory = _API.Games[0].RootCategories
+                    .Single(rc => rc.Guid == libraryItem.GBItem.RootCategoryGuid);
+                GamebananaSubCategory SubCategory =
+                    RootCategory.SubCategories.Single(sc => sc.Guid == libraryItem.GBItem.SubCategoryGuid);
+
+                GamebananaRootCategory NewCat = new()
+                {
+                    Guid = RootCategory.Guid,
+                    Name = RootCategory.Name,
+                    SubCategories = new()
+                    {
+                        SubCategory
+                    }
+                };
+                    SaveJSonFile(modpath, NewCat);
+            }
+        }
+        
 
         /// <summary>
         /// Saves a collection to a JSon File
@@ -180,23 +329,6 @@ namespace Workshop.FileManagement
                     serializer.TypeNameHandling = TypeNameHandling.None;
                 serializer.Serialize(file, _Source);
             }
-        }
-
-        /// <summary>
-        /// Creates a default Workspace
-        /// </summary>
-        public static Guid CreateBaseWorkspace(string _QuasarFolderPath)
-        {
-            String AssociationsPath = _QuasarFolderPath + @"\Library\Workspaces.json";
-
-            if (!Directory.Exists(_QuasarFolderPath + @"\Library\"))
-                Directory.CreateDirectory(_QuasarFolderPath + @"\Library\");
-
-            Workspace defaultWorkspace = new Workspace() { Name = "Default", Guid = Guid.NewGuid(), Associations = new ObservableCollection<Association>(), BuildDate = "" };
-            ObservableCollection<Workspace> DefaultFile = new ObservableCollection<Workspace>() { defaultWorkspace };
-            SaveWorkspaces(DefaultFile, _QuasarFolderPath);
-
-            return defaultWorkspace.Guid;
         }
 
         /// <summary>
@@ -230,106 +362,39 @@ namespace Workshop.FileManagement
             }
         }
 
-        public static bool BackupUserDataFiles(string AppDataPath)
-        {
-            try
-            {
-                string BackupPath = AppDataPath + @"\Backups\";
-
-                if (Directory.Exists(BackupPath))
-                {
-                    Directory.Delete(BackupPath, true);
-                }
-
-                Directory.CreateDirectory(BackupPath);
-                Directory.CreateDirectory(String.Format(@"{0}\Backups\Library", AppDataPath));
-                Directory.CreateDirectory(String.Format(@"{0}\Backups\Resources", AppDataPath));
-
-
-                foreach (string filepath in Directory.GetFiles(String.Format(@"{0}\Library", AppDataPath)))
-                {
-                    string newfilepath = String.Format(@"{0}\Backups\Library\{1}", AppDataPath, Path.GetFileName(filepath));
-                    File.Copy(filepath, newfilepath);
-                }
-
-                foreach (string filepath in Directory.GetFiles(String.Format(@"{0}\Resources", AppDataPath)))
-                {
-                    string newfilepath = String.Format(@"{0}\Backups\Resources\{1}", AppDataPath, Path.GetFileName(filepath));
-                    File.Copy(filepath, newfilepath);
-                }
-
-                if (Directory.GetFiles(BackupPath, "*.json", SearchOption.AllDirectories).Length == 0)
-                    return false;
-
-                return true;
-            }
-            catch (Exception e)
-            {
-                return false;
-            }
-            
-        }
-
-        public static bool RestoreUserDataFiles(string AppDataPath)
-        {
-            try
-            {
-                string BackupPath = AppDataPath + @"\Backups\";
-
-                foreach (string filepath in Directory.GetFiles(String.Format(@"{0}\Backups\Library", AppDataPath)))
-                {
-                    string newfilepath = String.Format(@"{0}\Library\{1}", AppDataPath, Path.GetFileName(filepath));
-                    File.Copy(filepath, newfilepath,true);
-                }
-
-                foreach (string filepath in Directory.GetFiles(String.Format(@"{0}\Backups\Resources", AppDataPath)))
-                {
-                    string newfilepath = String.Format(@"{0}\Resources\{1}", AppDataPath, Path.GetFileName(filepath));
-                    File.Copy(filepath, newfilepath, true);
-                }
-
-                return true;
-            }
-            catch (Exception e)
-            {
-                return false;
-            }
-
-        }
-
         public static ObservableCollection<LibraryItem> RecoverMods(string _QuasarFolderPath,string _AppDataPath, ObservableCollection<LibraryItem> Library, GamebananaAPI API, ILog QuasarLogger)
         {
             string[] ModFolders = Directory.GetDirectories(_QuasarFolderPath + @"\Library\Mods\", "*", SearchOption.TopDirectoryOnly);
 
-            foreach(string ModFolder in ModFolders)
-            {
-                try
-                {
-                    string ModInfoPath = ModFolder + @"\ModInformation.json";
-                    if (File.Exists(ModInfoPath))
-                    {
-                        QuasarLogger.Debug("Mod Info path is : "+ModInfoPath);
+            //foreach(string ModFolder in ModFolders)
+            //{
+            //    try
+            //    {
+            //        string ModInfoPath = ModFolder + @"\ModInformation.json";
+            //        if (File.Exists(ModInfoPath))
+            //        {
+            //            QuasarLogger.Debug("Mod Info path is : "+ModInfoPath);
 
-                        ModInformation mi = GetModInformation(ModInfoPath);
-                        LibraryItem li = mi.LibraryItem;
+            //            APIData mi = GetAPIData(ModInfoPath);
+            //            LibraryItem li = mi.LibraryItem;
 
-                        QuasarLogger.Debug("Item Parsed : " + li.Name);
-                        if (!Library.Any(l => l.GBItem.GamebananaItemID == li.GBItem.GamebananaItemID))
-                        {
-                            Library.Add(li);
-                        }
-                        API = ResourceManager.UpdateGamebananaAPI(mi.GamebananaRootCategory, API);
-                        QuasarLogger.Debug("Item Successfully processed");
-                    }
-                }
-                catch(Exception e)
-                {
-                    QuasarLogger.Error(e.Message);
-                    QuasarLogger.Error(e.StackTrace);
-                }
+            //            QuasarLogger.Debug("Item Parsed : " + li.Name);
+            //            if (!Library.Any(l => l.GBItem.GamebananaItemID == li.GBItem.GamebananaItemID))
+            //            {
+            //                Library.Add(li);
+            //            }
+            //            API = ResourceManager.UpdateGamebananaAPI(mi.GamebananaRootCategory, API);
+            //            QuasarLogger.Debug("Item Successfully processed");
+            //        }
+            //    }
+            //    catch(Exception e)
+            //    {
+            //        QuasarLogger.Error(e.Message);
+            //        QuasarLogger.Error(e.StackTrace);
+            //    }
                 
-            }
-            ResourceManager.SaveGamebananaAPI(API, _AppDataPath);
+            //}
+            //ResourceManager.SaveGamebananaAPI(API, _AppDataPath);
 
             return Library;
         }

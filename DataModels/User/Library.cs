@@ -47,10 +47,10 @@ namespace DataModels.User
         public int GamebananaAuthorID { get; set; }
     }
 
-    public class ModInformation
+    public class APIData
     {
-        public LibraryItem LibraryItem { get; set; }
-        public GamebananaRootCategory GamebananaRootCategory { get; set; }
+        public string GamebananaItemID { get; set; }
+        public string GamebananaModType { get; set; }
     }
     
 }

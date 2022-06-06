@@ -41,15 +41,59 @@ namespace Workshop.Associations
         /// <param name="_content_items">List of all ContentItems to parse from</param>
         /// <param name="_associated_element">Associated Game Element to filter ContentItems</param>
         /// <returns>The generated list of Assignment Contents</returns>
-        public static ObservableCollection<AssignmentContent> GetAssignmentContents(LibraryItem _library_item, ObservableCollection<ContentItem> _content_items, bool _grouped)
+        public static ObservableCollection<AssignmentContent> GetAssignmentContents(ObservableCollection<ContentItem> _content_items, bool _grouped)
         {
-            ObservableCollection<AssignmentContent> Contents = new();
-
             if (!_grouped)
             {
-                //Adding each ContentItem Separately
-                foreach (ContentItem MatchingContentItem in _content_items.Where(_content_item => _content_item.LibraryItemGuid == _library_item.Guid))
+                return new(GetSeparatedAssignmentContents(_content_items));
+            }
+            else
+            {
+                return new(GetGroupedAssignmentContents(_content_items));
+            }
+        }
+
+        public static List<AssignmentContent> GetSeparatedAssignmentContents(ObservableCollection<ContentItem> _content_items)
+        {
+            List<AssignmentContent> Contents = new();
+
+            //Adding each ContentItem Separately
+            foreach (ContentItem MatchingContentItem in _content_items)
+            {
+                Contents.Add(new()
                 {
+                    AssignmentName = MatchingContentItem.Name,
+                    AssignmentContentItems = new() { MatchingContentItem },
+                    SlotNumber = MatchingContentItem.SlotNumber
+                });
+            }
+
+            return Contents;
+        }
+
+        public static List<AssignmentContent> GetGroupedAssignmentContents(ObservableCollection<ContentItem> _content_items)
+        {
+            List<AssignmentContent> Contents = new();
+
+            foreach (ContentItem MatchingContentItem in _content_items)
+            {
+                bool ContentAdded = false;
+
+                //Looping through existing contents for matchs
+                foreach (AssignmentContent AssignmentContent in Contents)
+                {
+                    if (AssignmentContent.AssignmentContentItems[0].GroupName == MatchingContentItem.GroupName && AssignmentContent.AssignmentContentItems[0].ScanFiles[0].RootPath ==
+                        MatchingContentItem.ScanFiles[0].RootPath && AssignmentContent.AssignmentContentItems[0].OriginalSlotNumber == MatchingContentItem.OriginalSlotNumber)
+                    {
+                        AssignmentContent.AssignmentContentItems.Add(MatchingContentItem);
+                        ContentAdded = true;
+                    }
+                }
+
+                //If no match was found
+                if (!ContentAdded)
+                {
+                    //Creating a new item
                     Contents.Add(new()
                     {
                         AssignmentName = MatchingContentItem.Name,
@@ -58,37 +102,6 @@ namespace Workshop.Associations
                     });
                 }
             }
-            else
-            {
-                foreach (ContentItem MatchingContentItem in _content_items.Where(_content_item => _content_item.LibraryItemGuid == _library_item.Guid))
-                {
-                    bool ContentAdded = false;
-
-                    //Looping through existing contents for matchs
-                    foreach (AssignmentContent AssignmentContent in Contents)
-                    {
-                        if (AssignmentContent.AssignmentContentItems[0].GroupName == MatchingContentItem.GroupName && AssignmentContent.AssignmentContentItems[0].ScanFiles[0].RootPath ==
-                            MatchingContentItem.ScanFiles[0].RootPath && AssignmentContent.AssignmentContentItems[0].OriginalSlotNumber == MatchingContentItem.OriginalSlotNumber)
-                        {
-                            AssignmentContent.AssignmentContentItems.Add(MatchingContentItem);
-                            ContentAdded = true;
-                        }
-                    }
-
-                    //If no match was found
-                    if (!ContentAdded)
-                    {
-                        //Creating a new item
-                        Contents.Add(new()
-                        {
-                            AssignmentName = MatchingContentItem.Name,
-                            AssignmentContentItems = new() { MatchingContentItem },
-                            SlotNumber = MatchingContentItem.SlotNumber
-                        });
-                    }
-                }
-            }
-            
 
             return Contents;
         }

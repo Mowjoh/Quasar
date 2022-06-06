@@ -193,15 +193,12 @@ namespace DatabaseEditor.ViewModels
         private ObservableCollection<Workspace> _Workspaces { get; set; }
         private Workspace _SelectedWorkspace { get; set; }
 
-        //Mod Loaders
-        private ObservableCollection<ModLoader> _ModLoaders { get; set; }
 
         //Quasar Mod Types
         private ObservableCollection<QuasarModType> _QuasarModTypes { get; set; }
         private QuasarModType _SelectedQuasarModType { get; set; }
         private QuasarModTypeFileDefinition _SelectedQuasarModTypeFileDefinition { get; set; }
         private LibraryItem _SelectedTestLibraryItem { get; set; }
-        private ModLoader _SelectedTestModLoader { get; set; }
         private ObservableCollection<ScanTestResult> _TestResults { get; set; }
 
         private double _ProgressValue { get; set; }
@@ -281,8 +278,16 @@ namespace DatabaseEditor.ViewModels
             set
             {
                 _SelectedLibraryItem = value;
-                AssociatedRootCategory = API.Games[0].RootCategories.Single(c => c.Guid == value.GBItem.RootCategoryGuid);
-                AssociatedSubCategory = AssociatedRootCategory.SubCategories.Single(c => c.Guid == value.GBItem.SubCategoryGuid);
+                try
+                {
+                    AssociatedRootCategory = API.Games[0].RootCategories.Single(c => c.Guid == value.GBItem.RootCategoryGuid);
+                    AssociatedSubCategory = AssociatedRootCategory.SubCategories.Single(c => c.Guid == value.GBItem.SubCategoryGuid);
+                }
+                catch (NullReferenceException e)
+                {
+
+                }
+                
 
                 OnPropertyChanged("SelectedLibraryItem");
                 OnPropertyChanged("AssociatedRootCategory");
@@ -332,15 +337,6 @@ namespace DatabaseEditor.ViewModels
             }
         }
         //Mod Loaders
-        public ObservableCollection<ModLoader> ModLoaders
-        {
-            get => _ModLoaders;
-            set
-            {
-                _ModLoaders = value;
-                OnPropertyChanged("ModLoaders");
-            }
-        }
 
         //Quasar Mod Types
         public ObservableCollection<QuasarModType> QuasarModTypes
@@ -372,9 +368,8 @@ namespace DatabaseEditor.ViewModels
                         {
                             ID = 0,
                             SearchFileName = "{AnyFile}.{AnyExtension}",
-                            OutputPath = @"ModName}/",
+                            OutputPath = @"{ModName}/",
                             FilePriority = 10,
-                            QuasarModTypeBuilderDefinitions = new ObservableCollection<QuasarModTypeBuilderDefinition>(),
                         });
                     }
 
@@ -433,15 +428,6 @@ namespace DatabaseEditor.ViewModels
             {
                 _SelectedTestLibraryItem = value;
                 OnPropertyChanged("SelectedTestLibraryItem");
-            }
-        }
-        public ModLoader SelectedTestModLoader
-        {
-            get => _SelectedTestModLoader;
-            set
-            {
-                _SelectedTestModLoader = value;
-                OnPropertyChanged("SelectedTestModLoader");
             }
         }
         public ObservableCollection<ScanTestResult> TestResults
@@ -575,12 +561,11 @@ namespace DatabaseEditor.ViewModels
 
             //Loading referentials from the app and the user's Quasar folders
             Games = ResourceManager.GetGames(InstallDirectory);
-            Library = UserDataManager.GetLibrary(AppDataPath);
-            ContentItems = UserDataManager.GetContentItems(AppDataPath);
+            Library = UserDataManager.GetSeparatedLibrary(@"C:\Users\Mowjoh\Documents\Quasar");
+            ContentItems = UserDataManager.GetSeparatedContentItems(@"C:\Users\Mowjoh\Documents\Quasar");
             //Workspaces = UserDataManager.GetWorkspaces(AppDataPath);
-            ModLoaders = ResourceManager.GetModLoaders(InstallDirectory);
             QuasarModTypes = ResourceManager.GetQuasarModTypes(InstallDirectory);
-            API = ResourceManager.GetGamebananaAPI(AppDataPath);
+            API = UserDataManager.GetSeparatedGamebananaApi(@"C:\Users\Mowjoh\Documents\Quasar");
 
             //Setting up the Test Result Source
             CollectionViewSource = new CollectionViewSource();
@@ -733,9 +718,17 @@ namespace DatabaseEditor.ViewModels
         /// <returns></returns>
         public async Task<int> Scan(string Path)
         {
-            ObservableCollection<ScanFile> ScanResults = FileScanner.GetScanFiles(Path);
-            ScanResults = FileScanner.FilterIgnoredFiles(ScanResults);
-            ScanResults = FileScanner.MatchScanFiles(ScanResults, QuasarModTypes, Games[0], ScanPathText);
+
+            ObservableCollection<ScanFile> ScanResults = new ObservableCollection<ScanFile>();
+            List<ScanFile> workingList = FileScanner.GetScanFiles(Path);
+
+            workingList = FileScanner.FilterIgnoredFiles(workingList);
+            workingList = FileScanner.MatchScanFiles(workingList, QuasarModTypes, Games[0], Path);
+
+            foreach (ScanFile scan_file in workingList)
+            {
+                ScanResults.Add(scan_file);
+            }
 
             Application.Current.Dispatcher.Invoke((Action)delegate {
 
