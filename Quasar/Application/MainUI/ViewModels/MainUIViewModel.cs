@@ -420,15 +420,34 @@ namespace Quasar.MainUI.ViewModels
             GamebananaRootCategory rootcategory = UserDataManager.GetGamebananaRootCategory(_mod_directory);
 
             //Verifying stuff ?
-            if (libraryitem != null && contentitems != null && rootcategory != null)
+            if (libraryitem != null)
             {
-                //Adding it to the collections
-                Library.Add(libraryitem);
-                foreach (ContentItem contentitem in contentitems)
+                if (libraryitem.ManualMod)
                 {
-                    ContentItems.Add(contentitem);
+                    //Adding it to the collections
+                    Library.Add(libraryitem);
+                    if (contentitems != null)
+                    {
+                        foreach (ContentItem contentitem in contentitems)
+                        {
+                            ContentItems.Add(contentitem);
+                        }
+                    }
                 }
-                API = UserDataManager.GetUpdatedGamebananaApi(API, rootcategory);
+                else
+                {
+                    if (contentitems != null && rootcategory != null)
+                    {
+                        //Adding it to the collections
+                        Library.Add(libraryitem);
+                        foreach (ContentItem contentitem in contentitems)
+                        {
+                            ContentItems.Add(contentitem);
+                        }
+                        API = UserDataManager.GetUpdatedGamebananaApi(API, rootcategory);
+                    }
+                }
+                
             }
             else
             {
