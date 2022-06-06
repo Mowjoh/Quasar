@@ -72,6 +72,21 @@ namespace Workshop.FileManagement
 
             return Library;
         }
+
+        public static LibraryItem GetModLibraryItem(string _mod_path)
+        {
+            string LibraryDataPath = $@"{_mod_path}\LibraryData.json";
+            if (File.Exists(LibraryDataPath))
+            {
+                using (StreamReader file = File.OpenText(LibraryDataPath))
+                {
+                    JsonSerializer serializer = new JsonSerializer();
+                    return (LibraryItem)serializer.Deserialize(file, typeof(LibraryItem));
+                }
+            }
+
+            return null;
+        }
         public static APIData GetAPIData(string _ModInformationPath)
         {
             APIData Item = new APIData();
@@ -110,6 +125,20 @@ namespace Workshop.FileManagement
             }
 
             return ContentItems;
+        }
+        public static List<ContentItem> GetModContentItems(string _mod_path)
+        {
+            string ContentsDataPath = $@"{_mod_path}\ContentData.json";
+            if (File.Exists(ContentsDataPath))
+            {
+                using (StreamReader file = File.OpenText(ContentsDataPath))
+                {
+                    JsonSerializer serializer = new JsonSerializer();
+                    return (List<ContentItem>)serializer.Deserialize(file, typeof(List<ContentItem>));
+                }
+            }
+
+            return null;
         }
         public static ObservableCollection<ContentItem> GetSeparatedContentItems(string _library_folder_path)
         {
@@ -214,6 +243,58 @@ namespace Workshop.FileManagement
             }
 
             return API;
+        }
+        public static GamebananaRootCategory GetGamebananaRootCategory(string _mod_path)
+        {
+            string GamebananaRootCategoryPath = $@"{_mod_path}\Gamebanana.json";
+            if (File.Exists(GamebananaRootCategoryPath))
+            {
+                using (StreamReader file = File.OpenText(GamebananaRootCategoryPath))
+                {
+                    JsonSerializer serializer = new JsonSerializer();
+                    return (GamebananaRootCategory)serializer.Deserialize(file, typeof(GamebananaRootCategory));
+                }
+            }
+
+            return null;
+        }
+
+        public static GamebananaAPI GetBaseAPI()
+        {
+            GamebananaAPI API = new GamebananaAPI()
+            {
+                Games = new()
+                {
+                    new GamebananaGame()
+                    {
+                        Guid = new Guid("923429c3-6e2c-4d66-850d-16177d097106"),
+                        RootCategories = new ObservableCollection<GamebananaRootCategory>(),
+                        ID = 6498,
+                        Name = @"Super Smash Bros. Ultimate"
+                    }
+                }
+            };
+
+            return API;
+        }
+        public static GamebananaAPI GetUpdatedGamebananaApi(GamebananaAPI _source_api, GamebananaRootCategory _root_category)
+        {
+
+            GamebananaRootCategory FoundCategory = _source_api.Games[0].RootCategories
+                .SingleOrDefault(rc => rc.Guid == _root_category.Guid);
+
+            if (FoundCategory != null)
+            {
+                if (!FoundCategory.SubCategories.Any(sc =>
+                        sc.Guid == _root_category.SubCategories[0].Guid))
+                    FoundCategory.SubCategories.Add(_root_category.SubCategories[0]);
+            }
+            else
+            {
+                _source_api.Games[0].RootCategories.Add(_root_category);
+            }
+
+            return _source_api;
         }
         public static ObservableCollection<FileReference> GetModFiles(string _QuasarFolderPath)
         {

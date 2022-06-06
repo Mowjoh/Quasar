@@ -12,6 +12,7 @@ using DataModels.User;
 using DataModels.Resource;
 using Workshop.FileManagement;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading;
 using System.Threading.Tasks;
@@ -25,6 +26,7 @@ using Helpers.IPC;
 using System.IO;
 using System.Globalization;
 using System.Windows.Threading;
+using Microsoft.VisualBasic.ApplicationServices;
 using Quasar.Music.Views;
 using Quasar.Other.Views;
 using Quasar.Settings.ViewModels;
@@ -376,7 +378,6 @@ namespace Quasar.MainUI.ViewModels
             QuasarLogger.Info("Loading Views");
             SetupViews();
 
-            EventSystem.Subscribe<ModListItem>(ModListItemEvent);
             EventSystem.Subscribe<ModalEvent>(ProcessModalEvent);
         }
 
@@ -388,9 +389,15 @@ namespace Quasar.MainUI.ViewModels
             //Loading User Data
             try
             {
-                Library = UserDataManager.GetSeparatedLibrary(Properties.QuasarSettings.Default.DefaultDir);
-                ContentItems = UserDataManager.GetSeparatedContentItems(Properties.QuasarSettings.Default.DefaultDir);
-                API = UserDataManager.GetSeparatedGamebananaApi(Properties.QuasarSettings.Default.DefaultDir);
+                Library = new();
+                ContentItems = new();
+                API = UserDataManager.GetBaseAPI();
+
+                foreach (string directory in Directory.GetDirectories($@"{Properties.QuasarSettings.Default.DefaultDir}\Library\Mods"))
+                {
+                    LoadModData(directory);
+                }
+
                 UserDataLoaded = true;
             }
             catch (Exception e)
@@ -402,6 +409,31 @@ namespace Quasar.MainUI.ViewModels
             Games = ResourceManager.GetGames(Properties.QuasarSettings.Default.AppPath);
             CurrentGame = Games[0];
             QuasarModTypes = ResourceManager.GetQuasarModTypes(Properties.QuasarSettings.Default.AppPath);
+            
+        }
+
+        public void LoadModData(string _mod_directory)
+        {
+            //Getting data
+            LibraryItem libraryitem = UserDataManager.GetModLibraryItem(_mod_directory);
+            List<ContentItem> contentitems = UserDataManager.GetModContentItems(_mod_directory);
+            GamebananaRootCategory rootcategory = UserDataManager.GetGamebananaRootCategory(_mod_directory);
+
+            //Verifying stuff ?
+            if (libraryitem != null && contentitems != null && rootcategory != null)
+            {
+                //Adding it to the collections
+                Library.Add(libraryitem);
+                foreach (ContentItem contentitem in contentitems)
+                {
+                    ContentItems.Add(contentitem);
+                }
+                API = UserDataManager.GetUpdatedGamebananaApi(API, rootcategory);
+            }
+            else
+            {
+                Directory.Delete(_mod_directory,true);
+            }
             
         }
 
@@ -568,21 +600,6 @@ namespace Quasar.MainUI.ViewModels
                     break;
                 default:
                     break;
-            }
-        }
-
-        /// <summary>
-        /// Opens the Content tab with this item
-        /// </summary>
-        /// <param name="_SelectedModListItem"></param>
-        public void ModListItemEvent(ModListItem _SelectedModListItem)
-        {
-            if (_SelectedModListItem.ModViewModel.ActionRequested == "ShowAssignments")
-            {
-                AssignmentTabActive = true;
-                FileManagerTabActive = false;
-                SelectedTabItem = TabItems[1];
-                SelectedModListItem = _SelectedModListItem;
             }
         }
 
