@@ -370,6 +370,7 @@ namespace Workshop.FileManagement
         {
             foreach (LibraryItem libraryItem in _LibraryItems)
             {
+                
                 string modpath = $@"{_LibraryPath}\Library\Mods\{libraryItem.Guid}\Gamebanana.json";
                 GamebananaRootCategory RootCategory = _API.Games[0].RootCategories
                     .Single(rc => rc.Guid == libraryItem.GBItem.RootCategoryGuid);

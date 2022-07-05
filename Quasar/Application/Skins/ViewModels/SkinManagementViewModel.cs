@@ -153,8 +153,9 @@ namespace Quasar.Skins.ViewModels
                 Contents = new(),
                 GameElement = null,
                 ModTypes = MUVM.QuasarModTypes.Where(t => t.GameElementFamilyID == 1).ToList(),
-                Slots = new List<int>() {0, 1, 2, 3, 4, 5, 6, 7}
+                Slots = new List<int>() {-1}
             };
+
             Slots = new();
             for (int i = 0; i < 8; i++)
             {
