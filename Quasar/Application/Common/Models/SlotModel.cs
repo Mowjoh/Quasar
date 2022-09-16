@@ -8,7 +8,7 @@ using DataModels.Common;
 using DataModels.Resource;
 using DataModels.User;
 using Quasar.Common.Views;
-using Workshop.Associations;
+using Workshop.Assignments;
 
 namespace Quasar.Common.Models
 {
