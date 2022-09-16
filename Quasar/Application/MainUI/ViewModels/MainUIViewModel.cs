@@ -25,13 +25,11 @@ using System.Windows.Shell;
 using Helpers.IPC;
 using System.IO;
 using System.Globalization;
-using System.Windows.Threading;
-using Microsoft.VisualBasic.ApplicationServices;
 using Quasar.Music.Views;
 using Quasar.Other.Views;
-using Quasar.Settings.ViewModels;
 using Quasar.Skins.Views;
 using Quasar.Stages.Views;
+using Quasar.Common;
 
 namespace Quasar.MainUI.ViewModels
 {
@@ -409,6 +407,8 @@ namespace Quasar.MainUI.ViewModels
             Games = ResourceManager.GetGames(Properties.QuasarSettings.Default.AppPath);
             CurrentGame = Games[0];
             QuasarModTypes = ResourceManager.GetQuasarModTypes(Properties.QuasarSettings.Default.AppPath);
+            ResourceManager.SaveGamesFile(Games, @"C:\Resources");
+            ResourceManager.SaveQuasarModTypes(QuasarModTypes, @"C:\");
             
         }
 
@@ -420,15 +420,34 @@ namespace Quasar.MainUI.ViewModels
             GamebananaRootCategory rootcategory = UserDataManager.GetGamebananaRootCategory(_mod_directory);
 
             //Verifying stuff ?
-            if (libraryitem != null && contentitems != null && rootcategory != null)
+            if (libraryitem != null)
             {
-                //Adding it to the collections
-                Library.Add(libraryitem);
-                foreach (ContentItem contentitem in contentitems)
+                if (libraryitem.ManualMod)
                 {
-                    ContentItems.Add(contentitem);
+                    //Adding it to the collections
+                    Library.Add(libraryitem);
+                    if (contentitems != null)
+                    {
+                        foreach (ContentItem contentitem in contentitems)
+                        {
+                            ContentItems.Add(contentitem);
+                        }
+                    }
                 }
-                API = UserDataManager.GetUpdatedGamebananaApi(API, rootcategory);
+                else
+                {
+                    if (contentitems != null && rootcategory != null)
+                    {
+                        //Adding it to the collections
+                        Library.Add(libraryitem);
+                        foreach (ContentItem contentitem in contentitems)
+                        {
+                            ContentItems.Add(contentitem);
+                        }
+                        API = UserDataManager.GetUpdatedGamebananaApi(API, rootcategory);
+                    }
+                }
+                
             }
             else
             {
@@ -515,17 +534,9 @@ namespace Quasar.MainUI.ViewModels
         public void UpdateTask()
         {
             QuasarLogger.Debug("Update Status is To Update");
-            ModalEvent Meuh = new ModalEvent()
-            {
-                Action = "Show",
-                EventName = "Updating",
-                Title = Properties.Resources.MainUI_Modal_UpdateProgressTitle,
-                Content = Properties.Resources.MainUI_Modal_UpdateProgressContent,
-                OkButtonText = "OK",
-                Type = ModalType.Loader
-            };
 
-            EventSystem.Publish<ModalEvent>(Meuh);
+            Popup.CallModal(Modal.Update);
+
             Task.Run(() =>
             {
                 UpdateCommander.LaunchUpdateSequence(QuasarLogger, Library, API);
@@ -535,17 +546,9 @@ namespace Quasar.MainUI.ViewModels
         public void PreviousInstallTask()
         {
             QuasarLogger.Debug("Update Status is Previously installed");
-            ModalEvent Meuhdeux = new ModalEvent()
-            {
-                Action = "Show",
-                EventName = "RecoveringInstallation",
-                Title = Properties.Resources.MainUI_Modal_RecoverProgressTitle,
-                Content = Properties.Resources.MainUI_Modal_RecoverProgressContent,
-                OkButtonText = "OK",
-                Type = ModalType.Loader
-            };
 
-            //EventSystem.Publish<ModalEvent>(Meuhdeux);
+            Popup.CallModal(Modal.RecoverInstallation);
+
             //Task.Run(() =>
             //{
             //    Library = UpdateCommander.LaunchInstallRecoverySequence(Library, API, QuasarLogger);

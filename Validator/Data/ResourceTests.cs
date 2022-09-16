@@ -41,15 +41,15 @@ namespace Validator.Data
         /// <summary>
         /// Validates that the Gamebanana deserializes properly and contains data
         /// </summary>
-        [Fact]
-        public void Loading_GamebananaFileLoadsAndContainsData()
-        {
-            GamebananaAPI Resource = ResourceManager.GetGamebananaAPI(_appDataLocalPath);
-
-            Assert.True(Resource.Games.Count > 0);
-
-            Assert.Equal("Super Smash Bros. Ultimate", Resource.Games[0].Name);
-        }
+        // [Fact]
+        // public void Loading_GamebananaFileLoadsAndContainsData()
+        // {
+        //     GamebananaAPI Resource = ResourceManager.GetGamebananaAPI(_appDataLocalPath);
+        //
+        //     Assert.True(Resource.Games.Count > 0);
+        //
+        //     Assert.Equal("Super Smash Bros. Ultimate", Resource.Games[0].Name);
+        // }
 
         /// <summary>
         /// Validates that the Games deserializes properly and contains data
@@ -62,32 +62,6 @@ namespace Validator.Data
             Assert.True(Resource.Count > 0);
 
             Assert.Equal("Smash Ultimate", Resource[0].Name);
-        }
-
-        /// <summary>
-        /// Validates that the Mod Loaders deserializes properly and contains data
-        /// </summary>
-        [Fact]
-        public void Loading_ModLoadersFileLoadsAndContainsData()
-        {
-            ObservableCollection<ModLoader> Resource = ResourceManager.GetModLoaders(_appDataLocalPath);
-
-            Assert.True(Resource.Count == 3);
-
-            Assert.Equal("ARCropolis", Resource[0].Name);
-            Assert.Equal("ARCadia style", Resource[1].Name);
-            Assert.Equal("UMM", Resource[2].Name);
-        }
-
-        /// <summary>
-        /// Validates that the Mod Types deserializes properly and contains data
-        /// </summary>
-        [Fact]
-        public void Loading_ModTypesFileLoadsAndContainsData()
-        {
-            ObservableCollection<QuasarModType> Resource = ResourceManager.GetQuasarModTypes(_appDataLocalPath);
-            
-            Assert.True(Resource.Count > 0);
         }
 
     }

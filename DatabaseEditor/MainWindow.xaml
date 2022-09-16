@@ -465,7 +465,7 @@
                                                 Binding="{Binding ScanFile.OriginPath}"
                                                 Header="Origin Path" />
                             <DataGridTextColumn Width="1*"
-                                                Binding="{Binding ScanFile.DestinationPath}"
+                                                Binding="{Binding ScanFile.PreProcessedOutputFilePath}"
                                                 Header="Destination" />
                             <DataGridTextColumn Width="1*"
                                                 Binding="{Binding ScanFile.QuasarModTypeName}"

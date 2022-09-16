@@ -21,6 +21,10 @@ namespace Quasar.Stages.ViewModels
 
         #region Private
         private StageItem _SelectedStageItem { get; set; }
+        private SlotModel _SourceSlot { get; set; }
+        private SlotModel _NormalSlot { get; set; }
+        private SlotModel _OmegaSlot { get; set; }
+        private SlotModel _BattlefieldSlot { get; set; }
         #endregion
 
         #region Public
@@ -44,6 +48,42 @@ namespace Quasar.Stages.ViewModels
                 }
             }
         }
+        public SlotModel SourceSlot
+        {
+            get => _SourceSlot;
+            set
+            {
+                _SourceSlot = value;
+                OnPropertyChanged("SourceSlot");
+            }
+        }
+        public SlotModel NormalSlot
+        {
+            get => _NormalSlot;
+            set
+            {
+                _NormalSlot = value;
+                OnPropertyChanged("NormalSlot");
+            }
+        }
+        public SlotModel OmegaSlot
+        {
+            get => _OmegaSlot;
+            set
+            {
+                _OmegaSlot = value;
+                OnPropertyChanged("OmegaSlot");
+            }
+        }
+        public SlotModel BattlefieldSlot
+        {
+            get => _BattlefieldSlot;
+            set
+            {
+                _BattlefieldSlot = value;
+                OnPropertyChanged("BattlefieldSlot");
+            }
+        }
         #endregion
 
         #endregion
@@ -53,7 +93,7 @@ namespace Quasar.Stages.ViewModels
         #region Private
         private ObservableCollection<StageItem> _StageItems { get; set; }
         private bool _SelectionViewActive { get; set; }
-
+        private bool _Grouped { get; set; } = true;
         #endregion
 
         #region Public
@@ -79,6 +119,16 @@ namespace Quasar.Stages.ViewModels
             }
         }
         public bool DisplayViewActive => !_SelectionViewActive;
+        public bool Grouped
+        {
+            get => _Grouped;
+            set
+            {
+                _Grouped = value;
+                OnPropertyChanged("Grouped");
+                RefreshSlots();
+            }
+        }
         #endregion
 
         #endregion
@@ -245,6 +295,38 @@ namespace Quasar.Stages.ViewModels
 
             EventSystem.Subscribe<StageItemViewModel>(GetSelectedStageItem);
             SelectionViewActive = true;
+
+            SourceSlot = new()
+            {
+                Contents = new(),
+                GameElement = null,
+                ModTypes = MUVM.QuasarModTypes.Where(t => t.GameElementFamilyID == 2).ToList(),
+                Slots = new List<int>() { 1 }
+            };
+
+            NormalSlot = new()
+            {
+                Contents = new(),
+                GameElement = null,
+                ModTypes = MUVM.QuasarModTypes.Where(t => t.GameElementFamilyID == 2).ToList(),
+                Slots = new List<int>() { 1 }
+            };
+
+            OmegaSlot = new()
+            {
+                Contents = new(),
+                GameElement = null,
+                ModTypes = MUVM.QuasarModTypes.Where(t => t.GameElementFamilyID == 2).ToList(),
+                Slots = new List<int>() { 1 }
+            };
+
+            BattlefieldSlot = new()
+            {
+                Contents = new(),
+                GameElement = null,
+                ModTypes = MUVM.QuasarModTypes.Where(t => t.GameElementFamilyID == 2).ToList(),
+                Slots = new List<int>() { 1 }
+            };
         }
 
         public void GetSelectedStageItem(StageItemViewModel _stage_item)
@@ -257,6 +339,18 @@ namespace Quasar.Stages.ViewModels
         public void ResetSelectedStageItem()
         {
             SelectedStageItem = null;
+        }
+
+        public void RefreshSlots()
+        {
+            //SourceSlot.GameElement = SelectedStageItem.SIVM.GameElement;
+            //NormalSlot.GameElement = SelectedStageItem.SIVM.GameElement;
+            //OmegaSlot.GameElement = SelectedStageItem.SIVM.GameElement;
+            //BattlefieldSlot.GameElement = SelectedStageItem.SIVM.GameElement;
+            SourceSlot.GetMatchingContents(MUVM.ContentItems, Grouped);
+            NormalSlot.GetMatchingContents(MUVM.ContentItems, Grouped);
+            OmegaSlot.GetMatchingContents(MUVM.ContentItems, Grouped);
+            BattlefieldSlot.GetMatchingContents(MUVM.ContentItems, Grouped);
         }
     }
 }

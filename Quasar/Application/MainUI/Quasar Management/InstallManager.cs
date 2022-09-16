@@ -11,6 +11,7 @@ using Quasar.MainUI.ViewModels;
 using log4net;
 using Quasar.Common.Models;
 using Workshop.FileManagement;
+using Quasar.Common;
 
 namespace Quasar.Helpers.Quasar_Management
 {
@@ -137,23 +138,11 @@ namespace Quasar.Helpers.Quasar_Management
             {
                 Properties.QuasarSettings.Default.DefaultDir = newPath;
                 Properties.QuasarSettings.Default.Save();
-                ModalEvent Meuh = new ModalEvent()
-                {
-                    EventName = "MoveInstall",
-                    Action = "LoadOK",
-                };
-
-                EventSystem.Publish<ModalEvent>(Meuh);
+                Popup.UpdateModalStatus(Modal.MoveInstall, true);
             }
             else
             {
-                ModalEvent Meuh = new ModalEvent()
-                {
-                    EventName = "MoveInstall",
-                    Action = "LoadKO",
-                };
-
-                EventSystem.Publish<ModalEvent>(Meuh);
+                Popup.UpdateModalStatus(Modal.MoveInstall, false);
             }
         }
 

@@ -2,7 +2,7 @@
 using DataModels.User;
 using System;
 using System.Collections.ObjectModel;
-using Workshop.Associations;
+using Workshop.Assignments;
 using Xunit;
 
 namespace Validator.Grouping

@@ -25,6 +25,7 @@ using Quasar.Library.Models;
 using Workshop.FileManagement;
 using Workshop.Web;
 using System.IO;
+using Quasar.Common;
 
 namespace Quasar.Controls.ModManagement.ViewModels
 {
@@ -793,19 +794,7 @@ namespace Quasar.Controls.ModManagement.ViewModels
 
             if (Properties.QuasarSettings.Default.TransferQuasarFoldersOnly && Properties.QuasarSettings.Default.SuppressManageWarning)
             {
-                ModalEvent meuh = new ModalEvent()
-                {
-                    EventName = "TransferWarning",
-                    Type = ModalType.OkCancel,
-                    Action = "Show",
-                    Title = Properties.Resources.Library_Modal_TransferWarningTitle,
-                    Content = Properties.Resources.Library_Modal_TransferWarningContent,
-                    OkButtonText = Properties.Resources.Library_Modal_TransferWarningOK,
-                    CancelButtonText = Properties.Resources.Library_Modal_TransferWarningCancel
-
-                };
-
-                EventSystem.Publish<ModalEvent>(meuh);
+                Popup.CallModal(Modal.TransferWarning);
             }
             else
             {
@@ -1071,19 +1060,7 @@ namespace Quasar.Controls.ModManagement.ViewModels
 
             if (Properties.QuasarSettings.Default.SupressModDeletion)
             {
-                ModalEvent meuh = new ModalEvent()
-                {
-                    EventName = "DeleteMod",
-                    Type = ModalType.OkCancel,
-                    Action = "Show",
-                    Title = Properties.Resources.Library_Modal_DeleteTitle,
-                    Content = Properties.Resources.Library_Modal_DeleteContent,
-                    OkButtonText = Properties.Resources.Library_Modal_DeleteOK,
-                    CancelButtonText = Properties.Resources.Library_Modal_DeleteCancel
-
-                };
-
-                EventSystem.Publish<ModalEvent>(meuh);
+                Popup.CallModal(Modal.DeleteMod);
             }
             else
             {
@@ -1142,15 +1119,7 @@ namespace Quasar.Controls.ModManagement.ViewModels
             if (SelectedModListItem == null)
                 return;
 
-            EventSystem.Publish<ModalEvent>(new()
-            {
-                Action = "Show",
-                Title = "Import in Progress",
-                Content = "Quasar is importing the selected files",
-                EventName = "ImportingFiles",
-                OkButtonText = Properties.Resources.Modal_Label_DefaultOK,
-                Type = ModalType.Loader
-            });
+            Popup.CallModal(Modal.ImportFiles);
 
             ModFileManager FileManager = new ModFileManager(MLI.ModViewModel.LibraryItem);
 
@@ -1166,15 +1135,7 @@ namespace Quasar.Controls.ModManagement.ViewModels
             string NewInstallPath = newDialog.SelectedPath;
             FileManager.ImportFolder(NewInstallPath);
 
-            EventSystem.Publish<ModalEvent>(new()
-            {
-                Action = "LoadOK",
-                Title = "Import Success",
-                Content = "Quasar finished importing the selected files",
-                EventName = "ImportingFiles",
-                OkButtonText = Properties.Resources.Modal_Label_DefaultOK,
-                Type = ModalType.Loader
-            });
+            Popup.UpdateModalStatus(Modal.ImportFiles,true);
             QuasarLogger.Info($"Finished importing files");
         }
 

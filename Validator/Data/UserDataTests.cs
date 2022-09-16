@@ -25,12 +25,6 @@ namespace Validator.Data
             Assert.True(LibraryItems.Count > 0);
         }
         [Fact]
-        public void Loading_WorkspaceFileLoadsAndContainsData()
-        {
-            ObservableCollection<Workspace> Workspaces = UserDataManager.GetWorkspaces(AppDataLocalPath);
-            Assert.True(Workspaces.Count > 0);
-        }
-        [Fact]
         public void Loading_ContentItemsFileLoadsAndContainsData()
         {
             ObservableCollection<ContentItem> ContentItems = UserDataManager.GetSingleFileContentItems(AppDataLocalPath);
@@ -53,11 +47,5 @@ namespace Validator.Data
 
         }
 
-        [Fact]
-        public void Backup_UserDataBackupComplete()
-        {
-            Assert.True(UserDataManager.BackupUserDataFiles(AppDataLocalPath));
-
-        }
     }
 }

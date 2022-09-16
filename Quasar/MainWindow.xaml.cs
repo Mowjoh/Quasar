@@ -3,7 +3,9 @@ using System.Linq;
 using System.Reflection.Metadata;
 using System.Windows;
 using DataModels.User;
+using Quasar.Common;
 using Quasar.Common.Models;
+using Quasar.Controls;
 using Quasar.Helpers;
 using Quasar.MainUI.ViewModels;
 using Workshop.Associations;
@@ -42,18 +44,7 @@ namespace Quasar
             {
                 e.Cancel = true;
 
-                ModalEvent meuh = new ModalEvent()
-                {
-                    Action = "Show",
-                    EventName = "QuasarClose",
-                    Title = "Are you sure you want to Exit ?",
-                    Content = "Quasar is currently active.\rExiting now will probably result in some errors later on",
-                    OkButtonText = "I'm sure",
-                    CancelButtonText = "Nope",
-                    Type = ModalType.OkCancel
-                };
-
-                EventSystem.Publish<ModalEvent>(meuh);
+                Popup.CallModal(Modal.Exit);
             }
         }
 
@@ -64,7 +55,7 @@ namespace Quasar
         public void ProcessIncomingModalEvent(ModalEvent meuh)
         {
 
-            if (meuh.EventName == "QuasarClose")
+            if (meuh.EventName == "Exit")
             {
                 if(meuh.Action == "OK")
                 {

@@ -3,9 +3,8 @@ using DataModels.User;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text.RegularExpressions;
 
-namespace Workshop.Associations
+namespace Workshop.Assignments
 {
     public static class Grouper
     {
@@ -18,8 +17,7 @@ namespace Workshop.Associations
         public static QuasarModTypeGroup GetQuasarModTypeGroups(int _game_element_family_id, ObservableCollection<QuasarModType> _available_quasar_mod_types)
         {
             //Instantiating Group collection
-            QuasarModTypeGroup Group = new();
-            Group = new()
+            QuasarModTypeGroup Group = new()
             {
                 QuasarModTypeCollection = new()
             };
@@ -37,9 +35,8 @@ namespace Workshop.Associations
         /// <summary>
         /// Provides AssignmentContents for a specific QuasarModType and GameElement
         /// </summary>
-        /// <param name="_quasar_mod_type">Quasar Mod Type used to filter ContentItems</param>
         /// <param name="_content_items">List of all ContentItems to parse from</param>
-        /// <param name="_associated_element">Associated Game Element to filter ContentItems</param>
+        /// <param name="_grouped">If you want ContentItems grouped by ModType.Group</param>
         /// <returns>The generated list of Assignment Contents</returns>
         public static ObservableCollection<AssignmentContent> GetAssignmentContents(ObservableCollection<ContentItem> _content_items, bool _grouped)
         {
@@ -79,7 +76,7 @@ namespace Workshop.Associations
             {
                 bool ContentAdded = false;
 
-                //Looping through existing contents for matchs
+                //Looping through existing contents for matches
                 foreach (AssignmentContent AssignmentContent in Contents)
                 {
                     if (AssignmentContent.AssignmentContentItems[0].GroupName == MatchingContentItem.GroupName && AssignmentContent.AssignmentContentItems[0].ScanFiles[0].RootPath ==

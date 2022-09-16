@@ -3,39 +3,79 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:local="clr-namespace:Quasar.Skins.Views" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:views="clr-namespace:Quasar.Skins.Views"
              d:DesignHeight="450" d:DesignWidth="800"
              mc:Ignorable="d">
+    <UserControl.Resources>
 
-    <Grid>
-        <Grid Visibility="{Binding SelectionViewActive, Converter={StaticResource BoolVisi}}">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="100" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
-            <Label HorizontalAlignment="Center" VerticalAlignment="Center"
-                   Content="Select your Character" FontSize="32"
-                   Style="{StaticResource CutieLabelStyle}" />
-            <ItemsControl ItemsSource="{Binding CharacterItems}"
-                          Grid.Row="1"
-                          Margin="10,0,0,0">
+        <!--Selection Resources-->
+        <Style x:Key="SelectionHeader" TargetType="Label" BasedOn="{StaticResource CutieLabelStyle}">
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="FontSize" Value="32" />
+        </Style>
+        
+        <ControlTemplate TargetType="{x:Type ItemsControl}" x:Key="SelectionItemsControl">
+            <ItemsControl Margin="10,0,0,0"  ItemsSource="{Binding CharacterItems}" >
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <WrapPanel />
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
             </ItemsControl>
+        </ControlTemplate>
+
+        <Style x:Key="PlayerHeader" TargetType="TextBlock" BasedOn="{StaticResource CutieTextBlockStyle}">
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Top" />
+            <Setter Property="FontSize" Value="20" />
+            <Setter Property="Margin" Value="0,10" />
+        </Style>
+
+        <!--Slotting Resources-->
+        <Style x:Key="PlayerBorder" TargetType="Border">
+            <Setter Property="Margin" Value="0,0,0,0" />
+            <Setter Property="BorderBrush" Value="{StaticResource CutieBG24}" />
+            <Setter Property="BorderThickness" Value="0,0,2,0" />
+        </Style>
+
+        <Style x:Key="PlayerIconBorder" TargetType="Border">
+            <Setter Property="Height" Value="90" />
+            <Setter Property="Width" Value="100" />
+            <Setter Property="VerticalAlignment" Value="Top" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="0,50,0,0" />
+            <Setter Property="Background" Value="{StaticResource CutieBG08}" />
+            <Setter Property="BorderBrush" Value="{StaticResource CutieBG24}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="5" />
+        </Style>
+
+</UserControl.Resources>
+
+    <Grid>
+        <!--  Selection View  -->
+        <Grid Visibility="{Binding SelectionViewActive, Converter={StaticResource BoolVisi}}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="100" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            
+            <Label Grid.Row="0" Content="Select your Character" Style="{StaticResource SelectionHeader}" />
+            
+            <ItemsControl Grid.Row="1" Template="{StaticResource SelectionItemsControl}"/>
         </Grid>
+
+        <!--  Slotting View  -->
         <Grid Visibility="{Binding DisplayViewActive, Converter={StaticResource BoolVisi}}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="100" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
 
+            <!--  Top Actions  -->
             <Grid Grid.Row="0" Grid.Column="0"
                   Background="Black">
+
                 <Button Width="180" Height="35"
-                        Margin="15,15,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
+                        Margin="15,15,0,0" HorizontalAlignment="Left" VerticalAlignment="Center"
                         Command="{Binding Path=GoBack}"
                         Content="Go back to selection"
                         Template="{StaticResource CutieSmallButtonTemplate}" />
@@ -57,6 +97,7 @@
                           Template="{StaticResource CutieToggleButton}" />
             </Grid>
 
+            <!--  Slotting Interface  -->
             <Grid Grid.Row="1" Grid.Column="0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
@@ -64,67 +105,68 @@
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="*" />
-                    <!--<ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />-->
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
-                <Grid Grid.Column="1">
-                    <TextBlock Margin="0,10" HorizontalAlignment="Center" VerticalAlignment="Top"
-                               FontSize="20"
-                               Foreground="{StaticResource Player1Color}"
-                               Style="{StaticResource CutieTextBlockStyle}"
-                               Text="Player 1" />
-                    <Border Width="100" Height="90"
-                            Margin="0,50,0,0" HorizontalAlignment="Center" VerticalAlignment="Top"
-                            BorderBrush="{StaticResource CutieBG24}"
-                            BorderThickness="1" CornerRadius="5">
-                        <Border.Style>
-                            <Style TargetType="Border">
-                                <Setter Property="Background" Value="{StaticResource CutieBG08}" />
-                                <Setter Property="BorderBrush" Value="#c1c1c1" />
-                            </Style>
-                        </Border.Style>
-                        <Grid Background="Transparent">
-                            <Image Width="80" Height="80"
-                                   Source="{Binding SelectedCharacterItem.CIVM.Slot0String}" />
+
+                <!--  Contents  -->
+                <Grid Grid.Row="0" Grid.Column="0">
+                    <Border Style="{StaticResource PlayerBorder}">
+
+                        <Grid>
+                            <TextBlock Foreground="White" Style="{StaticResource PlayerHeader}" Text="Available Contents" />
+
+                            <ScrollViewer Margin="0,50,0,0"
+                                          HorizontalScrollBarVisibility="Hidden">
+                                <ItemsControl ItemsSource="{Binding SourceSlot.Contents}"
+                                              HorizontalContentAlignment="Center" />
+                            </ScrollViewer>
+
                         </Grid>
+
                     </Border>
-                    <ItemsControl ItemsSource="{Binding Slots[0].Contents}"
-                                  Margin="0,150,0,0">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <WrapPanel />
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                    </ItemsControl>
+                </Grid>
+
+                <!--  Slots  -->
+                <Grid Grid.Column="1">
+
+                    <Border Style="{StaticResource PlayerBorder}">
+                        <Grid>
+
+                            <TextBlock Foreground="{StaticResource Player1Color}" Style="{StaticResource PlayerHeader}" Text="Player 1" />
+
+                            <Border Style="{StaticResource PlayerIconBorder}">
+                                <Grid Background="Transparent">
+                                    <Image Width="80" Height="80"
+                                           Source="{Binding SelectedCharacterItem.CIVM.Slot0String}" />
+                                </Grid>
+                            </Border>
+
+                            <ScrollViewer Margin="0,150,0,0"
+                                          HorizontalScrollBarVisibility="Hidden">
+                                <ItemsControl ItemsSource="{Binding Slots[0].Contents}"
+                                              HorizontalContentAlignment="Center" />
+                            </ScrollViewer>
+
+                        </Grid>
+
+                    </Border>
                 </Grid>
                 <Grid Grid.Column="2">
-                    <Border BorderBrush="White" BorderThickness="2">
+                    <Border Style="{StaticResource PlayerBorder}">
                         <Grid>
-                            <TextBlock Margin="0,10" HorizontalAlignment="Center" VerticalAlignment="Top"
-                                       FontSize="20"
-                                       Foreground="{StaticResource Player2Color}"
-                                       Style="{StaticResource CutieTextBlockStyle}"
-                                       Text="Player 2" />
-                            <Border Width="100" Height="90"
-                                    Margin="0,50,0,0" HorizontalAlignment="Center" VerticalAlignment="Top"
-                                    BorderBrush="{StaticResource CutieBG24}"
-                                    BorderThickness="1" CornerRadius="5">
-                                <Border.Style>
-                                    <Style TargetType="Border">
-                                        <Setter Property="Background" Value="{StaticResource CutieBG08}" />
-                                        <Setter Property="BorderBrush" Value="#c1c1c1" />
-                                    </Style>
-                                </Border.Style>
+                            <TextBlock Foreground="{StaticResource Player2Color}" Style="{StaticResource PlayerHeader}" Text="Player 2" />
+
+                            <Border Style="{StaticResource PlayerIconBorder}">
+                                
                                 <Grid Background="Transparent">
                                     <Image Width="80" Height="80"
                                            Source="{Binding SelectedCharacterItem.CIVM.Slot1String}" />
                                 </Grid>
+
                             </Border>
+
                             <ItemsControl ItemsSource="{Binding Slots[1].Contents}"
                                           Margin="0,150,0,0">
                                 <ItemsControl.ItemsPanel>
@@ -138,56 +180,38 @@
 
                 </Grid>
                 <Grid Grid.Column="3">
-                    <TextBlock Margin="0,10" HorizontalAlignment="Center" VerticalAlignment="Top"
-                               FontSize="20"
-                               Foreground="{StaticResource Player3Color}"
-                               Style="{StaticResource CutieTextBlockStyle}"
-                               Text="Player 3" />
-                    <Border Width="100" Height="90"
-                            Margin="0,50,0,0" HorizontalAlignment="Center" VerticalAlignment="Top"
-                            BorderBrush="{StaticResource CutieBG24}"
-                            BorderThickness="1" CornerRadius="5">
-                        <Border.Style>
-                            <Style TargetType="Border">
-                                <Setter Property="Background" Value="{StaticResource CutieBG08}" />
-                                <Setter Property="BorderBrush" Value="#c1c1c1" />
-                            </Style>
-                        </Border.Style>
-                        <Grid Background="Transparent">
-                            <Image Width="80" Height="80"
-                                   Source="{Binding SelectedCharacterItem.CIVM.Slot2String}" />
+                    <Border Style="{StaticResource PlayerBorder}">
+                        <Grid>
+                            <TextBlock Foreground="{StaticResource Player3Color}" Style="{StaticResource PlayerHeader}" Text="Player 3" />
+
+                            <Border Style="{StaticResource PlayerIconBorder}">
+                                <Grid Background="Transparent">
+                                    <Image Width="80" Height="80"
+                                           Source="{Binding SelectedCharacterItem.CIVM.Slot2String}" />
+                                </Grid>
+                            </Border>
+
+                            <ItemsControl ItemsSource="{Binding Slots[2].Contents}"
+                                          Margin="0,150,0,0">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                            </ItemsControl>
                         </Grid>
                     </Border>
-                    <ItemsControl ItemsSource="{Binding Slots[2].Contents}"
-                                  Margin="0,150,0,0">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <WrapPanel />
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                    </ItemsControl>
                 </Grid>
                 <Grid Grid.Column="4">
-                    <TextBlock Margin="0,10" HorizontalAlignment="Center" VerticalAlignment="Top"
-                               FontSize="20"
-                               Foreground="{StaticResource Player4Color}"
-                               Style="{StaticResource CutieTextBlockStyle}"
-                               Text="Player 4" />
-                    <Border Width="100" Height="90"
-                            Margin="0,50,0,0" HorizontalAlignment="Center" VerticalAlignment="Top"
-                            BorderBrush="{StaticResource CutieBG24}"
-                            BorderThickness="1" CornerRadius="5">
-                        <Border.Style>
-                            <Style TargetType="Border">
-                                <Setter Property="Background" Value="{StaticResource CutieBG08}" />
-                                <Setter Property="BorderBrush" Value="#c1c1c1" />
-                            </Style>
-                        </Border.Style>
+                    <TextBlock Foreground="{StaticResource Player4Color}" Style="{StaticResource PlayerHeader}" Text="Player 4" />
+
+                    <Border Style="{StaticResource PlayerIconBorder}">
                         <Grid Background="Transparent">
                             <Image Width="80" Height="80"
                                    Source="{Binding SelectedCharacterItem.CIVM.Slot3String}" />
                         </Grid>
                     </Border>
+
                     <ItemsControl ItemsSource="{Binding Slots[3].Contents}"
                                   Margin="0,150,0,0">
                         <ItemsControl.ItemsPanel>
@@ -197,145 +221,12 @@
                         </ItemsControl.ItemsPanel>
                     </ItemsControl>
                 </Grid>
-                <!--<Grid Grid.Column="4">
-                    <TextBlock Margin="0,10" HorizontalAlignment="Center" VerticalAlignment="Top"
-                               FontSize="20"
-                               Foreground="{StaticResource Player5Color}"
-                               Style="{StaticResource CutieTextBlockStyle}"
-                               Text="Player 5" />
-                    <Border Width="100" Height="90"
-                            Margin="0,50,0,0" HorizontalAlignment="Center" VerticalAlignment="Top"
-                            BorderBrush="{StaticResource CutieBG24}"
-                            BorderThickness="1" CornerRadius="5">
-                        <Border.Style>
-                            <Style TargetType="Border">
-                                <Setter Property="Background" Value="{StaticResource CutieBG08}" />
-                                <Setter Property="BorderBrush" Value="#c1c1c1" />
-                            </Style>
-                        </Border.Style>
-                        <Grid Background="Transparent">
-                            <Image Width="80" Height="80"
-                                   Source="{Binding SelectedCharacterItem.CIVM.Slot4String}" />
-                        </Grid>
-                    </Border>
-                    <ItemsControl ItemsSource="{Binding Slots[4].Contents}"
-                                  Margin="0,150,0,0">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <WrapPanel />
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                    </ItemsControl>
-                </Grid>
-                <Grid Grid.Column="5">
-                    <TextBlock Margin="0,10" HorizontalAlignment="Center" VerticalAlignment="Top"
-                               FontSize="20"
-                               Foreground="{StaticResource Player6Color}"
-                               Style="{StaticResource CutieTextBlockStyle}"
-                               Text="Player 6" />
-                    <Border Width="100" Height="90"
-                            Margin="0,50,0,0" HorizontalAlignment="Center" VerticalAlignment="Top"
-                            BorderBrush="{StaticResource CutieBG24}"
-                            BorderThickness="1" CornerRadius="5">
-                        <Border.Style>
-                            <Style TargetType="Border">
-                                <Setter Property="Background" Value="{StaticResource CutieBG08}" />
-                                <Setter Property="BorderBrush" Value="#c1c1c1" />
-                            </Style>
-                        </Border.Style>
-                        <Grid Background="Transparent">
-                            <Image Width="80" Height="80"
-                                   Source="{Binding SelectedCharacterItem.CIVM.Slot5String}" />
-                        </Grid>
-                    </Border>
-                    <Border />
-                    <ItemsControl ItemsSource="{Binding Slots[5].Contents}"
-                                  Margin="0,150,0,0">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <WrapPanel />
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                    </ItemsControl>
-                </Grid>
-                <Grid Grid.Column="6">
-                    <TextBlock Margin="0,10" HorizontalAlignment="Center" VerticalAlignment="Top"
-                               FontSize="20"
-                               Foreground="{StaticResource Player7Color}"
-                               Style="{StaticResource CutieTextBlockStyle}"
-                               Text="Player 7" />
-                    <Border Width="100" Height="90"
-                            Margin="0,50,0,0" HorizontalAlignment="Center" VerticalAlignment="Top"
-                            BorderBrush="{StaticResource CutieBG24}"
-                            BorderThickness="1" CornerRadius="5">
-                        <Border.Style>
-                            <Style TargetType="Border">
-                                <Setter Property="Background" Value="{StaticResource CutieBG08}" />
-                                <Setter Property="BorderBrush" Value="#c1c1c1" />
-                            </Style>
-                        </Border.Style>
-                        <Grid Background="Transparent">
-                            <Image Width="80" Height="80"
-                                   Source="{Binding SelectedCharacterItem.CIVM.Slot6String}" />
-                        </Grid>
-                    </Border>
-                    <ItemsControl ItemsSource="{Binding Slots[6].Contents}"
-                                  Margin="0,150,0,0">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <WrapPanel />
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                    </ItemsControl>
-                </Grid>
-                <Grid Grid.Column="7">
-                    <TextBlock Margin="0,10" HorizontalAlignment="Center" VerticalAlignment="Top"
-                               FontSize="20"
-                               Foreground="{StaticResource Player8Color}"
-                               Style="{StaticResource CutieTextBlockStyle}"
-                               Text="Player 8" />
-                    <Border Width="100" Height="90"
-                            Margin="0,50,0,0" HorizontalAlignment="Center" VerticalAlignment="Top"
-                            BorderBrush="{StaticResource CutieBG24}"
-                            BorderThickness="1" CornerRadius="5">
-                        <Border.Style>
-                            <Style TargetType="Border">
-                                <Setter Property="Background" Value="{StaticResource CutieBG08}" />
-                                <Setter Property="BorderBrush" Value="#c1c1c1" />
-                            </Style>
-                        </Border.Style>
-                        <Grid Background="Transparent">
-                            <Image Width="80" Height="80"
-                                   Source="{Binding SelectedCharacterItem.CIVM.Slot7String}" />
-                        </Grid>
-                    </Border>
-                    <ItemsControl ItemsSource="{Binding Slots[7].Contents}"
-                                  Margin="0,150,0,0">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <WrapPanel />
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                    </ItemsControl>
-                </Grid>-->
-                <Grid Grid.Row="0" Grid.Column="0">
-                    <Border BorderBrush="green" BorderThickness="2">
-                        <ScrollViewer>
-                            <ItemsControl ItemsSource="{Binding SourceSlot.Contents}">
-                                <ItemsControl.ItemsPanel>
-                                    <ItemsPanelTemplate>
-                                        <WrapPanel />
-                                    </ItemsPanelTemplate>
-                                </ItemsControl.ItemsPanel>
-                            </ItemsControl>
-                        </ScrollViewer>
-                    </Border>
 
-
-                </Grid>
             </Grid>
 
 
         </Grid>
+
     </Grid>
+
 </UserControl>

@@ -258,10 +258,10 @@ Quasar will be of no use to you.</value>
     <value>Recovering Files and Data</value>
   </data>
   <data name="MainUI_Modal_UpdateFinishedContent" xml:space="preserve">
-    <value />
+    <value>Quasar finished it's update process succesfully</value>
   </data>
   <data name="MainUI_Modal_UpdateFinishedTitle" xml:space="preserve">
-    <value />
+    <value>Update Finished</value>
   </data>
   <data name="MainUI_Modal_UpdateProgressContent" xml:space="preserve">
     <value>Please be patient, Quasar is updating</value>
@@ -602,5 +602,29 @@ Also check that your FTP server is running</value>
   </data>
   <data name="Transfer_Tooltip_CloseWindowButton" xml:space="preserve">
     <value>Close the transfer window</value>
+  </data>
+  <data name="Quasar_Modal_Title_Exit" xml:space="preserve">
+    <value>Are you sure you want to Exit ?</value>
+  </data>
+  <data name="Quasar_Modal_Content_Exit" xml:space="preserve">
+    <value>Quasar is currently active.\rExiting now will probably result in some errors later on</value>
+  </data>
+  <data name="Library_Modal_Title_ImportFiles" xml:space="preserve">
+    <value>Import in Progress</value>
+  </data>
+  <data name="Library_Modal_Content_ImportFiles" xml:space="preserve">
+    <value>Quasar is importing the selected files</value>
+  </data>
+  <data name="Library_Modal_Title_ImportFiles_Success" xml:space="preserve">
+    <value>Import Success</value>
+  </data>
+  <data name="Library_Modal_Title_ImportFiles_Failure" xml:space="preserve">
+    <value>Import Error</value>
+  </data>
+  <data name="Library_Modal_Content_ImportFiles_Success" xml:space="preserve">
+    <value>Quasar finished importing the selected files</value>
+  </data>
+  <data name="Library_Modal_Content_ImportFiles_Failure" xml:space="preserve">
+    <value>Quasar could not import the selected files</value>
   </data>
 </root>

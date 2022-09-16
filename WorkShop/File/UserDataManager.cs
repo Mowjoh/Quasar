@@ -45,6 +45,11 @@ namespace Workshop.FileManagement
             return Library;
         }
 
+        /// <summary>
+        /// Loads the library from different files within their respective mod folders
+        /// </summary>
+        /// <param name="_library_folder_path">Path to the stored mods</param>
+        /// <returns>A full Library containing data for every found mod</returns>
         public static ObservableCollection<LibraryItem> GetSeparatedLibrary(string _library_folder_path)
         {
             ObservableCollection<LibraryItem> Library = new ObservableCollection<LibraryItem>();
@@ -370,6 +375,7 @@ namespace Workshop.FileManagement
         {
             foreach (LibraryItem libraryItem in _LibraryItems)
             {
+                
                 string modpath = $@"{_LibraryPath}\Library\Mods\{libraryItem.Guid}\Gamebanana.json";
                 GamebananaRootCategory RootCategory = _API.Games[0].RootCategories
                     .Single(rc => rc.Guid == libraryItem.GBItem.RootCategoryGuid);

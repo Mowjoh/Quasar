@@ -64,7 +64,7 @@ namespace Workshop.FileManagement
             {
                 JsonSerializer serializer = new JsonSerializer();
                 if (Headless)
-                    serializer.TypeNameHandling = TypeNameHandling.None;
+                    serializer.TypeNameHandling = TypeNameHandling.All;
                 serializer.Serialize(file, _Source);
             }
         }

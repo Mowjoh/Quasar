@@ -36,9 +36,13 @@
     <FileVersion></FileVersion>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="Application\MainUI\Models\**" />
     <Compile Remove="Resources\images\GameDataCategories\**" />
+    <EmbeddedResource Remove="Application\MainUI\Models\**" />
     <EmbeddedResource Remove="Resources\images\GameDataCategories\**" />
+    <None Remove="Application\MainUI\Models\**" />
     <None Remove="Resources\images\GameDataCategories\**" />
+    <Page Remove="Application\MainUI\Models\**" />
     <Page Remove="Resources\images\GameDataCategories\**" />
   </ItemGroup>
   <ItemGroup>
@@ -5044,12 +5048,6 @@
       <Version>1.1.2</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Windows.Compatibility" Version="6.0.0" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Application\MainUI\Models\" />
-    <Folder Include="Application\Music\Models\" />
-    <Folder Include="Application\Skins\Models\" />
-    <Folder Include="Application\Stages\Models\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DataModels\DataModels.csproj" />

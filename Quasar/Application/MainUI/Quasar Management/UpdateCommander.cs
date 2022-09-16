@@ -14,6 +14,7 @@ using Quasar.Common.Models;
 using Quasar.Helpers;
 using Workshop.FileManagement;
 using Workshop.Updates;
+using Quasar.Common;
 
 namespace Quasar.Internal.Tools
 {
@@ -96,18 +97,7 @@ namespace Quasar.Internal.Tools
                 LaunchOldInstallChanges(Library, API);
             }
 
-
-            ModalEvent Meuh = new ModalEvent()
-            {
-                Action = "LoadOK",
-                EventName = "Updating",
-                Title = Properties.Resources.MainUI_Modal_UpdateFinishedTitle,
-                Content = Properties.Resources.MainUI_Modal_UpdateFinishedContent,
-                OkButtonText = "OK",
-                Type = ModalType.Loader
-            };
-
-            EventSystem.Publish<ModalEvent>(Meuh);
+            Popup.UpdateModalStatus(Modal.Update,true);
         }
 
         public static ObservableCollection<LibraryItem> LaunchInstallRecoverySequence(ObservableCollection<LibraryItem> Library, GamebananaAPI API, ILog QuasarLogger)
@@ -130,21 +120,11 @@ namespace Quasar.Internal.Tools
             }
             if (FoundRecoverableMods)
             {
-                ModalEvent meuh = new ModalEvent()
-                {
-                    Action = "Show",
-                    EventName = "RecoverMods",
-                    Title = "Recovery possible",
-                    Content = "Recoverable mods have been found, please wait while Quasar loads them up",
-                    OkButtonText = "OK",
-                    Type = ModalType.Loader
-                };
-
-                EventSystem.Publish<ModalEvent>(meuh);
+                Popup.CallModal(Modal.RecoverInstallation);
+                
                 Library = UserDataManager.RecoverMods(Properties.QuasarSettings.Default.DefaultDir, AppDataPath, Library, API, QuasarLogger);
 
-                meuh.Action = "LoadOK";
-                EventSystem.Publish<ModalEvent>(meuh);
+                Popup.UpdateModalStatus(Modal.RecoverInstallation, true);
             }
 
             return Library;

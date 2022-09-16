@@ -246,10 +246,10 @@ Quasar ne pourra rien pour vous.</value>
     <value>Ma Switch a un CFW</value>
   </data>
   <data name="MainUI_Modal_RecoverFinishedContent" xml:space="preserve">
-    <value />
+    <value>Quasar s'est mis à jour avec succès</value>
   </data>
   <data name="MainUI_Modal_RecoverFinishedTitle" xml:space="preserve">
-    <value />
+    <value>Mise à jour terminée</value>
   </data>
   <data name="MainUI_Modal_RecoverProgressContent" xml:space="preserve">
     <value>Veuillez patienter, Quasar récupère
@@ -602,5 +602,29 @@ que la bonne IP et le bon port soient utilisés.</value>
   </data>
   <data name="Transfer_Tooltip_CloseWindowButton" xml:space="preserve">
     <value>Fermer la fenêtre de transfert.</value>
+  </data>
+  <data name="Quasar_Modal_Title_Exit" xml:space="preserve">
+    <value>Êtes-vous sûr de vouloir quitter ?</value>
+  </data>
+  <data name="Quasar_Modal_Content_Exit" xml:space="preserve">
+    <value>Quasar est actuellement actif.\rQuitter l'application maintenant pourra provoquer des erreurs futures.</value>
+  </data>
+  <data name="Library_Modal_Title_ImportFiles" xml:space="preserve">
+    <value>Import en cours</value>
+  </data>
+  <data name="Library_Modal_Content_ImportFiles" xml:space="preserve">
+    <value>Quasar est en train d'importer les fichiers sélectionnés</value>
+  </data>
+  <data name="Library_Modal_Title_ImportFiles_Success" xml:space="preserve">
+    <value>Import réussi</value>
+  </data>
+  <data name="Library_Modal_Title_ImportFiles_Failure" xml:space="preserve">
+    <value>Erreur d'import</value>
+  </data>
+  <data name="Library_Modal_Content_ImportFiles_Success" xml:space="preserve">
+    <value>Quasar a terminé l'import avec succès</value>
+  </data>
+  <data name="Library_Modal_Content_ImportFiles_Failure" xml:space="preserve">
+    <value>Quasar n'a pas réussi à importer les fichiers.</value>
   </data>
 </root>

@@ -2,6 +2,72 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:p="clr-namespace:Quasar.Properties"
              DataContext="{Binding SVM}">
+    <UserControl.Resources>
+
+        <Style x:Key="SectionHeader" TargetType="Label" BasedOn="{StaticResource CutieLabelStyle}">
+            <Setter Property="VerticalAlignment" Value="Top" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="Margin" Value="0,5,5,0" />
+            <Setter Property="FontSize" Value="15" />
+        </Style>
+
+        <!--#region Settings Templates -->
+        <ControlTemplate x:Key="ApplicationSettingsTemplate">
+            <ItemsControl ItemsSource="{Binding AppSettings}" Margin="0,40,0,0">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Vertical" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
+        </ControlTemplate>
+        <ControlTemplate x:Key="FTPSettingsTemplate">
+            <ItemsControl ItemsSource="{Binding FTPSettings}" Margin="0,35,0,0">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Vertical" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
+        </ControlTemplate>
+        <ControlTemplate x:Key="TransferSettingsTemplate">
+            <ItemsControl ItemsSource="{Binding TransferSettings}" Margin="0,35,0,0">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Vertical" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
+        </ControlTemplate>
+        <ControlTemplate x:Key="WarningSettingsTemplate">
+            <ItemsControl ItemsSource="{Binding WarningSettings}" Margin="0,35,0,0">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Vertical" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
+        </ControlTemplate>
+        <!--#endregion-->
+
+        <Style x:Key="QuestionBox" TargetType="Path">
+            <Setter Property="Data" Value="M21,3H3v18h18V3z M12.01,18c-0.7,0-1.26-0.56-1.26-1.26c0-0.71,0.56-1.25,1.26-1.25c0.71,0,1.25,0.54,1.25,1.25 C13.25,17.43,12.72,18,12.01,18z M15.02,10.6c-0.76,1.11-1.48,1.46-1.87,2.17c-0.16,0.29-0.22,0.48-0.22,1.41h-1.82 c0-0.49-0.08-1.29,0.31-1.98c0.49-0.87,1.42-1.39,1.96-2.16c0.57-0.81,0.25-2.33-1.37-2.33c-1.06,0-1.58,0.8-1.8,1.48L8.56,8.49 C9.01,7.15,10.22,6,11.99,6c1.48,0,2.49,0.67,3.01,1.52C15.44,8.24,15.7,9.59,15.02,10.6z"></Setter>
+            <Setter Property="Width" Value="30"></Setter>
+            <Setter Property="Height" Value="30"></Setter>
+            <Setter Property="HorizontalAlignment" Value="Left"></Setter>
+            <Setter Property="VerticalAlignment" Value="Top"></Setter>
+            <Setter Property="Stroke" Value="Transparent"></Setter>
+            <Setter Property="Fill" Value="{StaticResource QuasarTextColorAccent}"></Setter>
+        </Style>
+
+        <Style x:Key="SettingsButton" TargetType="Button">
+            <Setter Property="Width" Value="300"></Setter>
+            <Setter Property="Height" Value="32"></Setter>
+            <Setter Property="HorizontalAlignment" Value="Left"></Setter>
+            <Setter Property="VerticalAlignment" Value="Top"></Setter>
+        </Style>
+
+    </UserControl.Resources>
 
     <Grid Background="{DynamicResource CutieBG01}">
 
@@ -24,20 +90,15 @@
 
                 <!--  Application Settings Grid  -->
                 <Grid Grid.Row="0" Background="Transparent">
-                    <Label Margin="0,5,5,0" HorizontalAlignment="Left" VerticalAlignment="Top"
-                           Content="{x:Static p:Resources.Settings_Header_ApplicationSettings}" FontSize="15" Style="{StaticResource CutieLabelStyle}" />
-                    <ItemsControl ItemsSource="{Binding AppSettings}" Margin="0,40,0,0">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <StackPanel Orientation="Vertical" />
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                    </ItemsControl>
 
-                    <Button Width="300" Height="32" Margin="3,135,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
-                            Command="{Binding Path=MoveInstallCommand}" Content="{x:Static p:Resources.Settings_Button_MoveInstallFolder}" Template="{StaticResource CutieSmallButtonTemplate}" />
-                    <Path Width="30" Height="30" Margin="320,140,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
-                          Data="M21,3H3v18h18V3z M12.01,18c-0.7,0-1.26-0.56-1.26-1.26c0-0.71,0.56-1.25,1.26-1.25c0.71,0,1.25,0.54,1.25,1.25 C13.25,17.43,12.72,18,12.01,18z M15.02,10.6c-0.76,1.11-1.48,1.46-1.87,2.17c-0.16,0.29-0.22,0.48-0.22,1.41h-1.82 c0-0.49-0.08-1.29,0.31-1.98c0.49-0.87,1.42-1.39,1.96-2.16c0.57-0.81,0.25-2.33-1.37-2.33c-1.06,0-1.58,0.8-1.8,1.48L8.56,8.49 C9.01,7.15,10.22,6,11.99,6c1.48,0,2.49,0.67,3.01,1.52C15.44,8.24,15.7,9.59,15.02,10.6z" Fill="{StaticResource QuasarTextColorAccent}" Stroke="Transparent" ToolTip="{x:Static p:Resources.Settings_Comment_AskMoveInstall}" />
+                    <Label Content="{x:Static p:Resources.Settings_Header_ApplicationSettings}" Style="{StaticResource SectionHeader}" />
+
+                    <ItemsControl Template="{StaticResource ApplicationSettingsTemplate}" />
+
+                    <Button Style="{StaticResource SettingsButton}" Template="{StaticResource CutieSmallButtonTemplate}" Margin="3,135,0,0" 
+                            Command="{Binding Path=MoveInstallCommand}" Content="{x:Static p:Resources.Settings_Button_MoveInstallFolder}"  />
+
+                    <Path Style="{StaticResource QuestionBox}" Margin="320,140,0,0" ToolTip="{x:Static p:Resources.Settings_Comment_AskMoveInstall}" />
 
                     <!--<Label Margin="0,135,5,0" HorizontalAlignment="Left" VerticalAlignment="Top"
                            Content="This enables you to move your Quasar Library to another folder" FontSize="13" Style="{StaticResource CutieLabelStyle}" />-->
@@ -45,23 +106,15 @@
 
                 <!--  FTP Settings Grid  -->
                 <Grid Grid.Row="1" Background="Transparent">
-                    <Label Margin="0,5,5,0" HorizontalAlignment="Left" VerticalAlignment="Top"
-                           Content="{x:Static p:Resources.Settings_Header_FtpSettings}" FontSize="15" Style="{StaticResource CutieLabelStyle}" />
-                    <ItemsControl ItemsSource="{Binding FTPSettings}" Margin="0,35,0,0">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <StackPanel Orientation="Vertical" />
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                    </ItemsControl>
+                    <Label Content="{x:Static p:Resources.Settings_Header_FtpSettings}" Style="{StaticResource SectionHeader}" />
 
-                    <Button Width="300" Height="32" Margin="3,218,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
-                            Command="{Binding Path=ValidateFTPCommand}" Content="{x:Static p:Resources.Settings_Button_ValidateFTP}" Template="{StaticResource CutieSmallButtonTemplate}" />
-                    <Path Width="30" Height="30" Margin="320,223,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
-                          Data="M21,3H3v18h18V3z M12.01,18c-0.7,0-1.26-0.56-1.26-1.26c0-0.71,0.56-1.25,1.26-1.25c0.71,0,1.25,0.54,1.25,1.25 C13.25,17.43,12.72,18,12.01,18z M15.02,10.6c-0.76,1.11-1.48,1.46-1.87,2.17c-0.16,0.29-0.22,0.48-0.22,1.41h-1.82 c0-0.49-0.08-1.29,0.31-1.98c0.49-0.87,1.42-1.39,1.96-2.16c0.57-0.81,0.25-2.33-1.37-2.33c-1.06,0-1.58,0.8-1.8,1.48L8.56,8.49 C9.01,7.15,10.22,6,11.99,6c1.48,0,2.49,0.67,3.01,1.52C15.44,8.24,15.7,9.59,15.02,10.6z" Fill="{StaticResource QuasarTextColorAccent}" Stroke="Transparent" ToolTip="{x:Static p:Resources.Settings_Comment_TestFTP}" />
+                    <ItemsControl Template="{StaticResource FTPSettingsTemplate}" />
 
-                    <!--<Label Margin="270,180,5,0" HorizontalAlignment="Left" VerticalAlignment="Top"
-                           Content="When you've typed your address and authentication info, use this to enable FTP when transferring" FontSize="12" Style="{StaticResource CutieLabelStyle}" />-->
+                    <Button Style="{StaticResource SettingsButton}" Template="{StaticResource CutieSmallButtonTemplate}" Margin="3,218,0,0" 
+                            Command="{Binding Path=ValidateFTPCommand}" Content="{x:Static p:Resources.Settings_Button_ValidateFTP}"  />
+
+                    <Path Style="{StaticResource QuestionBox}" Margin="320,223,0,0" ToolTip="{x:Static p:Resources.Settings_Comment_TestFTP}" />
+
                 </Grid>
 
             </Grid>
@@ -80,15 +133,19 @@
 
                 <!--  Transfer Settings  -->
                 <Grid Grid.Row="0" Background="Transparent">
-                    <Label Margin="0,5,5,0" HorizontalAlignment="Left" VerticalAlignment="Top"
-                           Content="{x:Static p:Resources.Settings_Header_FileTransfer}" FontSize="15" Style="{StaticResource CutieLabelStyle}" />
-                    <ItemsControl ItemsSource="{Binding TransferSettings}" Margin="0,35,0,0">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <StackPanel Orientation="Vertical" />
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                    </ItemsControl>
+                    <Label Content="{x:Static p:Resources.Settings_Header_FtpSettings}" Style="{StaticResource SectionHeader}" />
+
+                    <ItemsControl Template="{StaticResource FTPSettingsTemplate}" />
+
+                    <Button Style="{StaticResource SettingsButton}" Template="{StaticResource CutieSmallButtonTemplate}" Margin="3,218,0,0" 
+                            Command="{Binding Path=ValidateFTPCommand}" Content="{x:Static p:Resources.Settings_Button_ValidateFTP}"  />
+
+                    <Path Style="{StaticResource QuestionBox}" Margin="320,223,0,0" ToolTip="{x:Static p:Resources.Settings_Comment_TestFTP}" />
+
+                    <Label Margin="0,5,5,0" HorizontalAlignment="Left" VerticalAlignment="Top"></Label>
+
+                    <ItemsControl Template="{StaticResource TransferSettingsTemplate}" />
+
                     <Button Width="250" Margin="0,0,0,15" HorizontalAlignment="Left" VerticalAlignment="Bottom"
                             Command="{Binding ReloadCommand}" Content="{x:Static p:Resources.Settings_Button_Refresh}" Template="{StaticResource CutieSmallButtonTemplate}" />
                 </Grid>
@@ -96,13 +153,8 @@
                 <Grid Grid.Row="1" Background="Transparent">
                     <Label Margin="0,5,5,0" HorizontalAlignment="Left" VerticalAlignment="Top"
                            Content="{x:Static p:Resources.Settings_Header_Toggles}" FontSize="15" Style="{StaticResource CutieLabelStyle}" />
-                    <ItemsControl ItemsSource="{Binding WarningSettings}" Margin="0,35,0,0">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <StackPanel Orientation="Vertical" />
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                    </ItemsControl>
+
+                    <ItemsControl Template="{StaticResource WarningSettingsTemplate}" />
                 </Grid>
 
 

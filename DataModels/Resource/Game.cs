@@ -34,8 +34,11 @@ namespace DataModels.Resource
     {
         public int ID { get; set; }
         public string Name { get; set; }
+        [Newtonsoft.Json.JsonIgnore]
         public string ImagePath { get; set; }
+        [Newtonsoft.Json.JsonIgnore]
         public string ViewType { get; set; }
+        [Newtonsoft.Json.JsonIgnore]
         public string FilterName { get; set; }
         public ObservableCollection<GameElement> GameElements { get; set; }
     }
@@ -44,6 +47,7 @@ namespace DataModels.Resource
         public int ID { get; set; }
         public string Name { get; set; }
         public string GameFolderName { get; set; }
+        [Newtonsoft.Json.JsonIgnore]
         public string FilterValue { get; set; }
         public bool isDLC { get; set; }
     }

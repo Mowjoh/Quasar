@@ -21,8 +21,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataModels", "DataModels\Da
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DatabaseEditor", "DatabaseEditor\DatabaseEditor.csproj", "{BACA50AD-7714-4362-BECA-61819F13C46D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tomlhawk", "Tomlhawk\Tomlhawk.csproj", "{FEFC3EFB-C816-4CDC-9653-A42C190403F3}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug Admin|Any CPU = Debug Admin|Any CPU
@@ -103,18 +101,6 @@ Global
 		{BACA50AD-7714-4362-BECA-61819F13C46D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{BACA50AD-7714-4362-BECA-61819F13C46D}.Release|x86.ActiveCfg = Release|Any CPU
 		{BACA50AD-7714-4362-BECA-61819F13C46D}.Release|x86.Build.0 = Release|Any CPU
-		{FEFC3EFB-C816-4CDC-9653-A42C190403F3}.Debug Admin|Any CPU.ActiveCfg = Debug|Any CPU
-		{FEFC3EFB-C816-4CDC-9653-A42C190403F3}.Debug Admin|Any CPU.Build.0 = Debug|Any CPU
-		{FEFC3EFB-C816-4CDC-9653-A42C190403F3}.Debug Admin|x86.ActiveCfg = Debug|Any CPU
-		{FEFC3EFB-C816-4CDC-9653-A42C190403F3}.Debug Admin|x86.Build.0 = Debug|Any CPU
-		{FEFC3EFB-C816-4CDC-9653-A42C190403F3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FEFC3EFB-C816-4CDC-9653-A42C190403F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FEFC3EFB-C816-4CDC-9653-A42C190403F3}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{FEFC3EFB-C816-4CDC-9653-A42C190403F3}.Debug|x86.Build.0 = Debug|Any CPU
-		{FEFC3EFB-C816-4CDC-9653-A42C190403F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FEFC3EFB-C816-4CDC-9653-A42C190403F3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FEFC3EFB-C816-4CDC-9653-A42C190403F3}.Release|x86.ActiveCfg = Release|Any CPU
-		{FEFC3EFB-C816-4CDC-9653-A42C190403F3}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -125,7 +111,6 @@ Global
 		{CF8C6D00-D560-4DBC-A307-E4357FB7F685} = {40072382-3FF7-4CD0-8C2C-FD62543FC394}
 		{FD8B24D6-B1EF-4066-B4C3-57BC64F50699} = {40072382-3FF7-4CD0-8C2C-FD62543FC394}
 		{BACA50AD-7714-4362-BECA-61819F13C46D} = {791DD3F9-D9BF-4486-82AD-4A1AD43999B1}
-		{FEFC3EFB-C816-4CDC-9653-A42C190403F3} = {791DD3F9-D9BF-4486-82AD-4A1AD43999B1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {57BCC8AF-A55F-45F4-9840-DE92480716A0}

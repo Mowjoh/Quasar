@@ -1,7 +1,6 @@
 ﻿<Window x:Class="Quasar.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:p="clr-namespace:Quasar.Properties" xmlns:views1="clr-namespace:Quasar.MainUI.Views"
-        Title="{x:Static p:Resources.Quasar_WindowTitle}"
+        xmlns:p="clr-namespace:Quasar.Properties" xmlns:common="clr-namespace:Quasar.Common" Title="{x:Static p:Resources.Quasar_WindowTitle}"
         Width="1280" Height="768" MinWidth="1280" MinHeight="768"
         Closing="AskQuitQuasar" DataContext="{Binding RelativeSource={RelativeSource Self}}" Icon="Quasar.ico" WindowStartupLocation="CenterScreen">
 
@@ -17,7 +16,8 @@
 
         <Grid x:Name="OverlayGrid"
               Margin="0,0,0,0" Panel.ZIndex="1000">
-            <views1:ModalPopup DataContext="{Binding ModalPopupViewModel}" />
+            
+            <common:ModalPopup DataContext="{Binding ModalPopupViewModel}" />
         </Grid>
 
         <Grid x:Name="AppGrid">

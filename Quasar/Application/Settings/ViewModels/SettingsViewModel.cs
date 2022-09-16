@@ -14,6 +14,8 @@ using System.Windows.Input;
 using DataModels.Common;
 using log4net;
 using Quasar.Settings.Models;
+using Quasar.Controls;
+using Quasar.Common;
 
 namespace Quasar.Settings.ViewModels
 {
@@ -239,15 +241,7 @@ namespace Quasar.Settings.ViewModels
                     default:
                         break;
                     case "Language":
-                        EventSystem.Publish<ModalEvent>(new()
-                        {
-                            Action = "Show",
-                            Content = Properties.Resources.Settings_Modal_Content_ShutdownWarning,
-                            Title = Properties.Resources.Settings_Modal_Title_ShutdownWarning,
-                            OkButtonText = Properties.Resources.Settings_Modal_Button_ShutdownWarning,
-                            EventName = "ShutdownWarning",
-                            Type = ModalType.Warning
-                        });
+                        Popup.CallModal(Modal.Shutdown);
                         break;
                     case "PreferredTransferMethod":
                         LoadSettings();
@@ -423,17 +417,7 @@ namespace Quasar.Settings.ViewModels
         /// </summary>
         public void AskMoveInstall()
         {
-            ModalEvent Meuh = new ModalEvent()
-            {
-                EventName = "AskMoveInstall",
-                Action = "Show",
-                Type = ModalType.OkCancel,
-                Title = Properties.Resources.Settings_Modal_Title_AskMoveInstall,
-                Content = Properties.Resources.Settings_Modal_Content_AskMoveInstall,
-                OkButtonText = "OK",
-                CancelButtonText = "CANCEL"
-            };
-            EventSystem.Publish<ModalEvent>(Meuh);
+            Popup.CallModal(Modal.AskMoveInstall);
         }
 
         /// <summary>
@@ -450,16 +434,8 @@ namespace Quasar.Settings.ViewModels
             {
                 //Showing user a Modal to block UI while it processes
                 string NewInstallPath = dialog.SelectedPath;
-                ModalEvent Meuh = new ModalEvent()
-                {
-                    EventName = "MoveInstall",
-                    Action = "Show",
-                    Type = ModalType.Loader,
-                    Title = Properties.Resources.Settings_Modal_Title_MovingInstall,
-                    Content = Properties.Resources.Settings_Modal_Content_MovingInstall,
-                    OkButtonText = Properties.Resources.Settings_Modal_OkButton_MovingInstall,
-                };
-                EventSystem.Publish<ModalEvent>(Meuh);
+
+                Popup.CallModal(Modal.MoveInstall);
 
                 //Launching the move task
                 Task.Run(() => {

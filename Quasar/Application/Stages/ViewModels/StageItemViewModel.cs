@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using DataModels.Common;
+using DataModels.Resource;
 using Quasar.Common.Models;
 using Quasar.Helpers;
 using Quasar.Skins.ViewModels;
@@ -29,6 +30,19 @@ namespace Quasar.Stages.ViewModels
                 OnPropertyChanged("Full");
             }
         }
+
+        private GameElement _GameElement { get; set; }
+
+        public GameElement GameElement
+        {
+            get => _GameElement;
+            set
+            {
+                _GameElement = value;
+                OnPropertyChanged("GameElement");
+            }
+        }
+
 
         public string MiniatureString => $@"../../../Resources/images/Stages/miniature_{StageString}.png";
         public string DefaultString => $@"../../../Resources/images/Stages/standard_{StageString}.png";

@@ -98,7 +98,7 @@ namespace Workshop.Builder
                                         {
                                             QuasarModType qmt = quasarModTypes.Single(q => q.ID == ScanFile.QuasarModTypeID);
                                             GameElement ge = game.GameElementFamilies.Single(f => f.ID == qmt.GameElementFamilyID).GameElements.Single(g => g.ID == ci.GameElementID);
-                                            string FilePath = FileScanner.ProcessScanFileOutput(ScanFile, qmt, ci.SlotNumber, ge.GameFolderName, ge.isDLC);
+                                            string FilePath = FileScanner.ProcessFinalOutput(ScanFile, qmt, ci.SlotNumber, ge.GameFolderName, ge.isDLC);
                                             //Getting Files for that specific mod
                                             string LibraryContentFolderPath = LibraryPath + "\\Library\\Mods\\" + LibraryItem.Guid + "\\";
                                             LibraryContentFolderPath = LibraryContentFolderPath.Replace(@"\", @"/");
