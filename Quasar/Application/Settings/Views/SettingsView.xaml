@@ -4,6 +4,10 @@
              DataContext="{Binding SVM}">
     <UserControl.Resources>
 
+        <Style x:Key="ColumnStyle" TargetType="Grid" >
+            <Setter Property="Margin" Value="15,0,15,15" />
+            <Setter Property="Background" Value="{DynamicResource CutieBG01}" />
+        </Style>
         <Style x:Key="SectionHeader" TargetType="Label" BasedOn="{StaticResource CutieLabelStyle}">
             <Setter Property="VerticalAlignment" Value="Top" />
             <Setter Property="HorizontalAlignment" Value="Left" />
@@ -80,9 +84,7 @@
             </Grid.ColumnDefinitions>
 
             <!--  Left Column  -->
-            <Grid Grid.Column="0"
-                  Margin="15,0,15,15"
-                  Background="{DynamicResource CutieBG01}">
+            <Grid Grid.Column="0" Style="{StaticResource ColumnStyle}" >
                 <Grid.RowDefinitions>
                     <RowDefinition Height="185" />
                     <RowDefinition Height="1*" />
@@ -123,9 +125,7 @@
             <Grid Grid.Column="1" Background="{StaticResource CutieBG06}" />
 
             <!--  Right Column  -->
-            <Grid Grid.Column="2"
-                  Margin="15,0,0,0"
-                  Background="{DynamicResource CutieBG01}">
+            <Grid Grid.Column="2" Style="{StaticResource ColumnStyle}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="275" />
                     <RowDefinition Height="1*" />
@@ -133,26 +133,19 @@
 
                 <!--  Transfer Settings  -->
                 <Grid Grid.Row="0" Background="Transparent">
-                    <Label Content="{x:Static p:Resources.Settings_Header_FtpSettings}" Style="{StaticResource SectionHeader}" />
-
-                    <ItemsControl Template="{StaticResource FTPSettingsTemplate}" />
-
-                    <Button Style="{StaticResource SettingsButton}" Template="{StaticResource CutieSmallButtonTemplate}" Margin="3,218,0,0" 
-                            Command="{Binding Path=ValidateFTPCommand}" Content="{x:Static p:Resources.Settings_Button_ValidateFTP}"  />
-
-                    <Path Style="{StaticResource QuestionBox}" Margin="320,223,0,0" ToolTip="{x:Static p:Resources.Settings_Comment_TestFTP}" />
-
-                    <Label Margin="0,5,5,0" HorizontalAlignment="Left" VerticalAlignment="Top"></Label>
+                    <Label Content="{x:Static p:Resources.Settings_Header_FileTransfer}" Style="{StaticResource SectionHeader}" />
 
                     <ItemsControl Template="{StaticResource TransferSettingsTemplate}" />
 
-                    <Button Width="250" Margin="0,0,0,15" HorizontalAlignment="Left" VerticalAlignment="Bottom"
-                            Command="{Binding ReloadCommand}" Content="{x:Static p:Resources.Settings_Button_Refresh}" Template="{StaticResource CutieSmallButtonTemplate}" />
+                    <Button Style="{StaticResource SettingsButton}" Template="{StaticResource CutieSmallButtonTemplate}" Margin="3,218,0,0" 
+                            Command="{Binding Path=ReloadCommand}" Content="{x:Static p:Resources.Settings_Button_Refresh}"  />
+
+                    <Path Style="{StaticResource QuestionBox}" Margin="320,223,0,0" ToolTip="{x:Static p:Resources.Settings_Comment_TestFTP}" />
+
                 </Grid>
 
                 <Grid Grid.Row="1" Background="Transparent">
-                    <Label Margin="0,5,5,0" HorizontalAlignment="Left" VerticalAlignment="Top"
-                           Content="{x:Static p:Resources.Settings_Header_Toggles}" FontSize="15" Style="{StaticResource CutieLabelStyle}" />
+                    <Label Content="{x:Static p:Resources.Settings_Header_Toggles}" Style="{StaticResource SectionHeader}" />
 
                     <ItemsControl Template="{StaticResource WarningSettingsTemplate}" />
                 </Grid>

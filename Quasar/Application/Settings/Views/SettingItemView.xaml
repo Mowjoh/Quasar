@@ -3,9 +3,29 @@
              DataContext="{Binding ViewModel}">
 
     <UserControl.Resources>
+        <!--Item Styles-->
+        <Style x:Key="ItemBorderStyle" TargetType="Border">
+            <Setter Property="Background" Value="{StaticResource CutieBG06}" />
+            <Setter Property="BorderBrush" Value="{StaticResource CutieBG06}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="5" />
+        </Style>
+        <Style x:Key="CommentPathStyle" TargetType="Path">
+            <Setter Property="Visibility" Value="Visible" />
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding EnableValue}" Value="True">
+                    <Setter Property="Visibility" Value="Collapsed" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <!--Value Styles-->
         <Style x:Key="SettingsTextBlock"
                BasedOn="{StaticResource CutieTextBlockStyle}" TargetType="{x:Type TextBlock}">
             <Setter Property="Visibility" Value="Hidden" />
+            <Setter Property="Margin" Value="0,0,15,0" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="VerticalAlignment" Value="Center" />
             <Style.Triggers>
                 <DataTrigger Binding="{Binding EnableCheckBox}" Value="True">
                     <Setter Property="Visibility" Value="Visible" />
@@ -31,6 +51,9 @@
         </Style>
         <Style x:Key="SettingsCheckBox" TargetType="{x:Type CheckBox}">
             <Setter Property="Visibility" Value="Hidden" />
+            <Setter Property="Margin" Value="100,0,15,0" />
+            <Setter Property="HorizontalAlignment" Value="Right" />
+            <Setter Property="VerticalAlignment" Value="Center" />
             <Style.Triggers>
                 <DataTrigger Binding="{Binding EnableCheckBox}" Value="True">
                     <Setter Property="Visibility" Value="Visible" />
@@ -39,6 +62,9 @@
         </Style>
         <Style x:Key="SettingsComboBox" TargetType="{x:Type ComboBox}">
             <Setter Property="Visibility" Value="Hidden" />
+            <Setter Property="Margin" Value="0,0,15,0" />
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="VerticalAlignment" Value="Center" />
             <Style.Triggers>
                 <DataTrigger Binding="{Binding EnableComboBox}" Value="True">
                     <Setter Property="Visibility" Value="Visible" />
@@ -48,26 +74,29 @@
         <Style x:Key="SettingsTextBox"
                BasedOn="{StaticResource CutieTextBoxStyle}" TargetType="{x:Type TextBox}">
             <Setter Property="Visibility" Value="Hidden" />
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Setter Property="VerticalAlignment" Value="Center" />
             <Style.Triggers>
                 <DataTrigger Binding="{Binding EnableTextBox}" Value="True">
                     <Setter Property="Visibility" Value="Visible" />
                 </DataTrigger>
             </Style.Triggers>
         </Style>
-        <Style x:Key="ItemBorderStyle" TargetType="Border">
-            <Setter Property="Background" Value="{StaticResource CutieBG06}" />
-            <Setter Property="BorderBrush" Value="{StaticResource CutieBG06}" />
-            <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="CornerRadius" Value="5" />
+
+        <!--Help Box-->
+        <Style x:Key="HelpBox" TargetType="Path" BasedOn="{StaticResource CommentPathStyle}">
+            <Setter Property="Width" Value="30" />
+            <Setter Property="Height" Value="30" />
+            <Setter Property="Margin" Value="0,5,0,0" />
+            <Setter Property="HorizontalAlignment" Value="Right" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Fill" Value="{StaticResource QuasarTextColorAccent}" />
+            <Setter Property="Stroke" Value="Transparent" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Data" Value="M21,3H3v18h18V3z M12.01,18c-0.7,0-1.26-0.56-1.26-1.26c0-0.71,0.56-1.25,1.26-1.25c0.71,0,1.25,0.54,1.25,1.25 C13.25,17.43,12.72,18,12.01,18z M15.02,10.6c-0.76,1.11-1.48,1.46-1.87,2.17c-0.16,0.29-0.22,0.48-0.22,1.41h-1.82 c0-0.49-0.08-1.29,0.31-1.98c0.49-0.87,1.42-1.39,1.96-2.16c0.57-0.81,0.25-2.33-1.37-2.33c-1.06,0-1.58,0.8-1.8,1.48L8.56,8.49 C9.01,7.15,10.22,6,11.99,6c1.48,0,2.49,0.67,3.01,1.52C15.44,8.24,15.7,9.59,15.02,10.6z" />
         </Style>
-        <Style x:Key="CommentPathStyle" TargetType="Path">
-            <Setter Property="Visibility" Value="Visible" />
-            <Style.Triggers>
-                <DataTrigger Binding="{Binding EnableValue}" Value="True">
-                    <Setter Property="Visibility" Value="Collapsed" />
-                </DataTrigger>
-            </Style.Triggers>
-        </Style>
+        
     </UserControl.Resources>
 
     <Grid Height="40" Margin="2" HorizontalAlignment="Stretch"
@@ -88,35 +117,23 @@
                    Margin="5,0" VerticalAlignment="Center"
                    FontSize="13" Style="{StaticResource CutieTextBlockStyle}" Text="{Binding SettingItem.DisplayName}" />
 
-        <Path Grid.Column="1"
-              Width="30" Height="30" Margin="0,5,0,0" HorizontalAlignment="Right" VerticalAlignment="Center"
-              Data="M21,3H3v18h18V3z M12.01,18c-0.7,0-1.26-0.56-1.26-1.26c0-0.71,0.56-1.25,1.26-1.25c0.71,0,1.25,0.54,1.25,1.25 C13.25,17.43,12.72,18,12.01,18z M15.02,10.6c-0.76,1.11-1.48,1.46-1.87,2.17c-0.16,0.29-0.22,0.48-0.22,1.41h-1.82 c0-0.49-0.08-1.29,0.31-1.98c0.49-0.87,1.42-1.39,1.96-2.16c0.57-0.81,0.25-2.33-1.37-2.33c-1.06,0-1.58,0.8-1.8,1.48L8.56,8.49 C9.01,7.15,10.22,6,11.99,6c1.48,0,2.49,0.67,3.01,1.52C15.44,8.24,15.7,9.59,15.02,10.6z" Fill="{StaticResource QuasarTextColorAccent}" Stroke="Transparent" Style="{StaticResource CommentPathStyle}" ToolTip="{Binding SettingItem.DisplayComment}" />
+        <Path Grid.Column="1" Style="{StaticResource HelpBox}" ToolTip="{Binding SettingItem.DisplayComment}" />
 
 
         <!--#region Value Mode-->
-        <TextBlock Grid.Column="3"
-                   Margin="0,0,15,0" HorizontalAlignment="Left" VerticalAlignment="Center"
-                   Style="{StaticResource CutieTextBlockStyle}" Text="{Binding SettingItem.DisplayValue}" />
+        <TextBlock Grid.Column="3" Style="{StaticResource SettingsTextBlock}" Text="{Binding SettingItem.DisplayValue}" />
         <!--#endregion-->
 
         <!--#region Check Mode-->
-        <CheckBox x:Name="SettingCheckBox"
-                  Grid.Column="3"
-                  Margin="100,0,15,0" HorizontalAlignment="Right" VerticalAlignment="Center"
-                  IsChecked="{Binding IsChecked}" Style="{StaticResource SettingsCheckBox}" Template="{StaticResource CutieToggleButton}" />
+        <CheckBox x:Name="SettingCheckBox" Grid.Column="3" IsChecked="{Binding IsChecked}" Style="{StaticResource SettingsCheckBox}" Template="{StaticResource CutieToggleButton}" />
         <!--#endregion-->
 
         <!--#region Input Mode-->
-        <TextBox Grid.Column="3"
-                 HorizontalAlignment="Stretch" VerticalAlignment="Center" HorizontalContentAlignment="Stretch" KeyUp="TextBox_KeyUp"
-                 Style="{StaticResource SettingsTextBox}" Text="{Binding SettingItem.DisplayValue, UpdateSourceTrigger=PropertyChanged}" />
+        <TextBox Grid.Column="3" KeyUp="TextBox_KeyUp" Style="{StaticResource SettingsTextBox}" Text="{Binding SettingItem.DisplayValue, UpdateSourceTrigger=PropertyChanged}" />
         <!--#endregion-->
 
         <!--#region Choice Mode-->
-        <ComboBox ItemsSource="{Binding AvailableValues}" SelectedItem="{Binding SelectedBoxValue}" DisplayMemberPath="Key"
-                  Grid.Column="3"
-                  Margin="0,0,15,0" HorizontalAlignment="Stretch" VerticalAlignment="Center"
-                  Style="{StaticResource SettingsComboBox}" />
+        <ComboBox ItemsSource="{Binding AvailableValues}" SelectedItem="{Binding SelectedBoxValue}" DisplayMemberPath="Key" Grid.Column="3" Style="{StaticResource SettingsComboBox}" />
         <!--#endregion-->
 
     </Grid>
