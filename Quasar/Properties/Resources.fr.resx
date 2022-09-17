@@ -627,4 +627,46 @@ que la bonne IP et le bon port soient utilisés.</value>
   <data name="Library_Modal_Content_ImportFiles_Failure" xml:space="preserve">
     <value>Quasar n'a pas réussi à importer les fichiers.</value>
   </data>
+  <data name="MainUI_Help_Tooltip" xml:space="preserve">
+	  <value>Cliquez ici pour avoir plus d'informations sur cet onglet</value>
+  </data>
+  <data name="MainUI_Help_Content" xml:space="preserve">
+	  <value>Aide</value>
+  </data>
+  <data name="Help_Library_Title" xml:space="preserve">
+	  <value>Help with the Library Tab</value>
+  </data>
+  <data name="Help_Music_Title" xml:space="preserve">
+	  <value>Help with the Music Tab</value>
+  </data>
+  <data name="Help_Other_Title" xml:space="preserve">
+	  <value>Help with the Other Tab</value>
+  </data>
+  <data name="Help_Settings_Title" xml:space="preserve">
+	  <value>Help with the Settings Tab</value>
+  </data>
+  <data name="Help_Skin_Title" xml:space="preserve">
+	  <value>Help with the Skin Tab</value>
+  </data>
+  <data name="Help_Stage_Title" xml:space="preserve">
+	  <value>Help with the Stages Tab</value>
+  </data>
+  <data name="Help_Library_Content" xml:space="preserve">
+	  <value>Library Content</value>
+  </data>
+  <data name="Help_Music_Content" xml:space="preserve">
+	  <value>Music Content</value>
+  </data>
+  <data name="Help_Other_Content" xml:space="preserve">
+	  <value>Other Content</value>
+  </data>
+  <data name="Help_Settings_Content" xml:space="preserve">
+	  <value>Settings Content</value>
+  </data>
+  <data name="Help_Skin_Content" xml:space="preserve">
+	  <value>Skin Content</value>
+  </data>
+  <data name="Help_Stage_Content" xml:space="preserve">
+	  <value>Stage Content</value>
+  </data>
 </root>

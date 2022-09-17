@@ -6,6 +6,17 @@
 
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis" />
+
+        <Style x:Key="QuestionBox" TargetType="Path">
+            <Setter Property="Data" Value="M22.65 34h3V22h-3ZM24 18.3q.7 0 1.175-.45.475-.45.475-1.15t-.475-1.2Q24.7 15 24 15q-.7 0-1.175.5-.475.5-.475 1.2t.475 1.15q.475.45 1.175.45ZM24 44q-4.1 0-7.75-1.575-3.65-1.575-6.375-4.3-2.725-2.725-4.3-6.375Q4 28.1 4 23.95q0-4.1 1.575-7.75 1.575-3.65 4.3-6.35 2.725-2.7 6.375-4.275Q19.9 4 24.05 4q4.1 0 7.75 1.575 3.65 1.575 6.35 4.275 2.7 2.7 4.275 6.35Q44 19.85 44 24q0 4.1-1.575 7.75-1.575 3.65-4.275 6.375t-6.35 4.3Q28.15 44 24 44Zm.05-3q7.05 0 12-4.975T41 23.95q0-7.05-4.95-12T24 7q-7.05 0-12.025 4.95Q7 16.9 7 24q0 7.05 4.975 12.025Q16.95 41 24.05 41ZM24 24Z"></Setter>
+            <Setter Property="Width" Value="40"></Setter>
+            <Setter Property="Height" Value="40"></Setter>
+            <Setter Property="Stretch" Value="UniformToFill"></Setter>
+            <Setter Property="HorizontalAlignment" Value="Left"></Setter>
+            <Setter Property="VerticalAlignment" Value="Top"></Setter>
+            <Setter Property="Stroke" Value="Transparent"></Setter>
+            <Setter Property="Fill" Value="{StaticResource QuasarTextColorAccent}"></Setter>
+        </Style>
     </Window.Resources>
 
     <Window.TaskbarItemInfo>
@@ -21,6 +32,30 @@
         </Grid>
 
         <Grid x:Name="AppGrid">
+
+            <Grid ZIndex="9999" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="8,5">
+                <Button Command="{Binding Path=HelpCommand}">
+                    <Button.Template>
+                        <ControlTemplate>
+                            <Grid ToolTip="{x:Static p:Resources.MainUI_Help_Tooltip}">
+                                <Grid.Style>
+                                    <Style TargetType="Grid">
+
+                                        <Style.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Background" Value="{StaticResource CutieBG12}"></Setter>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Grid.Style>
+                                <Label Style="{StaticResource CutieLabelStyle}" Content="{x:Static p:Resources.MainUI_Help_Content}" FontSize="25" VerticalContentAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,40,0"></Label>
+                                <Path Style="{StaticResource QuestionBox}" VerticalAlignment="Center" HorizontalAlignment="Right"  />
+                            </Grid>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+
+            </Grid>
 
             <TabControl ItemsSource="{Binding TabItems}" SelectedItem="{Binding SelectedTabItem}"
                         x:Name="NewTabControl"

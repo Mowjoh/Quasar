@@ -16,6 +16,7 @@ namespace Quasar.Common
 
     public enum ModalType { Warning, OkCancel, Loader}
     public enum Modal { TransferWarning, DeleteMod,AskMoveInstall, MoveInstall, Update, RecoverInstallation, Exit, ImportFiles, Shutdown }
+    public enum Help { Library, Skin,Stage, Music, Other, Settings}
     public static class Popup
     {
         //Public accessible functions
@@ -59,6 +60,31 @@ namespace Quasar.Common
                         Properties.Resources.Settings_Modal_Button_ShutdownWarning,Properties.Resources.Modal_Label_DefaultCancel);
                     break;
             }
+        }
+
+        public static void CallHelp(Help _modal)
+        {
+            switch (_modal)
+            {
+                case Help.Library:
+                    ShowModal("LibraryHelp", ModalType.Warning, Properties.Resources.Help_Library_Title, Properties.Resources.Help_Library_Content);
+                    break;
+                case Help.Skin:
+                    ShowModal("SkinHelp", ModalType.Warning, Properties.Resources.Help_Skin_Title, Properties.Resources.Help_Skin_Content);
+                    break;
+                case Help.Stage:
+                    ShowModal("StageHelp", ModalType.Warning, Properties.Resources.Help_Stage_Title, Properties.Resources.Help_Stage_Content);
+                    break;
+                case Help.Music:
+                    ShowModal("MusicHelp", ModalType.Warning, Properties.Resources.Help_Music_Title, Properties.Resources.Help_Music_Content);
+                    break;
+                case Help.Other:
+                    ShowModal("OtherHelp", ModalType.Warning, Properties.Resources.Help_Other_Title, Properties.Resources.Help_Other_Content);
+                    break;
+                case Help.Settings:
+                    ShowModal("SettingsHelp", ModalType.Warning, Properties.Resources.Help_Settings_Title, Properties.Resources.Help_Settings_Content);
+                    break;
+             }
         }
         public static void UpdateModalStatus(Modal _modal, bool _operation_success)
         {

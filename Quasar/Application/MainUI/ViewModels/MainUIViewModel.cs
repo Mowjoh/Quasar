@@ -326,6 +326,28 @@ namespace Quasar.MainUI.ViewModels
 
         #endregion
 
+        #region Commands
+
+        #region Private
+        private ICommand _HelpCommand { get; set; }
+        #endregion
+
+        #region Public
+        public ICommand HelpCommand
+        {
+            get
+            {
+                if (_HelpCommand == null)
+                {
+                    _HelpCommand = new RelayCommand(param => ShowHelp());
+                }
+                return _HelpCommand;
+            }
+        }
+        #endregion
+
+        #endregion
+
         /// <summary>
         /// Constructor for the MainUI ViewModel
         /// </summary>
@@ -570,6 +592,32 @@ namespace Quasar.MainUI.ViewModels
         #endregion
 
         #region Events
+
+        public void ShowHelp()
+        {
+            switch (SelectedTabIndex)
+            {
+                case 0: 
+                    Popup.CallHelp(Help.Library);
+                    break;
+                case 1:
+                    Popup.CallHelp(Help.Skin);
+                    break;
+                case 2:
+                    Popup.CallHelp(Help.Stage);
+                    break;
+                case 3:
+                    Popup.CallHelp(Help.Music);
+                    break;
+                case 4:
+                    Popup.CallHelp(Help.Other);
+                    break;
+                case 5:
+                    Popup.CallHelp(Help.Settings);
+                    break;
+            }
+        }
+
         /// <summary>
         /// Processes the incoming Modal Event
         /// </summary>
