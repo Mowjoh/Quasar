@@ -26,16 +26,19 @@ namespace Quasar.Common.Models
             }
         }
         public List<QuasarModType> ModTypes { get; set; }
-        public List<int> Slots { get; set; }
+        public int Slot { get; set; }
         public GameElement GameElement { get; set; }
 
         public void GetMatchingContents(ObservableCollection<ContentItem> _contents, bool _grouped)
         {
-            List<ContentItem> MatchingContents = GameElement == null
-                ? _contents.Where(c => ModTypes.Any(t => t.ID == c.QuasarModTypeID) && Slots.Contains(c.SlotNumber))
+            List<ContentItem> MatchingContents = new();
+            //Specific Slot Parsing
+            MatchingContents = GameElement == null
+                ? _contents.Where(c => ModTypes.Any(t => t.ID == c.QuasarModTypeID) && Slot == c.SlotNumber)
                     .ToList()
-                : _contents.Where(c => ModTypes.Any(t => t.ID == c.QuasarModTypeID) && Slots.Contains(c.SlotNumber) && c.GameElementID == GameElement.ID)
+                : _contents.Where(c => ModTypes.Any(t => t.ID == c.QuasarModTypeID) && Slot == c.SlotNumber && c.GameElementID == GameElement.ID)
                     .ToList();
+
 
             Contents = new();
 

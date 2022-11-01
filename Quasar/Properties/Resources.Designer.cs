@@ -207,7 +207,12 @@ namespace Quasar.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to * You can manage all your mods here. You can download them by clicking the Gamebanana Quasar links or delete them here.
+        ///* You can add or remove them from the transfer list meaning they will be/won&apos;t be transferred to your Switch.
+        ///
+        ///* You can launch the file transfer from here which will transfer all the mods that are present in the transfer list, configured like you did.
+        ///
+        ///* You can also add a mod manually.
         /// </summary>
         public static string Help_Library_Content {
             get {
@@ -216,7 +221,7 @@ namespace Quasar.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to Help with the Library Tab.
         /// </summary>
         public static string Help_Library_Title {
             get {
@@ -225,7 +230,7 @@ namespace Quasar.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to * Placeholder Text.
         /// </summary>
         public static string Help_Music_Content {
             get {
@@ -234,7 +239,7 @@ namespace Quasar.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to Help with the Music Tab.
         /// </summary>
         public static string Help_Music_Title {
             get {
@@ -243,7 +248,7 @@ namespace Quasar.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to * Placeholder Text.
         /// </summary>
         public static string Help_Other_Content {
             get {
@@ -252,7 +257,7 @@ namespace Quasar.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to Help with the Other Tab.
         /// </summary>
         public static string Help_Other_Title {
             get {
@@ -261,7 +266,9 @@ namespace Quasar.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to * You can change various parameters for Quasar here. If you don&apos;t know what a setting does, hover over the interrogation bubbles which will indicate you about what it does.
+        ///
+        ///If you&apos;re not sure about what you&apos;re doing, leave the setting at it&apos;s default value..
         /// </summary>
         public static string Help_Settings_Content {
             get {
@@ -270,7 +277,7 @@ namespace Quasar.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to Help with the Settings Tab.
         /// </summary>
         public static string Help_Settings_Title {
             get {
@@ -279,7 +286,15 @@ namespace Quasar.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to This screen allows you to edit where your Skins and Character-related mods will go. To do that, select the character you want to change mods with.
+        ///
+        ///Then, you can see all your available mods in the Available Contents column.
+        ///Drag items from there to the slot you want it in and you should see that appear in that column.
+        ///
+        ///Right Clicking an element will remove it from the slot.
+        ///
+        ///Be careful when slotting, you can do whatever here but be mindful of conflicts.
+        ///.
         /// </summary>
         public static string Help_Skin_Content {
             get {
@@ -288,7 +303,7 @@ namespace Quasar.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to Help with the Skin Tab.
         /// </summary>
         public static string Help_Skin_Title {
             get {
@@ -297,7 +312,7 @@ namespace Quasar.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to * Placeholder Text.
         /// </summary>
         public static string Help_Stage_Content {
             get {
@@ -306,7 +321,7 @@ namespace Quasar.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to Help with the Stages Tab.
         /// </summary>
         public static string Help_Stage_Title {
             get {
@@ -708,6 +723,15 @@ namespace Quasar.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Download failed.
+        /// </summary>
+        public static string ModItem_Label_DownloadFailed {
+            get {
+                return ResourceManager.GetString("ModItem_Label_DownloadFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Downloading.
         /// </summary>
         public static string ModItem_Label_Downloading {
@@ -749,6 +773,15 @@ namespace Quasar.Properties {
         public static string ModItem_Label_ManualAuthorRole {
             get {
                 return ResourceManager.GetString("ModItem_Label_ManualAuthorRole", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Corrupted Mod.
+        /// </summary>
+        public static string ModItem_Label_ModCorrupted {
+            get {
+                return ResourceManager.GetString("ModItem_Label_ModCorrupted", resourceCulture);
             }
         }
         
@@ -1422,6 +1455,42 @@ namespace Quasar.Properties {
         public static string Settings_Values_PreferredTransferMethod {
             get {
                 return ResourceManager.GetString("Settings_Values_PreferredTransferMethod", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string Skin_Button_GoBack {
+            get {
+                return ResourceManager.GetString("Skin_Button_GoBack", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string Skin_Label_AvailableContents {
+            get {
+                return ResourceManager.GetString("Skin_Label_AvailableContents", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string Skin_Label_CharacterSelect {
+            get {
+                return ResourceManager.GetString("Skin_Label_CharacterSelect", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string Skin_Label_GroupTypes {
+            get {
+                return ResourceManager.GetString("Skin_Label_GroupTypes", resourceCulture);
             }
         }
         

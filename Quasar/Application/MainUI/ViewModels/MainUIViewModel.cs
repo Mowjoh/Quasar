@@ -440,42 +440,64 @@ namespace Quasar.MainUI.ViewModels
             LibraryItem libraryitem = UserDataManager.GetModLibraryItem(_mod_directory);
             List<ContentItem> contentitems = UserDataManager.GetModContentItems(_mod_directory);
             GamebananaRootCategory rootcategory = UserDataManager.GetGamebananaRootCategory(_mod_directory);
+            APIData apiData = UserDataManager.GetAPIData(_mod_directory);
 
-            //Verifying stuff ?
+            //Is there a Library Item to parse ?
             if (libraryitem != null)
             {
-                if (libraryitem.ManualMod)
+                //Is the API Data missing ?
+                if (!libraryitem.ManualMod && rootcategory == null)
                 {
-                    //Adding it to the collections
-                    Library.Add(libraryitem);
-                    if (contentitems != null)
-                    {
-                        foreach (ContentItem contentitem in contentitems)
-                        {
-                            ContentItems.Add(contentitem);
-                        }
-                    }
+                    //Need to redownload mod information
+                    libraryitem.Status = LibraryItemStatus.DataLoss;
                 }
                 else
                 {
-                    if (contentitems != null && rootcategory != null)
+                    //Is there any content to parse?
+                    if (contentitems != null)
                     {
-                        //Adding it to the collections
-                        Library.Add(libraryitem);
+                        //Parsing contents
                         foreach (ContentItem contentitem in contentitems)
                         {
                             ContentItems.Add(contentitem);
                         }
-                        API = UserDataManager.GetUpdatedGamebananaApi(API, rootcategory);
+
                     }
+                    else
+                    {
+                        //Need to rescan mod
+                        libraryitem.Status = LibraryItemStatus.NoScan;
+                    }
+                    if(!libraryitem.ManualMod)
+                        API = UserDataManager.GetUpdatedGamebananaApi(API, rootcategory);
                 }
                 
             }
             else
             {
-                Directory.Delete(_mod_directory,true);
+                libraryitem = new LibraryItem()
+                {
+                    Guid = Guid.Parse(Path.GetFileName(_mod_directory)),
+                    GameID = 1,
+                    Time = DateTime.Now,
+                    Name = "Corrupted"
+                };
+
+                //No Library Item, can we redownload the info ?
+                if (apiData == null)
+                {
+                    //No way to parse data
+                    libraryitem.Status = LibraryItemStatus.Corrupted;
+                }
+                else
+                {
+                    //Need to redownload mod information
+                    libraryitem.Status = LibraryItemStatus.FullDataLoss;
+                }
             }
-            
+
+            Library.Add(libraryitem);
+
         }
 
         /// <summary>

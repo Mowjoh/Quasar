@@ -23,7 +23,7 @@
                             </Style>
                         </Border.Style>
                         <Grid Background="Transparent">
-                            <Image Width="60" Height="60" Source="{Binding Slot0String}"></Image>
+                            <Image Width="60" Height="60" Source="{Binding BaseImage}"></Image>
                         </Grid>
                     </Border>
                 </ControlTemplate>

@@ -301,7 +301,7 @@ namespace Quasar.Stages.ViewModels
                 Contents = new(),
                 GameElement = null,
                 ModTypes = MUVM.QuasarModTypes.Where(t => t.GameElementFamilyID == 2).ToList(),
-                Slots = new List<int>() { 1 }
+                Slot = -1
             };
 
             NormalSlot = new()
@@ -309,7 +309,7 @@ namespace Quasar.Stages.ViewModels
                 Contents = new(),
                 GameElement = null,
                 ModTypes = MUVM.QuasarModTypes.Where(t => t.GameElementFamilyID == 2).ToList(),
-                Slots = new List<int>() { 1 }
+                Slot = 1
             };
 
             OmegaSlot = new()
@@ -317,7 +317,7 @@ namespace Quasar.Stages.ViewModels
                 Contents = new(),
                 GameElement = null,
                 ModTypes = MUVM.QuasarModTypes.Where(t => t.GameElementFamilyID == 2).ToList(),
-                Slots = new List<int>() { 1 }
+                Slot = 1
             };
 
             BattlefieldSlot = new()
@@ -325,7 +325,7 @@ namespace Quasar.Stages.ViewModels
                 Contents = new(),
                 GameElement = null,
                 ModTypes = MUVM.QuasarModTypes.Where(t => t.GameElementFamilyID == 2).ToList(),
-                Slots = new List<int>() { 1 }
+                Slot = 1
             };
         }
 

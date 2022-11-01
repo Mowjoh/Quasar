@@ -637,16 +637,29 @@ Also check that your FTP server is running</value>
 	  <value>Help with the Library Tab</value>
   </data>
   <data name="Help_Library_Content" xml:space="preserve">
-	  <value>Library Content</value>
+	  <value>* You can manage all your mods here. You can download them by clicking the Gamebanana Quasar links or delete them here.
+* You can add or remove them from the transfer list meaning they will be/won't be transferred to your Switch.
+
+* You can launch the file transfer from here which will transfer all the mods that are present in the transfer list, configured like you did.
+
+* You can also add a mod manually</value>
   </data>
   <data name="Help_Skin_Title" xml:space="preserve">
 	  <value>Help with the Skin Tab</value>
   </data>
   <data name="Help_Skin_Content" xml:space="preserve">
-	  <value>Skin Content</value>
+	  <value>This screen allows you to edit where your Skins and Character-related mods will go. To do that, select the character you want to change mods with.
+
+Then, you can see all your available mods in the Available Contents column.
+Drag items from there to the slot you want it in and you should see that appear in that column.
+
+Right Clicking an element will remove it from the slot.
+
+Be careful when slotting, you can do whatever here but be mindful of conflicts.
+</value>
   </data>
   <data name="Help_Stage_Content" xml:space="preserve">
-	  <value>Stage Content</value>
+	  <value>* Placeholder Text</value>
   </data>
   <data name="Help_Stage_Title" xml:space="preserve">
 	  <value>Help with the Stages Tab</value>
@@ -655,18 +668,38 @@ Also check that your FTP server is running</value>
 	  <value>Help with the Music Tab</value>
   </data>
   <data name="Help_Music_Content" xml:space="preserve">
-	  <value>Music Content</value>
+	  <value>* Placeholder Text</value>
   </data>
   <data name="Help_Other_Content" xml:space="preserve">
-	  <value>Other Content</value>
+	  <value>* Placeholder Text</value>
   </data>
   <data name="Help_Other_Title" xml:space="preserve">
 	  <value>Help with the Other Tab</value>
   </data>
   <data name="Help_Settings_Content" xml:space="preserve">
-	  <value>Settings Content</value>
+	  <value>* You can change various parameters for Quasar here. If you don't know what a setting does, hover over the interrogation bubbles which will indicate you about what it does.
+
+If you're not sure about what you're doing, leave the setting at it's default value.</value>
   </data>
   <data name="Help_Settings_Title" xml:space="preserve">
 	  <value>Help with the Settings Tab</value>
+  </data>
+  <data name="ModItem_Label_DownloadFailed" xml:space="preserve">
+	  <value>Download failed</value>
+  </data>
+  <data name="ModItem_Label_ModCorrupted" xml:space="preserve">
+	  <value>Corrupted Mod</value>
+  </data>
+  <data name="Skin_Label_AvailableContents" xml:space="preserve">
+	  <value>Available Contents</value>
+  </data>
+  <data name="Skin_Button_GoBack" xml:space="preserve">
+	  <value>Go back to selection</value>
+  </data>
+  <data name="Skin_Label_CharacterSelect" xml:space="preserve">
+	  <value>Select your character</value>
+  </data>
+  <data name="Skin_Label_GroupTypes" xml:space="preserve">
+	  <value>Group Types</value>
   </data>
 </root>

@@ -248,6 +248,34 @@
 
             </Path>
 
+            <!--  Mod Corrupted Action Grid  -->
+            <Grid Grid.Row="0" Grid.RowSpan="2" Grid.Column="1"
+                  Panel.ZIndex="100"
+                  Background="{StaticResource CutieBG08}"
+                  Visibility="{Binding Corrupted, Converter={StaticResource BoolVisi}}">
+
+                <Label HorizontalAlignment="Left" VerticalAlignment="Center"
+                       Content="{Binding LibraryItem.Status}"
+                       Style="{StaticResource CutieLabelStyle}" />
+
+                <Label HorizontalAlignment="Center" VerticalAlignment="Center"
+                       Content="{x:Static p:Resources.ModItem_Label_ModCorrupted}"
+                       Style="{StaticResource CutieLabelStyle}" />
+
+                <StackPanel FlowDirection="RightToLeft" Orientation="Horizontal">
+
+                    <Button Margin="10,0,0,0"
+                            Command="{Binding Path=DeleteModCommand}"
+                            Template="{StaticResource ActionTrashButton}" />
+
+                    <Button Margin="10,0,0,0"
+                            Command="{Binding Path=RetryDownloadCommand}"
+                            Template="{StaticResource ActionRetryButton}" />
+
+                </StackPanel>
+
+            </Grid>
+
             <!--  Download Fail Action Grid  -->
             <Grid Grid.Row="0" Grid.RowSpan="2" Grid.Column="1"
                   Panel.ZIndex="100"
@@ -255,7 +283,7 @@
                   Visibility="{Binding DownloadFailed, Converter={StaticResource BoolVisi}}">
 
                 <Label HorizontalAlignment="Center" VerticalAlignment="Center"
-                       Content="Download Failed"
+                       Content="{x:Static p:Resources.ModItem_Label_DownloadFailed}"
                        Style="{StaticResource CutieLabelStyle}" />
 
                 <StackPanel FlowDirection="RightToLeft" Orientation="Horizontal">

@@ -634,39 +634,71 @@ que la bonne IP et le bon port soient utilisés.</value>
 	  <value>Aide</value>
   </data>
   <data name="Help_Library_Title" xml:space="preserve">
-	  <value>Help with the Library Tab</value>
+	  <value>Aide pour la Bibliothèque</value>
   </data>
   <data name="Help_Music_Title" xml:space="preserve">
-	  <value>Help with the Music Tab</value>
+	  <value>Aide pour la Musique</value>
   </data>
   <data name="Help_Other_Title" xml:space="preserve">
-	  <value>Help with the Other Tab</value>
+	  <value>Aide pour les autres contenus</value>
   </data>
   <data name="Help_Settings_Title" xml:space="preserve">
-	  <value>Help with the Settings Tab</value>
+	  <value>Aide avec les paramètres</value>
   </data>
   <data name="Help_Skin_Title" xml:space="preserve">
-	  <value>Help with the Skin Tab</value>
+	  <value>Aide avec les Skins</value>
   </data>
   <data name="Help_Stage_Title" xml:space="preserve">
-	  <value>Help with the Stages Tab</value>
+	  <value>Aide avec les Terrains</value>
   </data>
   <data name="Help_Library_Content" xml:space="preserve">
-	  <value>Library Content</value>
+	  <value>* Cet onglet permet de gérer les mods disponibles. Vous pouvez en télécharger avec les liens Quasar sur Gamebanana ou les supprimer ici.
+* Vous pouvez les ajouter ou les retirer de la liste de transfert ce qui détermine s'ils seront transférés ou non à votre Switch.
+
+* Vous pouvez lancer le transfert de fichiers qui transfèrera tous les mods présents dans la liste de transfert, configurés comme vous l'avez défini.
+
+* Vous pouvez également ajouter des mods manuellement.</value>
   </data>
   <data name="Help_Music_Content" xml:space="preserve">
-	  <value>Music Content</value>
+	  <value>* Texte Provisoire</value>
   </data>
   <data name="Help_Other_Content" xml:space="preserve">
-	  <value>Other Content</value>
+	  <value>* Texte Provisoire</value>
   </data>
   <data name="Help_Settings_Content" xml:space="preserve">
-	  <value>Settings Content</value>
+	  <value>* Vous pouvez changer différents paramètres pour Quasar ici. Si vous ne savez pas ce qu'un paramètre, passez votre souris sur les bulles avec un point d'interrogation qui vous renseigneront sur un paramètre spécifique.
+
+Si vous n'êtes pas sûrs de ce que vous faites, il vaut généralement mieux de laisser les paramètres par défaut.</value>
   </data>
   <data name="Help_Skin_Content" xml:space="preserve">
-	  <value>Skin Content</value>
+	  <value>Cet écran vous permet de modifier le point d'arrivée des Skins et des mods liés aux personnages. Pour ce faire, sélectionnez le personnage pour lequel vous voulez modifier les mods.
+
+Ensuite, vous pourrez voir vos mods disponibles dans la colonne des contenus disponibles.
+Vous pouvez drag &amp; drop depuis cette colonne vers les slots et cela les fera apparaitre dans ce slot.
+
+Vous pouvez effectuer un clic droit sur un élément pour le supprimer du slot en question.
+
+Faites attention aux conflits, vous pouvez faire ce que vous voulez ici !</value>
   </data>
   <data name="Help_Stage_Content" xml:space="preserve">
 	  <value>Stage Content</value>
+  </data>
+  <data name="ModItem_Label_DownloadFailed" xml:space="preserve">
+	  <value>Téléchargement échoué</value>
+  </data>
+  <data name="ModItem_Label_ModCorrupted" xml:space="preserve">
+	  <value>Mod Corrompu</value>
+  </data>
+  <data name="Skin_Button_GoBack" xml:space="preserve">
+	  <value>Retourner à la sélection</value>
+  </data>
+  <data name="Skin_Label_AvailableContents" xml:space="preserve">
+	  <value>Contenus Disponibles</value>
+  </data>
+  <data name="Skin_Label_CharacterSelect" xml:space="preserve">
+	  <value>Choisissez votre personnage</value>
+  </data>
+  <data name="Skin_Label_GroupTypes" xml:space="preserve">
+	  <value>Types Groupés</value>
   </data>
 </root>

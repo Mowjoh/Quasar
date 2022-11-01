@@ -1,30 +1,42 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Interop;
 using DataModels.Common;
 using DataModels.Resource;
 using DataModels.User;
+using GongSolutions.Wpf.DragDrop;
+using Helpers.IPC;
+using Microsoft.VisualBasic;
+using Quasar.Common;
 using Quasar.Common.Models;
 using Quasar.Common.Views;
 using Quasar.Helpers;
 using Quasar.MainUI.ViewModels;
 using Quasar.Skins.Views;
 using Workshop.Associations;
+using Workshop.FileManagement;
 
 namespace Quasar.Skins.ViewModels
 {
-    public class SkinManagementViewModel : ObservableObject
+    public class SkinManagementViewModel : ObservableObject, IDropTarget
     {
         #region Data
 
         #region Private
         private CharacterItem _SelectedCharacterItem { get; set; }
-        private SlotModel _SourceSlot { get; set; }
-        private ObservableCollection<SlotModel> _Slots { get; set; }
+        private SlotViewModel _SourceSlot { get; set; }
+        private ObservableCollection<SlotViewModel> _Slots { get; set; }
+        private int _StartingSlot { get; set; }
+        private int _ModuloSlot => _StartingSlot < 8 ? _StartingSlot : (_StartingSlot % 8);
+        private bool SlotChangeWorking = false;
         #endregion
 
         #region Public
@@ -48,7 +60,7 @@ namespace Quasar.Skins.ViewModels
                 }
             }
         }
-        public SlotModel SourceSlot
+        public SlotViewModel SourceSlot
         {
             get => _SourceSlot;
             set
@@ -57,8 +69,7 @@ namespace Quasar.Skins.ViewModels
                 OnPropertyChanged("SourceSlot");
             }
         }
-
-        public ObservableCollection<SlotModel> Slots
+        public ObservableCollection<SlotViewModel> Slots
         {
             get => _Slots;
             set
@@ -103,7 +114,6 @@ namespace Quasar.Skins.ViewModels
             }
         }
         public bool DisplayViewActive => !_SelectionViewActive;
-
         public bool Grouped
         {
             get => _Grouped;
@@ -114,14 +124,29 @@ namespace Quasar.Skins.ViewModels
                 RefreshSlots();
             }
         }
+
+
+        public bool SecondSlots => _ModuloSlot > 3;
+        public string Slot1Text => $"Player {(_StartingSlot + 1)}";
+        public string Slot2Text => $"Player {(_StartingSlot + 2)}";
+        public string Slot3Text => $"Player {(_StartingSlot + 3)}";
+        public string Slot4Text => $"Player {(_StartingSlot + 4)}";
+
+        
+        public string Slot1Image => SelectedCharacterItem != null ? $@"../../../Resources/images/Characters/{SelectedCharacterItem.CIVM.ScreenshotName}_0{_ModuloSlot}.png" : "";
+        public string Slot2Image => SelectedCharacterItem != null ? $@"../../../Resources/images/Characters/{SelectedCharacterItem.CIVM.ScreenshotName}_0{_ModuloSlot +1}.png" : "";
+        public string Slot3Image => SelectedCharacterItem != null ? $@"../../../Resources/images/Characters/{SelectedCharacterItem.CIVM.ScreenshotName}_0{_ModuloSlot +2}.png" : "";
+        public string Slot4Image => SelectedCharacterItem != null ? $@"../../../Resources/images/Characters/{SelectedCharacterItem.CIVM.ScreenshotName}_0{_ModuloSlot +3}.png" : "";
         #endregion
 
         #endregion
 
         #region Commands
-        
+
         #region Private
         private ICommand _GoBack { get; set; }
+        private ICommand _PreviousSlots { get; set; }
+        private ICommand _NextSlots { get; set; }
         #endregion
 
         #region Public
@@ -136,6 +161,30 @@ namespace Quasar.Skins.ViewModels
                 return _GoBack;
             }
         }
+
+        public ICommand PreviousSlots
+        {
+            get
+            {
+                if (_PreviousSlots == null)
+                {
+                    _PreviousSlots = new RelayCommand(param => ChangeSlotPosition(false));
+                }
+                return _PreviousSlots;
+            }
+        }
+
+        public ICommand NextSlots
+        {
+            get
+            {
+                if (_NextSlots == null)
+                {
+                    _NextSlots = new RelayCommand(param => ChangeSlotPosition(true));
+                }
+                return _NextSlots;
+            }
+        }
         #endregion
 
         #endregion
@@ -146,39 +195,42 @@ namespace Quasar.Skins.ViewModels
             CharacterItems = GetCharacterItems();
 
             EventSystem.Subscribe<CharacterItemViewModel>(GetSelectedCharacterItem);
+            EventSystem.Subscribe<AssignmentContent>(ElementRightClicked);
             SelectionViewActive = true;
+
+            _StartingSlot = 0;
 
             SourceSlot = new()
             {
-                Contents = new(),
-                GameElement = null,
-                ModTypes = MUVM.QuasarModTypes.Where(t => t.GameElementFamilyID == 1).ToList(),
-                Slots = new List<int>() {-1}
-            };
-
-            Slots = new();
-            for (int i = 0; i < 8; i++)
-            {
-                Slots.Add(new()
+                Source = true,
+                SlotModel = new()
                 {
                     Contents = new(),
                     GameElement = null,
                     ModTypes = MUVM.QuasarModTypes.Where(t => t.GameElementFamilyID == 1).ToList(),
-                    Slots = new(){i}
+                    Slot = -1
+                },
+                Image = ""
+            };
+
+            Slots = new();
+            for (int i = 0; i < 4; i++)
+            {
+                Slots.Add(new()
+                {
+                    Source = false,
+                    SlotModel = new()
+                    {
+                        Contents = new(),
+                        GameElement = null,
+                        ModTypes = MUVM.QuasarModTypes.Where(t => t.GameElementFamilyID == 1).ToList(),
+                        Slot = (_StartingSlot + i)
+                    },
+                    Image = ""
                 });
             }
 
-        }
-
-        public void GetSelectedCharacterItem(CharacterItemViewModel ci)
-        {
-            CharacterItem cis = CharacterItems.Single(c => c.CIVM == ci);
-            SelectedCharacterItem = cis;
-            RefreshSlots();
-        }
-        public void ResetSelectedCharacterItem()
-        {
-            SelectedCharacterItem = null;
+            EventSystem.Subscribe<(SlotModel, ContentItemView)>(ContentDropped);
         }
 
         public ObservableCollection<CharacterItem> GetCharacterItems()
@@ -274,16 +326,128 @@ namespace Quasar.Skins.ViewModels
             };
         }
 
+        public void GetSelectedCharacterItem(CharacterItemViewModel ci)
+        {
+            CharacterItem cis = CharacterItems.Single(c => c.CIVM == ci);
+            SelectedCharacterItem = cis;
+            RefreshUI();
+            RefreshSlots();
+        }
+
+        public void ResetSelectedCharacterItem()
+        {
+            SelectedCharacterItem = null;
+        }
+
+        public void ChangeSlotPosition(bool forward)
+        {
+            if (forward)
+            {
+                _StartingSlot += 4;
+            }
+
+            if (!forward == _StartingSlot > 0)
+            {
+                _StartingSlot -= 4;
+            }
+
+            for (int i = 0; i < 4; i++)
+            {
+                Slots[i].SlotModel.Slot = _StartingSlot + i;
+            }
+            RefreshUI();
+            RefreshSlots();
+        }
+
+        public void RefreshUI()
+        {
+            OnPropertyChanged("SecondSlots");
+            OnPropertyChanged("Slot1Text");
+            OnPropertyChanged("Slot2Text");
+            OnPropertyChanged("Slot3Text");
+            OnPropertyChanged("Slot4Text");
+            OnPropertyChanged("Slot1Image");
+            OnPropertyChanged("Slot2Image");
+            OnPropertyChanged("Slot3Image");
+            OnPropertyChanged("Slot4Image");
+        }
+
         public void RefreshSlots()
         {
-            SourceSlot.GameElement = SelectedCharacterItem.CIVM.GameElement;
-            SourceSlot.GetMatchingContents(MUVM.ContentItems, Grouped);
+            SourceSlot.SlotModel.GameElement = SelectedCharacterItem.CIVM.GameElement;
+            SourceSlot.SlotModel.GetMatchingContents(MUVM.ContentItems, Grouped);
 
-            foreach (SlotModel slotModel in Slots)
+            foreach (SlotViewModel slotViewModel in Slots)
             {
-                slotModel.GameElement = SelectedCharacterItem.CIVM.GameElement;
-                slotModel.GetMatchingContents(MUVM.ContentItems, Grouped);
+                slotViewModel.SlotModel.GameElement = SelectedCharacterItem.CIVM.GameElement;
+                slotViewModel.SlotModel.GetMatchingContents(MUVM.ContentItems, Grouped);
+                slotViewModel.Refresh();
             }
+        }
+
+        void IDropTarget.DragOver(IDropInfo dropInfo)
+        {
+            {
+                if (dropInfo.Data is ContentItemView && !SlotChangeWorking)
+                {
+                    SlotChangeWorking = true;
+                    Task.Run(() =>
+                    {
+                        System.Threading.Thread.Sleep(1000);
+                        SlotChangeWorking = false;
+                    });
+
+                    Button b = (Button)dropInfo.VisualTarget;
+                    if (b.Name == "NextSlotButton")
+                    {
+                        ChangeSlotPosition(true);
+                    }
+
+                    if (b.Name == "PreviousSlotButton")
+                    {
+                        ChangeSlotPosition(false);
+                    }
+                    
+                }
+                
+
+            }
+        }
+
+        public void Drop(IDropInfo dropInfo)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ContentDropped((SlotModel, ContentItemView) _data)
+        {
+            SlotModel senderModel = _data.Item1;
+            ContentItemView senderContentItemView = _data.Item2;
+            
+            foreach (ContentItem content in senderContentItemView.ViewModel.Assignment.AssignmentContentItems)
+            {
+                content.SlotNumber = senderModel.Slot;
+            }
+            UserDataManager.SaveSeparatedContentItems(senderContentItemView.ViewModel.Assignment.AssignmentContentItems, Properties.QuasarSettings.Default.DefaultDir);
+            RefreshSlots();
+        }
+
+        public void ElementRightClicked(AssignmentContent contents)
+        {
+            foreach (ContentItem content in contents.AssignmentContentItems)
+            {
+                if (content.SlotNumber == -1)
+                {
+                    content.SlotNumber = content.OriginalSlotNumber;
+                }
+                else
+                {
+                    content.SlotNumber = -1;
+                }
+                
+            }
+            UserDataManager.SaveSeparatedContentItems(contents.AssignmentContentItems, Properties.QuasarSettings.Default.DefaultDir);
+            RefreshSlots();
         }
     }
 }

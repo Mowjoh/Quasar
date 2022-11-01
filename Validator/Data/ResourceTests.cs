@@ -31,25 +31,10 @@ namespace Validator.Data
             }
 
             //Checking names
-            Assert.Equal("Gamebanana.json", Path.GetFileName(Resources[0]));
-            Assert.Equal("Games.json", Path.GetFileName(Resources[1]));
-            Assert.Equal("ModLoaders.json", Path.GetFileName(Resources[2]));
-            Assert.Equal("ModTypes.json", Path.GetFileName(Resources[3]));
+            Assert.Equal("Games.json", Path.GetFileName(Resources[0]));
+            Assert.Equal("ModTypes.json", Path.GetFileName(Resources[1]));
 
         }
-
-        /// <summary>
-        /// Validates that the Gamebanana deserializes properly and contains data
-        /// </summary>
-        // [Fact]
-        // public void Loading_GamebananaFileLoadsAndContainsData()
-        // {
-        //     GamebananaAPI Resource = ResourceManager.GetGamebananaAPI(_appDataLocalPath);
-        //
-        //     Assert.True(Resource.Games.Count > 0);
-        //
-        //     Assert.Equal("Super Smash Bros. Ultimate", Resource.Games[0].Name);
-        // }
 
         /// <summary>
         /// Validates that the Games deserializes properly and contains data
@@ -57,7 +42,7 @@ namespace Validator.Data
         [Fact]
         public void Loading_GamesFileLoadsAndContainsData()
         {
-            ObservableCollection<Game> Resource = ResourceManager.GetGames(_appDataLocalPath);
+            ObservableCollection<Game> Resource = ResourceManager.GetGames(InstallDirectory);
 
             Assert.True(Resource.Count > 0);
 

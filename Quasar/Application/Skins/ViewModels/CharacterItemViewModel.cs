@@ -32,15 +32,7 @@ namespace Quasar.Skins.ViewModels
             ? GameElement.GameFolderName.Split(";")[0]
             : GameElement.GameFolderName;
 
-        public string Slot0String => $@"../../../Resources/images/Characters/{ScreenshotName}_00.png";
-        public string Slot1String => $@"../../../Resources/images/Characters/{ScreenshotName}_01.png";
-        public string Slot2String => $@"../../../Resources/images/Characters/{ScreenshotName}_02.png";
-        public string Slot3String => $@"../../../Resources/images/Characters/{ScreenshotName}_03.png";
-        public string Slot4String => $@"../../../Resources/images/Characters/{ScreenshotName}_04.png";
-        public string Slot5String => $@"../../../Resources/images/Characters/{ScreenshotName}_05.png";
-        public string Slot6String => $@"../../../Resources/images/Characters/{ScreenshotName}_06.png";
-        public string Slot7String => $@"../../../Resources/images/Characters/{ScreenshotName}_07.png";
-
+        public string BaseImage => $@"../../../Resources/images/Characters/{ScreenshotName}_00.png";
 
         #endregion
 

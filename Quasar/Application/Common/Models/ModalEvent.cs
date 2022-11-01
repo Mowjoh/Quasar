@@ -67,22 +67,22 @@ namespace Quasar.Common
             switch (_modal)
             {
                 case Help.Library:
-                    ShowModal("LibraryHelp", ModalType.Warning, Properties.Resources.Help_Library_Title, Properties.Resources.Help_Library_Content);
+                    ShowModal("LibraryHelp", ModalType.Warning, Properties.Resources.Help_Library_Title, Properties.Resources.Help_Library_Content, true);
                     break;
                 case Help.Skin:
-                    ShowModal("SkinHelp", ModalType.Warning, Properties.Resources.Help_Skin_Title, Properties.Resources.Help_Skin_Content);
+                    ShowModal("SkinHelp", ModalType.Warning, Properties.Resources.Help_Skin_Title, Properties.Resources.Help_Skin_Content, true);
                     break;
                 case Help.Stage:
-                    ShowModal("StageHelp", ModalType.Warning, Properties.Resources.Help_Stage_Title, Properties.Resources.Help_Stage_Content);
+                    ShowModal("StageHelp", ModalType.Warning, Properties.Resources.Help_Stage_Title, Properties.Resources.Help_Stage_Content, true);
                     break;
                 case Help.Music:
-                    ShowModal("MusicHelp", ModalType.Warning, Properties.Resources.Help_Music_Title, Properties.Resources.Help_Music_Content);
+                    ShowModal("MusicHelp", ModalType.Warning, Properties.Resources.Help_Music_Title, Properties.Resources.Help_Music_Content, true);
                     break;
                 case Help.Other:
-                    ShowModal("OtherHelp", ModalType.Warning, Properties.Resources.Help_Other_Title, Properties.Resources.Help_Other_Content);
+                    ShowModal("OtherHelp", ModalType.Warning, Properties.Resources.Help_Other_Title, Properties.Resources.Help_Other_Content, true);
                     break;
                 case Help.Settings:
-                    ShowModal("SettingsHelp", ModalType.Warning, Properties.Resources.Help_Settings_Title, Properties.Resources.Help_Settings_Content);
+                    ShowModal("SettingsHelp", ModalType.Warning, Properties.Resources.Help_Settings_Title, Properties.Resources.Help_Settings_Content, true);
                     break;
              }
         }
@@ -113,13 +113,13 @@ namespace Quasar.Common
         }
         
         //Functions to call a Modal to the front
-        private static void ShowModal(string _event_name, ModalType _type, string _title, string _content)
+        private static void ShowModal(string _event_name, ModalType _type, string _title, string _content, bool _help = false)
         {
             ModalEvent meuh = new ModalEvent()
             {
                 EventName = _event_name,
                 Type = _type,
-                Action = "Show",
+                Action = _help ? "ShowHelp" : "Show",
                 Title = _title,
                 Content = _content,
                 OkButtonText = Properties.Resources.Modal_Label_DefaultOK,

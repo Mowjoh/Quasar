@@ -32,5 +32,15 @@ namespace Quasar.Common.Views
 
             this.DataContext = ViewModel;
         }
+
+        private void ContentItemView_OnMouseUp(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton == MouseButton.Right && e.RightButton == MouseButtonState.Released)
+            {
+                ViewModel.SendElementRightClicked();
+
+            }
+            
+        }
     }
 }

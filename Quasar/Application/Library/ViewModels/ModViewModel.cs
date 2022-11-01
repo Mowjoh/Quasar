@@ -330,6 +330,10 @@ namespace Quasar.Controls.Mod.ViewModels
             }
         }
         public bool Standby => !Downloading;
+
+        public bool Corrupted => (LibraryItem.Status == LibraryItemStatus.Corrupted) ||
+                                 (LibraryItem.Status == LibraryItemStatus.DataLoss) ||
+                                 (LibraryItem.Status == LibraryItemStatus.FullDataLoss);
         public bool StandbyEditing => !Downloading && LibraryItem.Editing;
         public bool StandbyNotEditing => !Downloading && !LibraryItem.Editing;
         public bool DownloadFailed
@@ -561,8 +565,12 @@ namespace Quasar.Controls.Mod.ViewModels
             MVM = model;
             LibraryItem = Mod;
 
-            GetHumanTime();
-            GetAuthors();
+            if (Mod.Status != LibraryItemStatus.Corrupted || Mod.Status != LibraryItemStatus.DataLoss ||
+                Mod.Status != LibraryItemStatus.FullDataLoss)
+            {
+                GetHumanTime();
+                GetAuthors();
+            }
 
             EventSystem.Subscribe<LibraryItem>(Refresh);
         }

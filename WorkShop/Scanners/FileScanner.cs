@@ -18,7 +18,7 @@ namespace Workshop.Scanners
     {
         //List of files and extensions to filter with
         public static string[] IgnoreExtensions = { ".csv", ".jpg", ".txt", ".png" };
-        public static string[] IgnoreFiles = { "APIData.json", "ContentData.json", "LibraryData.json", "Gamebanana.json" };
+        public static string[] IgnoreFiles = { "APIData.json", "ContentData.json", "LibraryData.json", "Gamebanana.json", "ModInformation.json" };
         public static string RootFolders = "append|assist|boss|camera|campaign|common|effect|enemy|fighter|finalsmash|item|item|miihat|param|pokemon|prebuilt;|render|snapshot|stream;|sound|spirits|stage|standard|ui";
 
         #region Scanning

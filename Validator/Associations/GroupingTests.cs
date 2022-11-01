@@ -149,7 +149,7 @@ namespace Validator.Grouping
             ObservableCollection<AssignmentContent> AssignmentContents = Grouper.GetAssignmentContents(TestContentItems, false);
 
             //There should only be the first three contents
-            Assert.True(AssignmentContents.Count == 3);
+            Assert.True(AssignmentContents.Count == 4);
 
             //There should not be any grouped contents
             Assert.DoesNotContain(AssignmentContents, ac => ac.Single == false);
@@ -193,7 +193,7 @@ namespace Validator.Grouping
                     QuasarModTypeID = 1,
                     LibraryItemGuid = LibraryItem.Guid,
                     Guid = Guid.NewGuid(),
-                    Name = "First Content",
+                    Name = "Second Content",
                     GroupName = "Test Group 1",
                     SlotNumber = 0,
                     OriginalSlotNumber = 0,
@@ -212,7 +212,7 @@ namespace Validator.Grouping
                     QuasarModTypeID = 0,
                     LibraryItemGuid = LibraryItem.Guid,
                     Guid = Guid.NewGuid(),
-                    Name = "Second Content",
+                    Name = "Third Content",
                     GroupName = "Test Group 1",
                     SlotNumber = 0,
                     OriginalSlotNumber = 0,
@@ -231,7 +231,7 @@ namespace Validator.Grouping
                     QuasarModTypeID = 1,
                     LibraryItemGuid = LibraryItem.Guid,
                     Guid = Guid.NewGuid(),
-                    Name = "Third Content",
+                    Name = "Fourth Content",
                     GroupName = "Test Group 2",
                     SlotNumber = 1,
                     OriginalSlotNumber = 1,
@@ -249,7 +249,7 @@ namespace Validator.Grouping
                     QuasarModTypeID = 1,
                     LibraryItemGuid = LibraryItem.Guid,
                     Guid = Guid.NewGuid(),
-                    Name = "Third Content",
+                    Name = "Fifth Content",
                     GroupName = "Test Group 2",
                     SlotNumber = 1,
                     OriginalSlotNumber = 1,
@@ -268,7 +268,7 @@ namespace Validator.Grouping
                     QuasarModTypeID = 1,
                     LibraryItemGuid = Guid.NewGuid(),
                     Guid = Guid.NewGuid(),
-                    Name = "Fourth Content",
+                    Name = "Sixth Content",
                     GroupName = "Test Group 2",
                     SlotNumber = 5,
                     OriginalSlotNumber = 1,
@@ -286,7 +286,7 @@ namespace Validator.Grouping
                     QuasarModTypeID = 0,
                     LibraryItemGuid = LibraryItem.Guid,
                     Guid = Guid.NewGuid(),
-                    Name = "First Content",
+                    Name = "Seventh Content",
                     GroupName = "Test Group 1",
                     SlotNumber = 1,
                     OriginalSlotNumber = 1,
@@ -305,7 +305,7 @@ namespace Validator.Grouping
                     QuasarModTypeID = 1,
                     LibraryItemGuid = LibraryItem.Guid,
                     Guid = Guid.NewGuid(),
-                    Name = "First Content",
+                    Name = "Eighth Content",
                     GroupName = "Test Group 1",
                     SlotNumber = 1,
                     OriginalSlotNumber = 1,
@@ -321,12 +321,13 @@ namespace Validator.Grouping
 
             ObservableCollection<AssignmentContent> AssignmentContents = Grouper.GetAssignmentContents(TestContentItems, true);
 
-            Assert.True(AssignmentContents.Count == 5);
+            Assert.True(AssignmentContents.Count == 6);
             Assert.True(AssignmentContents[0].AssignmentContentItems.Count == 2);
             Assert.True(AssignmentContents[1].AssignmentContentItems.Count == 1);
             Assert.True(AssignmentContents[2].AssignmentContentItems.Count == 1);
             Assert.True(AssignmentContents[3].AssignmentContentItems.Count == 1);
-            Assert.True(AssignmentContents[4].AssignmentContentItems.Count == 2);
+            Assert.True(AssignmentContents[4].AssignmentContentItems.Count == 1);
+            Assert.True(AssignmentContents[5].AssignmentContentItems.Count == 2);
         }
     }
 }

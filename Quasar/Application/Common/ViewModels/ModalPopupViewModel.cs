@@ -4,6 +4,7 @@ using DataModels.Common;
 using Quasar.Helpers;
 using System.Windows.Input;
 using Quasar.Controls;
+using System.Windows;
 
 namespace Quasar.Common
 {
@@ -82,6 +83,8 @@ namespace Quasar.Common
 
         #region Private
         private bool _ModalVisible { get; set; }
+        private bool _HelpModal { get; set; }
+        private Rect _Rekt { get; set; }
         #endregion
 
         #region Public
@@ -95,6 +98,30 @@ namespace Quasar.Common
                 OnPropertyChanged("ModalVisible");
             }
         }
+        public bool HelpModal
+        {
+            get => _HelpModal;
+            set
+            {
+                _HelpModal = value;
+                OnPropertyChanged("HelpModal");
+                Rekt = value ? new Rect(0, 0, 1000, 700) : new Rect(0, 0, 800, 400);
+            }
+        }
+
+        public Rect Rekt
+        {
+            get => _Rekt;
+            set
+            {
+                if (_Rekt == value)
+                    return;
+
+                _Rekt = value;
+                OnPropertyChanged("Rekt");
+            }
+        }
+
         public bool TitleVisible => (Meuh?.Title ?? "") != "";
         public bool TitleInvisible => !TitleVisible;
         public bool OkButtonVisible => Meuh?.Type == ModalType.Warning || Meuh?.Type == ModalType.Loader;
@@ -135,6 +162,9 @@ namespace Quasar.Common
                 case "Show":
                     ShowModal(meuh);
                     break;
+                case "ShowHelp":
+                    ShowModal(meuh, true);
+                    break;
                 case "LoadOK":
                     EnableModal(true, meuh);
                     break;
@@ -152,7 +182,7 @@ namespace Quasar.Common
         /// Enables the Modal and displays it's data
         /// </summary>
         /// <param name="meuh">ModalEvent to be displayed</param>
-        public void ShowModal(ModalEvent meuh)
+        public void ShowModal(ModalEvent meuh, bool _help = false)
         {
             ModalVisible = true;
             Meuh = meuh;
@@ -162,6 +192,8 @@ namespace Quasar.Common
                 OnPropertyChanged("ModalLoading");
                 OnPropertyChanged("OKButtonEnabled");
             }
+
+            HelpModal = _help;
         }
 
         /// <summary>

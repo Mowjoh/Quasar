@@ -3,6 +3,7 @@ using DataModels.User;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace Workshop.Assignments
 {
@@ -61,7 +62,7 @@ namespace Workshop.Assignments
                 {
                     AssignmentName = MatchingContentItem.Name,
                     AssignmentContentItems = new() { MatchingContentItem },
-                    SlotNumber = MatchingContentItem.SlotNumber
+                    SlotNumber = MatchingContentItem.OriginalSlotNumber
                 });
             }
 
@@ -79,8 +80,10 @@ namespace Workshop.Assignments
                 //Looping through existing contents for matches
                 foreach (AssignmentContent AssignmentContent in Contents)
                 {
-                    if (AssignmentContent.AssignmentContentItems[0].GroupName == MatchingContentItem.GroupName && AssignmentContent.AssignmentContentItems[0].ScanFiles[0].RootPath ==
-                        MatchingContentItem.ScanFiles[0].RootPath && AssignmentContent.AssignmentContentItems[0].OriginalSlotNumber == MatchingContentItem.OriginalSlotNumber)
+                    if (AssignmentContent.AssignmentContentItems[0].GroupName == MatchingContentItem.GroupName && 
+                        AssignmentContent.AssignmentContentItems[0].ScanFiles[0].RootPath == MatchingContentItem.ScanFiles[0].RootPath && 
+                        AssignmentContent.AssignmentContentItems[0].OriginalSlotNumber == MatchingContentItem.OriginalSlotNumber &&
+                        AssignmentContent.AssignmentContentItems[0].LibraryItemGuid == MatchingContentItem.LibraryItemGuid)
                     {
                         AssignmentContent.AssignmentContentItems.Add(MatchingContentItem);
                         ContentAdded = true;
@@ -95,7 +98,7 @@ namespace Workshop.Assignments
                     {
                         AssignmentName = MatchingContentItem.Name,
                         AssignmentContentItems = new() { MatchingContentItem },
-                        SlotNumber = MatchingContentItem.SlotNumber
+                        SlotNumber = MatchingContentItem.OriginalSlotNumber
                     });
                 }
             }

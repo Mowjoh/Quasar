@@ -561,10 +561,10 @@ namespace DatabaseEditor.ViewModels
 
             //Loading referentials from the app and the user's Quasar folders
             Games = ResourceManager.GetGames(InstallDirectory);
+            QuasarModTypes = ResourceManager.GetQuasarModTypes(InstallDirectory);
+
             Library = UserDataManager.GetSeparatedLibrary(@"C:\Users\Mowjoh\Documents\Quasar");
             ContentItems = UserDataManager.GetSeparatedContentItems(@"C:\Users\Mowjoh\Documents\Quasar");
-            //Workspaces = UserDataManager.GetWorkspaces(AppDataPath);
-            QuasarModTypes = ResourceManager.GetQuasarModTypes(InstallDirectory);
             API = UserDataManager.GetSeparatedGamebananaApi(@"C:\Users\Mowjoh\Documents\Quasar");
 
             //Setting up the Test Result Source

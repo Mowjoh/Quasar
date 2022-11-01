@@ -2,7 +2,9 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:local="clr-namespace:Quasar.Skins.Views" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:views="clr-namespace:Quasar.Skins.Views"
              d:DesignHeight="450" d:DesignWidth="800"
-             mc:Ignorable="d">
+             mc:Ignorable="d" xmlns:dd="urn:gong-wpf-dragdrop"
+             xmlns:p="clr-namespace:Quasar.Properties"
+             xmlns:common="clr-namespace:Quasar.Common">
     <UserControl.Resources>
 
         <!--Selection Resources-->
@@ -22,12 +24,7 @@
             </ItemsControl>
         </ControlTemplate>
 
-        <Style x:Key="PlayerHeader" TargetType="TextBlock" BasedOn="{StaticResource CutieTextBlockStyle}">
-            <Setter Property="HorizontalAlignment" Value="Center" />
-            <Setter Property="VerticalAlignment" Value="Top" />
-            <Setter Property="FontSize" Value="20" />
-            <Setter Property="Margin" Value="0,10" />
-        </Style>
+        
 
         <!--Slotting Resources-->
         <Style x:Key="PlayerBorder" TargetType="Border">
@@ -48,6 +45,16 @@
             <Setter Property="CornerRadius" Value="5" />
         </Style>
 
+        <Style x:Key="PlayerHeader" TargetType="TextBlock" BasedOn="{StaticResource CutieTextBlockStyle}">
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Top" />
+            <Setter Property="FontSize" Value="20" />
+            <Setter Property="Margin" Value="0,10" />
+            <Style.Triggers>
+                <DataTrigger></DataTrigger>
+            </Style.Triggers>
+        </Style>
+
 </UserControl.Resources>
 
     <Grid>
@@ -57,8 +64,8 @@
                 <RowDefinition Height="100" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            
-            <Label Grid.Row="0" Content="Select your Character" Style="{StaticResource SelectionHeader}" />
+
+            <Label Grid.Row="0" Content="{x:Static p:Resources.Skin_Label_CharacterSelect}" Style="{StaticResource SelectionHeader}" />
             
             <ItemsControl Grid.Row="1" Template="{StaticResource SelectionItemsControl}"/>
         </Grid>
@@ -75,10 +82,30 @@
                   Background="Black">
 
                 <Button Width="180" Height="35"
-                        Margin="15,15,0,0" HorizontalAlignment="Left" VerticalAlignment="Center"
+                        Margin="15,15,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
                         Command="{Binding Path=GoBack}"
-                        Content="Go back to selection"
+                        Content="{x:Static p:Resources.Skin_Button_GoBack}"
                         Template="{StaticResource CutieSmallButtonTemplate}" />
+
+                <Grid Height="50" VerticalAlignment="Bottom" Background="Transparent">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Button Grid.Column="1" x:Name="PreviousSlotButton" Margin="15,0,0,5"  HorizontalAlignment="Left" VerticalAlignment="Bottom"
+                            Command="{Binding Path=PreviousSlots}"
+                            ToolTip="Previous Slots"
+                            Template="{StaticResource ActionLeftArrowButton}" dd:DragDrop.IsDropTarget="True" dd:DragDrop.DropHandler="{Binding}" />
+
+                    <Button Grid.Column="4" x:Name="NextSlotButton"  Margin="0,0,15,5" HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                            Command="{Binding Path=NextSlots}"
+                            ToolTip="Next Slots"
+                            Template="{StaticResource ActionRightArrowButton}" dd:DragDrop.IsDropTarget="True" dd:DragDrop.DropHandler="{Binding}" />
+                </Grid>
+                
 
                 <TextBlock Margin="0,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center"
                            FontSize="24"
@@ -86,13 +113,13 @@
                            Text="{Binding SelectedCharacterItem.CIVM.GameElement.Name}"
                            TextAlignment="Right" />
 
-                <TextBlock Margin="0,0,64,0" HorizontalAlignment="Right" VerticalAlignment="Center"
+                <TextBlock Margin="0,20,64,0" HorizontalAlignment="Right" VerticalAlignment="Top"
                            FontSize="16"
                            Style="{StaticResource CutieTextBlockStyle}"
-                           Text="Group Types" TextAlignment="Right" />
+                           Text="{x:Static p:Resources.Skin_Label_GroupTypes}" TextAlignment="Right" />
 
                 <CheckBox x:Name="SettingCheckBox"
-                          Margin="0,0,15,0" HorizontalAlignment="Right" VerticalAlignment="Center"
+                          Margin="0,22,15,0" HorizontalAlignment="Right" VerticalAlignment="Top"
                           IsChecked="{Binding Grouped}"
                           Template="{StaticResource CutieToggleButton}" />
             </Grid>
@@ -112,114 +139,30 @@
 
                 <!--  Contents  -->
                 <Grid Grid.Row="0" Grid.Column="0">
-                    <Border Style="{StaticResource PlayerBorder}">
+                    <Grid>
+                        <TextBlock Foreground="White" Style="{StaticResource PlayerHeader}" Text="{x:Static p:Resources.Skin_Label_AvailableContents}" />
 
-                        <Grid>
-                            <TextBlock Foreground="White" Style="{StaticResource PlayerHeader}" Text="Available Contents" />
+                        <ScrollViewer Margin="0,50,0,0"
+                                      HorizontalScrollBarVisibility="Hidden">
+                            <ItemsControl ItemsSource="{Binding SourceSlot.SlotModel.Contents}" dd:DragDrop.IsDragSource="True" dd:DragDrop.DropHandler="{Binding}"
+                                          HorizontalContentAlignment="Center" />
+                        </ScrollViewer>
 
-                            <ScrollViewer Margin="0,50,0,0"
-                                          HorizontalScrollBarVisibility="Hidden">
-                                <ItemsControl ItemsSource="{Binding SourceSlot.Contents}"
-                                              HorizontalContentAlignment="Center" />
-                            </ScrollViewer>
-
-                        </Grid>
-
-                    </Border>
+                    </Grid>
                 </Grid>
 
                 <!--  Slots  -->
                 <Grid Grid.Column="1">
-
-                    <Border Style="{StaticResource PlayerBorder}">
-                        <Grid>
-
-                            <TextBlock Foreground="{StaticResource Player1Color}" Style="{StaticResource PlayerHeader}" Text="Player 1" />
-
-                            <Border Style="{StaticResource PlayerIconBorder}">
-                                <Grid Background="Transparent">
-                                    <Image Width="80" Height="80"
-                                           Source="{Binding SelectedCharacterItem.CIVM.Slot0String}" />
-                                </Grid>
-                            </Border>
-
-                            <ScrollViewer Margin="0,150,0,0"
-                                          HorizontalScrollBarVisibility="Hidden">
-                                <ItemsControl ItemsSource="{Binding Slots[0].Contents}"
-                                              HorizontalContentAlignment="Center" />
-                            </ScrollViewer>
-
-                        </Grid>
-
-                    </Border>
+                    <common:SlotView DataContext="{Binding Slots[0]}" dd:DragDrop.DropHandler="{Binding}" dd:DragDrop.IsDropTarget="True"></common:SlotView>
                 </Grid>
                 <Grid Grid.Column="2">
-                    <Border Style="{StaticResource PlayerBorder}">
-                        <Grid>
-                            <TextBlock Foreground="{StaticResource Player2Color}" Style="{StaticResource PlayerHeader}" Text="Player 2" />
-
-                            <Border Style="{StaticResource PlayerIconBorder}">
-                                
-                                <Grid Background="Transparent">
-                                    <Image Width="80" Height="80"
-                                           Source="{Binding SelectedCharacterItem.CIVM.Slot1String}" />
-                                </Grid>
-
-                            </Border>
-
-                            <ItemsControl ItemsSource="{Binding Slots[1].Contents}"
-                                          Margin="0,150,0,0">
-                                <ItemsControl.ItemsPanel>
-                                    <ItemsPanelTemplate>
-                                        <WrapPanel />
-                                    </ItemsPanelTemplate>
-                                </ItemsControl.ItemsPanel>
-                            </ItemsControl>
-                        </Grid>
-                    </Border>
-
+                    <common:SlotView DataContext="{Binding Slots[1]}" dd:DragDrop.DropHandler="{Binding}" dd:DragDrop.IsDropTarget="True"></common:SlotView>
                 </Grid>
                 <Grid Grid.Column="3">
-                    <Border Style="{StaticResource PlayerBorder}">
-                        <Grid>
-                            <TextBlock Foreground="{StaticResource Player3Color}" Style="{StaticResource PlayerHeader}" Text="Player 3" />
-
-                            <Border Style="{StaticResource PlayerIconBorder}">
-                                <Grid Background="Transparent">
-                                    <Image Width="80" Height="80"
-                                           Source="{Binding SelectedCharacterItem.CIVM.Slot2String}" />
-                                </Grid>
-                            </Border>
-
-                            <ItemsControl ItemsSource="{Binding Slots[2].Contents}"
-                                          Margin="0,150,0,0">
-                                <ItemsControl.ItemsPanel>
-                                    <ItemsPanelTemplate>
-                                        <WrapPanel />
-                                    </ItemsPanelTemplate>
-                                </ItemsControl.ItemsPanel>
-                            </ItemsControl>
-                        </Grid>
-                    </Border>
+                    <common:SlotView DataContext="{Binding Slots[2]}" dd:DragDrop.DropHandler="{Binding}" dd:DragDrop.IsDropTarget="True"></common:SlotView>
                 </Grid>
                 <Grid Grid.Column="4">
-                    <TextBlock Foreground="{StaticResource Player4Color}" Style="{StaticResource PlayerHeader}" Text="Player 4" />
-
-                    <Border Style="{StaticResource PlayerIconBorder}">
-                        <Grid Background="Transparent">
-                            <Image Width="80" Height="80"
-                                   Source="{Binding SelectedCharacterItem.CIVM.Slot3String}" />
-                        </Grid>
-                    </Border>
-
-                    <ItemsControl ItemsSource="{Binding Slots[3].Contents}"
-                                  Margin="0,150,0,0">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <WrapPanel />
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                    </ItemsControl>
+                    <common:SlotView DataContext="{Binding Slots[3]}" dd:DragDrop.DropHandler="{Binding}" dd:DragDrop.IsDropTarget="True"></common:SlotView>
                 </Grid>
 
             </Grid>

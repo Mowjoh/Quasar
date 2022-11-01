@@ -5008,6 +5008,7 @@
     <PackageReference Include="FontAwesome.WPF">
       <Version>4.7.0.9</Version>
     </PackageReference>
+    <PackageReference Include="gong-wpf-dragdrop" Version="3.2.0" />
     <PackageReference Include="Grpc" Version="2.43.0" />
     <PackageReference Include="ImageProcessor">
       <Version>2.9.1</Version>

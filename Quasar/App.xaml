@@ -800,6 +800,36 @@
                 </DataTrigger>
             </Style.Triggers>
         </Style>
+
+        <Style x:Key="ActionRightArrowPathStyle"
+               TargetType="{x:Type Path}">
+            <Setter Property="Data" Value="m24 40-2.1-2.15L34.25 25.5H8v-3h26.25L21.9 10.15 24 8l16 16Z" />
+            <Setter Property="Fill" Value="{StaticResource ActionButtonColor}" />
+            <Setter Property="Stroke" Value="{StaticResource ActionButtonColor}" />
+            <Setter Property="StrokeThickness" Value="3" />
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Fill" Value="#da036f" />
+                    <Setter Property="Stroke" Value="#da036f" />
+                </Trigger>
+
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="ActionLeftArrowPathStyle"
+               TargetType="{x:Type Path}">
+            <Setter Property="Data" Value="M24 40 8 24 24 8l2.1 2.1-12.4 12.4H40v3H13.7l12.4 12.4Z" />
+            <Setter Property="Fill" Value="{StaticResource ActionButtonColor}" />
+            <Setter Property="Stroke" Value="{StaticResource ActionButtonColor}" />
+            <Setter Property="StrokeThickness" Value="3" />
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Fill" Value="#da036f" />
+                    <Setter Property="Stroke" Value="#da036f" />
+                </Trigger>
+
+            </Style.Triggers>
+        </Style>
         <!--#endregion-->
 
         <!--#region Templates-->
@@ -894,6 +924,23 @@
                 <Path Style="{StaticResource ActionCloseBuildPathStyle}" />
             </Grid>
         </ControlTemplate>
+
+        <ControlTemplate x:Key="ActionRightArrowButton"
+                         TargetType="{x:Type Button}">
+            <Grid Height="24" MaxHeight="24"
+                  Background="Transparent">
+                <Path Style="{StaticResource ActionRightArrowPathStyle}" Stretch="Uniform" />
+            </Grid>
+        </ControlTemplate>
+
+        <ControlTemplate x:Key="ActionLeftArrowButton"
+                         TargetType="{x:Type Button}">
+            <Grid Height="24" MaxHeight="24"
+                  Background="Transparent">
+                <Path Style="{StaticResource ActionLeftArrowPathStyle}" Stretch="Uniform" />
+            </Grid>
+        </ControlTemplate>
+
         <!--#endregion-->
 
         <!--#endregion-->

@@ -4,6 +4,7 @@ using System;
 
 namespace DataModels.User
 {
+    public enum LibraryItemStatus{ Ready, Downloading, Editing, NoScan, DataLoss, FullDataLoss,Corrupted, Unrecoverable}
     public class LibraryItem
     {
         public Guid Guid { get; set; }
@@ -12,6 +13,7 @@ namespace DataModels.User
         public GamebananaItem GBItem {get; set;}
         public DateTime Time { get; set; }
         public string HumanTime => GetFormattedTime();
+        public LibraryItemStatus Status { get; set; }
 
         [JsonIgnore] public bool ManualMod => GBItem == null;
 

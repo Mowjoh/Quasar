@@ -252,8 +252,8 @@ namespace Validator.Scanning
 
             Assert.Contains(TestedFiles, sf => sf.Ignored == true && sf.Scanned == true);
             Assert.DoesNotContain(TestedFiles, sf => sf.Ignored == true && sf.Scanned == false);
-            Assert.Contains(TestedFiles, sf => sf.Ignored == true && sf.SourcePath == @"C:\TestPath\ModFolder\ModInformation.json");
-            Assert.Contains(TestedFiles, sf => sf.Ignored == false && sf.SourcePath == @"C:\TestPath\ModFolder\ModInformations.json");
+            Assert.Contains(TestedFiles, sf => sf.Ignored && sf.SourcePath == @"C:\TestPath\ModFolder\ModInformation.json");
+            Assert.Contains(TestedFiles, sf => !sf.Ignored && sf.SourcePath == @"C:\TestPath\ModFolder\ModInformations.json");
         }
 
         [Theory]
@@ -307,8 +307,8 @@ namespace Validator.Scanning
         [InlineData(@"C:\Users\Mowjoh\Documents\Quasar\Library\Mods\5f649369-b260-48e5-ae28-b808590e6ba7\test\fighter\mario\model\body\c01\alp_mario_001_col.nutexb")]
         public void Registration_BasicDataIsProperlyRegistered(string _source_path)
         {
-            ScanFile scanFile = new ScanFile(){ FilePath = _source_path };
-            scanFile = FileScanner.RegisterMatchData(scanFile, QuasarModTypes[0], QuasarModTypes[0].QuasarModTypeFileDefinitions[0]);
+            ScanFile scanFile = new ScanFile(){ SourcePath = _source_path };
+            scanFile = FileScanner.RegisterMatchData(scanFile, QuasarModTypes[0], QuasarModTypes[0].QuasarModTypeFileDefinitions[0], null,null,"","", FileScanner.GetRootFolder(_source_path)[0]);
 
             Assert.True(scanFile.Scanned);
             Assert.Equal(QuasarModTypes[0].ID,scanFile.QuasarModTypeID);
@@ -319,14 +319,14 @@ namespace Validator.Scanning
 
 
         [Theory]
-        [InlineData("test",5,0,"","01",5)]
-        [InlineData("test",5,0,"01","",5)]
-        [InlineData("test",0,7,"01","",7)]
-        [InlineData("test",0,7,"","01",7)]
-        [InlineData("test",7,7,"","01",7)]
-        [InlineData("test",7,7,"01","",7)]
-        [InlineData("test",3,7,"01","",3)]
-        [InlineData("test",3,7,"", "01", 3)]
+        [InlineData(@"C:\Users\Mowjoh\Documents\Quasar\Library\Mods\5f649369-b260-48e5-ae28-b808590e6ba7\fighter\mario\model\body\c01\alp_mario_001_col.nutexb", 5,0,"","01",5)]
+        [InlineData(@"C:\Users\Mowjoh\Documents\Quasar\Library\Mods\5f649369-b260-48e5-ae28-b808590e6ba7\fighter\mario\model\body\c01\alp_mario_001_col.nutexb", 5,0,"01","",5)]
+        [InlineData(@"C:\Users\Mowjoh\Documents\Quasar\Library\Mods\5f649369-b260-48e5-ae28-b808590e6ba7\fighter\mario\model\body\c01\alp_mario_001_col.nutexb", 0,7,"01","",7)]
+        [InlineData(@"C:\Users\Mowjoh\Documents\Quasar\Library\Mods\5f649369-b260-48e5-ae28-b808590e6ba7\fighter\mario\model\body\c01\alp_mario_001_col.nutexb", 0,7,"","01",7)]
+        [InlineData(@"C:\Users\Mowjoh\Documents\Quasar\Library\Mods\5f649369-b260-48e5-ae28-b808590e6ba7\fighter\mario\model\body\c01\alp_mario_001_col.nutexb",7,7,"","01",7)]
+        [InlineData(@"C:\Users\Mowjoh\Documents\Quasar\Library\Mods\5f649369-b260-48e5-ae28-b808590e6ba7\fighter\mario\model\body\c01\alp_mario_001_col.nutexb", 7,7,"01","",7)]
+        [InlineData(@"C:\Users\Mowjoh\Documents\Quasar\Library\Mods\5f649369-b260-48e5-ae28-b808590e6ba7\fighter\mario\model\body\c01\alp_mario_001_col.nutexb", 3,7,"01","",3)]
+        [InlineData(@"C:\Users\Mowjoh\Documents\Quasar\Library\Mods\5f649369-b260-48e5-ae28-b808590e6ba7\fighter\mario\model\body\c01\alp_mario_001_col.nutexb", 3,7,"", "01", 3)]
         public void Registration_AdvancedDataIsProperlyRegistered(string _source_path, int _file_element, int _folder_element, string _file_slot, string _folder_slot, int expectedElementID)
         {
             GameElement fileElement = _file_element == 0 ? null : new GameElement()
@@ -341,8 +341,8 @@ namespace Validator.Scanning
                 ID = _folder_element
             };
 
-            ScanFile scanFile = new ScanFile() { FilePath = _source_path };
-            scanFile = FileScanner.RegisterMatchData(scanFile, QuasarModTypes[0], QuasarModTypes[0].QuasarModTypeFileDefinitions[0], fileElement, folderElement, _file_slot, _folder_slot);
+            ScanFile scanFile = new ScanFile() { SourcePath = _source_path };
+            scanFile = FileScanner.RegisterMatchData(scanFile, QuasarModTypes[0], QuasarModTypes[0].QuasarModTypeFileDefinitions[0], fileElement, folderElement, _file_slot, _folder_slot, FileScanner.GetRootFolder(_source_path)[0]);
 
             Assert.True(scanFile.Scanned);
             Assert.Equal(QuasarModTypes[0].ID, scanFile.QuasarModTypeID);
